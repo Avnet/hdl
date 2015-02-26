@@ -136,13 +136,6 @@ puts "
 # Tagging Cases
 # Assumes GIT is installed and setup
 
-# if tag = yes, close_project, then look for errors in the log
-# grep through   C:\Avnet\Projects\sampleproject\sampleproject.runs\impl_1\runme.log
-# for ERROR:
-# then grep for failed timing
-# finally check that a binary actually was written to hard drive (file exists)
-# commit
-
 if {[string match -nocase "yes" $tag]} {
    puts "Attempting to Tag Project..."
    tag_process $project $board $projects_folder $repo_folder $scripts_folder "origin"
@@ -154,6 +147,8 @@ if {[string match -nocase "yes" $tag]} {
       puts "Tagged Project for Private Release"
       puts "Compressing file..."
       exec git clean -dxf
+      # when the TCL engine is updated in Vivado, this should be a good
+      # starting point to remove the need for the two .exe files
       # tar and compress files
       # use these lines once $tcl_version is 8.6b1 or greater
       #puts "Finding Files..."
@@ -195,7 +190,6 @@ if {[string match -nocase "yes" $tag]} {
          }
          puts "Please Wait, pushing to servers"
          tag_process $project $board $projects_folder $repo_folder $scripts_folder "tag_public"
-         # Need to remove "tag_public" from config - messes with how TortoiseGit performs a clean
          puts "Tagged Project for Public Release"
       } else {
          puts "Not OK to check-in public repository, check make and project\nRun public tag process again"
