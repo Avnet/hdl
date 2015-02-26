@@ -1,4 +1,47 @@
+# ----------------------------------------------------------------------------
+#       _____
+#      *     *
+#     *____   *____
+#    * *===*   *==*
+#   *___*===*___**  AVNET
+#        *======*
+#         *====*
+# ----------------------------------------------------------------------------
+# 
+#  This design is the property of Avnet.  Publication of this
+#  design is not authorized without written consent from Avnet.
+# 
+#  Please direct any questions or issues to the MicroZed Community Forums:
+#      http://www.microzed.org
+# 
+#  Disclaimer:
+#     Avnet, Inc. makes no warranty for the use of this code or design.
+#     This code is provided  "As Is". Avnet, Inc assumes no responsibility for
+#     any errors, which may appear in this code, nor does it make a commitment
+#     to update the information contained herein. Avnet, Inc specifically
+#     disclaims any implied warranties of fitness for a particular purpose.
+#                      Copyright(c) 2014 Avnet, Inc.
+#                              All rights reserved.
+# 
+# ----------------------------------------------------------------------------
+# 
+#  Create Date:         December 02, 2014
+#  Design Name:         
+#  Module Name:         
+#  Project Name:        
+#  Target Devices:      
+#  Hardware Boards:     
+# 
+#  Tool versions:       
 set required_version 2014.4
+# 
+#  Description:         Build Script for sample project (fails build)
+# 
+#  Dependencies:        Variable Configuration Scripts, Project Build Scripts,
+#                       Tagging Scripts
+# 
+# ----------------------------------------------------------------------------
+
 set debuglevel 0
 set scriptdir [pwd]
 set board "init"
@@ -128,7 +171,7 @@ if {[file isfile ./ProjectScripts/$project.tcl]} {
 # create variables with absolute folders for all necessary folders
 set boards_folder [file normalize [pwd]/../Boards]
 set ip_folder [file normalize [pwd]/../IP]
-set projects_folder [file normalize [pwd]/../Projects/$project]
+set projects_folder [file normalize [pwd]/../Projects/$project/$board]
 set scripts_folder [file normalize [pwd]]
 set repo_folder [file normalize [pwd]../../]
 
@@ -173,15 +216,24 @@ while {1} {
    # stop if an error is detected
    if {[file exists $projects_folder/$project.runs/synth_1/runme.log]} {
       grep "ERROR:" $projects_folder/$project.runs/synth_1/runme.log
-      if {[string match -nocase "true" $found]} { break }
+      if {[string match -nocase "true" $found]} { 
+         puts "Found Error in Synthesis..."
+         break
+      }
    }
    # stop if an error is detected
    if {[file exists $projects_folder/$project.runs/impl_1/runme.log]} {
       grep "ERROR:" $projects_folder/$project.runs/impl_1/runme.log
-      if {[string match -nocase "true" $found]} { break }
+      if {[string match -nocase "true" $found]} { 
+         puts "Found Error in Bitstream Creation..."
+         break
+      }
    }
    # stop if end of run detected
-   if {[file exists $projects_folder/$project.runs/impl_1/.place_design.end.rst]} { break }
+   if {[file exists $projects_folder/$project.runs/impl_1/.vivado.end.rst]} { 
+      puts "Found End of Bitstream Creation..."
+      break 
+   }
    # paint pretty picture - shows still running
    if {[string match -nocase "up" $updown]} {
       if {$dot_count < 10} { 
@@ -224,4 +276,12 @@ if {[string match -nocase "yes" $tag]} {
    source ./tag.tcl -notrace
 } else {
    puts "Not Running Tag"
+   puts "
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-                                                     -*
+*-            Finished Running Script                  -*
+*-                                                     -*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 }

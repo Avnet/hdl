@@ -29,34 +29,18 @@
 #  Design Name:         
 #  Module Name:         
 #  Project Name:        
-#  Target Devices:      Zynq-7020
+#  Target Devices:      
 #  Hardware Boards:     MicroZed, IO Carrier
 # 
-#  Tool versions:       Vivado 2014.4
+#  Tool versions:       
 # 
-#  Description:         Build Script for MicroZed IO Carrier
+#  Description:         Build Script for sample project
 # 
-#  Dependencies:        To be called from a project build script
+#  Dependencies:        make.tcl
 # 
 # ----------------------------------------------------------------------------
 
-proc avnet_create_project {project projects_folder scriptdir} {
+set argv [list board=MZ7020_IOCC project=sampleproject]
+set argc [llength $argv]
 
-   create_project $project $projects_folder -part xc7z020clg400-1 -force
-   # add selection for proper xdc based on needs
-   # if IO carrier, then use that xdc
-   # if FMC, choose that one
-   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/MZ7020_IOCC/microzed_io_carrier_pmod_ali3.xdc
-
-}
-
-proc avnet_add_ps {project projects_folder scriptdir} {
-
-   # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
-   apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" }  [get_bd_cells processing_system7_0]
-   create_bd_port -dir I -type clk M_AXI_GP0_ACLK
-   connect_bd_net [get_bd_pins /processing_system7_0/M_AXI_GP0_ACLK] [get_bd_ports M_AXI_GP0_ACLK]
-
-
-}
+source ./make.tcl -notrace

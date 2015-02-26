@@ -1,3 +1,46 @@
+# ----------------------------------------------------------------------------
+#       _____
+#      *     *
+#     *____   *____
+#    * *===*   *==*
+#   *___*===*___**  AVNET
+#        *======*
+#         *====*
+# ----------------------------------------------------------------------------
+# 
+#  This design is the property of Avnet.  Publication of this
+#  design is not authorized without written consent from Avnet.
+# 
+#  Please direct any questions or issues to the MicroZed Community Forums:
+#      http://www.microzed.org
+# 
+#  Disclaimer:
+#     Avnet, Inc. makes no warranty for the use of this code or design.
+#     This code is provided  "As Is". Avnet, Inc assumes no responsibility for
+#     any errors, which may appear in this code, nor does it make a commitment
+#     to update the information contained herein. Avnet, Inc specifically
+#     disclaims any implied warranties of fitness for a particular purpose.
+#                      Copyright(c) 2014 Avnet, Inc.
+#                              All rights reserved.
+# 
+# ----------------------------------------------------------------------------
+# 
+#  Create Date:         December 02, 2014
+#  Design Name:         
+#  Module Name:         
+#  Project Name:        
+#  Target Devices:      
+#  Hardware Boards:     
+# 
+#  Tool versions:       Vivado 2014.4
+# 
+#  Description:         Main Tag Script, used for 3 types of tagging
+# 
+#  Dependencies:        Windows requires the use of two .exe files, at least
+#                       until Vivado incorporates the next version of TCL
+# 
+# ----------------------------------------------------------------------------
+
 set found "false"
 # create GREP process
 # From: http://wiki.tcl.tk/9395
@@ -107,7 +150,7 @@ if {[string match -nocase "yes" $tag]} {
    if {[string match "private" $release_state]} {
       set archive_name $project\_$board\_[clock format [clock seconds] -gmt true -format "%Y%m%d_%H%M%S"].tar.gz
       puts "Attempting to Tag Project for Private Release"
-      #tag_process $project $board $projects_folder $repo_folder $scripts_folder
+      tag_process $project $board $projects_folder $repo_folder $scripts_folder "origin"
       puts "Tagged Project for Private Release"
       puts "Compressing file..."
       exec git clean -dxf
@@ -152,6 +195,7 @@ if {[string match -nocase "yes" $tag]} {
          }
          puts "Please Wait, pushing to servers"
          tag_process $project $board $projects_folder $repo_folder $scripts_folder "tag_public"
+         # Need to remove "tag_public" from config - messes with how TortoiseGit performs a clean
          puts "Tagged Project for Public Release"
       } else {
          puts "Not OK to check-in public repository, check make and project\nRun public tag process again"
@@ -167,4 +211,12 @@ if {[string match -nocase "yes" $tag]} {
 } else { 
    puts "No Tagging Requested, exiting"
 }
+puts "
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-                                                     -*
+*-          Finished Running Tag Script                -*
+*-                                                     -*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
