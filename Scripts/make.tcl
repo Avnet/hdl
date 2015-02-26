@@ -148,8 +148,8 @@ if {[string match "init" $tag]} {
 # Project Creation Cases
 # use a - for fall through expressions
 switch -nocase $board {
-    microzed7010_iocarriercard    -
-    microzed7020_iocarriercard    {puts "Setting Up Project $project..."
+    MZ7010_IOCC                   -
+    MZ7020_IOCC                   {puts "Setting Up Project $project..."
                                      source ./ProjectScripts/$project.tcl -notrace}
     default                       {puts "Error in Selecting Board!"
                                    puts "Boards are defined in [file normalize [pwd]/../Boards]"

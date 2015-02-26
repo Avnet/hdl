@@ -5,7 +5,7 @@ proc avnet_create_project {project scriptdir} {
    # add selection for proper xdc based on needs
    # if IO carrier, then use that xdc
    # if FMC, choose that one
-   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/Microzed7020_IOCarrierCard/microzed_io_carrier_pmod_ali3.xdc
+   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/MZ7020_IOCC/microzed_io_carrier_pmod_ali3.xdc
 
 }
 
