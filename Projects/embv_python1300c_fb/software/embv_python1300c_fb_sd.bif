@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+	[bootloader]embv_python1300c_fb.sdk\zynq_fsbl_app\Debug\zynq_fsbl_app.elf
+	embv_python1300c_fb.sdk\python1300c_fb_hw\embv_python1300c_fb_wrapper.bit
+	embv_python1300c_fb.sdk\python1300c_fb_app\Debug\python1300c_fb_app.elf
+}
