@@ -232,7 +232,6 @@ if {[string match -nocase "init" $tag]} {
    }
 }
 
-      return -code ok
 # Project Creation Cases
 # use a - for fall through expressions
 switch -nocase $board {
