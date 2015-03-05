@@ -94,7 +94,7 @@ puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
-
+set ranonce "false"
 # need to add debug printing to a log
 for {set i 0} {$i < [llength $argv]} {incr i} {
 
@@ -109,63 +109,94 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       #puts "would like to add clean=, however would like to add a confirmation due to destructive nature of wiping EVERYTHING out"
       puts "version_override=yes\n ***************************** \n CAUTION: \n Override the Version Check\n and attempt to make project\n *****************************"
       return -code ok
+   } elseif [string match -nocase "false" $ranonce] {
+      set ranonce "true"
+      puts ""
+      puts "+------------------+------------------------------------+"
+      puts "| Setting          |     Configuration                  |"
+      puts "+------------------+------------------------------------+"
    }
    # check for BOARD parameter
    if {[string match -nocase "board=*" [lindex $argv $i]]} {
       set board [string range [lindex $argv $i] 6 end]
-      puts "Board set to:     $board"
+      set printmessage $board
+      for {set j 0} {$j < [expr 30 - [string length $board]]} {incr j} {
+         append printmessage " "
+      }
+      puts "| Board            |     $printmessage |"
    }
    # check for PROJECT parameter
    if {[string match -nocase "project=*" [lindex $argv $i]]} {
       set project [string range [lindex $argv $i] 8 end]
-      puts "Project set to:   $project"
+      set printmessage $project
+      for {set j 0} {$j < [expr 30 - [string length $project]]} {incr j} {
+         append printmessage " "
+      }
+      puts "| Project          |     $printmessage |"
    }
    # check for TAG parameter
    if {[string match -nocase "tag=*" [lindex $argv $i]]} {
       set tag [string range [lindex $argv $i] 4 end]
-      puts "Tag set to:       $tag"
+      set printmessage $tag
+      for {set j 0} {$j < [expr 30 - [string length $tag]]} {incr j} {
+         append printmessage " "
+      }
+      puts "| Tag              |     $printmessage |"
    }
    # check for Version parameter
    if {[string match -nocase "version_override=*" [lindex $argv $i]]} {
       set version_override [string range [lindex $argv $i] 17 end]
-      puts "Version override set to:       $version_override"
+      set printmessage $version_override
+      for {set j 0} {$j < [expr 30 - [string length $version_override]]} {incr j} {
+         append printmessage " "
+      }
+      puts "| Version override |     $printmessage |"
    }
    # check for No Close Project parameter
    if {[string match -nocase "no_close_project=*" [lindex $argv $i]]} {
       set no_close_project [string range [lindex $argv $i] 17 end]
-      puts "No Close Project set to:       $no_close_project"
+      set printmessage $no_close_project
+      for {set j 0} {$j < [expr 30 - [string length $no_close_project]]} {incr j} {
+         append printmessage " "
+      }
+      puts "| No Close Project |     $printmessage |"
    }
-
+   puts "+------------------+------------------------------------+"
 }
+puts ""
+unset printmessage
+unset ranonce
 
 #version check
 set version [version -short]
-if {[string match "yes" $version_override]} {
+if {[string match -nocase "yes" $version_override]} {
    puts "Overriding Version Check, Please Check the Design for Validity!"
 } else {
    if {[expr $version == $required_version]} {
       puts "Version of Vivado acceptable, continuing..."
    } else {
       puts "Version $version of Vivado not acceptable, please run with Vivado $required_version to continue"
-      return -code error
+      return -code ok
    }
 }
 
 # If variables do not exist, exit script
-if {[string match "init" $board]} {
+if {[string match -nocase "init" $board]} {
    puts "Board was not defined, please define and try again!"
-   return -code error
+   return -code ok
 }
-if {[string match "init" $project]} {
+if {[string match -nocase "init" $project]} {
    puts "Project was not defined, please define and try again!"
-   return -code error
+   return -code ok
 }
 
 if {[file isfile ./ProjectScripts/$project.tcl]} {
-   puts "The board is defined as $board \nThe project is defined as $project\n"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Selected Board and Project as:\n$board and $project"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 } else {
    puts "Project Script Does NOT Exist, Check Name and Try Again!"
-   return -code error
+   return -code ok
 }
 
 # create variables with absolute folders for all necessary folders
@@ -176,7 +207,7 @@ set scripts_folder [file normalize [pwd]]
 set repo_folder [file normalize [pwd]../../]
 
 # IF tagging - check for modified files
-if {[string match "init" $tag]} {
+if {[string match -nocase "init" $tag]} {
    puts "Not Requesting Tag"
 } else {
    puts "Requesting Tag"
@@ -185,9 +216,23 @@ if {[string match "init" $tag]} {
    cd $scripts_folder
    if {[llength $modified_files] > 0} { 
       puts "Please commit all files before trying to TAG\nNot Tagging..."
-      return -code error
+      return -code ok
+   }
+   set GUI $rdi::mode
+   if {[string match -nocase "gui" $GUI]} {
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts "*-                                                     -*"
+      puts "*-             Cannot TAG from GUI!                    -*"
+      puts "*-           Please RUN from TCL SHELL                 -*"
+      puts "*-                                                     -*"
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      return -code ok
    }
 }
+
+      return -code ok
 # Project Creation Cases
 # use a - for fall through expressions
 switch -nocase $board {
@@ -200,7 +245,7 @@ switch -nocase $board {
 
     default                       {puts "Error in Selecting Board!"
                                    puts "Boards are defined in [file normalize [pwd]/../Boards]"
-                                   return -code error}
+                                   return -code ok}
 }
 
 # loop waiting for build to end so can call TAG
