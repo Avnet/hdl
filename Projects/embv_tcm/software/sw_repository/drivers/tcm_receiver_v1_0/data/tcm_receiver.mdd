@@ -1,0 +1,10 @@
+
+
+OPTION psf_version = 2.1;
+
+BEGIN DRIVER tcm_receiver
+	OPTION supported_peripherals = (tcm_receiver);
+	OPTION copyfiles = all;
+	OPTION VERSION = 1.0;
+	OPTION NAME = tcm_receiver;
+END DRIVER
