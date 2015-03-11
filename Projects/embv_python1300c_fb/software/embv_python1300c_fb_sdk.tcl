@@ -6,37 +6,55 @@ set hw_name  "python1300c_fb_hw"
 set bsp_name "python1300c_fb_bsp"
 set app_name "python1300c_fb_app"
 
+# The param_name proc works around a bug In the tools where the MSS file isn't getting updated correctly. 
+# This is fixed in 2015.2 (or 1 hopefully). 
+# This will allow you to open the SDK project and keeps the Changes made in the HSI
+proc param_name {mss name} {
+
+        set fp [open $mss r]
+        set file_data [read $fp]
+        close $fp
+
+        set fileout [open $mss "w"]
+        set data [split $file_data "\n"]
+        for {set i 0} {$i < [llength $data]} {incr i} {
+                if {[string first "PARAMETER NAME" [lindex $data $i]] != -1 } {
+                                puts $fileout "PARAMETER NAME = ${name}"
+                } else {
+                        puts $fileout [lindex $data $i]
+                }
+        }
+        close $fileout
+}
+
 set_workspace ${project}.sdk
 
 puts "\n#\n#\n# Adding local user repository ...\n#\n#\n"
-set_repo_path ../software/sw_repository
+hsi::set_repo_path ../software/sw_repository
 
 puts "\n#\n#\n# Importing hardware ${hw_name} ...\n#\n#\n"
 file copy -force ${project}.runs/impl_1/${project}_wrapper.sysdef ${project}.sdk/${hw_name}.hdf
 create_project -type hw -name ${hw_name} -hwspec ${project}.sdk/${hw_name}.hdf
 
-cd ${project}.sdk/${hw_name}
-open_hw_design system.hdf
+hsi::open_hw_design ${project}.sdk/${hw_name}/system.hdf
 
-# Create BSP for EMBV application (using MSS which specifies iicps_v2_2 driver)
+# Create EMBV BSP
 puts "\n#\n#\n# Creating ${bsp_name} ...\n#\n#\n"
-generate_bsp -sw_mss ../../../software/${bsp_name}.mss -dir ../${bsp_name}_ref -compile
+create_project -type bsp -name ${bsp_name} -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone
 
-cd ../..
-
-puts "\n#\n#\n# Adding local user repository ...\n#\n#\n"
-set_user_repo_path ../software/sw_repository
+# Modify EMBV BSP (with HSI commands, to use version 2.2 of IICPS driver)
+param_name ${project}.sdk/${bsp_name}/system.mss "system"
+open_sw_design ${project}.sdk/${bsp_name}/system.mss
+set_property VERSION 2.2 [hsi::get_drivers ps7_i2c_0]
+generate_bsp -compile -sw [current_sw_design] -dir ${project}.sdk/${bsp_name}
 
 # Create EMBV application
 puts "\n#\n#\n# Creating ${app_name} ...\n#\n#\n"
-#create_project -type app -name ${app_name} -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -mss ${bsp_name}.mss -lang C -app {Empty Application} -bsp ${bsp_name}
 create_project -type app -name ${app_name} -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Empty Application} -bsp ${bsp_name} 
-# BSP : did not use custom .mss file, replace with correctly generated BSP
-file copy   -force ../software/${bsp_name}.mss ${project}.sdk/${bsp_name}/system.mss
-file delete -force ${project}.sdk/${bsp_name}/ps7_cortexa9_0
-file copy   -force ${project}.sdk/${bsp_name}_ref/ps7_cortexa9_0 ${project}.sdk/${bsp_name}/.
+
 # APP : copy sources to empty application
-file copy ../software/${app_name}/src ${project}.sdk/${app_name}/src
+#file copy ../software/${app_name}/src ${project}.sdk/${app_name}/src
+exec cp -f -r ../software/${app_name}/src ${project}.sdk/${app_name}
 
 # build EMBV application
 puts "\n#\n#\n# Build ${app_name} ...\n#\n#\n"
