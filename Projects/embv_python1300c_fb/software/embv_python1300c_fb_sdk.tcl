@@ -38,19 +38,21 @@ create_project -type hw -name ${hw_name} -hwspec ${project}.sdk/${hw_name}.hdf
 
 hsi::open_hw_design ${project}.sdk/${hw_name}/system.hdf
 
-# Create EMBV BSP
-puts "\n#\n#\n# Creating ${bsp_name} ...\n#\n#\n"
-create_project -type bsp -name ${bsp_name} -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone
-
-# Modify EMBV BSP (with HSI commands, to use version 2.2 of IICPS driver)
-param_name ${project}.sdk/${bsp_name}/system.mss "system"
-open_sw_design ${project}.sdk/${bsp_name}/system.mss
-set_property VERSION 2.2 [hsi::get_drivers ps7_i2c_0]
-generate_bsp -compile -sw [current_sw_design] -dir ${project}.sdk/${bsp_name}
-
 # Create EMBV application
 puts "\n#\n#\n# Creating ${app_name} ...\n#\n#\n"
 create_project -type app -name ${app_name} -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Empty Application} -bsp ${bsp_name} 
+
+# Modify EMBV BSP (with HSI commands)
+puts "\n#\n#\n# Creating ${bsp_name} ...\n#\n#\n"
+param_name ${project}.sdk/${bsp_name}/system.mss "system"
+open_sw_design ${project}.sdk/${bsp_name}/system.mss
+# Use version 2.2 of IICPS driver (for repeated start feature)
+set_property VERSION 2.2 [hsi::get_drivers ps7_i2c_0]
+# Add ONSEMI_PYTHON_SW library
+add_library onsemi_python_sw
+#
+generate_bsp -compile -sw [current_sw_design] -dir ${project}.sdk/${bsp_name}
+close_sw_design [current_sw_design]
 
 # APP : copy sources to empty application
 #file copy ../software/${app_name}/src ${project}.sdk/${app_name}/src
@@ -58,7 +60,7 @@ exec cp -f -r ../software/${app_name}/src ${project}.sdk/${app_name}
 
 # build EMBV application
 puts "\n#\n#\n# Build ${app_name} ...\n#\n#\n"
-build -type bsp -name ${bsp_name}
+#build -type bsp -name ${bsp_name}
 build -type app -name ${app_name}
 
 # Create FSBL application

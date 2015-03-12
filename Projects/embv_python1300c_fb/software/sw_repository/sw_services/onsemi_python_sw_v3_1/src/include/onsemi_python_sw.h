@@ -118,6 +118,7 @@
 #include "xstatus.h"
 #include "xil_io.h"
 
+
 // ONSEMI_VITA_SPI definitions
 #define ONSEMI_VITA_SPI_S00_AXI_SLV_REG0_OFFSET 0
 #define ONSEMI_VITA_SPI_S00_AXI_SLV_REG1_OFFSET 4
