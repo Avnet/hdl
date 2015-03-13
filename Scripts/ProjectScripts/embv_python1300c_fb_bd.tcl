@@ -199,27 +199,33 @@ proc create_root_design { parentCell } {
   set_property -dict [ list CONFIG.RAM_ADDR_BITS {12} CONFIG.VTG_MASTER_SLAVE {1}  ] $v_axi4s_vid_out_0
 
   # Create instance: v_cfa_0, and set properties
-  set v_cfa_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cfa:7.0 v_cfa_0 ]
+  #set v_cfa_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cfa:7.0 v_cfa_0 ]
+  set v_cfa_0 [get_bd_cells v_cfa_0]
   set_property -dict [ list CONFIG.active_cols {1280} CONFIG.active_rows {1024} CONFIG.has_axi4_lite {true} CONFIG.max_cols {1280}  ] $v_cfa_0
 
   # Create instance: v_cresample_0, and set properties
-  set v_cresample_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cresample:4.0 v_cresample_0 ]
+  #set v_cresample_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cresample:4.0 v_cresample_0 ]
+  set v_cresample_0 [get_bd_cells v_cresample_0]
   set_property -dict [ list CONFIG.active_cols {1280} CONFIG.active_rows {1024} CONFIG.m_axis_video_format {2} CONFIG.s_axis_video_format {3}  ] $v_cresample_0
 
   # Create instance: v_osd_0, and set properties
-  set v_osd_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_osd:6.0 v_osd_0 ]
+  #set v_osd_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_osd:6.0 v_osd_0 ]
+  set v_osd_0 [get_bd_cells v_osd_0]
   set_property -dict [ list CONFIG.NUMBER_OF_LAYERS {2}  ] $v_osd_0
 
   # Create instance: v_rgb2ycrcb_0, and set properties
-  set v_rgb2ycrcb_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_rgb2ycrcb:7.1 v_rgb2ycrcb_0 ]
+  #set v_rgb2ycrcb_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_rgb2ycrcb:7.1 v_rgb2ycrcb_0 ]
+  set v_rgb2ycrcb_0 [get_bd_cells v_rgb2ycrcb_0]
   set_property -dict [ list CONFIG.ACTIVE_COLS {1280} CONFIG.ACTIVE_ROWS {1024}  ] $v_rgb2ycrcb_0
 
   # Create instance: v_tc_0, and set properties
-  set v_tc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tc:6.1 v_tc_0 ]
+  #set v_tc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tc:6.1 v_tc_0 ]
+  set v_tc_0 [get_bd_cells v_tc_0]
   set_property -dict [ list CONFIG.HAS_AXI4_LITE {false} CONFIG.VIDEO_MODE {1280x1024p} CONFIG.enable_detection {false}  ] $v_tc_0
 
   # Create instance: v_tpg_0, and set properties
-  set v_tpg_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tpg:6.0 v_tpg_0 ]
+  #set v_tpg_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tpg:6.0 v_tpg_0 ]
+  set v_tpg_0 [get_bd_cells v_tpg_0]
   set_property -dict [ list CONFIG.active_cols {1280} CONFIG.active_rows {1024} CONFIG.has_axi4s_slave {false} CONFIG.m_video_format {0} CONFIG.pattern_control {11}  ] $v_tpg_0
 
   # Create instance: v_vid_in_axi4s_0, and set properties

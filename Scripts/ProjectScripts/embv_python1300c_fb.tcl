@@ -42,6 +42,52 @@
 # 
 # ----------------------------------------------------------------------------
 
+proc validate_core_licenses { core_list ip_report_filename } {
+   set valid_cores 0
+   set invalid_cores 0   
+
+   puts ""
+   puts "+------------------+------------------------------------+"
+   puts "| Video IP Core    | License Status                     |"
+   puts "+------------------+------------------------------------+"
+
+   foreach core $core_list {
+   
+      # Format core name for display
+      set core_name $core
+      for {set j 0} {$j < [expr 16 - [string length $core]]} {incr j} {
+         append core_name " "
+      }
+      
+      # Search for core license status in ip status report
+      set file [open $ip_report_filename r]   
+      set ip_status ""
+      while {[gets $file line] >= 0} {
+         if {[regexp $core $line]} {
+            set ip_status $line
+   		 break
+         }
+      }
+      close $file
+      #puts "ip_status = ${ip_status}"
+   
+      # Validate and display status of core license
+      if {[regexp "Included" ${ip_status}]} {
+         puts "| ${core_name} | VALID (Full License)               |"
+         incr valid_cores
+      } elseif {[regexp "Hardware_E" ${ip_status}]} {
+         puts "| ${core_name} | VALID (Hardware Evaluation)        |"
+         incr valid_cores
+      } else {
+         puts "| ${core_name} | INVALID                            |"
+         incr invalid_cores
+      }
+      puts "+------------------+------------------------------------+"
+      
+   }
+   return $valid_cores
+}
+
 # 'private' used to allow this project to be privately tagged
 # 'public' used to allow this project to be publicly tagged
 set release_state private
@@ -75,6 +121,32 @@ avnet_add_ps $project $projects_folder $scriptdir
 # General Config
 puts "***** General Configuration for Design..."
 set_property target_language VHDL [current_project]
+
+# Check for Video IP core licenses
+puts "***** Check for Video IP core licenses..."
+set v_cfa_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cfa:7.0 v_cfa_0 ]
+set v_cresample_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cresample:4.0 v_cresample_0 ]
+set v_osd_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_osd:6.0 v_osd_0 ]
+set v_rgb2ycrcb_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_rgb2ycrcb:7.1 v_rgb2ycrcb_0 ]
+set v_tc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tc:6.1 v_tc_0 ]
+set v_tpg_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tpg:6.0 v_tpg_0 ]
+report_ip_status -file "video_ip_core_status.log"
+set core_list [list "v_cfa" "v_cresample" "v_osd" "v_rgb2ycrcb" "v_tc" "v_tpg" ]
+set valid_cores [validate_core_licenses $core_list "video_ip_core_status.log"]
+if { $valid_cores < 6 } {
+   puts " 
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-                                                     -*
+*-  !! Detected missing license for video ip cores !!  -*
+*-                                                     -*
+*-  For more details, refer to IP status report:   !!  -*
+*-     video_ip_core_status_report.log                 -*
+*-                                                     -*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"	
+   error "!! Detected missing license for video ip cores !!"
+}
 
 # Create Block Diagram
 set design_name ${project}
