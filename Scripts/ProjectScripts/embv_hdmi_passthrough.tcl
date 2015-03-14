@@ -44,7 +44,7 @@
 
 # 'private' used to allow this project to be privately tagged
 # 'public' used to allow this project to be publicly tagged
-set release_state private
+set release_state public
 
 # Generate Avnet IP
 puts "***** Generating IP..."
