@@ -118,7 +118,7 @@ proc tag_process {project board projects_folder repo_folder scripts_folder repo_
       # need to figure out how to remove everything after "while executing" catch {} ??
       puts [exec git tag -a $project\_$board\_[clock format [clock seconds] -gmt true -format "%Y%m%d_%H%M%S"] -m $project\_$board\_[clock format [clock seconds] -gmt true -format "%Y%m%d_%H%M%S"]]
       puts "Pushing to server..."
-      puts [exec git push $repo_server master --tags]
+      puts [exec -ignorestderr git push $repo_server master --tags]
    }
 }
 
@@ -173,7 +173,7 @@ if {[string match -nocase "yes" $tag]} {
    } elseif {[string match -nocase "public" $release_state]} {
       puts "Attempting to Tag Project for Public Release"
       #check if variable is AOK to public tag
-      puts "Ready for Public Commit, if you are certain type\n'$project' (no quotes):"
+      puts "Ready for Public Commit, if you are certain type your project name\n'$project' (no quotes):"
       set ok_to_tag_public [gets stdin]
       if {[string match -nocase $project $ok_to_tag_public]} {
          grep "tag_public" ../.git/config
