@@ -173,8 +173,8 @@ if {[string match -nocase "yes" $tag]} {
    } elseif {[string match -nocase "public" $release_state]} {
       puts "Attempting to Tag Project for Public Release"
       #check if variable is AOK to public tag
-      puts "Ready for Public Commit, if you are certain type '$project' (no quotes):"
-      set ok_to_tag_public [read stdin 3]
+      puts "Ready for Public Commit, if you are certain type\n'$project' (no quotes):"
+      set ok_to_tag_public [gets stdin]
       if {[string match -nocase $project $ok_to_tag_public]} {
          grep "tag_public" ../.git/config
          # if false, add in the public tagging information
@@ -193,13 +193,14 @@ if {[string match -nocase "yes" $tag]} {
       } else {
          puts "Tagging Project for Public Release Not Allowed\nPlease Check Permissions"
       }
-         close_project
    } else { 
          tag_process $project $board $projects_folder $repo_folder $scripts_folder "origin"
    }
 } else {
    puts "No Tagging Requested, exiting"
 }
+unset ok_to_tag_public
+close_project
 puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
