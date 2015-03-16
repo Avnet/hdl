@@ -79,7 +79,6 @@ proc grep0 {prefix pattern handle} {
         if {[regexp $pattern $line]} {
             global found
             set found "true"
-            puts "Public GITHUB Found"
             puts "$prefix${lnum}:${line}"
         }
     }

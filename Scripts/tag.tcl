@@ -69,7 +69,6 @@ proc grep0 {prefix pattern handle} {
         if {[regexp $pattern $line]} {
             global found
             set found "true"
-            puts "Public GITHUB Found"
             puts "$prefix${lnum}:${line}"
         }
     }
@@ -138,9 +137,7 @@ puts "
 
 if {[string match -nocase "yes" $tag]} {
    puts "Attempting to Tag Project..."
-   tag_process $project $board $projects_folder $repo_folder $scripts_folder "origin"
-} elseif {[string match -nocase "yes_private_release" $tag]} {
-   if {[string match "private" $release_state]} {
+   if {[string match -nocase "private" $release_state]} {
       set archive_name $project\_$board\_[clock format [clock seconds] -gmt true -format "%Y%m%d_%H%M%S"].tar.gz
       puts "Attempting to Tag Project for Private Release"
       tag_process $project $board $projects_folder $repo_folder $scripts_folder "origin"
@@ -167,18 +164,18 @@ if {[string match -nocase "yes" $tag]} {
          exec $scripts_folder/tar cvf $archive_name.tar Boards IP Projects Scripts
          exec $scripts_folder/gzip -c $archive_name.tar > $archive_name.tar.gz
          file delete $archive_name.tar
+         unset $archive_name
          cd $scripts_folder
+      } else {
+         puts "Script Needs to be updated to handle this Operating Environment, please contact script maintainer"
       }
-   } else {
-      puts "Private Release State Set to NOT ALLOWED, please check and try again..."
-   }
-} elseif {[string match -nocase "yes_public_release" $tag]} { 
-   puts "Attempting to Tag Project for Public Release"
-   if {[string match "public" $release_state]} {
+      close_project
+   } elseif {[string match -nocase "public" $release_state]} {
+      puts "Attempting to Tag Project for Public Release"
       #check if variable is AOK to public tag
-      puts "Ready for Public Commit, if you are certain type 'yes' (no quotes):"
+      puts "Ready for Public Commit, if you are certain type '$project' (no quotes):"
       set ok_to_tag_public [read stdin 3]
-      if {[string match -nocase "yes" $ok_to_tag_public]} {
+      if {[string match -nocase $project $ok_to_tag_public]} {
          grep "tag_public" ../.git/config
          # if false, add in the public tagging information
          if {[string match -nocase "false" $found]} {
@@ -187,22 +184,20 @@ if {[string match -nocase "yes" $tag]} {
             set out [open ../.git/config a]
             puts -nonewline $out $data
             close $out
+         } else {
+            puts "Public GITHUB Found in CONFIG"
          }
          puts "Please Wait, pushing to servers"
          tag_process $project $board $projects_folder $repo_folder $scripts_folder "tag_public"
          puts "Tagged Project for Public Release"
       } else {
-         puts "Not OK to check-in public repository, check make and project\nRun public tag process again"
+         puts "Tagging Project for Public Release Not Allowed\nPlease Check Permissions"
       }
-      } else {
-         puts "Not OK to check-in public repository, check make and project\nRun public tag process again"
-         return -code ok
-      }
-   } else {
-      close_project
-      puts "Tagging Project for Public Release Not Allowed, Please Check Permissions"
+         close_project
+   } else { 
+         tag_process $project $board $projects_folder $repo_folder $scripts_folder "origin"
    }
-} else { 
+} else {
    puts "No Tagging Requested, exiting"
 }
 puts "
