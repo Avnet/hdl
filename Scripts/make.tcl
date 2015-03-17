@@ -51,6 +51,7 @@ set no_close_project "no"
 set version_override "no"
 set found "false"
 set ok_to_tag_public "false"
+set sdk "no"
 
 # create GREP process
 # From: http://wiki.tcl.tk/9395
@@ -102,9 +103,15 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       puts "Parameters are:"
       puts "board=<board_name>\n boards are listed in the /Boards folder"
       puts "project=<project_name>\n project names are listed in the /Scripts/ProjectScripts folder"
-      puts "tag=\n 'yes' will tag locally\n 'yes_private_release' will attempt a private release tag + compression of package\n 'yes_public_release' will release to GITHUB"
+      puts "sdk=\n 'yes' will attempt to execute:\n ../software/<project_name>_sdk.tcl"
+      puts " in order to build the SDK portion of the project (prior to tagging request)"
+      puts "tag=\n 'yes' will tag locally\n this will attempt to tag based on that flag"
+      puts " each project has a release level flag, in the project make script\n the project has been released for the tag level you are attempting to run at"
+      puts " 'private' used to allow this project to be privately tagged"
+      puts "    with release_state set to private the script will release a tag + compress the package"
+      puts " 'public' used to allow this project to be publicly tagged"
+      puts "    with release_state set to public the script will release to GITHUB"
       puts "no_close_project=\n 'yes' will prevent the script from closing the project\n used to allow 'up+enter' rebuilds of a project"
-      puts " each project has a release level flag, please validate\n that your project has been released for the tag level you are attempting to run at"
       #puts "would like to add clean=, however would like to add a confirmation due to destructive nature of wiping EVERYTHING out"
       puts "version_override=yes\n ***************************** \n CAUTION: \n Override the Version Check\n and attempt to make project\n *****************************"
       return -code ok
@@ -234,16 +241,14 @@ if {[string match -nocase "init" $tag]} {
 # Project Creation Cases
 # use a - for fall through expressions
 switch -nocase $board {
-    MZ7010_IOCC                   -
-    MZ7020_IOCC                   {puts "Setting Up Project $project..."
-                                     source ./ProjectScripts/$project.tcl -notrace}
-    MZ7010_EMBV                   -
-    MZ7020_EMBV                   {puts "Setting Up Project $project..."
-                                     source ./ProjectScripts/$project.tcl -notrace}
-
-    default                       {puts "Error in Selecting Board!"
-                                   puts "Boards are defined in [file normalize [pwd]/../Boards]"
-                                   return -code ok}
+   MZ7010_EMBV                -
+   MZ7020_EMBV                -
+   MZ7010_IOCC                -
+   MZ7020_IOCC                {puts "Setting Up Project $project..."
+                                 source ./ProjectScripts/$project.tcl -notrace}
+   default                    {puts "Error in Selecting Board!"
+                                 puts "Boards are defined in [file normalize [pwd]/../Boards]"
+                                 return -code ok}
 }
 
 # loop waiting for build to end so can call TAG
@@ -313,8 +318,23 @@ while {1} {
 if {[string match -nocase "yes" $no_close_project]} {
    puts "Not Closing Project..."
 } else {
-   close_project
-   puts "Closing Project..."
+   set curr_proj [current_project -quiet]
+   if {[string match -nocase "" $curr_proj]} {
+      puts "Not Closing Project..."
+   } else {
+      puts "Closing Project..."
+      close_project
+   }
+   unset curr_proj
+}
+
+# attempt to build SDK portion
+if {[string match -nocase "yes" $sdk]} {
+   puts "Attempting to Build SDK..."
+   cd ${projects_folder}
+   exec >@stdout 2>@stderr xsdk -batch -source ../software/$project\_sdk.tcl
+   exec >@stdout 2>@stderr bootgen -image ../software/$project\_sd.bif -w -o BOOT.bin
+   cd ${scripts_folder}
 }
 
 # run Tagging script

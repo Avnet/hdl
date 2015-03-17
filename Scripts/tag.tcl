@@ -131,6 +131,23 @@ puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
+# if using for development, can set this to yes to just use the script
+# to build your project in Vivado
+# add this check, in case we end up trying to tag without running make.tcl
+# allow user to override (in case they are using start_gui/stop_gui
+
+if {[string match -nocase "yes" $no_close_project]} {
+   puts "Not Closing Project..."
+} else {
+   set curr_proj [current_project -quiet]
+   if {[string match -nocase "" $curr_proj]} {
+      puts "Not Closing Project..."
+   } else {
+      puts "Closing Project..."
+      close_project
+   }
+   unset curr_proj
+}
 
 # Tagging Cases
 # Assumes GIT is installed and setup
@@ -169,7 +186,6 @@ if {[string match -nocase "yes" $tag]} {
       } else {
          puts "Script Needs to be updated to handle this Operating Environment, please contact script maintainer"
       }
-      close_project
    } elseif {[string match -nocase "public" $release_state]} {
       puts "Attempting to Tag Project for Public Release"
       #check if variable is AOK to public tag
@@ -200,7 +216,6 @@ if {[string match -nocase "yes" $tag]} {
    puts "No Tagging Requested, exiting"
 }
 unset ok_to_tag_public
-close_project
 puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
