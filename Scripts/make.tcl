@@ -342,7 +342,7 @@ if {[string match -nocase "no" $close_project]} {
 if {[string match -nocase "yes" $sdk]} {
    puts "Attempting to Build SDK..."
    cd ${projects_folder}
-   exec >@stdout 2>@stderr xsdk -batch -source ../software/$project\_sdk.tcl
+   exec >@stdout 2>@stderr xsdk -batch -source ../software/$project\_sdk.tcl -notrace
    puts "Generating BOOT.BIN..."
    exec >@stdout 2>@stderr bootgen -image ../software/$project\_sd.bif -w -o BOOT.bin
    cd ${scripts_folder}
