@@ -40,21 +40,12 @@
 # 
 # ----------------------------------------------------------------------------
 
-set argv [list board=MZ7010_EMBV project=embv_tcm]
+# Build Toshiba TCM3232PB Frame Buffer design for MicroZed Embedded Vision Kit + MicroZed 7010 SOM
+set argv [list board=MZ7010_EMBV project=embv_tcm sdk=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
-cd ${projects_folder}
-exec >@stdout 2>@stderr xsdk -batch -source ../software/embv_tcm_sdk.tcl
-exec >@stdout 2>@stderr bootgen -image ../software/embv_tcm_sd.bif -w -o BOOT.bin
-cd ${scripts_folder}
-
-set argv [list board=MZ7020_EMBV project=embv_tcm]
+# Build Toshiba TCM3232PB Frame Buffer design for MicroZed Embedded Vision Kit + MicroZed 7020 SOM
+set argv [list board=MZ7020_EMBV project=embv_tcm sdk=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
-
-cd ${projects_folder}
-exec >@stdout 2>@stderr xsdk -batch -source ../software/embv_tcm_sdk.tcl
-exec >@stdout 2>@stderr bootgen -image ../software/embv_tcm_sd.bif -w -o BOOT.bin
-cd ${scripts_folder}
-
