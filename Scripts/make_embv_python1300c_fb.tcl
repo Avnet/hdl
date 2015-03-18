@@ -40,7 +40,7 @@
 # 
 # ----------------------------------------------------------------------------
 
-set argv [list board=MZ7020_EMBV project=embv_python1300c_fb no_close_project=no]
+set argv [list board=MZ7020_EMBV project=embv_python1300c_fb]
 set argc [llength $argv]
 source ./make.tcl -notrace
 

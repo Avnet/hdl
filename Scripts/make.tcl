@@ -47,7 +47,7 @@ set scriptdir [pwd]
 set board "init"
 set project "init"
 set tag "init"
-set no_close_project "no"
+set close_project "yes"
 set version_override "no"
 set found "false"
 set ok_to_tag_public "false"
@@ -95,6 +95,9 @@ puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
 set ranonce "false"
+# to adjust the width of the chart, need to adjust this as well as the "predefined"
+# chart elements below (there are 4 lines that need to be adjusted)
+set chart_wdith 30
 # need to add debug printing to a log
 for {set i 0} {$i < [llength $argv]} {incr i} {
 
@@ -111,7 +114,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       puts "    with release_state set to private the script will release a tag + compress the package"
       puts " 'public' used to allow this project to be publicly tagged"
       puts "    with release_state set to public the script will release to GITHUB"
-      puts "no_close_project=\n 'yes' will prevent the script from closing the project\n used to allow 'up+enter' rebuilds of a project"
+      puts "close_project=\n 'no' will prevent the script from closing the project\n used to allow 'up+enter' rebuilds of a project"
       #puts "would like to add clean=, however would like to add a confirmation due to destructive nature of wiping EVERYTHING out"
       puts "version_override=yes\n ***************************** \n CAUTION: \n Override the Version Check\n and attempt to make project\n *****************************"
       return -code ok
@@ -126,7 +129,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
    if {[string match -nocase "board=*" [lindex $argv $i]]} {
       set board [string range [lindex $argv $i] 6 end]
       set printmessage $board
-      for {set j 0} {$j < [expr 30 - [string length $board]]} {incr j} {
+      for {set j 0} {$j < [expr $chart_wdith - [string length $board]]} {incr j} {
          append printmessage " "
       }
       puts "| Board            |     $printmessage |"
@@ -135,7 +138,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
    if {[string match -nocase "project=*" [lindex $argv $i]]} {
       set project [string range [lindex $argv $i] 8 end]
       set printmessage $project
-      for {set j 0} {$j < [expr 30 - [string length $project]]} {incr j} {
+      for {set j 0} {$j < [expr $chart_wdith - [string length $project]]} {incr j} {
          append printmessage " "
       }
       puts "| Project          |     $printmessage |"
@@ -144,32 +147,41 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
    if {[string match -nocase "tag=*" [lindex $argv $i]]} {
       set tag [string range [lindex $argv $i] 4 end]
       set printmessage $tag
-      for {set j 0} {$j < [expr 30 - [string length $tag]]} {incr j} {
+      for {set j 0} {$j < [expr $chart_wdith - [string length $tag]]} {incr j} {
          append printmessage " "
       }
       puts "| Tag              |     $printmessage |"
+   }
+   # check for SDK parameter
+   if {[string match -nocase "sdk=*" [lindex $argv $i]]} {
+      set sdk [string range [lindex $argv $i] 4 end]
+      set printmessage $sdk
+      for {set j 0} {$j < [expr $chart_wdith - [string length $sdk]]} {incr j} {
+         append printmessage " "
+      }
+      puts "| SDK              |     $printmessage |"
    }
    # check for Version parameter
    if {[string match -nocase "version_override=*" [lindex $argv $i]]} {
       set version_override [string range [lindex $argv $i] 17 end]
       set printmessage $version_override
-      for {set j 0} {$j < [expr 30 - [string length $version_override]]} {incr j} {
+      for {set j 0} {$j < [expr $chart_wdith - [string length $version_override]]} {incr j} {
          append printmessage " "
       }
       puts "| Version override |     $printmessage |"
    }
    # check for No Close Project parameter
-   if {[string match -nocase "no_close_project=*" [lindex $argv $i]]} {
-      set no_close_project [string range [lindex $argv $i] 17 end]
-      set printmessage $no_close_project
-      for {set j 0} {$j < [expr 30 - [string length $no_close_project]]} {incr j} {
+   if {[string match -nocase "close_project=*" [lindex $argv $i]]} {
+      set close_project [string range [lindex $argv $i] 17 end]
+      set printmessage $close_project
+      for {set j 0} {$j < [expr $chart_wdith - [string length $close_project]]} {incr j} {
          append printmessage " "
       }
       puts "| No Close Project |     $printmessage |"
    }
    puts "+------------------+------------------------------------+"
 }
-puts ""
+puts "\n\n"
 unset printmessage
 unset ranonce
 
@@ -197,9 +209,9 @@ if {[string match -nocase "init" $project]} {
 }
 
 if {[file isfile ./ProjectScripts/$project.tcl]} {
-   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
    puts " Selected Board and Project as:\n$board and $project"
-   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
 } else {
    puts "Project Script Does NOT Exist, Check Name and Try Again!"
    return -code ok
@@ -261,8 +273,6 @@ set updown "up"
 set dot_count 1
 set x 0
 
-# wait 5 seconds before starting loop
-#after 5000
 puts "Generating Binary..."
 while {1} {
    # stop if an error is detected
@@ -315,7 +325,7 @@ while {1} {
 
 # if using for development, can set this to yes to just use the script
 # to build your project in Vivado
-if {[string match -nocase "yes" $no_close_project]} {
+if {[string match -nocase "no" $close_project]} {
    puts "Not Closing Project..."
 } else {
    set curr_proj [current_project -quiet]
@@ -333,6 +343,7 @@ if {[string match -nocase "yes" $sdk]} {
    puts "Attempting to Build SDK..."
    cd ${projects_folder}
    exec >@stdout 2>@stderr xsdk -batch -source ../software/$project\_sdk.tcl
+   puts "Generating BOOT.BIN..."
    exec >@stdout 2>@stderr bootgen -image ../software/$project\_sd.bif -w -o BOOT.bin
    cd ${scripts_folder}
 }
@@ -343,7 +354,9 @@ if {[string match -nocase "yes" $tag]} {
    source ./tag.tcl -notrace
 } else {
    puts "Not Running Tag"
-   puts "
+}
+
+puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-                                                     -*
@@ -351,4 +364,3 @@ if {[string match -nocase "yes" $tag]} {
 *-                                                     -*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-}

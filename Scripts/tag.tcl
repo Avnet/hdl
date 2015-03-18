@@ -136,7 +136,7 @@ puts "
 # add this check, in case we end up trying to tag without running make.tcl
 # allow user to override (in case they are using start_gui/stop_gui
 
-if {[string match -nocase "yes" $no_close_project]} {
+if {[string match -nocase "no" $close_project]} {
    puts "Not Closing Project..."
 } else {
    set curr_proj [current_project -quiet]

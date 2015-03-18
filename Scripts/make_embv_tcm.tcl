@@ -40,7 +40,7 @@
 # 
 # ----------------------------------------------------------------------------
 
-set argv [list board=MZ7010_EMBV project=embv_tcm no_close_project=no]
+set argv [list board=MZ7010_EMBV project=embv_tcm]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
@@ -49,7 +49,7 @@ exec >@stdout 2>@stderr xsdk -batch -source ../software/embv_tcm_sdk.tcl
 exec >@stdout 2>@stderr bootgen -image ../software/embv_tcm_sd.bif -w -o BOOT.bin
 cd ${scripts_folder}
 
-set argv [list board=MZ7020_EMBV project=embv_tcm no_close_project=no]
+set argv [list board=MZ7020_EMBV project=embv_tcm]
 set argc [llength $argv]
 source ./make.tcl -notrace
 

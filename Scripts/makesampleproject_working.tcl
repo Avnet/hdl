@@ -40,7 +40,7 @@
 # 
 # ----------------------------------------------------------------------------
 
-set argv [list board=MZ7010_IOCC project=sampleproject_working no_close_project=no]
+set argv [list board=MZ7010_IOCC project=sampleproject_working]
 set argc [llength $argv]
 
 source ./make.tcl -notrace
