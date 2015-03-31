@@ -41,6 +41,6 @@
 # ----------------------------------------------------------------------------
 
 # Build ALI3 Display design for ZedBoard
-set argv [list board=ZedBoard project=zedboard_ali3_sharp7 sdk=yes version_override=yes]
+set argv [list board=ZedBoard project=zedboard_ali3_sharp7 sdk=yes tag=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
