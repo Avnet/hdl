@@ -91,13 +91,15 @@ set_property DIFF_TERM TRUE [get_ports IO_PYTHON_CAM_clk_out_p]
 ######################
 
 # The following constraints are already created by the "ZYNQ7 Processing System" core
-#create_clock -period 10.000 -name clk_fpga_0 [get_nets -hierarchical FCLK_CLK0]
-#create_clock -period 5.000 -name clk_fpga_1 [get_nets -hierarchical FCLK_CLK1]
-#create_clock -period 5.000 -name clk_fpga_2 [get_nets -hierarchical FCLK_CLK2]
-
-# Rename auto-generated clocks from MMCM
-create_generated_clock -name clk_108mhz [get_pins design_1_i/clk_wiz_0/inst/plle2_adv_inst/CLKOUT0]
+#create_clock -period 13.333 -name clk_fpga_0 [get_nets -hierarchical FCLK_CLK0]
+#create_clock -period  6.667 -name clk_fpga_1 [get_nets -hierarchical FCLK_CLK1]
+#create_clock -period  5.000 -name clk_fpga_2 [get_nets -hierarchical FCLK_CLK2]
 
 create_clock -period 3.703 -name vita_ser_clk [get_ports IO_PYTHON_CAM_clk_out_p]
 
-set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] -group [get_clocks clk_fpga_1] -group [get_clocks -include_generated_clocks clk_108mhz] -group [get_clocks -include_generated_clocks vita_ser_clk]
+# Define asynchronous clock domains
+set_clock_groups -asynchronous  -group [get_clocks clk_fpga_0] \
+                                -group [get_clocks clk_fpga_1] \
+                                -group [get_clocks clk_out1_embv_python1300c_fb_clk_wiz_0_0] \
+                                -group [get_clocks {n_3_serdesclockgen[0].ic}] \
+                                -group [get_clocks vita_clk]
