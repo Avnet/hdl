@@ -54,7 +54,7 @@ source ./makeip.tcl -notrace
 
 # Create Vivado project
 puts "***** Creating Vivado Project..."
-source ../Boards/$board/$board.tcl -notrace
+source ../Boards/$board/[string tolower $board].tcl -notrace
 avnet_create_project $project $projects_folder $scriptdir
 #
 remove_files -fileset constrs_1 *.xdc

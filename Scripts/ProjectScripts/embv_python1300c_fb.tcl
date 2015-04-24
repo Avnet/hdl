@@ -78,6 +78,9 @@ proc validate_core_licenses { core_list ip_report_filename } {
       } elseif {[regexp "Hardware_E" ${ip_status}]} {
          puts "| ${core_name} | VALID (Hardware Evaluation)        |"
          incr valid_cores
+      } elseif {[regexp "Purchased" ${ip_status}]} {
+         puts "| ${core_name} | VALID (Purchased)                  |"
+         incr valid_cores
       } else {
          puts "| ${core_name} | INVALID                            |"
          incr invalid_cores
@@ -101,7 +104,7 @@ source ./makeip.tcl -notrace
 
 # Create Vivado project
 puts "***** Creating Vivado Project..."
-source ../Boards/$board/$board.tcl -notrace
+source ../Boards/$board/[string tolower $board].tcl -notrace
 avnet_create_project $project $projects_folder $scriptdir
 #
 remove_files -fileset constrs_1 *.xdc
