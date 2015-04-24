@@ -56,7 +56,20 @@ set_property PACKAGE_PIN Y19 [get_ports {IO_HDMIO_data[2]}]
 set_property PACKAGE_PIN V16 [get_ports {IO_HDMIO_data[1]}]
 set_property PACKAGE_PIN W16 [get_ports {IO_HDMIO_data[0]}]
 
-create_clock -period 2.000 -name io_tcm_clk_in [get_ports io_tcm_clk_in_p]
-create_generated_clock -source [get_ports io_tcm_clk_in_p] -divide_by 5 [get_pins design_1_i/tcm_receiver_0/inst/selectio_wiz_0_inst/clk_div_out]
+######################
+#  Clock Constraints #
+######################
 
-set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] -group [get_clocks clk_fpga_1] -group [get_clocks clk_out1_design_1_clk_wiz_1_0_1] -group [get_clocks io_tcm_clk_in] -group [get_clocks design_1_i/tcm_receiver_0/inst/selectio_wiz_0_inst/clk_div_out]
+# The following constraints are already created by the "ZYNQ7 Processing System" core
+#create_clock -period 10.000 -name clk_fpga_0 [get_nets -hierarchical FCLK_CLK0]
+#create_clock -period  6.667 -name clk_fpga_1 [get_nets -hierarchical FCLK_CLK1]
+#create_clock -period  5.000 -name clk_fpga_2 [get_nets -hierarchical FCLK_CLK2]
+
+# Rename auto-generated clocks
+create_clock -period 2.000 -name io_tcm_clk_in [get_ports io_tcm_clk_in_p]
+
+# Define asynchronous clock domains
+set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] \
+                               -group [get_clocks clk_fpga_1] \
+                               -group [get_clocks clk_out1_embv_tcm_clk_wiz_1_0_1] \
+                               -group [get_clocks io_tcm_clk_out]
