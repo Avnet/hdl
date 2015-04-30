@@ -253,6 +253,12 @@ if {[string match -nocase "init" $tag]} {
 # Project Creation Cases
 # use a - for fall through expressions
 switch -nocase $board {
+   ZC702                      -
+   ZEDBOARD                   {puts "Setting Up Project $project..."
+                                 source ./ProjectScripts/$project.tcl -notrace}
+   MZ7010_FMCCC               -
+   MZ7020_FMCCC               {puts "Setting Up Project $project..."
+                                 source ./ProjectScripts/$project.tcl -notrace}
    MZ7010_EMBV                -
    MZ7020_EMBV                -
    MZ7010_IOCC                -
