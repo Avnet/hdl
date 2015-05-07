@@ -41,17 +41,17 @@
 # ----------------------------------------------------------------------------
 
 # Build FMC-IMAGEON + VITA-2000-C Getting Started design for the ZC702 board
-set argv [list board=ZC702 project=fmc_imageon_gs sdk=yes]
+set argv [list board=ZC702 project=fmc_imageon_gs sdk=yes tag=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
 # Build FMC-IMAGEON + VITA-2000-C Getting Started design for the ZedBoard
-set argv [list board=ZEDBOARD project=fmc_imageon_gs sdk=yes]
+set argv [list board=ZEDBOARD project=fmc_imageon_gs sdk=yes tag=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
 # Build FMC-IMAGEON + VITA-2000-C Getting Started design for the MicroZed-7020 + FMC Carrier Card
-set argv [list board=MZ7020_FMCCC project=fmc_imageon_gs sdk=yes]
+set argv [list board=MZ7020_FMCCC project=fmc_imageon_gs sdk=yes tag=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
