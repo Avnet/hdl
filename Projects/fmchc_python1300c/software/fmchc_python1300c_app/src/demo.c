@@ -174,10 +174,12 @@ int demo_start_cam_in( demo_t *pdemo )
 
 	xil_printf("CFA Initialization\r\n");
 	XCfa_Reset(pdemo->pcfa);
-	//XCfa_WriteReg(pdemo->pcfa, CFA_BAYER_PHASE, 0x00);
-	XCfa_SetBayerPhase(pdemo->pcfa, XCFA_RGRG_COMBINATION);
 	XCfa_RegUpdateEnable(pdemo->pcfa);
 	XCfa_Enable(pdemo->pcfa);
+
+	//XCfa_WriteReg(pdemo->pcfa, CFA_BAYER_PHASE, 0x00);
+	XCfa_SetBayerPhase(pdemo->pcfa, XCFA_RGRG_COMBINATION);
+	XCfa_SetActiveSize(pdemo->pcfa, 1280, 1024);
 
 	return 1;
 }
@@ -209,8 +211,8 @@ int demo_start_frame_buffer( demo_t *pdemo )
 	xil_printf("VDMA 1 Initialization\r\n");
 	XAxiVdma_Reset(pdemo->paxivdma1, XAXIVDMA_WRITE);
 	XAxiVdma_Reset(pdemo->paxivdma1, XAXIVDMA_READ);
-	WriteSetup(pdemo->paxivdma1, 0x18000000, 0, 1, 1, 0, 0, pdemo->hdmio_width, pdemo->hdmio_height, 2048, 2048);
-	ReadSetup(pdemo->paxivdma1, 0x18000000, 0, 1, 1, 0, 0, pdemo->hdmio_width, pdemo->hdmio_height, 2048, 2048);
+	WriteSetup(pdemo->paxivdma1, 0x18000000, 0, 1, 1, 0, 0, 1280, 1024, 2048, 2048);
+	ReadSetup(pdemo->paxivdma1, 0x18000000, 0, 1, 1, 0, 0, 1280, 1024, 2048, 2048);
 	StartTransfer(pdemo->paxivdma1);
 
 	xil_printf("OSD Initialization (hdmi=0x%02X, cam=0x%02X)\r\n", pdemo->hdmi_alpha, pdemo->cam_alpha);
@@ -229,7 +231,7 @@ int demo_start_frame_buffer( demo_t *pdemo )
 	// Layer 1 - PYTHON-1300 camera
 	XOSD_SetLayerPriority(pdemo->posd, 1, XOSD_LAYER_PRIORITY_1);
 	XOSD_SetLayerAlpha(pdemo->posd, 1, 1, pdemo->cam_alpha);
-	XOSD_SetLayerDimension(pdemo->posd, 1, 0, 0, pdemo->hdmio_width, pdemo->hdmio_height);
+	XOSD_SetLayerDimension(pdemo->posd, 1, 0, 0, 1280, 1024);
 
 	XOSD_EnableLayer(pdemo->posd, 0);
 	XOSD_EnableLayer(pdemo->posd, 1);

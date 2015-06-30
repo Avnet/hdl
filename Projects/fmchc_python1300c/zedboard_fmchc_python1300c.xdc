@@ -84,22 +84,22 @@ set_property PACKAGE_PIN M19 [get_ports IO_PYTHON_CAM_clk_out_p]
 set_property PACKAGE_PIN M20 [get_ports IO_PYTHON_CAM_clk_out_n]
 set_property PACKAGE_PIN R19 [get_ports IO_PYTHON_CAM_sync_p]
 set_property PACKAGE_PIN T19 [get_ports IO_PYTHON_CAM_sync_n]
-#set_property PACKAGE_PIN R20 [get_ports {IO_PYTHON_CAM_data_p[7]}]
-#set_property PACKAGE_PIN R21 [get_ports {IO_PYTHON_CAM_data_n[7]}]
-#set_property PACKAGE_PIN T16 [get_ports {IO_PYTHON_CAM_data_p[6]}]
-#set_property PACKAGE_PIN T17 [get_ports {IO_PYTHON_CAM_data_n[6]}]
-#set_property PACKAGE_PIN J21 [get_ports {IO_PYTHON_CAM_data_p[5]}]
-#set_property PACKAGE_PIN J22 [get_ports {IO_PYTHON_CAM_data_n[5]}]
-#set_property PACKAGE_PIN J18 [get_ports {IO_PYTHON_CAM_data_p[4]}]
-#set_property PACKAGE_PIN K18 [get_ports {IO_PYTHON_CAM_data_n[4]}]
-set_property PACKAGE_PIN M21 [get_ports {IO_PYTHON_CAM_data_p[3]}];
-set_property PACKAGE_PIN M22 [get_ports {IO_PYTHON_CAM_data_n[3]}];
-set_property PACKAGE_PIN L21 [get_ports {IO_PYTHON_CAM_data_p[2]}];
-set_property PACKAGE_PIN L22 [get_ports {IO_PYTHON_CAM_data_n[2]}];
-set_property PACKAGE_PIN N22 [get_ports {IO_PYTHON_CAM_data_p[1]}];
-set_property PACKAGE_PIN P22 [get_ports {IO_PYTHON_CAM_data_n[1]}];
-set_property PACKAGE_PIN P17 [get_ports {IO_PYTHON_CAM_data_p[0]}];
-set_property PACKAGE_PIN P18 [get_ports {IO_PYTHON_CAM_data_n[0]}];
+#set_property PACKAGE_PIN R20 [get_ports {IO_PYTHON_CAM_data_p[]}]
+#set_property PACKAGE_PIN R21 [get_ports {IO_PYTHON_CAM_data_n[]}]
+set_property PACKAGE_PIN T16 [get_ports {IO_PYTHON_CAM_data_p[3]}]
+set_property PACKAGE_PIN T17 [get_ports {IO_PYTHON_CAM_data_n[3]}]
+#set_property PACKAGE_PIN J21 [get_ports {IO_PYTHON_CAM_data_p[]}]
+#set_property PACKAGE_PIN J22 [get_ports {IO_PYTHON_CAM_data_n[]}]
+set_property PACKAGE_PIN J18 [get_ports {IO_PYTHON_CAM_data_p[2]}]
+set_property PACKAGE_PIN K18 [get_ports {IO_PYTHON_CAM_data_n[2]}]
+set_property PACKAGE_PIN M21 [get_ports {IO_PYTHON_CAM_data_p[1]}]
+set_property PACKAGE_PIN M22 [get_ports {IO_PYTHON_CAM_data_n[1]}]
+set_property PACKAGE_PIN L21 [get_ports {IO_PYTHON_CAM_data_p[0]}]
+set_property PACKAGE_PIN L22 [get_ports {IO_PYTHON_CAM_data_n[0]}]
+#set_property PACKAGE_PIN N22 [get_ports {IO_PYTHON_CAM_data_p[]}]
+#set_property PACKAGE_PIN P22 [get_ports {IO_PYTHON_CAM_data_n[]}]
+#set_property PACKAGE_PIN P17 [get_ports {IO_PYTHON_CAM_data_p[]}]
+#set_property PACKAGE_PIN P18 [get_ports {IO_PYTHON_CAM_data_n[]}]
 
 set_property IOSTANDARD LVCMOS25 [get_ports IO_PYTHON_CAM_clk_pll]
 set_property IOSTANDARD LVCMOS25 [get_ports IO_PYTHON_CAM_reset_n]
@@ -137,9 +137,9 @@ create_clock -period 2.692 -name vita_ser_clk [get_ports IO_PYTHON_CAM_clk_out_p
 
 
 # Define asynchronous clock domains
-#set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] -group [get_clocks clk_fpga_1] -group [get_clocks clk_fpga_2] -group [get_clocks -include_generated_clocks video_clk] -group [get_clocks -include_generated_clocks vita_ser_clk] -group [get_clocks hdmii_clk] 
-set_clock_groups -asynchronous  -group [get_clocks clk_fpga_0] \
-                                -group [get_clocks clk_fpga_1] \
-                                -group [get_clocks {n_3_serdesclockgen[0].ic}] \
-                                -group [get_clocks video_clk] \
-				-group [get_clocks hdmii_clk] 
+set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] \
+                               -group [get_clocks clk_fpga_1] \
+			       -group [get_clocks clk_out1_fmchc_python1300c_clk_wiz_0_0_1] \
+			       -group [get_clocks clk_out2_fmchc_python1300c_clk_wiz_0_0_1] \
+			       -group [get_clocks vita_clk_1] -group [get_clocks hdmii_clk] \
+			       -group [get_clocks {n_3_serdesclockgen[0].ic}]

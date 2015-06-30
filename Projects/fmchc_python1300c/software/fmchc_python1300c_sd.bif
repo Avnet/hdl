@@ -1,6 +1,6 @@
 the_ROM_image:
 {
-	[bootloader]fmchc_python1300c.sdk\zynq_fsbl_app\Debug\zynq_fsbl_app.elf
-	fmchc_python1300c.sdk\fmchc_python1300c_hw\fmchc_python1300c_wrapper.bit
-	fmchc_python1300c.sdk\fmchc_python1300c_app\Debug\fmchc_python1300c_app.elf
+	[bootloader]fmchc_python1300c.sdk/zynq_fsbl_app/Debug/zynq_fsbl_app.elf
+	fmchc_python1300c.sdk/fmchc_python1300c_hw/fmchc_python1300c_wrapper.bit
+	fmchc_python1300c.sdk/fmchc_python1300c_app/Debug/fmchc_python1300c_app.elf
 }
