@@ -45,7 +45,6 @@
 #define __AVNET_CONSOLE_H__
 
 #include <stdio.h>
-#include "demo.h"
 #include "xbasic_types.h"
 
 #define MAX_LINE_LENGTH             256
@@ -78,6 +77,10 @@ struct struct_avnet_console_t
 	int verbose;
 	int echo;
 	int quit;
+
+  void *user_struct;
+	// Process Command Function
+	void (*command_process_func) ( void *pInstance, int cargc, char ** cargv );
 };
 typedef struct struct_avnet_console_t avnet_console_t;
 
@@ -86,8 +89,8 @@ void avnet_console_process( avnet_console_t *pConsole );
 int web_hprintf( void *web_handle, const char * fmt, ...);
 int web_pipeprintf( void *web_handle, const char * fmt, ...);
 
-void avnet_console_iic_command( avnet_console_t *pConsole, int cargc, char ** cargv, XIicPs *pIIC );
-void avnet_console_fps_command( avnet_console_t *pConsole, int cargc, char ** cargv, XIicPs *pIIC );
-void avnet_console_ccm_command( avnet_console_t *pConsole, int cargc, char ** cargv );
+//void avnet_console_iic_command( avnet_console_t *pConsole, int cargc, char ** cargv, XIicPs *pIIC );
+//void avnet_console_fps_command( avnet_console_t *pConsole, int cargc, char ** cargv, XIicPs *pIIC );
+//void avnet_console_ccm_command( avnet_console_t *pConsole, int cargc, char ** cargv );
 
 #endif // __AVNET_CONSOLE_H__

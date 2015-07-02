@@ -392,7 +392,7 @@ print_avnet_console_serial_app_header()
 
 
 int
-start_avnet_console_serial_application()
+start_avnet_console_serial_application(void *pInstance, void *command_process_func)
 {
     // Initialize serial console
     avnet_console_init( &serial_console );
@@ -400,6 +400,8 @@ start_avnet_console_serial_application()
     serial_console.io_hprintf = serial_hprintf;
     serial_console.echo = 1; // characters are not echoed by terminal, need echo on
     serial_console.pipe = 0;
+    serial_console.user_struct = pInstance;
+    serial_console.command_process_func = command_process_func;
 
     avnet_console_serial_server_running = 1;
 
