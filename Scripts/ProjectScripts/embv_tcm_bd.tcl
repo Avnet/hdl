@@ -347,27 +347,17 @@ CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.preset {Microzed*} \
   # Create instance: v_ccm_0, and set properties
   #set v_ccm_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_ccm:6.0 v_ccm_0 ]
   set v_ccm_0 [get_bd_cells v_ccm_0]
-  set_property -dict [ list CONFIG.HAS_AXI4_LITE {true}  ] $v_ccm_0
-  # auto-propagation of data_width does not work in scripting mode, so need to explicitly set this to 10
-  set_property -dict [ list CONFIG.S_AXIS_VIDEO_DATA_WIDTH.VALUE_SRC USER CONFIG.M_AXIS_VIDEO_DATA_WIDTH.VALUE_SRC USER ] $v_ccm_0
-  set_property -dict [ list CONFIG.S_AXIS_VIDEO_DATA_WIDTH {10} CONFIG.M_AXIS_VIDEO_DATA_WIDTH {10} CONFIG.CLIP {1023} ] $v_ccm_0
+  set_property -dict [ list CONFIG.CLIP {1023} CONFIG.HAS_AXI4_LITE {true} CONFIG.M_AXIS_VIDEO_DATA_WIDTH {10} CONFIG.S_AXIS_VIDEO_DATA_WIDTH {10}  ] $v_ccm_0
 
   # Create instance: v_cfa_0, and set properties
   #set v_cfa_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cfa:7.0 v_cfa_0 ]
   set v_cfa_0 [get_bd_cells v_cfa_0]
-  set_property -dict [ list CONFIG.has_axi4_lite {true}  ] $v_cfa_0
-  # auto-propagation of data_width does not work in scripting mode, so need to explicitly set this to 10
-  set_property -dict [ list CONFIG.data_width.VALUE_SRC USER ] $v_cfa_0
-  set_property -dict [ list CONFIG.data_width {10} ] $v_cfa_0
+  set_property -dict [ list CONFIG.data_width {10} CONFIG.has_axi4_lite {true}  ] $v_cfa_0
 
   # Create instance: v_cresample_0, and set properties
   #set v_cresample_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cresample:4.0 v_cresample_0 ]
   set v_cresample_0 [get_bd_cells v_cresample_0]
-  set_property -dict [ list CONFIG.has_axi4_lite {true}  ] $v_cresample_0
-  set_property -dict [ list CONFIG.m_axis_video_format {2} CONFIG.s_axis_video_format {3}  ] $v_cresample_0
-  # auto-propagation of data_width does not work in scripting mode, so need to explicitly set this to 10
-  set_property -dict [ list CONFIG.s_axis_video_data_width.VALUE_SRC USER ] $v_cresample_0
-  set_property -dict [ list CONFIG.s_axis_video_data_width {10} ] $v_cresample_0
+  set_property -dict [ list CONFIG.has_axi4_lite {true} CONFIG.m_axis_video_format {2} CONFIG.s_axis_video_data_width {10} CONFIG.s_axis_video_format {3}  ] $v_cresample_0
 
   # Create instance: v_osd_0, and set properties
   #set v_osd_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_osd:6.0 v_osd_0 ]
@@ -377,10 +367,7 @@ CONFIG.PCW_USE_S_AXI_HP0 {1} CONFIG.preset {Microzed*} \
   # Create instance: v_rgb2ycrcb_0, and set properties
   #set v_rgb2ycrcb_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_rgb2ycrcb:7.1 v_rgb2ycrcb_0 ]
   set v_rgb2ycrcb_0 [get_bd_cells v_rgb2ycrcb_0]
-  set_property -dict [ list CONFIG.HAS_AXI4_LITE {true} ] $v_rgb2ycrcb_0  
-  # auto-propagation of data_width does not work in scripting mode, so need to explicitly set this to 10
-  set_property -dict [ list CONFIG.S_AXIS_VIDEO_DATA_WIDTH.VALUE_SRC USER ] $v_rgb2ycrcb_0
-  set_property -dict [ list CONFIG.S_AXIS_VIDEO_DATA_WIDTH {10} CONFIG.yoffset {64} CONFIG.cboffset {512} CONFIG.croffset {512} CONFIG.ymax {960} CONFIG.cbmax {960} CONFIG.crmax {960} CONFIG.ymin {64} CONFIG.cbmin {64} CONFIG.crmin {64} ] $v_rgb2ycrcb_0
+  set_property -dict [ list CONFIG.HAS_AXI4_LITE {true} CONFIG.S_AXIS_VIDEO_DATA_WIDTH {10}  ] $v_rgb2ycrcb_0
 
   # Create instance: v_tc_0, and set properties
   #set v_tc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tc:6.1 v_tc_0 ]
