@@ -51,7 +51,7 @@
 #define MAX_LINE_LENGTH             256
 #define MAX_ARGC                    16
 
-#define AVNET_CONSOLE_PROMPT          "FMC_IMAGEON_GS"
+#define AVNET_CONSOLE_PROMPT          "FMCHC_PYTHON1300C"
 
 #define AVNET_CONSOLE_MAJOR         0
 #define AVNET_CONSOLE_MINOR         1

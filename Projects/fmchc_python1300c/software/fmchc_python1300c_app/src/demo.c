@@ -38,7 +38,7 @@ int demo_init( demo_t *pdemo )
 
    xil_printf( "FMC-HDMI-CAM Initialization ...\n\r" );
 
-   status = fmc_iic_xps_init(pdemo->pfmc_hdmi_cam_iic,"FMC-HDMI-CAM I2C Controller", XPAR_FMC_IMAGEON_IIC_0_BASEADDR );
+   status = fmc_iic_xps_init(pdemo->pfmc_hdmi_cam_iic,"FMC-HDMI-CAM I2C Controller", XPAR_FMC_HDMI_CAM_IIC_0_BASEADDR );
    if ( !status )
    {
 	  xil_printf( "ERROR : Failed to open FMC-IIC driver\n\r" );
@@ -87,6 +87,11 @@ int demo_init( demo_t *pdemo )
        xil_printf( "ERROR : Failed to init HDMI Output Interface\n\r" );
        return 0;
     }
+
+    // Default HDMI input resolution
+ 	pdemo->hdmii_width = pdemo->hdmio_width;
+ 	pdemo->hdmii_height = pdemo->hdmio_height;
+
 
     return 1;
 }
@@ -147,12 +152,12 @@ int demo_start_cam_in( demo_t *pdemo )
 			XPAR_ONSEMI_PYTHON_SPI_0_S00_AXI_BASEADDR,
 			XPAR_ONSEMI_PYTHON_CAM_0_S00_AXI_BASEADDR);
 	pdemo->ppython_receiver->uManualTap = 25; // IDELAY setting (0-31)
-    xil_printf( "FMC-IMAGEON VITA SPI Config for 10MHz ...\n\r" );
+    //xil_printf( "PYTHON SPI Config for 10MHz ...\n\r" );
     // axi4lite_0_clk = 75MHz
     onsemi_python_spi_config( pdemo->ppython_receiver, (75000000/10000000) );
 
-    // PYTHON Initialization
-    xil_printf( "PYTHON Initialization ...\n\r" );
+    // PYTHON Sensor Initialization
+    xil_printf( "PYTHON Sensor Initialization ...\n\r" );
 
 	// Camera Power Sequence
 	fmc_hdmi_cam_iic_mux( pdemo->pfmc_hdmi_cam, FMC_HDMI_CAM_I2C_SELECT_CAM );
@@ -167,10 +172,10 @@ int demo_start_cam_in( demo_t *pdemo )
 	usleep(10);
 
 	onsemi_python_sensor_initialize(
-			pdemo->ppython_receiver, SENSOR_INIT_ENABLE, 0);
+			pdemo->ppython_receiver, SENSOR_INIT_ENABLE, pdemo->bVerbose);
 	onsemi_python_cam_reg_write(pdemo->ppython_receiver,
 			ONSEMI_PYTHON_CAM_SYNCGEN_HTIMING1_REG, 0x00300500);
-	onsemi_python_sensor_cds(pdemo->ppython_receiver, 0);
+	onsemi_python_sensor_cds(pdemo->ppython_receiver, pdemo->bVerbose);
 
 	xil_printf("CFA Initialization\r\n");
 	XCfa_Reset(pdemo->pcfa);
@@ -186,6 +191,51 @@ int demo_start_cam_in( demo_t *pdemo )
 
 int demo_init_frame_buffer( demo_t *pdemo )
 {
+
+   // Clear frame stores
+   if ( pdemo->bVerbose )
+   {
+	   xil_printf( "Video Frame Buffer Initialization ...\n\r" );
+   }
+   Xuint32 frame, row, col;
+   Xuint16 pixel;
+   volatile Xuint16 *pStorageMem;
+
+   // Fill HDMI frame buffer with Gray ramps
+   pStorageMem = (Xuint16 *)0x10000000;
+   volatile Xuint16 *pStorageMem2 = (Xuint16 *)0x18000000;
+   for ( frame = 0; frame < 3; frame++ )
+   {
+	  //for ( row = 0; row < pdemo->hdmio_height; row++ )
+	  for ( row = 0; row < 2048; row++ )
+	  {
+		 //for ( col = 0; col < pdemo->hdmio_width; col++ )
+		  for ( col = 0; col < 2048; col++ )
+		 {
+			pixel = 0x8000 | (col & 0x00FF); // Grey ramp
+			*pStorageMem++ = pixel;
+		 }
+	  }
+   }
+
+   // Fill Camera frame buffer with green screen
+   pStorageMem = (Xuint16 *)0x18000000;
+   for ( frame = 0; frame < 3; frame++ )
+   {
+	  //for ( row = 0; row < pdemo->hdmio_height; row++ )
+	  for ( row = 0; row < 2048; row++ )
+	  {
+		 //for ( col = 0; col < pdemo->hdmio_width; col++ )
+		  for ( col = 0; col < 2048; col++ )
+		 {
+			pixel = 0x0000; // Green
+			*pStorageMem++ = pixel;
+		 }
+	  }
+   }
+
+   // Wait for DMA to synchronize
+   Xil_DCacheFlush();
 
 	return 1;
 }

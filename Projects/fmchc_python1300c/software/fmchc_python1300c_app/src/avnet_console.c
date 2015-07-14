@@ -187,12 +187,15 @@ void avnet_console_help( avnet_console_t *pConsole )
 {
   pConsole->io_hprintf( pConsole->io_handle, "\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "------------------------------------------------------\n\r");
-  pConsole->io_hprintf( pConsole->io_handle, "--                    FMC-IMAGEON                   --\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "--                    FMC-HDMI-CAM                  --\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "--               Getting Started Design             --\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "------------------------------------------------------\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "General Commands:\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "\thelp        Print the Top-Level menu Help Screen \n\r");
-  pConsole->io_hprintf( pConsole->io_handle, "\tstart       start and select video source (hdmi|vita)\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "\tverbose on  Enable verbose\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "\tverbose off Disable verbose\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "Getting Started Commands\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "\tstart       start and select video source (hdmi|cam)\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "---------------------------------------------\n\r");
 
@@ -373,14 +376,20 @@ void avnet_console_start_command( avnet_console_t *pConsole, int cargc, char ** 
    {
       if ( !strcmp(cargv[1],"hdmi") )
       {
+         demo_stop_frame_buffer(pdemo);
+         demo_init_frame_buffer(pdemo);
+
          pdemo->cam_alpha = 0x00;
          pdemo->hdmi_alpha = 0xFF;
          demo_start_hdmi_in(pdemo);
 
          demo_start_frame_buffer(pdemo);
       }
-      else if ( !strcmp(cargv[1],"vita") )
+      else if ( !strcmp(cargv[1],"cam") )
       {
+         demo_stop_frame_buffer(pdemo);
+         demo_init_frame_buffer(pdemo);
+
          pdemo->cam_alpha = 0xFF;
          pdemo->hdmi_alpha = 0x00;
          demo_start_cam_in(pdemo);
@@ -392,7 +401,7 @@ void avnet_console_start_command( avnet_console_t *pConsole, int cargc, char ** 
    if ( bDispSyntax )
    {
       pConsole->io_hprintf( pConsole->io_handle, "\tSyntax :\r\n" );
-      pConsole->io_hprintf( pConsole->io_handle, "\t\tstart vita  => Start VITA video source\r\n" );
+      pConsole->io_hprintf( pConsole->io_handle, "\t\tstart cam   => Start VITA video source\r\n" );
       pConsole->io_hprintf( pConsole->io_handle, "\t\tstart hdmi  => Start HDMI video source\r\n" );
    }
 

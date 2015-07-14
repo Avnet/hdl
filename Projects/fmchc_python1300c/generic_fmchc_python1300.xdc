@@ -3,20 +3,20 @@
 ########################
 
 # I2C Chain on FMC-HDMI-CAM
-set_property PACKAGE_PIN FMC{LA16_P} [get_ports fmc_imageon_iic_scl_io]
-set_property IOSTANDARD LVCMOS25 [get_ports fmc_imageon_iic_scl_io]
-set_property SLEW SLOW [get_ports fmc_imageon_iic_scl_io]
-set_property DRIVE 8 [get_ports fmc_imageon_iic_scl_io]
+set_property PACKAGE_PIN FMC{LA16_P} [get_ports fmc_hdmi_cam_iic_scl_io]
+set_property IOSTANDARD LVCMOS25 [get_ports fmc_hdmi_cam_iic_scl_io]
+set_property SLEW SLOW [get_ports fmc_hdmi_cam_iic_scl_io]
+set_property DRIVE 8 [get_ports fmc_hdmi_cam_iic_scl_io]
 
-set_property PACKAGE_PIN FMC{LA16_N} [get_ports fmc_imageon_iic_sda_io]
-set_property IOSTANDARD LVCMOS25 [get_ports fmc_imageon_iic_sda_io]
-set_property SLEW SLOW [get_ports fmc_imageon_iic_sda_io]
-set_property DRIVE 8 [get_ports fmc_imageon_iic_sda_io]
+set_property PACKAGE_PIN FMC{LA16_N} [get_ports fmc_hdmi_cam_iic_sda_io]
+set_property IOSTANDARD LVCMOS25 [get_ports fmc_hdmi_cam_iic_sda_io]
+set_property SLEW SLOW [get_ports fmc_hdmi_cam_iic_sda_io]
+set_property DRIVE 8 [get_ports fmc_hdmi_cam_iic_sda_io]
 
-set_property PACKAGE_PIN FMC{LA01_CC_N} [get_ports {fmc_imageon_iic_rst_n[0]}]
-set_property IOSTANDARD LVCMOS25 [get_ports {fmc_imageon_iic_rst_n[0]}]
-set_property SLEW SLOW [get_ports {fmc_imageon_iic_rst_n[0]}]
-set_property DRIVE 8 [get_ports {fmc_imageon_iic_rst_n[0]}]
+set_property PACKAGE_PIN FMC{LA01_CC_N} [get_ports {fmc_hdmi_cam_iic_rst_n[0]}]
+set_property IOSTANDARD LVCMOS25 [get_ports {fmc_hdmi_cam_iic_rst_n[0]}]
+set_property SLEW SLOW [get_ports {fmc_hdmi_cam_iic_rst_n[0]}]
+set_property DRIVE 8 [get_ports {fmc_hdmi_cam_iic_rst_n[0]}]
 
 # HDMI Input (ADV7611) on FMC-HDMI-CAM
 set_property PACKAGE_PIN FMC{CLK1_M2C_P or CLK0_C2M_P?} [get_ports IO_HDMII_clk]
@@ -117,8 +117,8 @@ set_property DIFF_TERM true [get_ports IO_PYTHON_CAM_data_*]
 
 
 # Video Clock Synthesizer on FMC-HDMI-CAM
-set_property PACKAGE_PIN FMC{CLK0_M2C_P} [get_ports fmc_imageon_vclk]
-set_property IOSTANDARD LVCMOS25 [get_ports fmc_imageon_vclk]
+set_property PACKAGE_PIN FMC{CLK0_M2C_P} [get_ports fmc_hdmi_cam_vclk]
+set_property IOSTANDARD LVCMOS25 [get_ports fmc_hdmi_cam_vclk]
 
 ######################
 #  Clock Constraints #
@@ -129,7 +129,7 @@ set_property IOSTANDARD LVCMOS25 [get_ports fmc_imageon_vclk]
 #create_clock -period  6.667 -name clk_fpga_1 [get_nets -hierarchical FCLK_CLK1]
 #create_clock -period  5.000 -name clk_fpga_2 [get_nets -hierarchical FCLK_CLK2]
 
-create_clock -period 6.730 -name video_clk [get_ports fmc_imageon_vclk]
+create_clock -period 6.730 -name video_clk [get_ports fmc_hdmi_cam_vclk]
 
 create_clock -period 6.730 -name hdmii_clk [get_ports IO_HDMII_clk]
 
@@ -137,9 +137,10 @@ create_clock -period 2.692 -name vita_ser_clk [get_ports IO_PYTHON_CAM_clk_out_p
 
 
 # Define asynchronous clock domains
-#set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] -group [get_clocks clk_fpga_1] -group [get_clocks clk_fpga_2] -group [get_clocks -include_generated_clocks video_clk] -group [get_clocks -include_generated_clocks vita_ser_clk] -group [get_clocks hdmii_clk] 
-set_clock_groups -asynchronous  -group [get_clocks clk_fpga_0] \
-                                -group [get_clocks clk_fpga_1] \
-                                -group [get_clocks {n_3_serdesclockgen[0].ic}] \
-                                -group [get_clocks video_clk] \
-				-group [get_clocks hdmii_clk] 
+set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] \
+                               -group [get_clocks clk_fpga_1] \
+			       -group [get_clocks clk_out1_fmchc_python1300c_clk_wiz_0_0_1] \
+			       -group [get_clocks clk_out2_fmchc_python1300c_clk_wiz_0_0_1] \
+			       -group [get_clocks vita_clk_1] \
+			       -group [get_clocks hdmii_clk] \
+			       -group [get_clocks {n_3_serdesclockgen[0].ic}]

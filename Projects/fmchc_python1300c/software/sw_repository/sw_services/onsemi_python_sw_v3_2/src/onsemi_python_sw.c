@@ -73,7 +73,8 @@
 //                                         - onsemi_vita_spi
 //                                         - onsemi_vita_cam
 //                      Feb 23, 2015: 3.1  Add core_version/core_id registers
-//
+//                      Jul 09, 2015: 3.2  Change sensor's sample point to fix
+//                                         sampling issue (intermittent across different hw)
 //----------------------------------------------------------------
 
 /***************************** Include Files *******************************/
@@ -239,7 +240,8 @@ Xuint16 vita_spi_seq1[VITA_SPI_SEQ1_QTY][3] =
    // Enable Clock Management - Part 1
    //    V1/SN/SE 10-bit mode with PLL
    {  2, 0xFFFF, 0x0001}, // Color Sensor
-   { 32, 0xFFFF, 0x2004}, // Configure clock management
+   { 32, 0xFFFF, 0x3004}, // Configure clock management
+                          //  [14:12] sample point = 3
    { 20, 0xFFFF, 0x0000}, // Configure clock management
    { 17, 0xFFFF, 0x2113}, // Configure PLL
    { 26, 0xFFFF, 0x2280}, // Configure PLL lock detector
@@ -254,7 +256,8 @@ Xuint16 vita_spi_seq3[VITA_SPI_SEQ3_QTY][3] =
    // Enable Clock Management - Part 2
    //    V1/SN/SE 10-bit mode with PLL
    {  9, 0xFFFF, 0x0000}, // Release clock generator soft reset
-   { 32, 0xFFFF, 0x2006}, // Enable logic clock
+   { 32, 0xFFFF, 0x3006}, // Enable logic clock
+                          //  [14:12] sample point = 3
    { 34, 0xFFFF, 0x0001}  // Enable logic blocks
 };
 
@@ -295,7 +298,8 @@ Xuint16 vita_spi_seq5[VITA_SPI_SEQ5_QTY][3] =
 {
    // Soft Power-Up
    //    V1/SN/SE 10-bit mode with PLL
-   {  32, 0xFFFF, 0x2007}, // Enable analog clock distribution
+   {  32, 0xFFFF, 0x3007}, // Enable analog clock distribution
+                          //  [14:12] sample point = 3
    {  10, 0xFFFF, 0x0000}, // Release soft reset state
    {  64, 0xFFFF, 0x0001}, // Enable biasing block
    {  72, 0xFFFF, 0x2227}, // Enable charge pump
@@ -347,7 +351,8 @@ Xuint16 vita_spi_seq9[VITA_SPI_SEQ9_QTY][3] =
    // Disable Clock Management - Part 2
    //    V1/SN/SE 10-bit mode with PLL
    { 34, 0xFFFF, 0x0000}, // Disable logic blocks
-   { 32, 0xFFFF, 0x2004}, // Disable logic clock
+   { 32, 0xFFFF, 0x3004}, // Disable logic clock
+                          //  [14:12] sample point = 3   
    {  9, 0xFFFF, 0x0009}  // Soft reset clock generator
 };
 

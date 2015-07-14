@@ -46,13 +46,13 @@
 #source ./make.tcl -notrace
 
 # Build FMC-HDMI-CAM + PYTHON-1300-C Getting Started design for the ZedBoard
-set argv [list board=ZEDBOARD project=fmchc_python1300c sdk=yes]
-set argc [llength $argv]
-source ./make.tcl -notrace
-
-# Build FMC-HDMI-CAM + PYTHON-1300-C Getting Started design for the MicroZed-7020 + FMC Carrier Card
-#set argv [list board=MZ7020_FMCCC project=fmchc_python1300c sdk=yes]
+#set argv [list board=ZEDBOARD project=fmchc_python1300c sdk=yes]
 #set argc [llength $argv]
 #source ./make.tcl -notrace
+
+# Build FMC-HDMI-CAM + PYTHON-1300-C Getting Started design for the MicroZed-7020 + FMC Carrier Card
+set argv [list board=MZ7020_FMCCC project=fmchc_python1300c sdk=yes]
+set argc [llength $argv]
+source ./make.tcl -notrace
 
 

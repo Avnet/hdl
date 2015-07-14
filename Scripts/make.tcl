@@ -268,6 +268,8 @@ switch -nocase $board {
    MZ7010_IOCC                -
    MZ7020_IOCC                {puts "Setting Up Project $project..."
                                  source ./ProjectScripts/$project.tcl -notrace}
+   PZSDR7035_FMCCC            {puts "Setting Up Project $project..."
+                                 source ./ProjectScripts/$project.tcl -notrace}
    default                    {puts "Error in Selecting Board!"
                                  puts "Boards are defined in [file normalize [pwd]/../Boards]"
                                  return -code ok}
