@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+	[bootloader]pzsdr_python1300c.sdk\zynq_fsbl_app\Debug\zynq_fsbl_app.elf
+	pzsdr_python1300c.sdk\pzsdr_python1300c_hw\pzsdr_python1300c_wrapper.bit
+	pzsdr_python1300c.sdk\pzsdr_python1300c_app\Debug\pzsdr_python1300c_app.elf
+}
