@@ -46,9 +46,8 @@ create_project -type app -name ${app_name} -hwproject ${hw_name} -proc ps7_corte
 puts "\n#\n#\n# Creating ${bsp_name} ...\n#\n#\n"
 param_name ${project}.sdk/${bsp_name}/system.mss "system"
 open_sw_design ${project}.sdk/${bsp_name}/system.mss
-# Add FMC_HDMI_CAM_SW library
+# Add FMC_IIC_SW library
 add_library fmc_iic_sw
-add_library fmc_hdmi_cam_sw
 # Add ONSEMI_PYTHON_SW library
 add_library onsemi_python_sw
 #
