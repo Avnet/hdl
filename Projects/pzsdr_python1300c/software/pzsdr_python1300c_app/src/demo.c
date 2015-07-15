@@ -86,7 +86,7 @@ int demo_start_cam_in( demo_t *pdemo )
 			XPAR_ONSEMI_PYTHON_SPI_0_S00_AXI_BASEADDR,
 			XPAR_ONSEMI_PYTHON_CAM_0_S00_AXI_BASEADDR);
 	pdemo->ppython_receiver->uManualTap = pdemo->uManualTap; // IDELAY setting (0-31)
-    xil_printf( "FMC-IMAGEON VITA SPI Config for 10MHz ...\n\r" );
+    xil_printf( "PYTHON SPI Config for 10MHz ...\n\r" );
     // axi4lite_0_clk = 75MHz
     onsemi_python_spi_config( pdemo->ppython_receiver, (75000000/10000000) );
 
