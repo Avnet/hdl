@@ -401,7 +401,7 @@ void avnet_console_start_command( avnet_console_t *pConsole, int cargc, char ** 
    if ( bDispSyntax )
    {
       pConsole->io_hprintf( pConsole->io_handle, "\tSyntax :\r\n" );
-      pConsole->io_hprintf( pConsole->io_handle, "\t\tstart cam   => Start VITA video source\r\n" );
+      pConsole->io_hprintf( pConsole->io_handle, "\t\tstart cam   => Start CAM  video source\r\n" );
       pConsole->io_hprintf( pConsole->io_handle, "\t\tstart hdmi  => Start HDMI video source\r\n" );
    }
 
