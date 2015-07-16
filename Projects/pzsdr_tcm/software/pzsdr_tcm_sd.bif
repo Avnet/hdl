@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+	[bootloader]pzsdr_tcm.sdk\zynq_fsbl_app\Debug\zynq_fsbl_app.elf
+	pzsdr_tcm.sdk\pzsdr_tcm_hw\pzsdr_tcm_wrapper.bit
+	pzsdr_tcm.sdk\pzsdr_tcm_app\Debug\pzsdr_tcm_app.elf
+}
