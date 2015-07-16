@@ -200,9 +200,11 @@ void avnet_console_process( avnet_console_t *pConsole )
 void avnet_console_help( avnet_console_t *pConsole )
 {
   pConsole->io_hprintf( pConsole->io_handle, "\n\r");
-  pConsole->io_hprintf( pConsole->io_handle, "---------------------------------------------\n\r");
-  pConsole->io_hprintf( pConsole->io_handle, "--     Toshiba TCM3232PB on Avnet EMBV     --\n\r");
-  pConsole->io_hprintf( pConsole->io_handle, "---------------------------------------------\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "------------------------------------------------------\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "--         PicoZed SDR SOM + FMC Carrier Card       --\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "--                     TCM3232PB                    --\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "--               Getting Started Design             --\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "------------------------------------------------------\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "General Commands:\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "\thelp        Print the Top-Level menu Help Screen \n\r");
   pConsole->io_hprintf( pConsole->io_handle, "\tiic         IIC control to Toshiba sensor \n\r");

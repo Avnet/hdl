@@ -51,7 +51,7 @@
 #define MAX_LINE_LENGTH             256
 #define MAX_ARGC                    16
 
-#define AVNET_CONSOLE_PROMPT          "EMBV"
+#define AVNET_CONSOLE_PROMPT          "PZSDR_TCM"
 
 #define AVNET_CONSOLE_MAJOR         0
 #define AVNET_CONSOLE_MINOR         1
