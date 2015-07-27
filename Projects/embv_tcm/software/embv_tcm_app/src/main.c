@@ -284,7 +284,7 @@ void avnet_config_1080p15_video(demo_t *pInstance) {
 	/* TCM Initialization */
 	tca9548_i2c_mux_select(pInstance->piicps, EMBV_IIC_MUX_CAM);
 //	tcm5117pl_get_chip_id(pInstance->piicps);
-	tcm5117pl_init(pInstance->piicps, TCM5117PL_VGAP60);
+	tcm5117pl_init(pInstance->piicps, TCM5117PL_1080P15);
 
 	/* CFA */
 	XCfa_Reset(pInstance->pcfa);
@@ -382,7 +382,7 @@ void avnet_config_1080p30_video(demo_t *pInstance) {
 	/* TCM Initialization */
 	tca9548_i2c_mux_select(pInstance->piicps, EMBV_IIC_MUX_CAM);
 //	tcm5117pl_get_chip_id(pInstance->piicps);
-	tcm5117pl_init(pInstance->piicps, TCM5117PL_VGAP60);
+	tcm5117pl_init(pInstance->piicps, TCM5117PL_1080P30);
 
 	/* CFA */
 	XCfa_Reset(pInstance->pcfa);
@@ -480,7 +480,7 @@ void avnet_config_1080p60_video(demo_t *pInstance) {
 	/* TCM Initialization */
 	tca9548_i2c_mux_select(pInstance->piicps, EMBV_IIC_MUX_CAM);
 //	tcm5117pl_get_chip_id(pInstance->piicps);
-	tcm5117pl_init(pInstance->piicps, TCM5117PL_VGAP60);
+	tcm5117pl_init(pInstance->piicps, TCM5117PL_1080P60);
 
 	/* CFA */
 	XCfa_Reset(pInstance->pcfa);

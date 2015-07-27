@@ -190,7 +190,7 @@ set version [version -short]
 if {[string match -nocase "yes" $version_override]} {
    puts "Overriding Version Check, Please Check the Design for Validity!"
 } else {
-   if {[expr $version == $required_version]} {
+   if {[string first $version $required_version]} {
       puts "Version of Vivado acceptable, continuing..."
    } else {
       puts "Version $version of Vivado not acceptable, please run with Vivado $required_version to continue"

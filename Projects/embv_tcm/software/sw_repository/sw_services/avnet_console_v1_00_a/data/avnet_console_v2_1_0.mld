@@ -2,6 +2,7 @@ OPTION psf_version = 2.1.0;
 
 BEGIN LIBRARY avnet_console
 
+  OPTION version = 1.00.a;
   OPTION desc = "Avnet Console Services";
   OPTION copyfiles = all;
 

@@ -235,7 +235,7 @@
     .C_PIXEL_WIDTH          ( C_PIXEL_WIDTH                       ) ,
     .C_AXIS_DATA_WIDTH      ( C_AXIS_DATA_WIDTH                   )
   ) tcm_receiver_axis_intf_inst (
-    .reset                  ( reset                               ),
+    .reset                  ( tcm_reset                           ),
     .clk                    ( aclk                                ),
 
     .empty0                 ( tcm_fifo_empty_p0                   ),

@@ -10,6 +10,10 @@
 #define IIC_TCA9548_SADR   0x70
 
 void tca9548_i2c_mux_select(XIicPs *pInstance, u8 i2c_select) {
+	char status;
+
 	XIicPs_Write(pInstance, IIC_TCA9548_SADR, i2c_select, NULL, 0);
 	usleep(10000);
 }
+
+

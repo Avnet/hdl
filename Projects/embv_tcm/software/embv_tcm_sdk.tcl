@@ -48,8 +48,10 @@ param_name ${project}.sdk/${bsp_name}/system.mss "system"
 open_sw_design ${project}.sdk/${bsp_name}/system.mss
 # Use version 2.2 of IICPS driver (for repeated start feature)
 set_property VERSION 2.2 [hsi::get_drivers ps7_i2c_0]
-# Add AVNET_CONSOLE library
-add_library avnet_console
+set_property VERSION 7.1 [hsi::get_drivers v_rgb2ycrcb_0]
+# Add avnet_console sw_services
+hsi::add_library -sw system avnet_console
+
 #
 generate_bsp -compile -sw [current_sw_design] -dir ${project}.sdk/${bsp_name}
 close_sw_design [current_sw_design]
