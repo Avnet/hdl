@@ -40,6 +40,8 @@
 ## Dependencies:        
 ##
 ## Revision:            Mar 11, 2015: 3.1  Update contents based on 2014.4 examples
+##                      Jul 09, 2015: 3.2  Change sensor's sample point to fix
+##                                         sampling issue (intermittent across different hw)
 ##----------------------------------------------------------------
 
 

@@ -65,6 +65,8 @@
 ##                       Jan 28, 2015: 3.01 fmc_imageon_vita_receiver driver
 ##                                          changed to onsemi_vita_sw library.
 ##                       Mar 11, 2015: 3.1  Update contents based on 2014.4 examples
+##                       Jul 09, 2015: 3.2  Change sensor's sample point to fix
+##                                          sampling issue (intermittent across different hw)
 ##----------------------------------------------------------------
 
 OPTION psf_version = 2.1;
@@ -75,7 +77,7 @@ BEGIN LIBRARY onsemi_python_sw
   OPTION SUPPORTED_PERIPHERALS = (onsemi_vita_cam onsemi_vita_spi);
 # OPTION APP_LINKER_FLAGS = "-Wl,--start-group,-lonsemi_python_sw,-lxil,-lgcc,-lc,--end-group";
   OPTION desc = "ON Semiconductor PYTHON Camera Receiver Library ";
-  OPTION VERSION = 3.1;
+  OPTION VERSION = 3.2;
   OPTION NAME = onsemi_python_sw;
 END LIBRARY
 

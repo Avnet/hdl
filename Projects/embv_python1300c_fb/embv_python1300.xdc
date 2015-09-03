@@ -87,11 +87,11 @@ set_property IOSTANDARD LVCMOS25 [get_ports IO_PYTHON_CAM_clk_pll]
 set_property IOSTANDARD LVCMOS25 [get_ports IO_PYTHON_SPI_spi_miso]
 set_property IOSTANDARD LVDS_25 [get_ports IO_PYTHON_CAM_clk_out_*]
 set_property IOSTANDARD LVDS_25 [get_ports IO_PYTHON_CAM_sync_*]
-set_property IOSTANDARD LVDS_25 [get_ports {IO_PYTHON_CAM_data_*]
+set_property IOSTANDARD LVDS_25 [get_ports IO_PYTHON_CAM_data_*]
 
 set_property DIFF_TERM TRUE [get_ports IO_PYTHON_CAM_clk_out_*]
 set_property DIFF_TERM TRUE [get_ports IO_PYTHON_CAM_sync_*]
-set_property DIFF_TERM TRUE [get_ports {IO_PYTHON_CAM_data_*}]
+set_property DIFF_TERM TRUE [get_ports IO_PYTHON_CAM_data_*]
 
 
 ######################
