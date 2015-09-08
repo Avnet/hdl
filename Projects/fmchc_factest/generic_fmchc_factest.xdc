@@ -80,26 +80,26 @@ set_property PACKAGE_PIN FMC{LA12_P} [get_ports IO_PYTHON_SPI_spi_sclk]
 set_property PACKAGE_PIN FMC{LA12_N} [get_ports IO_PYTHON_SPI_spi_ssel_n]
 set_property PACKAGE_PIN FMC{LA11_P} [get_ports IO_PYTHON_SPI_spi_mosi]
 set_property PACKAGE_PIN FMC{LA11_N} [get_ports IO_PYTHON_SPI_spi_miso]
-set_property PACKAGE_PIN FMC{LA00_CC_P} [get_ports IO_PYTHON_CAM_clk_out_p]
-set_property PACKAGE_PIN FMC{LA00_CC_N} [get_ports IO_PYTHON_CAM_clk_out_n]
-set_property PACKAGE_PIN FMC{LA10_P} [get_ports IO_PYTHON_CAM_sync_p]
-set_property PACKAGE_PIN FMC{LA10_N} [get_ports IO_PYTHON_CAM_sync_n]
-#set_property PACKAGE_PIN FMC{LA09_P} [get_ports {IO_PYTHON_CAM_data_p[]}]
-#set_property PACKAGE_PIN FMC{LA09_N} [get_ports {IO_PYTHON_CAM_data_n[]}]
-set_property PACKAGE_PIN FMC{LA07_P} [get_ports {IO_PYTHON_CAM_data_p[3]}]
-set_property PACKAGE_PIN FMC{LA07_N} [get_ports {IO_PYTHON_CAM_data_n[3]}]
-#set_property PACKAGE_PIN FMC{LA08_P} [get_ports {IO_PYTHON_CAM_data_p[]}]
-#set_property PACKAGE_PIN FMC{LA08_N} [get_ports {IO_PYTHON_CAM_data_n[]}]
-set_property PACKAGE_PIN FMC{LA05_P} [get_ports {IO_PYTHON_CAM_data_p[2]}]
-set_property PACKAGE_PIN FMC{LA05_N} [get_ports {IO_PYTHON_CAM_data_n[2]}]
-set_property PACKAGE_PIN FMC{LA04_P} [get_ports {IO_PYTHON_CAM_data_p[1]}]
-set_property PACKAGE_PIN FMC{LA04_N} [get_ports {IO_PYTHON_CAM_data_n[1]}]
-set_property PACKAGE_PIN FMC{LA06_P} [get_ports {IO_PYTHON_CAM_data_p[0]}]
-set_property PACKAGE_PIN FMC{LA06_N} [get_ports {IO_PYTHON_CAM_data_n[0]}]
-#set_property PACKAGE_PIN FMC{LA03_P} [get_ports {IO_PYTHON_CAM_data_p[]}]
-#set_property PACKAGE_PIN FMC{LA03_N} [get_ports {IO_PYTHON_CAM_data_n[]}]
-#set_property PACKAGE_PIN FMC{LA02_P} [get_ports {IO_PYTHON_CAM_data_p[]}]
-#set_property PACKAGE_PIN FMC{LA02_N} [get_ports {IO_PYTHON_CAM_data_n[]}]
+set_property PACKAGE_PIN FMC{LA00_CC_P} [get_ports IO_PYTHON_CAM_clk_out_p]; CAM_CLK_P
+set_property PACKAGE_PIN FMC{LA00_CC_N} [get_ports IO_PYTHON_CAM_clk_out_n]; CAM_CLK_N
+set_property PACKAGE_PIN FMC{LA10_P} [get_ports IO_PYTHON_CAM_sync_p]; CAM_SYNC_P
+set_property PACKAGE_PIN FMC{LA10_N} [get_ports IO_PYTHON_CAM_sync_n]; CAM_SYNC_N
+#set_property PACKAGE_PIN FMC{LA09_P} [get_ports {IO_PYTHON_CAM_data_p[]}]; CAM_DATA7_P
+#set_property PACKAGE_PIN FMC{LA09_N} [get_ports {IO_PYTHON_CAM_data_n[]}]; CAM_DATA7_N
+#set_property PACKAGE_PIN FMC{LA08_P} [get_ports {IO_PYTHON_CAM_data_p[]}]; CAM_DATA6_P
+#set_property PACKAGE_PIN FMC{LA08_N} [get_ports {IO_PYTHON_CAM_data_n[]}]; CAM_DATA6_N
+set_property PACKAGE_PIN FMC{LA07_P} [get_ports {IO_PYTHON_CAM_data_p[3]}]; CAM_DATA5_P
+set_property PACKAGE_PIN FMC{LA07_N} [get_ports {IO_PYTHON_CAM_data_n[3]}]; CAM_DATA5_N
+set_property PACKAGE_PIN FMC{LA05_P} [get_ports {IO_PYTHON_CAM_data_p[2]}]; CAM_DATA4_P
+set_property PACKAGE_PIN FMC{LA05_N} [get_ports {IO_PYTHON_CAM_data_n[2]}]; CAM_DATA4_N
+set_property PACKAGE_PIN FMC{LA04_P} [get_ports {IO_PYTHON_CAM_data_p[1]}]; CAM_DATA3_P
+set_property PACKAGE_PIN FMC{LA04_N} [get_ports {IO_PYTHON_CAM_data_n[1]}]; CAM_DATA3_N
+set_property PACKAGE_PIN FMC{LA06_P} [get_ports {IO_PYTHON_CAM_data_p[0]}]; CAM_DATA2_P
+set_property PACKAGE_PIN FMC{LA06_N} [get_ports {IO_PYTHON_CAM_data_n[0]}]; CAM_DATA2_N
+#set_property PACKAGE_PIN FMC{LA03_P} [get_ports {IO_PYTHON_CAM_data_p[]}]; CAM_DATA1_P
+#set_property PACKAGE_PIN FMC{LA03_N} [get_ports {IO_PYTHON_CAM_data_n[]}]; CAM_DATA1_N
+#set_property PACKAGE_PIN FMC{LA02_P} [get_ports {IO_PYTHON_CAM_data_p[]}]; CAM_DATA0_P
+#set_property PACKAGE_PIN FMC{LA02_N} [get_ports {IO_PYTHON_CAM_data_n[]}]; CAM_DATA0_N
 
 set_property IOSTANDARD LVCMOS25 [get_ports IO_PYTHON_CAM_clk_pll]
 set_property IOSTANDARD LVCMOS25 [get_ports IO_PYTHON_CAM_reset_n]
@@ -133,13 +133,14 @@ create_clock -period 6.730 -name video_clk [get_ports fmc_hdmi_cam_vclk]
 
 create_clock -period 6.730 -name hdmii_clk [get_ports IO_HDMII_clk]
 
-create_clock -period 2.692 -name vita_ser_clk [get_ports IO_PYTHON_CAM_clk_out_p]
+create_clock -period 3.703 -name vita_ser_clk [get_ports IO_PYTHON_CAM_clk_out_p]
 
 
 # Define asynchronous clock domains
-#set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] -group [get_clocks clk_fpga_1] -group [get_clocks clk_fpga_2] -group [get_clocks -include_generated_clocks video_clk] -group [get_clocks -include_generated_clocks vita_ser_clk] -group [get_clocks hdmii_clk] 
-set_clock_groups -asynchronous  -group [get_clocks clk_fpga_0] \
-                                -group [get_clocks clk_fpga_1] \
-                                -group [get_clocks {n_3_serdesclockgen[0].ic}] \
-                                -group [get_clocks video_clk] \
-				-group [get_clocks hdmii_clk] 
+set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] \
+                               -group [get_clocks clk_fpga_1] \
+			       -group [get_clocks clk_out1_fmchc_factest_clk_wiz_0_0_1] \
+			       -group [get_clocks clk_out2_fmchc_factest_clk_wiz_0_0_1] \
+			       -group [get_clocks vita_clk_1] \
+			       -group [get_clocks hdmii_clk] \
+			       -group [get_clocks {n_3_serdesclockgen[0].ic}]
