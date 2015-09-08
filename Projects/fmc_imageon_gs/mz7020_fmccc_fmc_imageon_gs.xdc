@@ -137,9 +137,9 @@ create_clock -period 2.692 -name vita_ser_clk [get_ports IO_VITA_CAM_clk_out_p]
 
 
 # Define asynchronous clock domains
-#set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] -group [get_clocks clk_fpga_1] -group [get_clocks clk_fpga_2] -group [get_clocks -include_generated_clocks video_clk] -group [get_clocks -include_generated_clocks vita_ser_clk] -group [get_clocks hdmii_clk] 
 set_clock_groups -asynchronous  -group [get_clocks clk_fpga_0] \
                                 -group [get_clocks clk_fpga_1] \
                                 -group [get_clocks {n_3_serdesclockgen[0].ic}] \
                                 -group [get_clocks video_clk] \
-				-group [get_clocks hdmii_clk] 
+                                -group [get_clocks vita_clk] \
+                                -group [get_clocks hdmii_clk] 
