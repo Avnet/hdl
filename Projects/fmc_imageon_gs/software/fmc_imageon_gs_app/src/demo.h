@@ -41,7 +41,7 @@ typedef struct {
     Xuint32 hdmio_height;
     fmc_imageon_video_timing_t hdmio_timing;
 
-	u8 vita_alpha;
+	u8 cam_alpha;
 	u8 hdmi_alpha;
 
     int bVerbose;
@@ -51,7 +51,7 @@ extern Xuint8 fmc_imageon_hdmii_edid_content[256];
 
 int demo_init( demo_t *pdemo );
 int demo_start_hdmi_in( demo_t *pdemo );
-int demo_start_vita_in( demo_t *pdemo );
+int demo_start_cam_in( demo_t *pdemo );
 int demo_init_frame_buffer( demo_t *pdemo );
 int demo_stop_frame_buffer( demo_t *pdemo );
 int demo_start_frame_buffer( demo_t *pdemo );

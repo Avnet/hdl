@@ -13,7 +13,7 @@ int demo_init( demo_t *pdemo )
 	pdemo->pfmc_imageon = &(pdemo->fmc_imageon);
 	pdemo->pvita_receiver = &(pdemo->vita_receiver);
 
-	pdemo->vita_alpha = 0xFF;
+	pdemo->cam_alpha = 0xFF;
 	pdemo->hdmi_alpha = 0x00;
 
 	pdemo->bVerbose = 0;
@@ -137,7 +137,7 @@ int demo_start_hdmi_in( demo_t *pdemo )
 	return 0;
 }
 
-int demo_start_vita_in( demo_t *pdemo )
+int demo_start_cam_in( demo_t *pdemo )
 {
 	int status;
 
@@ -200,6 +200,51 @@ int demo_start_vita_in( demo_t *pdemo )
 int demo_init_frame_buffer( demo_t *pdemo )
 {
 
+   // Clear frame stores
+   if ( pdemo->bVerbose )
+   {
+	   xil_printf( "Video Frame Buffer Initialization ...\n\r" );
+   }
+   Xuint32 frame, row, col;
+   Xuint16 pixel;
+   volatile Xuint16 *pStorageMem;
+
+   // Fill HDMI frame buffer with Gray ramps
+   pStorageMem = (Xuint16 *)0x10000000;
+   volatile Xuint16 *pStorageMem2 = (Xuint16 *)0x18000000;
+   for ( frame = 0; frame < 3; frame++ )
+   {
+	  //for ( row = 0; row < pdemo->hdmio_height; row++ )
+	  for ( row = 0; row < 2048; row++ )
+	  {
+		 //for ( col = 0; col < pdemo->hdmio_width; col++ )
+		  for ( col = 0; col < 2048; col++ )
+		 {
+			pixel = 0x8000 | (col & 0x00FF); // Grey ramp
+			*pStorageMem++ = pixel;
+		 }
+	  }
+   }
+
+   // Fill Camera frame buffer with green screen
+   pStorageMem = (Xuint16 *)0x18000000;
+   for ( frame = 0; frame < 3; frame++ )
+   {
+	  //for ( row = 0; row < pdemo->hdmio_height; row++ )
+	  for ( row = 0; row < 2048; row++ )
+	  {
+		 //for ( col = 0; col < pdemo->hdmio_width; col++ )
+		  for ( col = 0; col < 2048; col++ )
+		 {
+			pixel = 0x0000; // Green
+			*pStorageMem++ = pixel;
+		 }
+	  }
+   }
+
+   // Wait for DMA to synchronize
+   Xil_DCacheFlush();
+
 	return 1;
 }
 
@@ -228,7 +273,7 @@ int demo_start_frame_buffer( demo_t *pdemo )
 	ReadSetup(pdemo->paxivdma1, 0x18000000, 0, 1, 1, 0, 0, pdemo->hdmio_width, pdemo->hdmio_height, 2048, 2048);
 	StartTransfer(pdemo->paxivdma1);
 
-	xil_printf("OSD Initialization (hdmi=0x%02X, vita=0x%02X)\r\n", pdemo->hdmi_alpha, pdemo->vita_alpha);
+	xil_printf("OSD Initialization (hdmi=0x%02X, cam=0x%02X)\r\n", pdemo->hdmi_alpha, pdemo->cam_alpha);
 	XOSD_Reset(pdemo->posd);
 	XOSD_RegUpdateEnable(pdemo->posd);
 	XOSD_Enable(pdemo->posd);
@@ -243,7 +288,7 @@ int demo_start_frame_buffer( demo_t *pdemo )
 
 	// Layer 1 - PYTHON-1300 camera
 	XOSD_SetLayerPriority(pdemo->posd, 1, XOSD_LAYER_PRIORITY_1);
-	XOSD_SetLayerAlpha(pdemo->posd, 1, 1, pdemo->vita_alpha);
+	XOSD_SetLayerAlpha(pdemo->posd, 1, 1, pdemo->cam_alpha);
 	XOSD_SetLayerDimension(pdemo->posd, 1, 0, 0, pdemo->hdmio_width, pdemo->hdmio_height);
 
 	XOSD_EnableLayer(pdemo->posd, 0);

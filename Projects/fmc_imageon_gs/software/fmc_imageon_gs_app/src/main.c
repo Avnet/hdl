@@ -26,13 +26,13 @@ int main()
 	// Init reference design
 	demo_init_frame_buffer(pdemo);
 
-	// Try VITA first
-	pdemo->vita_alpha = 0xFF;
+	// Try CAM first
+	pdemo->cam_alpha = 0xFF;
 	pdemo->hdmi_alpha = 0x00;
-	if ( !demo_start_vita_in(pdemo) )
+	if ( !demo_start_cam_in(pdemo) )
 	{
 		// Then try HDMI
-		pdemo->vita_alpha = 0x00;
+		pdemo->cam_alpha = 0x00;
 		pdemo->hdmi_alpha = 0xFF;
 		demo_start_hdmi_in(pdemo);
 	}
