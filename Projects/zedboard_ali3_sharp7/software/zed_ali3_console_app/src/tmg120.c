@@ -122,6 +122,7 @@ int32u tmg120_initialize(zed_ali3_controller_demo_t *pDemo)
     pDemo->touch_posx_raw   = 0x0000;
     pDemo->touch_posy_raw   = 0x0000;
     pDemo->touch_valid   = 0;
+	pDemo->touch_pen_down = 0;
 
     // Initialize the controller specific information.
     pDemo->slave_touch_data_offset = 0;
@@ -273,30 +274,6 @@ int32u tmg120_enable_touch_clicktouch(zed_ali3_controller_demo_t *pDemo)
 
     sleep(1);
 
-    /* Note that the functionality of register 0x0D may not be completely
-     * implemented on Clicktouch TMG120.  It is better to use commands to
-     * implement actions such as resetting baselines, IDAC calibration,
-     * or auto threshold. */
-
-    /* Perform the reset baselines operation on the touch controller. */
-    //RegData[0] = 0x01;
-    //ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x0D, RegData, 1);
-
-    /* Perform the IDAC calibration on the touch controller. */
-    //RegData[0] = 0x02;
-    //ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x0D, RegData, 1);
-
-    /* Set the auto threshold on the touch controller. */
-    //RegData[0] = 0x08;
-    //ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x0D, RegData, 1);
-
-    /* Perform the reset baselines operation on the touch controller
-     * using the 0x13 command. */
-    //RegData[0] = 0x13;
-    //ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x02, RegData, 1);
-
-    sleep(1);
-
     RegData[0] = 0x00;
 
     /* Writing a single byte to this controller to set the address pointer
@@ -412,33 +389,7 @@ int32u tmg120_recalibrate_idac_clicktouch(zed_ali3_controller_demo_t *pDemo)
     int8u RegData[0x01];
     int32u ret = 0;
 
-
-    /* Perform a reset request on the touch controller. */
-    //RegData[0] = 0x01;
-    //ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x00, RegData, 1);
-
-    /* Perform the IDAC calibration on the touch controller. */
-    //RegData[0] = 0x02;
-    //ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x0D, RegData, 1);
-
-    /* Perform the reset baselines operation on the touch controller. */
-    //RegData[0] = 0x01;
-    //ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x0D, RegData, 1);
-
-    /* Set the auto threshold on the touch controller. */
-    //RegData[0] = 0x08;
-    //ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x0D, RegData, 1);
-
-    /* Perform the reset baselines operation on the touch controller
-     * using the 0x13 command. */
-    //RegData[0] = 0x13;
-    //ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x02, RegData, 1);
-
-    //RegData[0] = 0x00;
-
-    /* Wait for the requested operation to complete. */
-    //while ((RegData[0] & 0x80) == 0)
-
+    /* Perform the IDAC re-calibration on the touch controller. */
     RegData[0] = 0x14;
     ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, 0x02, RegData, 1);
 
@@ -517,7 +468,7 @@ int32u tmg120_enable_touch_dhelectronic(zed_ali3_controller_demo_t *pDemo)
     int8u ByteCount   = 1;
     int32u ret;
 
-    // Write the control message to the TMG120 controller.
+    /* Write the control message to the TMG120 controller. */
     ret = pDemo->touch_iic.fpIicWrite(&(pDemo->touch_iic), ChipAddress, RegAddress, &RegData, ByteCount);
 
     if (ret != ByteCount)
@@ -783,10 +734,7 @@ int32u tmg120_get_calibration_matrix(zed_ali3_controller_demo_t * pDemo,
 *
 ****************************************************************************/
 int32u tmg120_handle_touch_event_clicktouch(zed_ali3_controller_demo_t *pDemo,
-    int8u *touch_event,
-    int8u *touch_gesture,
-    int16u *touch_posx,
-    int16u *touch_posy)
+	touch_event_t *touch_event)
 {
     int8u ChipAddress = (int8u) clicktouch;
     int8u RegAddress  = 0x00;
@@ -816,43 +764,26 @@ int32u tmg120_handle_touch_event_clicktouch(zed_ali3_controller_demo_t *pDemo,
         xil_printf( "ERROR : Failed to read Touch Controller\n\r" );
         return -1;
     }
-
-    /* If one or more touches are being registered, then a valid touch event
-     * has occurred. */
-    if (((pDemo->mode == control) &&  (RegData[0x01] == 0x20)) ||
-    	((pDemo->mode == draw) &&  (RegData[0x01] != 0x00)))
-    {
-        *touch_event = 1;
-    }
-    else
-    {
-        *touch_event = 0;
-    }
-
+	
     /* Extract the touch event information from the information read from
      * the touch controller device.  */
-    *touch_posx = ((int16u)(RegData[0x04]) << 8) | ((int16u)(RegData[0x05]));
-    *touch_posy = ((int16u)(RegData[0x06]) << 8) | ((int16u)(RegData[0x07]));
-    *touch_gesture = (int8u)(RegData[0x01]);  // Read GEST_ID for event.
+    touch_event->touch_location.position_x = ((int16u)(RegData[0x04]) << 8) | ((int16u)(RegData[0x05]));
+    touch_event->touch_location.position_y = ((int16u)(RegData[0x06]) << 8) | ((int16u)(RegData[0x07]));
+    touch_event->touch_gesture = (int8u)(RegData[0x01]);  // Read GEST_ID for event.
+    touch_event->touch_finger_count = (int8u) (RegData[0x03] & 0x03); // Read finger count
 
-    /* One think that is useful to do is to filter out any touch events
+    /* One thing that is useful to do is to filter out any touch events
      * that do not make any sense.  Usually X and Y locations reported at 1
      * are simply incomplete measurements and can safely be ignored as
      * invalid touch events.
      */
-    if ((*touch_posx == 1) ||
-    	(*touch_posy == 1) ||
-    	(*touch_posx == 799) ||
-    	(*touch_posy == 479))
+    if ((touch_event->touch_location.position_x == 1) ||
+    	(touch_event->touch_location.position_y == 1) ||
+    	(touch_event->touch_location.position_x == 799) ||
+    	(touch_event->touch_location.position_y == 479))
     {
-    	*touch_event = 0;
+    	 touch_event->touch_finger_count = 0;
     }
-
-    /* TODO:  Someday support for multiple touches may be added.  This is
-     * where that information is stored in the message from the touch
-     * controller, this application code simply does not support it yet. */
-    //touch_pos2x = ((int16u)(RegData[0x09]) << 8) | ((int16u)(RegData[0x0A]));
-    //touch_pos2y = ((int16u)(RegData[0x0B]) << 8) | ((int16u)(RegData[0x0C]));
 
     return 0;
 }
@@ -876,10 +807,7 @@ int32u tmg120_handle_touch_event_clicktouch(zed_ali3_controller_demo_t *pDemo,
 *
 ****************************************************************************/
 int32u tmg120_handle_touch_event_dhelectronic(zed_ali3_controller_demo_t *pDemo,
-    int8u *touch_event,
-    int8u *touch_intensity,
-    int16u *touch_posx,
-    int16u *touch_posy)
+	touch_event_t *touch_event)
 {
     int8u ChipAddress = (int8u) dhelectronic;
     int8u RegAddress  = 0x07;
@@ -899,10 +827,10 @@ int32u tmg120_handle_touch_event_dhelectronic(zed_ali3_controller_demo_t *pDemo,
 
     /* Extract the touch event information from the information read from
      * the touch controller device.  */
-    *touch_event = RegData[0];
-    *touch_posx = ((int16u)(RegData[1]) << 8) | ((int16u)(RegData[2]));
-    *touch_posy = ((int16u)(RegData[3]) << 8) | ((int16u)(RegData[4]));
-    *touch_intensity = 0xFF;  // All touches have the same intensity.
+    touch_event->touch_finger_count = RegData[0];
+    touch_event->touch_location.position_x = ((int16u)(RegData[1]) << 8) | ((int16u)(RegData[2]));
+    touch_event->touch_location.position_y = ((int16u)(RegData[3]) << 8) | ((int16u)(RegData[4]));
+    touch_event->touch_gesture = 0xFF;  // All touches have the same gesture.
 
     return 0;
 }
@@ -924,12 +852,15 @@ int32u tmg120_handle_touch_event_dhelectronic(zed_ali3_controller_demo_t *pDemo,
 int32u tmg120_handle_touch_event(zed_ali3_controller_demo_t *pDemo)
 {
     static int8u previous_touch_event;
-    int8u touch_event = 0;
-	int8u touch_gesture = 0;
-    int16u touch_posx = 0;
-	int16u touch_posy = 0;
+    touch_event_t next_touch_event;
     int32u ret;
 
+    next_touch_event.touch_finger_count = 0;
+    next_touch_event.touch_gesture = 0;
+    next_touch_event.touch_location.position_x = 0;
+    next_touch_event.touch_location.position_y = 0;
+
+    // Track each new IRQ being handled.
     pDemo->touch_irqs++;
 
     if (touch_event_queue.isr_flag == FALSE)
@@ -948,13 +879,13 @@ int32u tmg120_handle_touch_event(zed_ali3_controller_demo_t *pDemo)
     {
         /* Read touch information from the DE Electronic touch
          * controller slave. */
-        ret = tmg120_handle_touch_event_dhelectronic(pDemo, &touch_event, &touch_gesture, &touch_posx, &touch_posy);
+        ret = tmg120_handle_touch_event_dhelectronic(pDemo, &next_touch_event);
     }
     else if (pDemo->controller_type == clicktouch)
     {
         /* Read touch information from the Clicktouch touch
          * controller slave. */
-        ret = tmg120_handle_touch_event_clicktouch(pDemo, &touch_event, &touch_gesture, &touch_posx, &touch_posy);
+        ret = tmg120_handle_touch_event_clicktouch(pDemo, &next_touch_event);
     }
 
     /* Check to see if a recognized touch controller was properly
@@ -996,10 +927,31 @@ int32u tmg120_handle_touch_event(zed_ali3_controller_demo_t *pDemo)
         }
     }
 
+    /* If this is the first event that reports fingers down since they have
+     * been lifted, then set the pen down indicator.
+	 */
+	if ((pDemo->touch_pen_down == 0) &&
+		(next_touch_event.touch_finger_count == 1))
+	{
+		pDemo->touch_pen_down = 1;
+		pDemo->touch_pen_down_transition = 1;
+	}
+	else if ((pDemo->touch_pen_down == 1) &&
+			(next_touch_event.touch_finger_count == 0))
+	{
+		pDemo->touch_pen_down = 0;
+		pDemo->touch_pen_down_transition = 0;
+	}
+	else
+	{
+		pDemo->touch_pen_down_transition = 0;
+	}
+
     // If a new touch event has occurred, register it.
-    if (((touch_event == 1) && (previous_touch_event == 0)) ||
-    	((touch_event == 1) &&
-        !((touch_posx == pDemo->touch_posx_raw) && (touch_posy == pDemo->touch_posy_raw))))
+    if (((next_touch_event.touch_finger_count == 1) && (previous_touch_event == 0)) ||
+    	((next_touch_event.touch_finger_count == 1) &&
+        !((next_touch_event.touch_location.position_x == pDemo->touch_posx_raw) &&
+          (next_touch_event.touch_location.position_y == pDemo->touch_posy_raw))))
     {
     	pDemo->touch_events++;
     }
@@ -1012,14 +964,14 @@ int32u tmg120_handle_touch_event(zed_ali3_controller_demo_t *pDemo)
     	/*
 		 * Record the touch event so that an up/down transition can be detected.
 		 */
-    	previous_touch_event = touch_event;
+    	previous_touch_event = next_touch_event.touch_finger_count;
     	return 0;
     }
 
-   /*
-    * Record the touch event so that an up/down transition can be detected.
-    */
-    previous_touch_event = touch_event;
+    /*
+     * Record the touch event so that an up/down transition can be detected.
+     */
+    previous_touch_event = next_touch_event.touch_finger_count;
 
     // Determine if the touch event queue is full.
     if (((touch_event_queue.rear_event == 0) && (touch_event_queue.front_event == (TOUCH_QUEUE_SIZE - 1))) ||
@@ -1034,9 +986,9 @@ int32u tmg120_handle_touch_event(zed_ali3_controller_demo_t *pDemo)
     {
         // Add the new touch event to the current front of the queue.
         touch_event_queue.touch_events[touch_event_queue.front_event].event_registered = 1;
-        touch_event_queue.touch_events[touch_event_queue.front_event].touch_gesture = touch_gesture;
-        touch_event_queue.touch_events[touch_event_queue.front_event].touch_location.position_x = touch_posx;
-        touch_event_queue.touch_events[touch_event_queue.front_event].touch_location.position_y = touch_posy;
+        touch_event_queue.touch_events[touch_event_queue.front_event].touch_gesture = next_touch_event.touch_gesture;
+        touch_event_queue.touch_events[touch_event_queue.front_event].touch_location.position_x = next_touch_event.touch_location.position_x;
+        touch_event_queue.touch_events[touch_event_queue.front_event].touch_location.position_y = next_touch_event.touch_location.position_y;
         touch_event_queue.touch_events[touch_event_queue.front_event].event_processed = 0;
 
         // Update the front of the queue.
@@ -1093,12 +1045,16 @@ int32u tmg120_process_touch_event(zed_ali3_controller_demo_t *pDemo)
     	if (touch_event_queue.touch_events[index].event_processed == 0)
     	{
             /*
-             * An unprocessed event has been found.  Copy the location data
-             * and mark it as processed.
+             * An unprocessed event has been found.  Copy the location and
+             * gesture data before marking it as processed.
              */
     	    pDemo->touch_posx_raw = touch_event_queue.touch_events[index].touch_location.position_x;
             pDemo->touch_posy_raw = touch_event_queue.touch_events[index].touch_location.position_y;
             pDemo->touch_gesture = touch_event_queue.touch_events[index].touch_gesture;
+
+            /* This touch event has now been processed and can be marked for
+             * reuse.
+             */
             touch_event_queue.touch_events[index].event_processed = 1;
 
             return 1;
