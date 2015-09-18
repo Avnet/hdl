@@ -31,15 +31,18 @@
 // Target Devices:      Zynq-7000
 // Hardware Boards:     ZedBoard, MicroZed, Zed Display Kit
 //
-// Tool versions:       ISE Design Suite 14.6 / Vivado 2013.2
+// Tool versions:       Vivado 2015.2
 //
 // Description:         ZedBoard ALI3 Controller Demonstration
+//                      This application will configure the display kit for
+//                      480*800 display output.
 //
 // Dependencies:
 //
 // Revision:            Jul 01, 2013: 1.00 Initial version
 //                      May 23, 2013: 1.02 Updated for Zed Display Kit - 14.5
 //                      Jul  1, 2013: 1.03 Revised for MicroZed target
+//                      Sep 17, 2015: 1.04 Updated for 2015.2 release
 //
 //----------------------------------------------------------------------------
 
@@ -190,6 +193,8 @@ struct struct_zed_ali3_controller_demo_t
     int16u touch_posx_cal;
     int16u touch_posy_cal;
     int8u  touch_gesture;
+    int8u  touch_pen_down;
+    int8u  touch_pen_down_transition;
     int32u touch_valid;
 
     ////////////////////////////////
