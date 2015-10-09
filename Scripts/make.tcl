@@ -236,8 +236,22 @@ set scripts_folder [file normalize [pwd]]
 set repo_folder [file normalize [pwd]../../]
 
 # IF tagging - check for modified files
+set GUI $rdi::mode
 if {[string match -nocase "init" $tag]} {
    puts "Not Requesting Tag"
+   if {[string match -nocase "yes" $jtag]} {
+      if {[string match -nocase "gui" $GUI]} {
+         puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+         puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+         puts "*-                                                     -*"
+         puts "*-              JTAG recommended to                    -*"
+         puts "*-            Use GUI!  Please run from GUI!           -*"
+         puts "*-                                                     -*"
+         puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+         puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+         return -code ok
+      }
+   }
 } else {
    puts "Requesting Tag"
    cd $repo_folder
@@ -247,7 +261,6 @@ if {[string match -nocase "init" $tag]} {
       puts "Please commit all files before trying to TAG\nNot Tagging..."
       return -code ok
    }
-   set GUI $rdi::mode
    if {[string match -nocase "gui" $GUI]} {
       puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
       puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
@@ -283,98 +296,41 @@ switch -nocase $board {
                                  return -code ok}
 }
 if {[string match -nocase "no" $jtag]} {
-# loop waiting for build to end so can call TAG
-# loop looks for \Projects\sampleproject_working\sampleproject_working.runs\impl_1\.place_design.end.rst
-# loop also looks for error conditions, so it does not wait forever for something that cannot finish
+   puts "Generating Binary..."
+   source ./bin_helper.tcl -notrace
 
-                                       # /Projects/sampleproject/sampleproject.runs/impl_1/runme.log
-                                       # 
-set updown "up"
-set dot_count 1
-set x 0
-
-puts "Generating Binary..."
-while {1} {
-   # stop if an error is detected
-   if {[file exists $projects_folder/$project.runs/synth_1/runme.log]} {
-      grep "ERROR:" $projects_folder/$project.runs/synth_1/runme.log
-      if {[string match -nocase "true" $found]} { 
-         puts "Found Error in Synthesis..."
-         break
-      }
-   }
-   # stop if an error is detected
-   if {[file exists $projects_folder/$project.runs/impl_1/runme.log]} {
-      grep "ERROR:" $projects_folder/$project.runs/impl_1/runme.log
-      if {[string match -nocase "true" $found]} { 
-         puts "Found Error in Bitstream Creation..."
-         break
-      }
-   }
-   # stop if end of run detected
-   if {[file exists $projects_folder/$project.runs/impl_1/.vivado.end.rst]} { 
-      puts "Found End of Bitstream Creation..."
-      break 
-   }
-   # paint pretty picture - shows still running
-   if {[string match -nocase "up" $updown]} {
-      if {$dot_count < 10} { 
-         incr dot_count
-      } else {
-         incr dot_count -1
-         set updown "down"
-      }
-   } elseif {[string match -nocase "down" $updown]} {
-      if {$dot_count > 0} { 
-         incr dot_count -1
-      } else {
-         incr dot_count
-         set updown "up"
-      }
-   } else {
-      set dot_count 1
-      set updown "down"
-   }
-   for {set y 0} {$y< $dot_count} {incr y} {
-      puts -nonewline "."
-   }
-   puts "."
-   # wait 1 second to check
-   after 1000
-}
-
-# if using for development, can set this to yes to just use the script
-# to build your project in Vivado
-if {[string match -nocase "no" $close_project]} {
-   puts "Not Closing Project..."
-} else {
-   set curr_proj [current_project -quiet]
-   if {[string match -nocase "" $curr_proj]} {
+   # if using for development, can set this to yes to just use the script
+   # to build your project in Vivado
+   if {[string match -nocase "no" $close_project]} {
       puts "Not Closing Project..."
    } else {
-      puts "Closing Project..."
-      close_project
+      set curr_proj [current_project -quiet]
+      if {[string match -nocase "" $curr_proj]} {
+         puts "Not Closing Project..."
+      } else {
+         puts "Closing Project..."
+         close_project
+      }
+      unset curr_proj
    }
-   unset curr_proj
-}
-
-# attempt to build SDK portion
-if {[string match -nocase "yes" $sdk]} {
-   puts "Attempting to Build SDK..."
-   cd ${projects_folder}
-   exec >@stdout 2>@stderr xsdk -batch -source ../software/$project\_sdk.tcl -notrace
-   puts "Generating BOOT.BIN..."
-   exec >@stdout 2>@stderr bootgen -image ../software/$project\_sd.bif -w -o BOOT.bin
-   cd ${scripts_folder}
-}
-
-# run Tagging script
-if {[string match -nocase "yes" $tag]} {
-   puts "Running Tag"
-   source ./tag.tcl -notrace
-} else {
-   puts "Not Running Tag"
-}
+   
+   # attempt to build SDK portion
+   if {[string match -nocase "yes" $sdk]} {
+      puts "Attempting to Build SDK..."
+      cd ${projects_folder}
+      exec >@stdout 2>@stderr xsdk -batch -source ../software/$project\_sdk.tcl -notrace
+      puts "Generating BOOT.BIN..."
+      exec >@stdout 2>@stderr bootgen -image ../software/$project\_sd.bif -w -o BOOT.bin
+      cd ${scripts_folder}
+   }
+   
+   # run Tagging script
+   if {[string match -nocase "yes" $tag]} {
+      puts "Running Tag"
+      source ./tag.tcl -notrace
+   } else {
+      puts "Not Running Tag"
+   }
 }
 puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*

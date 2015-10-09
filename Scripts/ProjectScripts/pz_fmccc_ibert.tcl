@@ -88,8 +88,10 @@ close_project
 
 # now the fun part, build the example!
 if {[string match -nocase "PZ7015_FMCCC" $board]} {
+   # change to 3.75Gbps_onb250Mhz
    create_project ibert_7series_gtp_0_example ./example -force
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
+   # change to 6.25Gbps_onb250Mhz
    create_project ibert_7series_gtx_0_example ./example -force
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
@@ -155,117 +157,41 @@ if { $returnCode != 0 } {
   error "Problems were encountered while executing the example design script, please review the log files."
 }
 
-
-# # General Config
-# puts "***** General Configuration for Design..."
-# set_property target_language VHDL [current_project]
-# 
-# # Create Target Files
-# generate_target {instantiation_template} [get_files $scripts_folder/$board\_$project/$board\_$project.srcs/sources_1/ip/ibert_7series_gtp_0/ibert_7series_gtp_0.xci]
-# generate_target all [get_files  $scripts_folder/$board\_$project/$board\_$project.srcs/sources_1/ip/ibert_7series_gtp_0/ibert_7series_gtp_0.xci]
-# update_compile_order -fileset sources_1
-# update_compile_order -fileset sim_1
-# close_project
-# 
-# 
-# # Add Project source files
-# puts "***** Adding Source Files to Block Design..."
-# make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
-# add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.vhd
-# 
-# # Build the binary
-# #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-# #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
-# #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-# puts "***** Building Binary..."
-# # add this to allow up+enter rebuild capability 
-# cd $scripts_folder
-# update_compile_order -fileset sources_1
-# update_compile_order -fileset sim_1
-# save_bd_design
-# launch_runs impl_1 -to_step write_bitstream
+# Build the binary
+#*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+#*- KEEP OUT, do not touch this section unless you know what you are doing! -*
+#*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+puts "***** Building Binary..."
+# add this to allow up+enter rebuild capability 
+cd $scripts_folder
+update_compile_order -fileset sources_1
+update_compile_order -fileset sim_1
+# need to shift the build point to example
+set projects_folder $projects_folder/example
+if {[string match -nocase "PZ7015_FMCCC" $board]} {
+   set project ibert_7series_gtp_0_example
+} elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
+   set project ibert_7series_gtx_0_example
+} else {
+   error "Problems were encountered while executing the example design script, please review the log files."
+}
+launch_runs impl_1 -to_step write_bitstream
 # #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 # #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 # #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 
-# 
-# 
-# #start_gui
-# 
-# set srcIpDir $scripts_folder/$board\_$project/$board\_$project.srcs/sources_1/ip/ibert_7series_gtp_0
-# create_project ibert_7series_gtp_0_example $scripts_folder/$board\_$project/example -force
-# cd $scripts_folder/$board\_$project/example
-# set_property part xc7z015clg485-1 [current_project]
-# set_property target_language verilog [current_project]
-# set_property simulator_language MIXED [current_project]
-# set_property enable_core_container false [current_project]
-# 
-# set returnCode 0
-# import_ip -files [list [file join $srcIpDir ibert_7series_gtp_0.xci]] -name ibert_7series_gtp_0
-# reset_target {example} [get_ips ibert_7series_gtp_0]
-# proc _filter_supported_targets {targets ip} {
-#   set res {}
-#   set all [get_property SUPPORTED_TARGETS $ip]
-#   foreach target $targets {
-#     lappend res {*}[lsearch -all -inline -nocase $all $target]
-#   }
-#   return $res
-# }
-# 
-# generate_target [_filter_supported_targets {instantiation_template synthesis simulation implementation shared_logic} [get_ips ibert_7series_gtp_0]] [get_ips ibert_7series_gtp_0]
-# add_files -norecurse $scripts_folder/example_ibert_7series_gtp_0.v
-# add_files -fileset constrs_1 -norecurse $scripts_folder/example_ibert_7series_gtp_0.xdc
-# set_property top example_ibert_7series_gtp_0 [current_fileset]
-# update_ip_catalog
-# update_compile_order -fileset sources_1
-# update_compile_order -fileset sim_1
-# set dfile $scripts_folder/$board\_$project/$board\_$project.srcs/sources_1/ip/ibert_7series_gtp_0/oepdone.txt
-# set doneFile [open $dfile w]
-# puts $doneFile "Open Example Project DONE"
-# close $doneFile
-# if { $returnCode != 0 } {
-#   error "Problems were encountered while executing the example design script, please review the log files."
-# }
-# 
-# 
-# # ----------
-# 
-# open_hw
-# connect_hw_server -url localhost:3121
-# current_hw_target [get_hw_targets */xilinx_tcf/*]
-# # read only?? set_property PARAM.FREQUENCY 15000000 [get_hw_targets */xilinx_tcf/*]
-# open_hw_target
-# current_hw_device [lindex [get_hw_devices] 1]
-# refresh_hw_device -update_hw_probes false [lindex [get_hw_devices] 1]
-# after 10000
-# set_property PROBES.FILE {} [lindex [get_hw_devices] 1]
-# set_property PROGRAM.FILE $scripts_folder/$board\_$project/example/ibert_7series_gtx_0_example.runs/impl_1/example_ibert_7series_gtx_0.bit [lindex [get_hw_devices] 1]
-# program_hw_devices [lindex [get_hw_devices] 1]
-# refresh_hw_device [lindex [get_hw_devices] 1]
-# detect_hw_sio_links
-# 
+puts "Generating Binary..."
+source ./bin_helper.tcl -notrace
+# JTAG bitstream 
+if {[string match -nocase "PZ7015_FMCCC" $board]} {
+   set jtagFilename $projects_folder/ibert_7series_gtp_0_example.runs/impl_1/example_ibert_7series_gtp_0.bit
+} elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
+   set jtagFilename $projects_folder/ibert_7series_gtx_0_example.runs/impl_1/example_ibert_7series_gtx_0.bit
+} else {
+   error "Problems were encountered while executing the example design script, please review the log files."
+}
+source ./jtag.tcl -notrace
+# Start Serial IO Links
+#after 10000
+detect_hw_sio_links

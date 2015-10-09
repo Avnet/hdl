@@ -9,6 +9,6 @@ current_hw_device [lindex [get_hw_devices] 1]
 refresh_hw_device -update_hw_probes false [lindex [get_hw_devices] 1]
 after 10000
 set_property PROBES.FILE {} [lindex [get_hw_devices] 1]
-set_property PROGRAM.FILE $scripts_folder/$board\_$project/$jtagFilename [lindex [get_hw_devices] 1]
+set_property PROGRAM.FILE $jtagFilename [lindex [get_hw_devices] 1]
 program_hw_devices [lindex [get_hw_devices] 1]
 refresh_hw_device [lindex [get_hw_devices] 1]
