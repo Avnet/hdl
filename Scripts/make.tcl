@@ -52,6 +52,7 @@ set version_override "no"
 set found "false"
 set ok_to_tag_public "false"
 set sdk "no"
+set jtag "no"
 
 # create GREP process
 # From: http://wiki.tcl.tk/9395
@@ -115,6 +116,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       puts " 'public' used to allow this project to be publicly tagged"
       puts "    with release_state set to public the script will release to GITHUB"
       puts "close_project=\n 'no' will prevent the script from closing the project\n used to allow 'up+enter' rebuilds of a project"
+      puts "jtag=\n 'yes' will attempt to JTAG a project after synthesis and binary generation"
       #puts "would like to add clean=, however would like to add a confirmation due to destructive nature of wiping EVERYTHING out"
       puts "version_override=yes\n ***************************** \n CAUTION: \n Override the Version Check\n and attempt to make project\n *****************************"
       return -code ok
@@ -175,6 +177,15 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       set close_project [string range [lindex $argv $i] 17 end]
       set printmessage $close_project
       for {set j 0} {$j < [expr $chart_wdith - [string length $close_project]]} {incr j} {
+         append printmessage " "
+      }
+      puts "| No Close Project |     $printmessage |"
+   }
+   # check for JTAG parameter
+   if {[string match -nocase "jtag=*" [lindex $argv $i]]} {
+      set jtag [string range [lindex $argv $i] 5 end]
+      set printmessage $jtag
+      for {set j 0} {$j < [expr $chart_wdith - [string length $jtag]]} {incr j} {
          append printmessage " "
       }
       puts "| No Close Project |     $printmessage |"
@@ -253,33 +264,30 @@ if {[string match -nocase "init" $tag]} {
 # Project Creation Cases
 # use a - for fall through expressions
 switch -nocase $board {
+   PZ7015_FMCCC               -
+   PZ7030_FMCCC               -
+   PZSDR7035_FMCCC            -
    ZC702                      -
-   ZEDBOARD                   {puts "Setting Up Project $project..."
-                                 source ./ProjectScripts/$project.tcl -notrace}
-   MITXZ7045                  {puts "Setting Up Project $project..."
-                                 source ./ProjectScripts/$project.tcl -notrace}
-   MITXZ7100                  {puts "Setting Up Project $project..."
-                                 source ./ProjectScripts/$project.tcl -notrace}
+   ZEDBOARD                   -
+   MITXZ7045                  -
+   MITXZ7100                  -
    MZ7010_FMCCC               -
-   MZ7020_FMCCC               {puts "Setting Up Project $project..."
-                                 source ./ProjectScripts/$project.tcl -notrace}
+   MZ7020_FMCCC               -
    MZ7010_EMBV                -
    MZ7020_EMBV                -
    MZ7010_IOCC                -
    MZ7020_IOCC                {puts "Setting Up Project $project..."
                                  source ./ProjectScripts/$project.tcl -notrace}
-   PZSDR7035_FMCCC            {puts "Setting Up Project $project..."
-                                 source ./ProjectScripts/$project.tcl -notrace}
    default                    {puts "Error in Selecting Board!"
                                  puts "Boards are defined in [file normalize [pwd]/../Boards]"
                                  return -code ok}
 }
-
+if {[string match -nocase "no" $jtag]} {
 # loop waiting for build to end so can call TAG
-# loop looks for C:\demo_try\Avnet\Projects\sampleproject_working\sampleproject_working.runs\impl_1\.place_design.end.rst
+# loop looks for \Projects\sampleproject_working\sampleproject_working.runs\impl_1\.place_design.end.rst
 # loop also looks for error conditions, so it does not wait forever for something that cannot finish
 
-                                       # C:/demo_try/Avnet/Projects/sampleproject/sampleproject.runs/impl_1/runme.log
+                                       # /Projects/sampleproject/sampleproject.runs/impl_1/runme.log
                                        # 
 set updown "up"
 set dot_count 1
@@ -367,7 +375,7 @@ if {[string match -nocase "yes" $tag]} {
 } else {
    puts "Not Running Tag"
 }
-
+}
 puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
