@@ -39,12 +39,17 @@
 //
 // Revision:            Feb 27, 2013: 1.00 First Version
 //                      Feb 27, 2013: 1.02 Updated to remove PWN and DIM
+//                      Oct 13, 2015: 1.03 Updated to add support for 
+//                                         additional, higher clock frequency
+//                                         modes
 //
 //----------------------------------------------------------------------------
 
 `timescale 1 ps / 1 ps
 
-module zed_ali3_controller_core
+module zed_ali3_controller_core # (
+  parameter C_PIXEL_CLOCK_RATE = 1 // Default clock rate is 33.33MHz
+  )
   (
 
   input  wire       reset_in,
@@ -69,15 +74,13 @@ module zed_ali3_controller_core
   output wire       ALI_CLK_N
 );
 
-/*
-  parameter integer PCLK_D  = 3;  
-  parameter integer PCLK_M  = 3;
-  parameter real PCLK_D_REAL  = 3.000;  
-  parameter real PCLK_M_REAL  = 3.000;
-  parameter real CLKIN_PERIOD = 30.000; // 33 MHz
-*/
-
-  //wire pclkx2, pclkx10, pll_lckd;
+  localparam integer PCLK_D = (C_PIXEL_CLOCK_RATE > 4)? 2 : 3;
+  localparam integer PCLK_M = (C_PIXEL_CLOCK_RATE > 4)? 2 : 3;
+  localparam real PCLK_D_REAL = (C_PIXEL_CLOCK_RATE > 4)? 2.000 : 3.000;
+  localparam real PCLK_M_REAL = (C_PIXEL_CLOCK_RATE > 4)? 2.000 : 3.000;
+  // Clock period assignments (in nanoseconds)
+  localparam real CLKIN_PERIOD = (C_PIXEL_CLOCK_RATE == 3)? 20.000 : (C_PIXEL_CLOCK_RATE == 5)? 14.06 : 30.000;
+  
   wire pll_lckd;
   wire clkfbout;
   wire clk_gen_txclk, clk_gen_txclk_div;
@@ -101,20 +104,13 @@ module zed_ali3_controller_core
   // can be used by OSERDES2
   //////////////////////////////////////////////////////////////////
   clock_generator_pll_7_to_1_diff_sdr # (
-	 .TX_CLOCK("BUF_G"),
+	 .TX_CLOCK("BUFIO"),
 	 .PIXEL_CLOCK("BUF_G"),
-/*	 
 	 .PIXEL_CLOCK_D(PCLK_D),
 	 .PIXEL_CLOCK_M(PCLK_M),
 	 .PIXEL_CLOCK_D_REAL(PCLK_D_REAL),
 	 .PIXEL_CLOCK_M_REAL(PCLK_M_REAL),
-	 .CLKIN_PERIOD(CLKIN_PERIOD),
-*/	 
-	 .PIXEL_CLOCK_D(3),
-	 .PIXEL_CLOCK_M(3),
-	 .PIXEL_CLOCK_D_REAL(3.00),
-	 .PIXEL_CLOCK_M_REAL(3.00),
-	 .CLKIN_PERIOD(30.00)
+	 .CLKIN_PERIOD(CLKIN_PERIOD)
 	 //.USE_PLL(0)  // Use MMCM block only, not the PLL block.
   ) clock_generator_serdes (
     .reset(reset_in),

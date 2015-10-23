@@ -239,7 +239,7 @@ set repo_folder [file normalize [pwd]../../]
 set GUI $rdi::mode
 if {[string match -nocase "init" $tag]} {
    puts "Not Requesting Tag"
-   if {[string match -nocase "no" $jtag]} {
+   if {[string match -nocase "yes" $jtag]} {
       if {[string match -nocase "gui" $GUI]} {
          puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
          puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
