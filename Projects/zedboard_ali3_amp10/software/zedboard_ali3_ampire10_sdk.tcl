@@ -1,7 +1,7 @@
 #Example test.tcl
 
 #!/usr/bin/tclsh
-set project  "zedboard_ali3_ampire10"
+set project  "zedboard_ali3_amp10"
 set hw_name  "zed_ali3_hw"
 set bsp_name "zed_ali3_bsp"
 set console_app_name "zed_ali3_console_app"
