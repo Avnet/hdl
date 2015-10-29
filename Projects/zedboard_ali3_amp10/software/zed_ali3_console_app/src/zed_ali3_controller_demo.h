@@ -244,8 +244,8 @@ struct struct_zed_ali3_controller_demo_t
     int16u touch_posx_cal;
     int16u touch_posy_cal;
     int8u  touch_gesture;
-	int8u  touch_pen_down;
-	int8u  touch_pen_down_transition;
+    int8u  touch_pen_down;
+    int8u  touch_pen_down_transition;
     int32u touch_valid;
 
     ////////////////////////////////
@@ -311,7 +311,5 @@ int zed_ali3_controller_demo_logo(zed_ali3_controller_demo_t *pDemo);
 int zed_ali3_controller_demo_switch(zed_ali3_controller_demo_t *pDemo, int switch_number, int switch_state);
 int zed_ali3_controller_demo_touch_calibrate(zed_ali3_controller_demo_t *pDemo);
 int zed_ali3_controller_demo_touch_process(zed_ali3_controller_demo_t *pDemo);
-int zed_ali3_controller_demo_accel_background(zed_ali3_controller_demo_t *pDemo);
-int zed_ali3_controller_demo_accel_indication(zed_ali3_controller_demo_t *pDemo);
 
 #endif // __ZED_ALI3_CONTROLLER_DEMO_H__
