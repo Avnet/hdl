@@ -64,8 +64,8 @@ vres_timing_t vres_resolutions[NUM_VIDEO_RESOLUTIONS] =
     { "720P",   720,    5,    5,   20,    1, 1280,  110,   40,  220,    1,  74250000 }, // VIDEO_RESOLUTION_720P
     { "SXGA",  1024,    1,    3,   26,    0, 1280,   48,  184,  200,    0, 110000000 }, // VIDEO_RESOLUTION_SXGA
     { "1080P", 1080,    4,    5,   36,    1, 1920,   88,   44,  148,    1, 148500000 }, // VIDEO_RESOLUTION_1080P
-    { "UXGA",  1200,    1,    3,   46,    0, 1600,   64,  192,  304,    0, 162000000 },  // VIDEO_RESOLUTION_UXGA
-    { "WXGA",   800,    7,    4,   12,    0, 1280,   65,   55,   40,    0,  71100000 }  // VIDEO_RESOLUTION_UXGA
+    { "UXGA",  1200,    1,    3,   46,    0, 1600,   64,  192,  304,    0, 162000000 }, // VIDEO_RESOLUTION_UXGA
+    { "WXGA",   800,    7,    4,   12,    0, 1280,   65,   55,   40,    0,  71100000 }  // VIDEO_RESOLUTION_WXGA
 };
 
 char *vres_get_name(int32u resolutionId)

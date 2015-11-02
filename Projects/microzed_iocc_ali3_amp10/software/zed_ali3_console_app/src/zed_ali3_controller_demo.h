@@ -36,7 +36,7 @@
 //
 // Description:         ZedBoard ALI3 Controller Demonstration
 //                      This application will configure the display kit for
-//                      480*800 display output.
+//                      1280*800 display output.
 //
 // Dependencies:
 //
@@ -44,7 +44,7 @@
 //                      May 23, 2013: 1.02 Updated for Zed Display Kit - 14.5
 //                      Jul  1, 2013: 1.03 Revised for MicroZed target
 //                      Sep 17, 2015: 1.04 Updated for 2015.2 release
-// Revision:            Oct 28, 2015: 1.05 Updated to support 10" Ampire 
+//                      Oct 28, 2015: 1.05 Updated to support 10" Ampire 
 //                                         display kit and Vivado 2015.2
 //
 //----------------------------------------------------------------------------

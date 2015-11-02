@@ -104,7 +104,7 @@ module zed_ali3_controller_core # (
   // can be used by OSERDES2
   //////////////////////////////////////////////////////////////////
   clock_generator_pll_7_to_1_diff_sdr # (
-	 .TX_CLOCK("BUFIO"),
+	 .TX_CLOCK("BUF_G"),
 	 .PIXEL_CLOCK("BUF_G"),
 	 .PIXEL_CLOCK_D(PCLK_D),
 	 .PIXEL_CLOCK_M(PCLK_M),

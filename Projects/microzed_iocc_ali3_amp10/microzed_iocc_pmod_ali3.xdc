@@ -77,7 +77,7 @@ set_property IOSTANDARD LVCMOS33 [get_ports emio_user_tri_io*];
 ####################
 
 # Rename auto-generated clocks from MMCM
-create_generated_clock -name ali3_clk [get_pins microzed_iocc_ali3_sharp7_i/clk_wiz_0/U0/mmcm_adv_inst/CLKOUT0]
+create_generated_clock -name ali3_clk [get_pins microzed_iocc_ali3_amp10_i/clk_wiz_0/U0/mmcm_adv_inst/CLKOUT0]
 
 ################
 # Clock Groups #
