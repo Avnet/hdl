@@ -44,7 +44,7 @@
 //                      Mar 06, 2013: 1.03 Add WVGA resolution
 //                                         Add Clock Frequency
 //                      May 23, 2013: 1.04 Updated for Zed Display Kit
-//                      Oct 30, 2013: 1.05 Add WXGA resolution 
+//                      Oct 30, 2015: 1.05 Add WXGA resolution 
 //
 //----------------------------------------------------------------------------
 

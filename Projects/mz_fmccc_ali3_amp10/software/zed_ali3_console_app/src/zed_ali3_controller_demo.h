@@ -98,6 +98,7 @@
 #define LED2_POSITION_Y                        270 + Y_OFFSET // "LED3"
 #define LED3_POSITION_Y                        270 + Y_OFFSET // "LED4"
 
+
 #define ACCEL_BACKGROUND_POSITION_X            864 + X_OFFSET
 #define ACCEL_BACKGROUND_POSITION_Y            0   + Y_OFFSET
 
@@ -145,15 +146,6 @@ enum demo_mode
 {
     draw = 0,
     control
-};
-
-/* Defines a touch controller enumeration type.  The enumeration values
- * just happen to also be the I2C slave address values. */
-enum touch_controller_type
-{
-    none = 0,
-    clicktouch = 0x1F,
-    dhelectronic = 0x20
 };
 
 /* This structure contains the context for the Zed Display Kit
