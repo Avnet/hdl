@@ -181,7 +181,7 @@ switch -nocase $board {
               source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
               }
    MZ7020_FMCCC {
-              set_property -dict [list CONFIG.preset {Microzed}] [get_bd_cells processing_system7_0]
+              #set_property -dict [list CONFIG.preset {Microzed}] [get_bd_cells processing_system7_0]
               source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
               }
    default    {puts "Unsupported Board!"
