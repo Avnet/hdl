@@ -80,20 +80,20 @@ set_property PACKAGE_PIN W15 [get_ports IO_PYTHON_SPI_spi_sclk]
 set_property PACKAGE_PIN Y15 [get_ports IO_PYTHON_SPI_spi_ssel_n]
 set_property PACKAGE_PIN Y14 [get_ports IO_PYTHON_SPI_spi_mosi]
 set_property PACKAGE_PIN AA14 [get_ports IO_PYTHON_SPI_spi_miso]
-set_property PACKAGE_PIN AA19 [get_ports IO_PYTHON_CAM_clk_out_n]; CAM_CLK_N
-set_property PACKAGE_PIN Y21 [get_ports IO_PYTHON_CAM_sync_n]; CAM_SYNC_N
-#set_property PACKAGE_PIN U16 [get_ports {IO_PYTHON_CAM_data_n[]}]; CAM_DATA7_N
-#set_property PACKAGE_PIN AB17 [get_ports {IO_PYTHON_CAM_data_n[]}]; CAM_DATA6_N
-set_property PACKAGE_PIN U21 [get_ports {IO_PYTHON_CAM_data_n[3]}]; CAM_DATA5_N
-set_property PACKAGE_PIN AB20 [get_ports {IO_PYTHON_CAM_data_n[2]}]; CAM_DATA4_N
-set_property PACKAGE_PIN V13 [get_ports {IO_PYTHON_CAM_data_p[1]}]; CAM_DATA3_P
-set_property PACKAGE_PIN W13 [get_ports {IO_PYTHON_CAM_data_n[1]}]; CAM_DATA3_N
-set_property PACKAGE_PIN U17 [get_ports {IO_PYTHON_CAM_data_p[0]}]; CAM_DATA2_P
-set_property PACKAGE_PIN V17 [get_ports {IO_PYTHON_CAM_data_n[0]}]; CAM_DATA2_N
-#set_property PACKAGE_PIN AA16 [get_ports {IO_PYTHON_CAM_data_p[]}]; CAM_DATA1_N
-#set_property PACKAGE_PIN AB16 [get_ports {IO_PYTHON_CAM_data_n[]}]; CAM_DATA1_N
-#set_property PACKAGE_PIN V14 [get_ports {IO_PYTHON_CAM_data_p[]}]; CAM_DATA0_P
-#set_property PACKAGE_PIN V15 [get_ports {IO_PYTHON_CAM_data_n[]}]; CAM_DATA0_N
+set_property PACKAGE_PIN AA19 [get_ports IO_PYTHON_CAM_clk_out_n]; #CAM_CLK_N
+set_property PACKAGE_PIN Y21 [get_ports IO_PYTHON_CAM_sync_n]; #CAM_SYNC_N
+#set_property PACKAGE_PIN U16 [get_ports {IO_PYTHON_CAM_data_n[]}]; #CAM_DATA7_N
+#set_property PACKAGE_PIN AB17 [get_ports {IO_PYTHON_CAM_data_n[]}]; #CAM_DATA6_N
+set_property PACKAGE_PIN U21 [get_ports {IO_PYTHON_CAM_data_n[3]}]; #CAM_DATA5_N
+set_property PACKAGE_PIN AB20 [get_ports {IO_PYTHON_CAM_data_n[2]}]; #CAM_DATA4_N
+set_property PACKAGE_PIN V13 [get_ports {IO_PYTHON_CAM_data_p[1]}]; #CAM_DATA3_P
+set_property PACKAGE_PIN W13 [get_ports {IO_PYTHON_CAM_data_n[1]}]; #CAM_DATA3_N
+set_property PACKAGE_PIN U17 [get_ports {IO_PYTHON_CAM_data_p[0]}]; #CAM_DATA2_P
+set_property PACKAGE_PIN V17 [get_ports {IO_PYTHON_CAM_data_n[0]}]; #CAM_DATA2_N
+#set_property PACKAGE_PIN AA16 [get_ports {IO_PYTHON_CAM_data_p[]}]; #CAM_DATA1_N
+#set_property PACKAGE_PIN AB16 [get_ports {IO_PYTHON_CAM_data_n[]}]; #CAM_DATA1_N
+#set_property PACKAGE_PIN V14 [get_ports {IO_PYTHON_CAM_data_p[]}]; #CAM_DATA0_P
+#set_property PACKAGE_PIN V15 [get_ports {IO_PYTHON_CAM_data_n[]}]; #CAM_DATA0_N
 
 set_property IOSTANDARD LVCMOS25 [get_ports IO_PYTHON_CAM_clk_pll]
 set_property IOSTANDARD LVCMOS25 [get_ports IO_PYTHON_CAM_reset_n]
