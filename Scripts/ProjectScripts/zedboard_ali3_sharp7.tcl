@@ -32,13 +32,16 @@
 #  Target Devices:      
 #  Hardware Boards:     ZedBoard Display Kit
 # 
-#  Tool versions:       Vivado 2014.4
+#  Tool versions:       Vivado 2015.2
 # 
 #  Description:         Build Script for Zed Display Kit design
 # 
 #  Dependencies:        To be called from a configured make script call
-#                       Calls support scripts, such as board configuration scripts
-#                          IP generation scripts or others as needed
+#                       Calls support scripts such as board configuration 
+#                       scripts, IP generation scripts, or others as needed
+#
+#  Revision:            Mar 26, 2015: 1.00 Initial version
+#                       Sep 09, 2015: 1.01 Updated for Vivado 2015.2
 # 
 # ----------------------------------------------------------------------------
 

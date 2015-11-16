@@ -31,7 +31,7 @@
 // Target Devices:      Zynq-7000
 // Hardware Boards:     Zynq Mini-ITX + ALI3 Display Kit
 //
-// Tool versions:       ISE Design Suite 14.6 / Vivado 2013.2
+// Tool versions:       Vivado 2015.2
 //
 // Description:         ALI3 Display Controller Demonstration
 //
@@ -42,6 +42,7 @@
 //                                         dependency upon
 //                                         xbasic_types.h
 //						Jun 05, 2015: 1.02 Updated to support Zynq Mini-ITX
+//                      Sep 17, 2015: 1.03 Updated to support 2015.2 tools
 //
 //----------------------------------------------------------------------------
 
@@ -65,6 +66,7 @@
 #include "zed_logo_image.h"
 #include "zed_pb_off.h"
 #include "zed_pb_on.h"
+#include "zed_system_config.h"
 #include "zed_title_plate.h"
 #include "zed_touch_target.h"
 
@@ -585,6 +587,7 @@ int zed_ali3_controller_demo_control(zed_ali3_controller_demo_t *pDemo)
 int zed_ali3_controller_demo_init(zed_ali3_controller_demo_t *pDemo)
 {
     int ret;
+    interface_graphic_t graphic;
 
     xil_printf("\n\r");
     xil_printf("------------------------------------------------------\n\r");
@@ -594,23 +597,19 @@ int zed_ali3_controller_demo_init(zed_ali3_controller_demo_t *pDemo)
     xil_printf("------------------------------------------------------\n\r");
     xil_printf("\n\r");
 
-    // Fill frame stores with logo splash screen data.
-    int32u frame, row, col;
-    int32u pixel;
-    volatile int32u *pStorageMem = (int32u *)pDemo->uBaseAddr_MEM_FrameBuffer;
-    for (frame = 0; frame < pDemo->uNumFrames_FrameBuffer; frame++)
-    {
-        for (row = 0; row < pDemo->ali3_height; row++)
-        {
-            for (col = 0; col < pDemo->ali3_width; col++)
-            {
-                // Grab the next pixel data from the static image array.
-                pixel = avnet_logo_image_data[((row * pDemo->ali3_width) + col)];
-                // Store the next pixel into the frame buffer space.
-                *(volatile uint32_t *) pStorageMem++ = pixel;
-            }
-        }
-    }
+    // Blank the screen,
+    draw_blank_screen(pDemo, COLOR_BLACK);
+
+    // Wait for DMA to synchronize.
+    Xil_DCacheFlush();
+
+    // Draw the system configuration graphic to the display.
+    graphic.location_x = 400 - (avnet_control_system_config_width / 2);  // Centered on graphic
+    graphic.location_y = 240 - (avnet_control_system_config_height / 2);  // Centered on graphic
+    graphic.size_x = avnet_control_system_config_width;
+    graphic.size_y = avnet_control_system_config_height;
+    graphic.default_image_data = avnet_control_system_config;
+    draw_image_data(pDemo, &graphic);
 
     // Wait for DMA to synchronize.
     Xil_DCacheFlush();
@@ -1230,7 +1229,7 @@ int zed_ali3_controller_demo_touch_process(zed_ali3_controller_demo_t *pDemo)
         // Check to see how the touch event should be handled.
         if (pDemo->mode == draw)
         {
-            // Draw the third target to the display.
+            // Draw the touch location indicator 'dot' to the display.
         	if ((pDemo->touch_posx_cal > avnet_draw_pen_black_width) &&
         		(pDemo->touch_posx_cal < (pDemo->ali3_width - avnet_draw_pen_black_width)))
             {
@@ -1267,7 +1266,8 @@ int zed_ali3_controller_demo_touch_process(zed_ali3_controller_demo_t *pDemo)
             // Wait for DMA to synchronize.
             Xil_DCacheFlush();
         }
-        else if (pDemo->mode == control)
+        else if ((pDemo->mode == control) &&
+                 (pDemo->touch_pen_down_transition == 1))
         {
             /*
              * Decode touch location against control positions.

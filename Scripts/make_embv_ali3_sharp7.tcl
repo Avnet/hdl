@@ -11,8 +11,8 @@
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 # 
-#  Please direct any questions or issues to the ZedBoard Community Forums:
-#      http://www.zedboard.org
+#  Please direct any questions or issues to the MicroZed Community Forums:
+#     http://www.microzed.org
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -37,6 +37,9 @@
 #  Description:         Build Script for Zed Display Kit design
 # 
 #  Dependencies:        make.tcl
+#
+#  Revision:            Jun 03, 2015: 1.00 Initial version
+#                       Sep 17, 2015: 1.01 Updated for Vivado 2015.2
 # 
 # ----------------------------------------------------------------------------
 

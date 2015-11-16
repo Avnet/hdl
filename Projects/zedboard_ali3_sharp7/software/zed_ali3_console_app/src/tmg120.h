@@ -77,6 +77,9 @@ struct struct_touch_event_t
 
     // Touch gesture information.
     int8u touch_gesture;
+	
+	// Touch finger count information.
+    int8u touch_finger_count;
 
     // Touch co-ordinate information.
     touch_location_t touch_location;

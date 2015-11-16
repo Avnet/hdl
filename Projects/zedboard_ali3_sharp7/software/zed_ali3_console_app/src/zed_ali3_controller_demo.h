@@ -195,6 +195,8 @@ struct struct_zed_ali3_controller_demo_t
     int16u touch_posx_cal;
     int16u touch_posy_cal;
     int8u  touch_gesture;
+	int8u  touch_pen_down;
+	int8u  touch_pen_down_transition;
     int32u touch_valid;
 
     ////////////////////////////////

@@ -46,6 +46,9 @@
 --                      Jun 18, 2014: 1.03 Added WSVGA resolution definition
 --                                         to support Kyocera 10.1" Panel 
 --                                         interface
+--                      Sep 22, 2015: 1.04 Added WXVGA resolution definition
+--                                         to support Ampire 10.1" Panel 
+--                                         interface
 --
 -------------------------------------------------------------------------------
 
@@ -260,6 +263,24 @@ begin
       tc_vesync <= std_logic_vector( conv_unsigned( 600 +   3 +     10             - 1, 11) );
       tc_veblnk <= std_logic_vector( conv_unsigned( 600 +   3 +     10 +    12     - 1, 11) );
    end generate WSVGA_VTIMING_GEN;
+   
+   WXGA_VTIMING_GEN : if ( C_VIDEO_RESOLUTION = 7 ) generate
+      -- SXGA
+      --   pixel rate = 71.1 MHz
+      --   resolution = 1280x800@60HZ
+      hvsync_polarity <= '0';
+      --                                            HPIXELS HFNPRCH HSYNCPW HBKPRCH
+      tc_hsblnk <= std_logic_vector( conv_unsigned(1280                            - 1, 11) );
+      tc_hssync <= std_logic_vector( conv_unsigned(1280 +   60                     - 1, 11) );
+      tc_hesync <= std_logic_vector( conv_unsigned(1280 +   60  +    50            - 1, 11) );
+      tc_heblnk <= std_logic_vector( conv_unsigned(1280 +   60  +    50  +   50    - 1, 11) );
+      --                                            VLINES  VFNPRCH VSYNCPW VBKPRCH
+      tc_vsblnk <= std_logic_vector( conv_unsigned(800                             - 1, 11) );
+      tc_vssync <= std_logic_vector( conv_unsigned(800  +   6                      - 1, 11) );
+      tc_vesync <= std_logic_vector( conv_unsigned(800  +   6   +     3            - 1, 11) );
+      tc_veblnk <= std_logic_vector( conv_unsigned(800  +   6   +     3  +    14   - 1, 11) );
+   end generate WXGA_VTIMING_GEN;
+
 
    --
    -- Timing Generator

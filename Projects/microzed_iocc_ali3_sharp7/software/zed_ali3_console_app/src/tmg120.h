@@ -31,13 +31,14 @@
 // Target Devices:      Zynq-7000 SoC
 // Avnet Boards:        ZedBoard, Zed Display Kit
 //
-// Tool versions:       ISE 14.5
+// Tool versions:       Vivado 2015.2
 //
 // Description:         Definitions for interface to Avnet Touch Controller
 //
 // Dependencies:
 //
 // Revision:            Jun 03, 2013: 1.00 Created for Zed Display Kit
+//                      Sep 17, 2015: 1.01 Updated for ALI3 kit and 2015.2
 //
 //----------------------------------------------------------------------------
 
@@ -80,6 +81,9 @@ struct struct_touch_event_t
 
     // Touch co-ordinate information.
     touch_location_t touch_location;
+    
+    // Touch finger count information.
+    int8u touch_finger_count;
 };
 typedef struct struct_touch_event_t touch_event_t;
 

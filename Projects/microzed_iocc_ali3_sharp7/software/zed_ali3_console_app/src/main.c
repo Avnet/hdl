@@ -84,8 +84,15 @@ int main()
     // Initialize Serial Console.
     start_avnet_console_serial_application();
 
+    // Wait while peripherals become calibrated and configured.
+    sleep(10);
+
     // Check for calibration request.
     zed_ali3_controller_demo_check_calibrate_request(&demo);
+
+    // Display the logo screen to show that the system is configured.
+    zed_ali3_controller_demo_logo(&demo);
+
 
     while (1)
     {

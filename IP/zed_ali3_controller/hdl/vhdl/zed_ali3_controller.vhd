@@ -54,10 +54,11 @@ library UNISIM;
 use UNISIM.VComponents.all;
 
 entity zed_ali3_controller is
-    Generic (
+    generic (
+      C_PIXEL_CLOCK_RATE : integer := 1; -- Default clock rate is 33.33MHz
       C_FAMILY           : string  := "zynq"
     );
-    Port (
+    port (
       reset_in           : in  std_logic;
       clk_in             : in  std_logic;
       pll_locked         : out std_logic;
@@ -90,6 +91,7 @@ architecture rtl of zed_ali3_controller is
 
   
    component zed_ali3_controller_core is
+    generic (C_PIXEL_CLOCK_RATE : integer);
       port ( 
          reset_in       : in  std_logic;
          clk_in         : in  std_logic;
@@ -125,6 +127,7 @@ begin
       end process;
 
    zed_ali3_controller_core_l : zed_ali3_controller_core
+      generic map (C_PIXEL_CLOCK_RATE => C_PIXEL_CLOCK_RATE)
       port map ( 
          reset_in       => reset_in,
          clk_in         => clk_in,

@@ -32,11 +32,14 @@
 #  Target Devices:      
 #  Hardware Boards:     Zynq Mini-ITX + Zed Display Kit
 # 
-#  Tool versions:       
+#  Tool versions:       Vivado 2015.2
 # 
 #  Description:         Build Script for Zed Display Kit design
 # 
 #  Dependencies:        make.tcl
+#
+#  Revision:            Jun 04, 2015: 1.00 Initial version
+#                       Sep 17, 2015: 1.01 Updated for Vivado 2015.2
 # 
 # ----------------------------------------------------------------------------
 
