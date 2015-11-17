@@ -112,17 +112,16 @@ remove_files -fileset constrs_1 *.xdc
 # Add board specific constraint file
 switch -nocase $board {
    ZC702      {
-              set_property BOARD_PART xilinx.com:zc702:part0:1.1 [current_project]
+			  set_property board_part xilinx.com:zc702:part0:1.2 [current_project]
               add_files -fileset constrs_1 -norecurse ${projects_folder}/../zc702_fmchc_python1300c.xdc
               }
    ZEDBOARD   {
-              set_property BOARD em.avnet.com:zynq:zed:d [current_project]
+			  set_property board_part em.avnet.com:zed:part0:1.3 [current_project]
               add_files -fileset constrs_1 -norecurse ${projects_folder}/../zedboard_fmchc_python1300c.xdc
               }
    MZ7020_FMCCC {
-              #set_property BOARD em.avnet.com:microzed:part0:1.1 [current_project]
-			  set_property BOARD em.avnet.com:microzed_7020:part0:1.0 [current_project]
-              add_files -fileset constrs_1 -norecurse ${projects_folder}/../mz7020_fmccc_fmchc_python1300c.xdc
+              set_property board_part em.avnet.com:microzed_7020:part0:1.0 [current_project]
+			  add_files -fileset constrs_1 -norecurse ${projects_folder}/../mz7020_fmccc_fmchc_python1300c.xdc
               }
    default    {puts "Unsupported Board!"
                return -code ok}
@@ -138,6 +137,12 @@ update_ip_catalog
 puts "***** Creating Block Design..."
 create_bd_design ${project}
 avnet_add_ps $project $projects_folder $scriptdir
+# Apply board specific settings
+switch -nocase $board {
+   MZ7020_FMCCC {
+      source ../../Scripts/ProjectScripts/microzed_preset.tcl
+   }
+}
 
 # General Config
 puts "***** General Configuration for Design..."

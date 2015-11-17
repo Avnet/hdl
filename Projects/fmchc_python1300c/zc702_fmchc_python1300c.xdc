@@ -137,4 +137,4 @@ set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] \
 			       -group [get_clocks clk_out2_fmchc_python1300c_clk_wiz_0_0_1] \
 			       -group [get_clocks vita_clk_1] \
 			       -group [get_clocks hdmii_clk] \
-			       -group [get_clocks {n_3_serdesclockgen[0].ic}]
+			       -group [get_clocks {*serdesclockgen[0].ic*}]
