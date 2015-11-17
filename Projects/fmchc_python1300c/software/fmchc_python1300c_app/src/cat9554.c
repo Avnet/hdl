@@ -62,6 +62,16 @@ void cat9554_vdd18_en(fmc_iic_t *pInstance) {
 	pInstance->fpIicWrite( pInstance, cat9554_iic_address, 0x01, &status, 1);
 }
 
+void cat9554_vdd18_off(fmc_iic_t *pInstance) {
+	u8 status = 0;
+
+	if ( !cat9554_iic_address )	{ cat9554_detect(pInstance); }
+
+	pInstance->fpIicRead(pInstance, cat9554_iic_address, 0x01, &status, 1);
+	status &= ~0x01;
+	pInstance->fpIicWrite(pInstance, cat9554_iic_address, 0x01, &status, 1);
+}
+
 void cat9554_vdd33_en(fmc_iic_t *pInstance) {
 	u8 status = 0;
 
@@ -72,6 +82,16 @@ void cat9554_vdd33_en(fmc_iic_t *pInstance) {
 	pInstance->fpIicWrite( pInstance, cat9554_iic_address, 0x01, &status, 1);
 }
 
+void cat9554_vdd33_off(fmc_iic_t *pInstance) {
+	u8 status = 0;
+
+	if ( !cat9554_iic_address )	{ cat9554_detect(pInstance); }
+
+	pInstance->fpIicRead(pInstance, cat9554_iic_address, 0x01, &status, 1);
+	status &= ~0x02;
+	pInstance->fpIicWrite(pInstance, cat9554_iic_address, 0x01, &status, 1);
+}
+
 void cat9554_vddpix_en(fmc_iic_t *pInstance) {
 	u8 status = 0;
 
@@ -80,6 +100,17 @@ void cat9554_vddpix_en(fmc_iic_t *pInstance) {
 	pInstance->fpIicRead( pInstance, cat9554_iic_address, 0x01, &status, 1);
 	status |= 0x04;
 	pInstance->fpIicWrite( pInstance, cat9554_iic_address, 0x01, &status, 1);
+
+}
+
+void cat9554_vddpix_off(fmc_iic_t *pInstance) {
+	u8 status = 0;
+
+	if ( !cat9554_iic_address )	{ cat9554_detect(pInstance); }
+
+	pInstance->fpIicRead(pInstance, cat9554_iic_address, 0x01, &status, 1);
+	status &= ~0x04;
+	pInstance->fpIicWrite(pInstance, cat9554_iic_address, 0x01, &status, 1);
 
 }
 

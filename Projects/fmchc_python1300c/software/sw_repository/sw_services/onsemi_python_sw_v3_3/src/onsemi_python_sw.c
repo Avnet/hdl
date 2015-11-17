@@ -75,6 +75,8 @@
 //                      Feb 23, 2015: 3.1  Add core_version/core_id registers
 //                      Jul 09, 2015: 3.2  Change sensor's sample point to fix
 //                                         sampling issue (intermittent across different hw)
+//                      Nov 17, 2015: 3.3  Update driver 
+//                                         - update init sequence to resolve intermittent issues
 //----------------------------------------------------------------
 
 /***************************** Include Files *******************************/
@@ -1068,28 +1070,10 @@ int onsemi_vita_sensor_initialize(  onsemi_vita_t *pContext, int initID, int bVe
       uControl = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_REMAPPER_CONTROL_REG );
       if ( bVerbose ) xil_printf( "VITA REMAPPER - Control = 0x%08X\n\r", uControl );
 
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Asserting Reset\n\r" );
-      onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, ONSEMI_VITA_CAM_ISERDES_RESET_BIT );
-      if ( bVerbose ) xil_printf( "VITA DECODER - Asserting Reset\n\r" );
-      onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_DECODER_CONTROL_REG, ONSEMI_VITA_CAM_DECODER_RESET_BIT );
-      if ( bVerbose ) xil_printf( "VITA CRC - Asserting Reset\n\r" );
-      onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_CRC_CONTROL_REG, ONSEMI_VITA_CAM_CRC_INITVALUE_BIT | ONSEMI_VITA_CAM_CRC_RESET_BIT );
-
-      usleep(10); // 10 usec
-
       if ( bVerbose ) xil_printf("VITA SPI Sequence 0 - Assert RESET_N pin\n\r" );
       onsemi_vita_reset( pContext, ONSEMI_VITA_CAM_VITA_RESET_BIT );
 
       usleep(10); // 10 usec
-
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Releasing Reset\n\r" );
-      onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, 0x00000000 );
-      if ( bVerbose ) xil_printf( "VITA DECODER - Releasing Reset\n\r" );
-      onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_DECODER_CONTROL_REG, 0x00000000 );
-      if ( bVerbose ) xil_printf( "VITA CRC - Releasing Reset\n\r" );
-      onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_CRC_CONTROL_REG, ONSEMI_VITA_CAM_CRC_INITVALUE_BIT );
-
-      sleep(1); // 1 sec (time to get clocks to lock)
 
       if ( bVerbose ) xil_printf("VITA SPI Sequence 0 - Releasing RESET_N pin\n\r" );
       onsemi_vita_reset( pContext, 0 );
@@ -1191,80 +1175,90 @@ int onsemi_vita_sensor_initialize(  onsemi_vita_t *pContext, int initID, int bVe
       }
       onsemi_vita_spi_write_sequence( pContext, vita_spi_seq5, VITA_SPI_SEQ5_QTY );
       //
-      uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
-
-      uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
-
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Waiting for CLK_RDY to assert\n\r");
-      uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
-      timeout = 9;
-//      while ( !(uStatus & 0x00000100) && --timeout  )
-      while ( !(uStatus & 0x00000100) && --timeout  )
-      {
-	     uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
-         if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
-         usleep(1);
-      }
-      if ( !timeout )
-      {
-         if ( bVerbose ) xil_printf( "\tTimed Out !!!\n\r" );
-         return 0;
-      }
-
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Align Start\n\r" );
-      onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, ONSEMI_VITA_CAM_ISERDES_ALIGN_START_BIT );
-
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Waiting for ALIGN_BUSY to assert\n\r");
-      uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
-      timeout = 9;
-//      while ( !(uStatus & 0x00000200) && --timeout  )
-      while ( !(uStatus & 0x00000200) && --timeout  )
-      {
-         uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
-         if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
-         usleep(1);
-      }
-      if ( !timeout )
-      {
-         if ( bVerbose ) xil_printf( "\tTimed Out !!!\n\r" );
-         return 0;
-      }
-
-      onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, 0x00000000);
-
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Waiting for ALIGN_BUSY to de-assert\n\r");
-      uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
-      timeout = 9;
-//      while ( (uStatus & 0x00000200) && --timeout )
-      while ( (uStatus & 0x00000200) )
-      {
-         uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
-         if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
-         usleep(1);
-      }
-      if ( !timeout )
-      {
-         if ( bVerbose ) xil_printf( "\tTimed Out !!!\n\r" );
-      }
-
-      uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
-      if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
-
    }
 
    if ( (initID == SENSOR_INIT_SEQ06) || (initID == SENSOR_INIT_ENABLE) )
    {
-      if ( bVerbose )
-      {
-         xil_printf("VITA SPI Sequence 6 - Enable Sequencer\n\r" );
-         onsemi_vita_spi_display_sequence( pContext, vita_spi_seq6, VITA_SPI_SEQ6_QTY );
-      }
-      onsemi_vita_spi_write_sequence( pContext, vita_spi_seq6, VITA_SPI_SEQ6_QTY );
+
+
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Asserting Reset\n\r" );
+	         onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, ONSEMI_VITA_CAM_ISERDES_RESET_BIT );
+	         if ( bVerbose ) xil_printf( "VITA DECODER - Asserting Reset\n\r" );
+	         onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_DECODER_CONTROL_REG, ONSEMI_VITA_CAM_DECODER_RESET_BIT );
+	         if ( bVerbose ) xil_printf( "VITA CRC - Asserting Reset\n\r" );
+	         onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_CRC_CONTROL_REG, ONSEMI_VITA_CAM_CRC_INITVALUE_BIT | ONSEMI_VITA_CAM_CRC_RESET_BIT );
+
+	         usleep(10); // 10 usec
+
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Releasing Reset\n\r" );
+	         onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, 0x00000000 );
+	         if ( bVerbose ) xil_printf( "VITA DECODER - Releasing Reset\n\r" );
+	         onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_DECODER_CONTROL_REG, 0x00000000 );
+	         if ( bVerbose ) xil_printf( "VITA CRC - Releasing Reset\n\r" );
+	         onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_CRC_CONTROL_REG, ONSEMI_VITA_CAM_CRC_INITVALUE_BIT );
+
+	         sleep(1); // 1 sec (time to get clocks to lock)
+
+	         uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
+
+	         uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
+
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Waiting for CLK_RDY to assert\n\r");
+	         uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
+	         timeout = 9;
+	         while ( !(uStatus & 0x00000100) && --timeout  )
+	         {
+	   	     uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
+	            if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
+	            usleep(1);
+	         }
+	         if ( !timeout )
+	         {
+	            if ( bVerbose ) xil_printf( "\tTimed Out !!!\n\r" );
+	            return 0;
+	         }
+
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Align Start\n\r" );
+	         onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, ONSEMI_VITA_CAM_ISERDES_ALIGN_START_BIT );
+
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Waiting for ALIGN_BUSY to assert\n\r");
+	         uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
+	         timeout = 9;
+	         while ( !(uStatus & 0x00000200) && --timeout  )
+	         {
+	            uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
+	            if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
+	            usleep(1);
+	         }
+	         if ( !timeout )
+	         {
+	            if ( bVerbose ) xil_printf( "\tTimed Out !!!\n\r" );
+	            return 0;
+	         }
+
+	         onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, 0x00000000);
+
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Waiting for ALIGN_BUSY to de-assert\n\r");
+	         uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
+	         timeout = 9;
+	         while ( (uStatus & 0x00000200) )
+	         {
+	            uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
+	            if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
+	            usleep(1);
+	         }
+	         if ( !timeout )
+	         {
+	            if ( bVerbose ) xil_printf( "\tTimed Out !!!\n\r" );
+	         }
+
+	         uStatus = onsemi_vita_cam_reg_read( pContext, ONSEMI_VITA_CAM_ISERDES_STATUS_REG );
+	         if ( bVerbose ) xil_printf( "VITA ISERDES - Status = 0x%08X\n\r", uStatus );
 
       if ( bVerbose ) xil_printf( "VITA ISERDES - Enabling FIFO enable\n\r" );
       onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, ONSEMI_VITA_CAM_ISERDES_FIFO_ENABLE_BIT );
@@ -1281,6 +1275,13 @@ int onsemi_vita_sensor_initialize(  onsemi_vita_t *pContext, int initID, int bVe
 
       usleep(100);
       } while ((uStatus != 0) && --timeout);
+
+      if ( bVerbose )
+      {
+         xil_printf("VITA SPI Sequence 6 - Enable Sequencer\n\r" );
+         onsemi_vita_spi_display_sequence( pContext, vita_spi_seq6, VITA_SPI_SEQ6_QTY );
+      }
+      onsemi_vita_spi_write_sequence( pContext, vita_spi_seq6, VITA_SPI_SEQ6_QTY );
    }
 
    if ( (initID == SENSOR_INIT_SEQ07) || (initID == SENSOR_INIT_DISABLE) )

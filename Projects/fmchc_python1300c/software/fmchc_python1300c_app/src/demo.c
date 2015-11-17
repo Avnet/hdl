@@ -164,6 +164,15 @@ int demo_start_cam_in( demo_t *pdemo )
 	cat9554_initialize(pdemo->pfmc_hdmi_cam_iic);
 	usleep(10);
 
+	// Make sure all disable first
+	cat9554_vddpix_off(pdemo->pfmc_hdmi_cam_iic);
+	usleep(10);
+	cat9554_vdd33_off(pdemo->pfmc_hdmi_cam_iic);
+	usleep(10);
+	cat9554_vdd18_off(pdemo->pfmc_hdmi_cam_iic);
+	usleep(1000);
+
+	// Turn them on one by one
 	cat9554_vdd18_en(pdemo->pfmc_hdmi_cam_iic);
 	usleep(10);
 	cat9554_vdd33_en(pdemo->pfmc_hdmi_cam_iic);
@@ -173,9 +182,9 @@ int demo_start_cam_in( demo_t *pdemo )
 
 	onsemi_python_sensor_initialize(
 			pdemo->ppython_receiver, SENSOR_INIT_ENABLE, pdemo->bVerbose);
+	onsemi_python_sensor_cds(pdemo->ppython_receiver, pdemo->bVerbose);
 	onsemi_python_cam_reg_write(pdemo->ppython_receiver,
 			ONSEMI_PYTHON_CAM_SYNCGEN_HTIMING1_REG, 0x00300500);
-	onsemi_python_sensor_cds(pdemo->ppython_receiver, pdemo->bVerbose);
 
 	xil_printf("CFA Initialization\r\n");
 	XCfa_Reset(pdemo->pcfa);

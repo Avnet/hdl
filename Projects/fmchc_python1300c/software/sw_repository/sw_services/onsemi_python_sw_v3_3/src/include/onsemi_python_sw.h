@@ -76,6 +76,7 @@
 //                      Feb 23, 2015: 3.1  Add core_version/core_id registers
 //                      Jul 09, 2015: 3.2  Change sensor's sample point to fix
 //                                         sampling issue (intermittent across different hw)
+//                      Nov 17, 2015: 3.3  Update driver 
 //----------------------------------------------------------------
 
 #ifndef ONSEMI_PYTHON_SW_H
