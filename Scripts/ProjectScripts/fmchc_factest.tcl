@@ -112,12 +112,11 @@ remove_files -fileset constrs_1 *.xdc
 # Add board specific constraint file
 switch -nocase $board {
    ZEDBOARD   {
-              set_property BOARD em.avnet.com:zynq:zed:d [current_project]
+			  set_property board_part em.avnet.com:zed:part0:1.3 [current_project]
               add_files -fileset constrs_1 -norecurse ${projects_folder}/../zedboard_fmchc_factest.xdc
               }
    MZ7020_FMCCC {
-              #set_property BOARD em.avnet.com:microzed:part0:1.1 [current_project]
-			  set_property BOARD em.avnet.com:microzed_7020:part0:1.0 [current_project]
+              set_property board_part em.avnet.com:microzed_7020:part0:1.0 [current_project]
               add_files -fileset constrs_1 -norecurse ${projects_folder}/../mz7020_fmccc_fmchc_factest.xdc
               }
    default    {puts "Unsupported Board!"
@@ -134,6 +133,12 @@ update_ip_catalog
 puts "***** Creating Block Design..."
 create_bd_design ${project}
 avnet_add_ps $project $projects_folder $scriptdir
+# Apply board specific settings
+switch -nocase $board {
+   MZ7020_FMCCC {
+      source ../../Scripts/ProjectScripts/microzed_preset.tcl
+   }
+}
 
 # General Config
 puts "***** General Configuration for Design..."
@@ -173,7 +178,7 @@ switch -nocase $board {
               source ../../Scripts/ProjectScripts/fmchc_factest_bd.tcl
               }
    MZ7020_FMCCC {
-              set_property -dict [list CONFIG.preset {Microzed}] [get_bd_cells processing_system7_0]
+              #set_property -dict [list CONFIG.preset {Microzed}] [get_bd_cells processing_system7_0]
               source ../../Scripts/ProjectScripts/fmchc_factest_bd.tcl
               }
    default    {puts "Unsupported Board!"
