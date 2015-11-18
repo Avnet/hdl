@@ -182,6 +182,8 @@ int demo_start_cam_in( demo_t *pdemo )
 
 	onsemi_python_sensor_initialize(
 			pdemo->ppython_receiver, SENSOR_INIT_ENABLE, pdemo->bVerbose);
+	onsemi_python_sensor_initialize(
+			pdemo->ppython_receiver, SENSOR_INIT_STREAMON, pdemo->bVerbose);
 	onsemi_python_sensor_cds(pdemo->ppython_receiver, pdemo->bVerbose);
 	onsemi_python_cam_reg_write(pdemo->ppython_receiver,
 			ONSEMI_PYTHON_CAM_SYNCGEN_HTIMING1_REG, 0x00300500);

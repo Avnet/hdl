@@ -76,7 +76,11 @@
 //                      Jul 09, 2015: 3.2  Change sensor's sample point to fix
 //                                         sampling issue (intermittent across different hw)
 //                      Nov 17, 2015: 3.3  Update driver 
-//                                         - update init sequence to resolve intermittent issues
+//                                         - Update code to detect PYTHON-1300 image sensor
+//                                         - Update init sequence to resolve intermittent issues
+//                                            - Reset the camera receiver before starting the sensor 
+//                                            - Move start of capture to new SENSOR_INIT_STREAMON sequence
+//                                              (corresponds to linux V4L VIDIOC_STREAMON)
 //----------------------------------------------------------------
 
 /***************************** Include Files *******************************/
@@ -993,8 +997,8 @@ int onsemi_vita_spi_display_sequence( onsemi_vita_t *pContext, Xuint16 pConfig[]
 int onsemi_vita_sensor_initialize(  onsemi_vita_t *pContext, int initID, int bVerbose )
 {
   int i;
-   Xuint16 uAddr;
-   Xuint16 uData;
+   Xuint16 uAddr, uAddr2;
+   Xuint16 uData, uData2;
    Xuint32 uStatus;
    Xuint32 uControl;
    int timeout;
@@ -1083,6 +1087,9 @@ int onsemi_vita_sensor_initialize(  onsemi_vita_t *pContext, int initID, int bVe
       uAddr = 0;
       onsemi_vita_spi_read( pContext, uAddr, &uData );
       if ( bVerbose ) xil_printf( "\tVITA_SPI[0x%04X] => 0x%04X\n\r", uAddr, uData );
+      uAddr2 = 1;
+      onsemi_vita_spi_read( pContext, uAddr2, &uData2 );
+      if ( bVerbose ) xil_printf( "\tVITA_SPI[0x%04X] => 0x%04X\n\r", uAddr2, uData2 );
 	  if ( bVerbose )
 	  {
          switch ( uData )
@@ -1102,16 +1109,21 @@ int onsemi_vita_sensor_initialize(  onsemi_vita_t *pContext, int initID, int bVe
 		 case 0x56FA:
 			 xil_printf( "\tVITA-25K Sensor detected\n\r" );
 			 break;
+		 case 0x50D0:
+             if ( (uData2 & 0x0300) == 0x0000 ) xil_printf( "\tPYTHON-1300 Sensor detected\n\r" );
+             if ( (uData2 & 0x0300) == 0x0100 ) xil_printf( "\tPYTHON-500 Sensor detected\n\r" );
+             if ( (uData2 & 0x0300) == 0x0200 ) xil_printf( "\tPYTHON-300 Sensor detected\n\r" );
+			 break;
 		 default:
 			 xil_printf( "\tERROR: Unknown CHIP_ID !!!\n\r" );
 			 break;
 		 }
 	  }       
-//       if ( uData != 0x560D )
-//       {
-//          if ( bVerbose ) xil_printf( "\tERROR: Absent or unsupported VITA sensor !!!\n\r" );
-//          return 0;
-//       }
+      if ( (uData != 0x50D0) && ((uData2 & 0x0300) != 0x0000) )
+      {
+         if ( bVerbose ) xil_printf( "\tERROR: Absent or unsupported PYTHON sensor !!!\n\r" );
+         return 0;
+      }
    }
 
    if ( (initID == SENSOR_INIT_SEQ01) || (initID == SENSOR_INIT_ENABLE) )
@@ -1179,8 +1191,6 @@ int onsemi_vita_sensor_initialize(  onsemi_vita_t *pContext, int initID, int bVe
 
    if ( (initID == SENSOR_INIT_SEQ06) || (initID == SENSOR_INIT_ENABLE) )
    {
-
-
 	         if ( bVerbose ) xil_printf( "VITA ISERDES - Asserting Reset\n\r" );
 	         onsemi_vita_cam_reg_write( pContext, ONSEMI_VITA_CAM_ISERDES_CONTROL_REG, ONSEMI_VITA_CAM_ISERDES_RESET_BIT );
 	         if ( bVerbose ) xil_printf( "VITA DECODER - Asserting Reset\n\r" );
@@ -1276,6 +1286,10 @@ int onsemi_vita_sensor_initialize(  onsemi_vita_t *pContext, int initID, int bVe
       usleep(100);
       } while ((uStatus != 0) && --timeout);
 
+   }
+   
+   if ( (initID == SENSOR_INIT_SEQ06A) || (initID == SENSOR_INIT_STREAMON) )
+   {
       if ( bVerbose )
       {
          xil_printf("VITA SPI Sequence 6 - Enable Sequencer\n\r" );
