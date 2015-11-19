@@ -41,7 +41,7 @@
 # ----------------------------------------------------------------------------
 
 # Build PYTHON-1300-C Frame Buffer design for MicroZed Embedded Vision Kit + MicroZed 7020 SOM
-set argv [list board=MZ7020_EMBV project=embv_python1300c_fb sdk=yes]
+set argv [list board=MZ7020_EMBV project=embv_python1300c_fb sdk=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
