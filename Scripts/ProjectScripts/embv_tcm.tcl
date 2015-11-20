@@ -119,6 +119,8 @@ update_ip_catalog
 puts "***** Creating Block Design..."
 create_bd_design ${project}
 avnet_add_ps $project $projects_folder $scriptdir
+# Apply board specific settings
+      source ../../Scripts/ProjectScripts/microzed_preset.tcl
 
 # General Config
 puts "***** General Configuration for Design..."

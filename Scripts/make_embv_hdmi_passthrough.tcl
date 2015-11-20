@@ -41,12 +41,12 @@
 # ----------------------------------------------------------------------------
 
 # Build HDMI-Passthrough design for MicroZed Embedded Vision Kit + MicroZed 7010 SOM
-set argv [list board=MZ7010_EMBV project=embv_hdmi_passthrough sdk=yes]
+set argv [list board=MZ7010_EMBV project=embv_hdmi_passthrough sdk=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
 # Build HDMI-Passthrough design for MicroZed Embedded Vision Kit + MicroZed 7020 SOM
-set argv [list board=MZ7020_EMBV project=embv_hdmi_passthrough sdk=yes]
+set argv [list board=MZ7020_EMBV project=embv_hdmi_passthrough sdk=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
  
