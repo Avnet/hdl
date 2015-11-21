@@ -161,6 +161,7 @@ int demo_start_cam_in( demo_t *pdemo )
     }
     else
     {
+       onsemi_vita_sensor_initialize( pdemo->pvita_receiver, SENSOR_INIT_STREAMON, pdemo->bVerbose);	
        sleep(1);
 
        xil_printf( "FMC-IMAGEON VITA Configuration for 1080P60 timing ...\n\r" );
