@@ -76,6 +76,12 @@
 //                      Feb 23, 2015: 3.1  Add core_version/core_id registers
 //                      Jul 09, 2015: 3.2  Change sensor's sample point to fix
 //                                         sampling issue (intermittent across different hw)
+//                      Nov 17, 2015: 3.3  Update driver 
+//                                         - Update code to detect PYTHON-1300 image sensor
+//                                         - Update init sequence to resolve intermittent issues
+//                                            - Reset the camera receiver before starting the sensor 
+//                                            - Move start of capture to new SENSOR_INIT_STREAMON sequence
+//                                              (corresponds to linux V4L VIDIOC_STREAMON)
 //----------------------------------------------------------------
 
 #ifndef ONSEMI_PYTHON_SW_H
@@ -749,8 +755,10 @@ int onsemi_vita_spi_display_sequence( onsemi_vita_t *pContext, Xuint16 pConfig[]
 #define SENSOR_INIT_SEQ08	  8
 #define SENSOR_INIT_SEQ09	  9
 #define SENSOR_INIT_SEQ10	 10
-#define SENSOR_INIT_ENABLE  101 // Execute sequences 0,1,2,3,4,5,6
-#define SENSOR_INIT_DISABLE 102 // Execute sequences 7, 8, 9, 10
+#define SENSOR_INIT_SEQ06A	 11
+#define SENSOR_INIT_ENABLE   101 // Execute sequences 0,1,2,3,4,5,6
+#define SENSOR_INIT_DISABLE  102 // Execute sequences 7, 8, 9, 10
+#define SENSOR_INIT_STREAMON 103 // Start capture (corresponds to linux V4L VIDIOC_STREAMON)
 int onsemi_vita_sensor_initialize( onsemi_vita_t *pContext, int initID, int bVerbose );
 
 /******************************************************************************
