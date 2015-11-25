@@ -29,12 +29,12 @@
 #  Design Name:         
 #  Module Name:         
 #  Project Name:        
-#  Target Devices:      Zynq-7020
-#  Hardware Boards:     PicoZed, FMC Carrier V2
+#  Target Devices:      Zynq-70
+#  Hardware Boards:     ZC706
 # 
-#  Tool versions:       Vivado 2015.2.1
+#  Tool versions:       Vivado 2015.2
 # 
-#  Description:         Build Script for PicoZed FMC Carrier V2
+#  Description:         Build Script for Xilinx ZC706
 # 
 #  Dependencies:        To be called from a project build script
 # 
@@ -42,11 +42,10 @@
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
-   create_project $project $projects_folder -part xc7z020clg400-1 -force
+   create_project $project $projects_folder -part xc7z045ffg900-2 -force
+   
    # add selection for proper xdc based on needs
-   # if IO carrier, then use that xdc
-   # if FMC, choose that one
-   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7020_FMC2/PZ7020_RevC_FMCV2_RevA_v1.xdc
+   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/ZC706/zc706_r1_0.xdc
 
 }
 
@@ -55,8 +54,6 @@ proc avnet_add_ps {project projects_folder scriptdir} {
    # add selection for customization depending on board choice (or none)
    create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" }  [get_bd_cells processing_system7_0]
-   create_bd_port -dir I -type clk M_AXI_GP0_ACLK
-   connect_bd_net [get_bd_pins /processing_system7_0/M_AXI_GP0_ACLK] [get_bd_ports M_AXI_GP0_ACLK]
 
 
 }

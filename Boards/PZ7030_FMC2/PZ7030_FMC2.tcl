@@ -47,7 +47,7 @@ proc avnet_create_project {project projects_folder scriptdir} {
    # if IO carrier, then use that xdc
    # if FMC, choose that one
    # for now, uses the same master constraints file as PZ7015
-   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMCV2/PZ7030_7015_RevC_FMCV2_RevA_v1.xdc
+   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_7015_RevC_FMCV2_RevA_v1.xdc
 
 }
 

@@ -46,7 +46,7 @@ proc avnet_create_project {project projects_folder scriptdir} {
    # add selection for proper xdc based on needs
    # if IO carrier, then use that xdc
    # if FMC, choose that one
-   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7010_FMCV2/PZ7010_RevC_FMCV2_RevA_v1.xdc
+   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7010_FMC2/PZ7010_RevC_FMCV2_RevA_v1.xdc
 
 }
 

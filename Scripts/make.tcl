@@ -279,8 +279,13 @@ if {[string match -nocase "init" $tag]} {
 switch -nocase $board {
    PZ7015_FMCCC               -
    PZ7030_FMCCC               -
+   PZ7010_FMC2                -
+   PZ7020_FMC2                -
+   PZ7015_FMC2                -
+   PZ7030_FMC2                -
    PZSDR7035_FMCCC            -
    ZC702                      -
+   ZC706                      -
    ZEDBOARD                   -
    MITXZ7045                  -
    MITXZ7100                  -
