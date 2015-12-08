@@ -113,7 +113,17 @@ remove_files -fileset constrs_1 *.xdc
 switch -nocase $board {
    ZC702      {
 			  set_property board_part xilinx.com:zc702:part0:1.2 [current_project]
-              add_files -fileset constrs_1 -norecurse ${projects_folder}/../zc702_fmchc_python1300c.xdc
+			  # use this XDC file for FMC slot #1
+              #add_files -fileset constrs_1 -norecurse ${projects_folder}/../zc702_fmc1_fmchc_python1300c.xdc
+			  # use this XDC file for FMC slot #2
+              add_files -fileset constrs_1 -norecurse ${projects_folder}/../zc702_fmc2_fmchc_python1300c.xdc
+              }
+   ZC706      {
+			  set_property board_part xilinx.com:zc706:part0:1.2 [current_project]
+			  # use this XDC file for LPC FMC slot
+              add_files -fileset constrs_1 -norecurse ${projects_folder}/../zc706_lpc_fmchc_python1300c.xdc
+			  # use this XDC file for HPC FMC slot
+              #add_files -fileset constrs_1 -norecurse ${projects_folder}/../zc706_hpc_fmchc_python1300c.xdc
               }
    ZEDBOARD   {
 			  set_property board_part em.avnet.com:zed:part0:1.3 [current_project]
@@ -122,6 +132,10 @@ switch -nocase $board {
    MZ7020_FMCCC {
               set_property board_part em.avnet.com:microzed_7020:part0:1.0 [current_project]
 			  add_files -fileset constrs_1 -norecurse ${projects_folder}/../mz7020_fmccc_fmchc_python1300c.xdc
+              }
+   PZ7030_FMC2 {
+              set_property board_part em.avnet.com:picozed_7030:part0:1.0 [current_project]
+			  add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz7030_fmc2_fmchc_python1300c.xdc
               }
    default    {puts "Unsupported Board!"
                return -code ok}
@@ -141,6 +155,9 @@ avnet_add_ps $project $projects_folder $scriptdir
 switch -nocase $board {
    MZ7020_FMCCC {
       source ../../Scripts/ProjectScripts/microzed_preset.tcl
+   }
+   PZ7030_FMC2 {
+      source ../../Scripts/ProjectScripts/picozed_preset.tcl
    }
 }
 
@@ -181,11 +198,19 @@ switch -nocase $board {
               set_property -dict [list CONFIG.preset {ZC702}] [get_bd_cells processing_system7_0]
               source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
               }
+   ZC706      {
+              set_property -dict [list CONFIG.preset {ZC706}] [get_bd_cells processing_system7_0]
+              source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
+              }
    ZEDBOARD   {
               set_property -dict [list CONFIG.preset {ZedBoard}] [get_bd_cells processing_system7_0]
               source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
               }
    MZ7020_FMCCC {
+              #set_property -dict [list CONFIG.preset {Microzed}] [get_bd_cells processing_system7_0]
+              source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
+              }
+   PZ7030_FMC2 {
               #set_property -dict [list CONFIG.preset {Microzed}] [get_bd_cells processing_system7_0]
               source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
               }
