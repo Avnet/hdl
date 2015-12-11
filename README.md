@@ -45,4 +45,4 @@ For design support please contact your local Avnet/Silica FAE or visit one of ou
 [Vivado 2015.2.1]:http://www.xilinx.com/content/xilinx/en/downloadNav/vivado-design-tools/2015-2.html
 [Avnet Technical Community]:http://community.em.avnet.com/
 [Zed Community Support Forums]:http://www.picozed.org/forum
-[legal]https://github.com/Avnet/legal
+[legal]:https://github.com/Avnet/legal
