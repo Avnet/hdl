@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+	[bootloader]pz_fmc2_ali3_amp10.sdk/zynq_fsbl_app/Debug/zynq_fsbl_app.elf
+	pz_fmc2_ali3_amp10.sdk/zed_ali3_hw/pz_fmc2_ali3_amp10_wrapper.bit
+	pz_fmc2_ali3_amp10.sdk/zed_ali3_console_app/Debug/zed_ali3_console_app.elf
+}
