@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+	[bootloader]pz_fmc2_valtest.sdk/zynq_fsbl_app/Debug/zynq_fsbl_app.elf
+	pz_fmc2_valtest.sdk/pz_fmc2_hw/pz_fmc2_valtest_wrapper.bit
+	pz_fmc2_valtest.sdk/pzcc_iic_eeprom_test/Debug/pzcc_iic_eeprom_test.elf
+}
