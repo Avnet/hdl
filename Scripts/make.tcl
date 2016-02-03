@@ -240,7 +240,7 @@ set GUI $rdi::mode
 if {[string match -nocase "init" $tag]} {
    puts "Not Requesting Tag"
    if {[string match -nocase "yes" $jtag]} {
-      if {[string match -nocase "gui" $GUI]} {
+      if {[string match -nocase "tcl" $GUI]} {
          puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
          puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
          puts "*-                                                     -*"

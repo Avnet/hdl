@@ -60,6 +60,8 @@ if {[string match -nocase "PZ7015_FMCCC" $board]} {
    add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz7015_ibert_7series_gtp_0.xdc
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
    add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz7030_ibert_7series_gtx_0.xdc
+} elseif {[string match -nocase "PZ7015_FMC2" $board]} {
+   add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz7015_fmc2_ibert_7series_gtp_0.xdc
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -77,6 +79,11 @@ if {[string match -nocase "PZ7015_FMCCC" $board]} {
    set_property -dict [list CONFIG.C_PROTOCOL_MAXLINERATE_1 {6.25} CONFIG.C_PROTOCOL_RXREFCLK_FREQUENCY_1 {250.000} CONFIG.C_PROTOCOL_QUAD0 {Custom_1_/_6.25_Gbps} CONFIG.C_REFCLK_SOURCE_QUAD_0 {MGTREFCLK1_112} CONFIG.C_SYSCLOCK_SOURCE_INT {QUAD112_1} CONFIG.C_PROTOCOL_QUAD0 {Custom_1_/_6.25_Gbps} CONFIG.C_PROTOCOL_QUAD1 {None} CONFIG.C_PROTOCOL_QUAD2 {None} CONFIG.C_PROTOCOL_QUAD3 {None} CONFIG.C_PROTOCOL_QUAD4 {None} CONFIG.C_PROTOCOL_QUAD5 {None} CONFIG.C_PROTOCOL_QUAD6 {None} CONFIG.C_PROTOCOL_QUAD7 {None} CONFIG.C_PROTOCOL_QUAD8 {None} CONFIG.C_PROTOCOL_QUAD9 {None} CONFIG.C_PROTOCOL_QUAD10 {None} CONFIG.C_PROTOCOL_QUAD11 {None} CONFIG.C_PROTOCOL_QUAD12 {None} CONFIG.C_PROTOCOL_QUAD13 {None} CONFIG.C_PROTOCOL_QUAD14 {None} CONFIG.C_PROTOCOL_QUAD15 {None} CONFIG.C_REFCLK_SOURCE_QUAD_1 {None} CONFIG.C_REFCLK_SOURCE_QUAD_2 {None} CONFIG.C_REFCLK_SOURCE_QUAD_3 {None} CONFIG.C_REFCLK_SOURCE_QUAD_4 {None} CONFIG.C_REFCLK_SOURCE_QUAD_5 {None} CONFIG.C_REFCLK_SOURCE_QUAD_6 {None} CONFIG.C_REFCLK_SOURCE_QUAD_7 {None} CONFIG.C_REFCLK_SOURCE_QUAD_8 {None} CONFIG.C_REFCLK_SOURCE_QUAD_9 {None} CONFIG.C_REFCLK_SOURCE_QUAD_10 {None} CONFIG.C_REFCLK_SOURCE_QUAD_11 {None} CONFIG.C_REFCLK_SOURCE_QUAD_12 {None} CONFIG.C_REFCLK_SOURCE_QUAD_13 {None} CONFIG.C_REFCLK_SOURCE_QUAD_14 {None} CONFIG.C_REFCLK_SOURCE_QUAD_15 {None} CONFIG.C_CHANNEL_QUAD_0 {Channel_0} CONFIG.C_CHANNEL_QUAD_1 {Channel_0} CONFIG.C_CHANNEL_QUAD_2 {Channel_0} CONFIG.C_CHANNEL_QUAD_3 {Channel_0} CONFIG.C_CHANNEL_QUAD_4 {Channel_0} CONFIG.C_CHANNEL_QUAD_5 {Channel_0} CONFIG.C_CHANNEL_QUAD_6 {Channel_0} CONFIG.C_CHANNEL_QUAD_7 {Channel_0} CONFIG.C_CHANNEL_QUAD_8 {Channel_0} CONFIG.C_CHANNEL_QUAD_9 {Channel_0} CONFIG.C_CHANNEL_QUAD_10 {Channel_0} CONFIG.C_CHANNEL_QUAD_11 {Channel_0} CONFIG.C_CHANNEL_QUAD_12 {Channel_0} CONFIG.C_CHANNEL_QUAD_13 {Channel_0} CONFIG.C_CHANNEL_QUAD_14 {Channel_0} CONFIG.C_CHANNEL_QUAD_15 {Channel_0} CONFIG.C_RXOUTCLK_GT_LOCATION {QUAD_112} CONFIG.C_RXOUTCLK_PIN_STD {DIFF_SSTL15} CONFIG.C_RXOUTCLK_FREQUENCY {195.3125} CONFIG.C_SYSCLK_MODE_EXTERNAL {0} CONFIG.C_SYSCLK_IO_PIN_STD {DIFF_SSTL15} CONFIG.C_SYSCLK_FREQUENCY {250.000} CONFIG.C_SYSCLK_IO_PIN_LOC_N {UNASSIGNED} CONFIG.C_SYSCLK_IO_PIN_LOC_P {UNASSIGNED}] [get_ips ibert_7series_gtx_0]
    generate_target {instantiation_template} [get_files ./$project.srcs/sources_1/ip/ibert_7series_gtx_0/ibert_7series_gtx_0.xci]
    generate_target all [get_files  ./$project.srcs/sources_1/ip/ibert_7series_gtx_0/ibert_7series_gtx_0.xci]
+} elseif {[string match -nocase "PZ7015_FMC2" $board]} {
+   create_ip -name ibert_7series_gtp -vendor xilinx.com -library ip -version 3.0 -module_name ibert_7series_gtp_0
+   set_property -dict [list CONFIG.C_PROTOCOL_MAXLINERATE_1 {3.125} CONFIG.C_PROTOCOL_RXREFCLK_FREQUENCY_1 {250.000} CONFIG.C_PROTOCOL_QUAD0 {Custom_1_/_3.125_Gbps} CONFIG.C_REFCLK_SOURCE_QUAD_0 {MGTREFCLK1_112} CONFIG.C_PROTOCOL_MAXLINERATE_1 {3.125} CONFIG.C_PROTOCOL_MAXLINERATE_2 {3.125} CONFIG.C_PROTOCOL_MAXLINERATE_3 {3.125} CONFIG.C_PROTOCOL_QUAD0 {Custom_1_/_3.125_Gbps} CONFIG.C_PROTOCOL_QUAD1 {None} CONFIG.C_PROTOCOL_QUAD2 {None} CONFIG.C_PROTOCOL_QUAD3 {None} CONFIG.C_REFCLK_SOURCE_QUAD_1 {None} CONFIG.C_REFCLK_SOURCE_QUAD_2 {None} CONFIG.C_REFCLK_SOURCE_QUAD_3 {None} CONFIG.C_CHANNEL_QUAD_0 {Channel_0} CONFIG.C_CHANNEL_QUAD_1 {Channel_0} CONFIG.C_CHANNEL_QUAD_2 {Channel_0} CONFIG.C_CHANNEL_QUAD_3 {Channel_0} CONFIG.C_RXOUTCLK_GT_LOCATION {QUAD_112} CONFIG.C_RXOUTCLK_PIN_STD {DIFF_SSTL15} CONFIG.C_SYSCLOCK_SOURCE_INT {External}] [get_ips ibert_7series_gtp_0]
+   generate_target {instantiation_template} [get_files ./$project.srcs/sources_1/ip/ibert_7series_gtp_0/ibert_7series_gtp_0.xci]
+   generate_target all [get_files  ./$project.srcs/sources_1/ip/ibert_7series_gtp_0/ibert_7series_gtp_0.xci]
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -93,6 +100,9 @@ if {[string match -nocase "PZ7015_FMCCC" $board]} {
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
    # change to 6.25Gbps_onb250Mhz
    create_project ibert_7series_gtx_0_example ./example -force
+} elseif {[string match -nocase "PZ7015_FMC2" $board]} {
+   # change to 3.125Gbps_onb250Mhz
+   create_project ibert_7series_gtx_0_example ./example -force
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -101,6 +111,8 @@ if {[string match -nocase "PZ7015_FMCCC" $board]} {
    set_property part xc7z015clg485-1 [current_project]
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
    set_property part xc7z030sbg485-1 [current_project]
+} elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
+   set_property part xc7z015clg485-1 [current_project]
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -115,6 +127,9 @@ if {[string match -nocase "PZ7015_FMCCC" $board]} {
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
    import_ip -files [list [file join ../$project.srcs/sources_1/ip/ibert_7series_gtx_0 ibert_7series_gtx_0.xci]] -name ibert_7series_gtx_0
    reset_target {example} [get_ips ibert_7series_gtx_0]
+} elseif {[string match -nocase "PZ7015_FMC2" $board]} {
+   import_ip -files [list [file join ../$project.srcs/sources_1/ip/ibert_7series_gtp_0 ibert_7series_gtp_0.xci]] -name ibert_7series_gtp_0
+   reset_target {example} [get_ips ibert_7series_gtp_0]
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -137,6 +152,11 @@ if {[string match -nocase "PZ7015_FMCCC" $board]} {
    add_files -norecurse ../../pz7030_ibert_7series_gtx_0.v
    add_files -fileset constrs_1 -norecurse ../../pz7030_ibert_7series_gtx_0.xdc
    set_property top pz7030_ibert_7series_gtx_0 [current_fileset]
+} elseif {[string match -nocase "PZ7015_FMC2" $board]} {
+   generate_target [_filter_supported_targets {instantiation_template synthesis simulation implementation shared_logic} [get_ips ibert_7series_gtp_0]] [get_ips ibert_7series_gtp_0]
+   add_files -norecurse ../../pz7015_fmc2_ibert_7series_gtp_0.v
+   add_files -fileset constrs_1 -norecurse ../../pz7015_fmc2_ibert_7series_gtp_0.xdc
+   set_property top pz7015_fmc2_ibert_7series_gtp_0 [current_fileset]
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -147,6 +167,8 @@ if {[string match -nocase "PZ7015_FMCCC" $board]} {
    set dfile ./ibert_7series_gtp_0_example.srcs/sources_1/ip/ibert_7series_gtp_0/oepdone.txt
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
    set dfile ./ibert_7series_gtx_0_example.srcs/sources_1/ip/ibert_7series_gtx_0/oepdone.txt
+} elseif {[string match -nocase "PZ7015_FMC2" $board]} {
+   set dfile ./ibert_7series_gtp_0_example.srcs/sources_1/ip/ibert_7series_gtp_0/oepdone.txt
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -172,6 +194,8 @@ if {[string match -nocase "PZ7015_FMCCC" $board]} {
    set project ibert_7series_gtp_0_example
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
    set project ibert_7series_gtx_0_example
+} elseif {[string match -nocase "PZ7015_FMC2" $board]} {
+   set project ibert_7series_gtp_0_example
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -185,9 +209,11 @@ puts "Generating Binary..."
 source ./bin_helper.tcl -notrace
 # JTAG bitstream 
 if {[string match -nocase "PZ7015_FMCCC" $board]} {
-   set jtagFilename $projects_folder/ibert_7series_gtp_0_example.runs/impl_1/pz7015_ibert_7series_gtp_0.bit
+   set jtagFilename $projects_folder/ibert_7series_gtp_0_example.runs/impl_1/example_ibert_7series_gtp_0.bit
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
-   set jtagFilename $projects_folder/ibert_7series_gtx_0_example.runs/impl_1/pz7030_ibert_7series_gtx_0.bit
+   set jtagFilename $projects_folder/ibert_7series_gtx_0_example.runs/impl_1/example_ibert_7series_gtp_0.bit
+} elseif {[string match -nocase "PZ7015_FMC2" $board]} {
+   set jtagFilename $projects_folder/ibert_7series_gtp_0_example.runs/impl_1/pz7015_fmc2_ibert_7series_gtp_0.bit
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
