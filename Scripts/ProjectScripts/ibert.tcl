@@ -57,9 +57,9 @@ source ../Boards/$board/$board.tcl -notrace
 avnet_create_project $project $projects_folder $scriptdir
 remove_files -fileset constrs_1 *.xdc
 if {[string match -nocase "PZ7015_FMCCC" $board]} {
-   add_files -fileset constrs_1 -norecurse ${projects_folder}/../example_ibert_7series_gtp_0.xdc
+   add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz7015_ibert_7series_gtp_0.xdc
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
-   add_files -fileset constrs_1 -norecurse ${projects_folder}/../example_ibert_7series_gtx_0.xdc
+   add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz7030_ibert_7series_gtx_0.xdc
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -129,14 +129,14 @@ proc _filter_supported_targets {targets ip} {
 
 if {[string match -nocase "PZ7015_FMCCC" $board]} {
    generate_target [_filter_supported_targets {instantiation_template synthesis simulation implementation shared_logic} [get_ips ibert_7series_gtp_0]] [get_ips ibert_7series_gtp_0]
-   add_files -norecurse ../../example_ibert_7series_gtp_0.v
-   add_files -fileset constrs_1 -norecurse ../../example_ibert_7series_gtp_0.xdc
-   set_property top example_ibert_7series_gtp_0 [current_fileset]
+   add_files -norecurse ../../pz7015_ibert_7series_gtp_0.v
+   add_files -fileset constrs_1 -norecurse ../../pz7015_ibert_7series_gtp_0.xdc
+   set_property top pz7015_ibert_7series_gtp_0 [current_fileset]
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
    generate_target [_filter_supported_targets {instantiation_template synthesis simulation implementation shared_logic} [get_ips ibert_7series_gtx_0]] [get_ips ibert_7series_gtx_0]
-   add_files -norecurse ../../example_ibert_7series_gtx_0.v
-   add_files -fileset constrs_1 -norecurse ../../example_ibert_7series_gtx_0.xdc
-   set_property top example_ibert_7series_gtx_0 [current_fileset]
+   add_files -norecurse ../../pz7030_ibert_7series_gtx_0.v
+   add_files -fileset constrs_1 -norecurse ../../pz7030_ibert_7series_gtx_0.xdc
+   set_property top pz7030_ibert_7series_gtx_0 [current_fileset]
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }
@@ -185,9 +185,9 @@ puts "Generating Binary..."
 source ./bin_helper.tcl -notrace
 # JTAG bitstream 
 if {[string match -nocase "PZ7015_FMCCC" $board]} {
-   set jtagFilename $projects_folder/ibert_7series_gtp_0_example.runs/impl_1/example_ibert_7series_gtp_0.bit
+   set jtagFilename $projects_folder/ibert_7series_gtp_0_example.runs/impl_1/pz7015_ibert_7series_gtp_0.bit
 } elseif {[string match -nocase "PZ7030_FMCCC" $board]} {
-   set jtagFilename $projects_folder/ibert_7series_gtx_0_example.runs/impl_1/example_ibert_7series_gtx_0.bit
+   set jtagFilename $projects_folder/ibert_7series_gtx_0_example.runs/impl_1/pz7030_ibert_7series_gtx_0.bit
 } else {
    error "Problems were encountered while executing the example design script, please review the log files."
 }

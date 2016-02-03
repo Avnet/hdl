@@ -41,7 +41,7 @@
 # ----------------------------------------------------------------------------
 
 # Set Build Variables
-set argv [list board=PZ7015_FMCCC project=pz_fmccc_ibert jtag=yes version_override=yes]
+set argv [list board=PZ7015_FMCCC project=ibert jtag=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
