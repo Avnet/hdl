@@ -187,7 +187,7 @@ void avnet_console_help( avnet_console_t *pConsole )
 {
   pConsole->io_hprintf( pConsole->io_handle, "\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "------------------------------------------------------\n\r");
-  pConsole->io_hprintf( pConsole->io_handle, "--                    FMC-HDMI-CAM                  --\n\r");
+  pConsole->io_hprintf( pConsole->io_handle, "--             FMC-HDMI-CAM + PYTHON-1300-C         --\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "--               Getting Started Design             --\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "------------------------------------------------------\n\r");
   pConsole->io_hprintf( pConsole->io_handle, "General Commands:\n\r");

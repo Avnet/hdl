@@ -11,8 +11,8 @@
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 # 
-#  Please direct any questions or issues to the ZedBoard Community Forums:
-#      http://www.zedboard.org
+#  Please direct any questions or issues to the MicroZed Community Forums:
+#     http://www.microzed.org
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.

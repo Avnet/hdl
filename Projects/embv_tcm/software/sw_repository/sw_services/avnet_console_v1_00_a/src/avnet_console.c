@@ -31,8 +31,7 @@
 //
 // Tool versions:       ISE 14.2
 //
-// Description:         Text-based console for
-//                      FMC-IMAGEON Getting Started Design
+// Description:         Text-based console for EMBV
 //
 // Dependencies:        
 //

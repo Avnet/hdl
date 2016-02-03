@@ -34,7 +34,7 @@
 # 
 #  Tool versions:       Vivado 2014.4
 # 
-#  Description:         Build Script for Toshiba TCM3232PB Frame Buffer design
+#  Description:         Build Script for FMC-IMAGEON + VITA-2000 Getting Started design
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration scripts
@@ -112,16 +112,15 @@ remove_files -fileset constrs_1 *.xdc
 # Add board specific constraint file
 switch -nocase $board {
    ZC702      {
-              set_property BOARD_PART xilinx.com:zc702:part0:1.1 [current_project]
+			  set_property board_part xilinx.com:zc702:part0:1.2 [current_project]
               add_files -fileset constrs_1 -norecurse ${projects_folder}/../zc702_fmc_imageon_gs.xdc
               }
    ZEDBOARD   {
-              set_property BOARD em.avnet.com:zynq:zed:d [current_project]
+			  set_property board_part em.avnet.com:zed:part0:1.3 [current_project]
               add_files -fileset constrs_1 -norecurse ${projects_folder}/../zedboard_fmc_imageon_gs.xdc
               }
    MZ7020_FMCCC {
-              #set_property BOARD em.avnet.com:microzed:part0:1.1 [current_project]
-			  set_property BOARD em.avnet.com:microzed_7020:part0:1.0 [current_project]
+              set_property board_part em.avnet.com:microzed_7020:part0:1.0 [current_project]
               add_files -fileset constrs_1 -norecurse ${projects_folder}/../mz7020_fmccc_fmc_imageon_gs.xdc
               }
    default    {puts "Unsupported Board!"
@@ -138,6 +137,12 @@ update_ip_catalog
 puts "***** Creating Block Design..."
 create_bd_design ${project}
 avnet_add_ps $project $projects_folder $scriptdir
+# Apply board specific settings
+switch -nocase $board {
+   MZ7020_FMCCC {
+      source ../../Scripts/ProjectScripts/microzed_preset.tcl
+   }
+}
 
 # General Config
 puts "***** General Configuration for Design..."
@@ -181,7 +186,7 @@ switch -nocase $board {
               source ../../Scripts/ProjectScripts/fmc_imageon_gs_bd.tcl
               }
    MZ7020_FMCCC {
-              set_property -dict [list CONFIG.preset {Microzed}] [get_bd_cells processing_system7_0]
+              #set_property -dict [list CONFIG.preset {Microzed}] [get_bd_cells processing_system7_0]
               source ../../Scripts/ProjectScripts/fmc_imageon_gs_bd.tcl
               }
    default    {puts "Unsupported Board!"

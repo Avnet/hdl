@@ -17,7 +17,7 @@ proc make_ip {ip_name} {
    set_property vendor {avnet.com} [ipx::current_core]
    set_property library {ip} [ipx::current_core]
    set_property name {vtiming_gen} [ipx::current_core]
-   set_property version {1.4} [ipx::current_core]
+   set_property version {1.6} [ipx::current_core]
    set_property display_name {Static Video Timing Generator} [ipx::current_core]
    set_property vendor_display_name {Avnet} [ipx::current_core]
    set_property company_url {http://em.avnet.com} [ipx::current_core]
@@ -49,6 +49,9 @@ proc make_ip {ip_name} {
    set_property value false [ipx::get_user_parameters C_DEBUG_PORT -of_objects [ipx::current_core]]
    set_property value_format bool [ipx::get_user_parameters C_DEBUG_PORT -of_objects [ipx::current_core]]
    
+   ipx::add_user_parameter C_VIDEO_RESOLUTION [ipx::current_core]
+   set_property value_resolve_type user [ipx::get_user_parameters C_VIDEO_RESOLUTION -of_objects [ipx::current_core]]
+   
    # Assign the bus interfaces used for this IP core.
    ipx::add_bus_interface {VTIMING} [ipx::current_core]
    set_property interface_mode {master} [ipx::get_bus_interfaces VTIMING -of_objects [ipx::current_core]]
@@ -72,6 +75,12 @@ proc make_ip {ip_name} {
    # Setup the Customization GUI for this IP core.
    ipgui::add_param -name {C_DEBUG_PORT} -component [ipx::current_core] -parent [ipgui::get_pagespec -name "Page 0" -component [ipx::current_core] ] -display_name {C_DEBUG_PORT}
    set_property tooltip {Enable Debug Port} [ipgui::get_guiparamspec -name "C_DEBUG_PORT" -component [ipx::current_core] ]
+   
+   ipgui::add_param -name {C_VIDEO_RESOLUTION} -component [ipx::current_core] -parent [ipgui::get_pagespec -name "Page 0" -component [ipx::current_core] ] -display_name {C_VIDEO_RESOLUTION}
+   set_property tooltip {Select resolution of the targeted display panel} [ipgui::get_guiparamspec -name "C_VIDEO_RESOLUTION" -component [ipx::current_core] ]
+   set_property widget {comboBox} [ipgui::get_guiparamspec -name "C_VIDEO_RESOLUTION" -component [ipx::current_core] ]
+   set_property value_validation_type pairs [ipx::get_user_parameters C_VIDEO_RESOLUTION -of_objects [ipx::current_core]]
+   set_property value_validation_pairs {640x480 0 800x480 1 800x600 2 1024x768 3 1280x720 4 1280x1024 5 1024x600 6 1280x800 7} [ipx::get_user_parameters C_VIDEO_RESOLUTION -of_objects [ipx::current_core]]
    
    # Generate the XGUI files to accompany this IP core.
    ipx::create_xgui_files [ipx::current_core]

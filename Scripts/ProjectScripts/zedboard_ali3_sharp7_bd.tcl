@@ -114,14 +114,16 @@ proc create_hier_cell_zed_ali3_display { parentCell nameHier } {
   set_property -dict [ list CONFIG.CONST_VAL {1}  ] $vcc_const_0
 
   # Create instance: vtiming_gen_0, and set properties
-  set vtiming_gen_0 [ create_bd_cell -type ip -vlnv avnet.com:ip:vtiming_gen:1.4 vtiming_gen_0 ]
+  set vtiming_gen_0 [ create_bd_cell -type ip -vlnv avnet.com:ip:vtiming_gen:1.6 vtiming_gen_0 ]
+  set_property -dict [list CONFIG.C_VIDEO_RESOLUTION {1}] $vtiming_gen_0
 
   # Create instance: xlconcat_0, and set properties
   set xlconcat_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0 ]
   set_property -dict [ list CONFIG.NUM_PORTS {3}  ] $xlconcat_0
 
   # Create instance: zed_ali3_controller_0, and set properties
-  set zed_ali3_controller_0 [ create_bd_cell -type ip -vlnv avnet.com:ip:zed_ali3_controller:1.6 zed_ali3_controller_0 ]
+  set zed_ali3_controller_0 [ create_bd_cell -type ip -vlnv avnet.com:ip:zed_ali3_controller:1.7 zed_ali3_controller_0 ]
+  set_property -dict [list CONFIG.C_PIXEL_CLOCK_RATE {1}] $zed_ali3_controller_0
 
   # Create instance: debounce_0, and set properties
   set debounce_0 [ create_bd_cell -type ip -vlnv avnet.com:ip:debounce:1.0 debounce_0 ]

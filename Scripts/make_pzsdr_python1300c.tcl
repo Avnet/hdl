@@ -41,7 +41,7 @@
 # ----------------------------------------------------------------------------
 
 # Build PYTHON-1300-C Getting Started design for the PicoZed SDR SOM + FMC Carrier Card
-set argv [list board=PZSDR7035_FMCCC project=pzsdr_python1300c sdk=yes]
+set argv [list board=PZSDR7035_FMCCC project=pzsdr_python1300c sdk=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 

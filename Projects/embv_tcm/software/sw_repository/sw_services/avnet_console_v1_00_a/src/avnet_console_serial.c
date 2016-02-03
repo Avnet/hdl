@@ -36,6 +36,8 @@
 // Dependencies:
 //
 // Revision:            Nov 18, 2010: 1.01 Initial version
+//                      Nov 16, 2015: 1.02 Comment out func_ptr typedef
+//                                         which conflicts with xil_printf.h
 //
 //----------------------------------------------------------------
 
@@ -121,102 +123,102 @@ typedef struct params_s {
 /*---------------------------------------------------*/
 
 typedef char* charptr;
-typedef int (*func_ptr)(int c);
+//typedef int (*func_ptr)(int c);
 
-///*---------------------------------------------------*/
-///*                                                   */
-///* This routine puts pad characters into the output  */
-///* buffer.                                           */
-///*                                                   */
-//static void padding( const int l_flag, params_t *par)
-//{
-//    int i;
-//
-//    if (par->do_padding && l_flag && (par->len < par->num1))
-//        for (i=par->len; i<par->num1; i++)
-//            OS_PUTCHAR( par->pad_character);
-//}
-//
-///*---------------------------------------------------*/
-///*                                                   */
-///* This routine moves a string to the output buffer  */
-///* as directed by the padding and positioning flags. */
-///*                                                   */
-//static void outs( charptr lp, params_t *par)
-//{
-//    /* pad on left if needed                         */
-//    par->len = strlen( lp);
-//    padding( !(par->left_flag), par);
-//
-//    /* Move string to the buffer                     */
-//    while (*lp && (par->num2)--)
-//        OS_PUTCHAR( *lp++);
-//
-//    /* Pad on right if needed                        */
-//    /* CR 439175 - elided next stmt. Seemed bogus.   */
-//    /* par->len = strlen( lp);                       */
-//    padding( par->left_flag, par);
-//}
-//
-///*---------------------------------------------------*/
-///*                                                   */
-///* This routine moves a number to the output buffer  */
-///* as directed by the padding and positioning flags. */
-///*                                                   */
-//
-//static void outnum( const long n, const long base, params_t *par)
-//{
-//    charptr cp;
-//    int negative;
-//    char outbuf[32];
-//    const char digits[] = "0123456789ABCDEF";
-//    unsigned long num;
-//
-//    /* Check if number is negative                   */
-//    if (base == 10 && n < 0L) {
-//        negative = 1;
-//        num = -(n);
-//    }
-//    else{
-//        num = (n);
-//        negative = 0;
-//    }
-//
-//    /* Build number (backwards) in outbuf            */
-//    cp = outbuf;
-//    do {
-//        *cp++ = digits[(int)(num % base)];
-//    } while ((num /= base) > 0);
-//    if (negative)
-//        *cp++ = '-';
-//    *cp-- = 0;
-//
-//    /* Move the converted number to the buffer and   */
-//    /* add in the padding where needed.              */
-//    par->len = strlen(outbuf);
-//    padding( !(par->left_flag), par);
-//    while (cp >= outbuf)
-//        OS_PUTCHAR( *cp--);
-//    padding( par->left_flag, par);
-//}
-//
-///*---------------------------------------------------*/
-///*                                                   */
-///* This routine gets a number from the format        */
-///* string.                                           */
-///*                                                   */
-//static int getnum( charptr* linep)
-//{
-//    int n;
-//    charptr cp;
-//
-//    n = 0;
-//    cp = *linep;
-//    while (isdigit(((int)*cp)))
-//        n = n*10 + ((*cp++) - '0');
-//    *linep = cp;
-//    return(n);
-//}
+/*---------------------------------------------------*/
+/*                                                   */
+/* This routine puts pad characters into the output  */
+/* buffer.                                           */
+/*                                                   */
+static void padding( const int l_flag, params_t *par)
+{
+    int i;
+
+    if (par->do_padding && l_flag && (par->len < par->num1))
+        for (i=par->len; i<par->num1; i++)
+            OS_PUTCHAR( par->pad_character);
+}
+
+/*---------------------------------------------------*/
+/*                                                   */
+/* This routine moves a string to the output buffer  */
+/* as directed by the padding and positioning flags. */
+/*                                                   */
+static void outs( charptr lp, params_t *par)
+{
+    /* pad on left if needed                         */
+    par->len = strlen( lp);
+   padding( !(par->left_flag), par);
+
+    /* Move string to the buffer                     */
+    while (*lp && (par->num2)--)
+       OS_PUTCHAR( *lp++);
+
+    /* Pad on right if needed                        */
+    /* CR 439175 - elided next stmt. Seemed bogus.   */
+    /* par->len = strlen( lp);                       */
+    padding( par->left_flag, par);
+}
+
+/*---------------------------------------------------*/
+/*                                                   */
+/* This routine moves a number to the output buffer  */
+/* as directed by the padding and positioning flags. */
+/*                                                   */
+
+static void outnum( const long n, const long base, params_t *par)
+{
+    charptr cp;
+    int negative;
+    char outbuf[32];
+    const char digits[] = "0123456789ABCDEF";
+    unsigned long num;
+
+    /* Check if number is negative                   */
+   if (base == 10 && n < 0L) {
+        negative = 1;
+        num = -(n);
+    }
+    else{
+        num = (n);
+        negative = 0;
+    }
+
+    /* Build number (backwards) in outbuf            */
+    cp = outbuf;
+    do {
+        *cp++ = digits[(int)(num % base)];
+    } while ((num /= base) > 0);
+    if (negative)
+        *cp++ = '-';
+    *cp-- = 0;
+
+    /* Move the converted number to the buffer and   */
+    /* add in the padding where needed.              */
+    par->len = strlen(outbuf);
+    padding( !(par->left_flag), par);
+    while (cp >= outbuf)
+        OS_PUTCHAR( *cp--);
+    padding( par->left_flag, par);
+}
+
+/*---------------------------------------------------*/
+/*                                                   */
+/* This routine gets a number from the format        */
+/* string.                                           */
+/*                                                   */
+static int getnum( charptr* linep)
+{
+    int n;
+    charptr cp;
+
+    n = 0;
+    cp = *linep;
+    while (isdigit(((int)*cp)))
+        n = n*10 + ((*cp++) - '0');
+    *linep = cp;
+    return(n);
+}
 
 /*---------------------------------------------------*/
 /*                                                   */

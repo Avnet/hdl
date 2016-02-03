@@ -104,7 +104,7 @@ create_clock -period 2.692 -name vita_ser_clk [get_ports IO_PYTHON_CAM_clk_out_p
 # Define asynchronous clock domains
 set_clock_groups -asynchronous  -group [get_clocks clk_fpga_0] \
                                 -group [get_clocks clk_fpga_1] \
-                                -group [get_clocks {n_3_serdesclockgen[0].ic}] \
-                                -group [get_clocks clk_out1_pzsdr_python1300c_clk_wiz_0_0] \                                 
+                                -group [get_clocks {*serdesclockgen[0].ic*}] \
+                                -group [get_clocks clk_out1_pzsdr_python1300c_clk_wiz_0_0] \
                                 -group [get_clocks vita_ser_clk] \
                                 -group [get_clocks vita_clk]

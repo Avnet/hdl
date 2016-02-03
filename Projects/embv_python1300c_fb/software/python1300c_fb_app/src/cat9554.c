@@ -63,6 +63,17 @@ void cat9554_vdd18_en(XIicPs *pInstance) {
 	XIicPs_Write(pInstance, cat9554_iic_address, 0x01, &status, 1);
 }
 
+void cat9554_vdd18_off(XIicPs *pInstance) {
+	u8 status = 0;
+
+	if ( !cat9554_iic_address )	{ cat9554_detect(pInstance); }
+
+	XIicPs_Read(pInstance, cat9554_iic_address, 0x01, &status, 1);
+	status &= ~0x01;
+	XIicPs_Write(pInstance, cat9554_iic_address, 0x01, &status, 1);
+}
+
+
 void cat9554_vdd33_en(XIicPs *pInstance) {
 	u8 status = 0;
 
@@ -70,6 +81,16 @@ void cat9554_vdd33_en(XIicPs *pInstance) {
 
 	XIicPs_Read(pInstance, cat9554_iic_address, 0x01, &status, 1);
 	status |= 0x02;
+	XIicPs_Write(pInstance, cat9554_iic_address, 0x01, &status, 1);
+}
+
+void cat9554_vdd33_off(XIicPs *pInstance) {
+	u8 status = 0;
+
+	if ( !cat9554_iic_address )	{ cat9554_detect(pInstance); }
+
+	XIicPs_Read(pInstance, cat9554_iic_address, 0x01, &status, 1);
+	status &= ~0x02;
 	XIicPs_Write(pInstance, cat9554_iic_address, 0x01, &status, 1);
 }
 
@@ -83,4 +104,17 @@ void cat9554_vddpix_en(XIicPs *pInstance) {
 	XIicPs_Write(pInstance, cat9554_iic_address, 0x01, &status, 1);
 
 }
+
+void cat9554_vddpix_off(XIicPs *pInstance) {
+	u8 status = 0;
+
+	if ( !cat9554_iic_address )	{ cat9554_detect(pInstance); }
+
+	XIicPs_Read(pInstance, cat9554_iic_address, 0x01, &status, 1);
+	status &= ~0x04;
+	XIicPs_Write(pInstance, cat9554_iic_address, 0x01, &status, 1);
+
+}
+
+
 

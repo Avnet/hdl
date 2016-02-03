@@ -133,6 +133,15 @@ while (1)
 	cat9554_initialize(pdemo->piicps0);
 	usleep(10);
 
+	// Make sure all disable first
+	cat9554_vddpix_off(pdemo->piicps0);
+	usleep(10);
+	cat9554_vdd33_off(pdemo->piicps0);
+	usleep(10);
+	cat9554_vdd18_off(pdemo->piicps0);
+	usleep(1000);
+
+	// Turn them on one by one
 	cat9554_vdd18_en(pdemo->piicps0);
 	usleep(10);
 	cat9554_vdd33_en(pdemo->piicps0);
@@ -142,9 +151,11 @@ while (1)
 
 	onsemi_python_sensor_initialize(
 			pdemo->pPython_receiver, SENSOR_INIT_ENABLE, 0);
+	onsemi_python_sensor_initialize(
+			pdemo->pPython_receiver, SENSOR_INIT_STREAMON, 0);
+	onsemi_python_sensor_cds(pdemo->pPython_receiver, 0);
 	onsemi_python_cam_reg_write(pdemo->pPython_receiver,
 			ONSEMI_PYTHON_CAM_SYNCGEN_HTIMING1_REG, 0x00300500);
-	onsemi_python_sensor_cds(pdemo->pPython_receiver, 0);
 
 	xil_printf("CFA Initialization\r\n");
 	XCfa_Reset(pdemo->pcfa);

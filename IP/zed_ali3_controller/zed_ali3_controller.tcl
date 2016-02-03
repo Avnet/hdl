@@ -20,7 +20,7 @@ proc make_ip {ip_name} {
    set_property vendor {avnet.com} [ipx::current_core]
    set_property library {ip} [ipx::current_core]
    set_property name {zed_ali3_controller} [ipx::current_core]
-   set_property version {1.6} [ipx::current_core]
+   set_property version {1.7} [ipx::current_core]
    set_property display_name {ALI3 Display Controller} [ipx::current_core]
    set_property vendor_display_name {Avnet} [ipx::current_core]
    set_property company_url {http://em.avnet.com} [ipx::current_core]
@@ -92,6 +92,12 @@ proc make_ip {ip_name} {
    ipgui::add_param -name {C_DATA_WIDTH} -component [ipx::current_core] -parent [ipgui::get_pagespec -name "Page 0" -component [ipx::current_core] ] -display_name {C_DATA_WIDTH}
    set_property tooltip {Video Data Width} [ipgui::get_guiparamspec -name "C_DATA_WIDTH" -component [ipx::current_core] ]
    
+   ipgui::add_param -name {C_PIXEL_CLOCK_RATE} -component [ipx::current_core] -parent [ipgui::get_pagespec -name "Page 0" -component [ipx::current_core] ] -display_name {C_PIXEL_CLOCK_RATE}
+   set_property tooltip {Select the pixel clock rate (in MHz) of the targeted display panel} [ipgui::get_guiparamspec -name "C_PIXEL_CLOCK_RATE" -component [ipx::current_core] ]
+   set_property widget {comboBox} [ipgui::get_guiparamspec -name "C_PIXEL_CLOCK_RATE" -component [ipx::current_core] ]
+   set_property value_validation_type pairs [ipx::get_user_parameters C_PIXEL_CLOCK_RATE -of_objects [ipx::current_core]]
+   set_property value_validation_pairs {25 0 33.33 1 40 2 50 3 65 4 71.1 5 74.25 6 108 7} [ipx::get_user_parameters C_PIXEL_CLOCK_RATE -of_objects [ipx::current_core]]
+
    # Generate the XGUI files to accompany this IP core.
    ipx::create_xgui_files [ipx::current_core]
    

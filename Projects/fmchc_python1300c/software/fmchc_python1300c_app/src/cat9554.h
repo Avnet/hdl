@@ -20,4 +20,8 @@ void cat9554_vdd18_en(fmc_iic_t *pInstance);
 void cat9554_vdd33_en(fmc_iic_t *pInstance);
 void cat9554_vddpix_en(fmc_iic_t *pInstance);
 
+void cat9554_vdd18_off(fmc_iic_t *pInstance);
+void cat9554_vdd33_off(fmc_iic_t *pInstance);
+void cat9554_vddpix_off(fmc_iic_t *pInstance);
+
 #endif /* PCA9534_H_ */

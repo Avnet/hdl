@@ -41,12 +41,12 @@
 # ----------------------------------------------------------------------------
 
 # Build FMC-HDMI-CAM Factory Test design for the ZedBoard
-#set argv [list board=ZEDBOARD project=fmchc_factest sdk=yes]
+#set argv [list board=ZEDBOARD project=fmchc_factest sdk=yes version_override=yes]
 #set argc [llength $argv]
 #source ./make.tcl -notrace
 
 # Build FMC-HDMI-CAM Factory Test design for the MicroZed-7020 + FMC Carrier Card
-set argv [list board=MZ7020_FMCCC project=fmchc_factest sdk=yes]
+set argv [list board=MZ7020_FMCCC project=fmchc_factest sdk=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 

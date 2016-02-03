@@ -5,8 +5,8 @@
  *      Author: 910560
  */
 
-#ifndef PCA9534_H_
-#define PCA9534_H_
+#ifndef PCA9554_H_
+#define PCA9554_H_
 
 #include "xiicps.h"
 
@@ -19,5 +19,9 @@ void cat9554_initialize(XIicPs *pInstance);
 void cat9554_vdd18_en(XIicPs *pInstance);
 void cat9554_vdd33_en(XIicPs *pInstance);
 void cat9554_vddpix_en(XIicPs *pInstance);
+
+void cat9554_vdd18_off(XIicPs *pInstance);
+void cat9554_vdd33_off(XIicPs *pInstance);
+void cat9554_vddpix_off(XIicPs *pInstance);
 
 #endif /* PCA9534_H_ */
