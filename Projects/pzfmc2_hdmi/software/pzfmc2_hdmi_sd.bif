@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+	[bootloader]pzfmc2_hdmi.sdk\zynq_fsbl_app\Debug\zynq_fsbl_app.elf
+	pzfmc2_hdmi.sdk\pzfmc2_hdmi_hw\pzfmc2_hdmi_wrapper.bit
+	pzfmc2_hdmi.sdk\pzfmc2_hdmi_app\Debug\pzfmc2_hdmi_app.elf
+}
