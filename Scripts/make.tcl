@@ -96,6 +96,8 @@ puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 
 set ranonce "false"
+set start_time [clock seconds]
+set build_params ""
 # to adjust the width of the chart, need to adjust this as well as the "predefined"
 # chart elements below (there are 4 lines that need to be adjusted)
 set chart_wdith 30
@@ -122,10 +124,10 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       return -code ok
    } elseif [string match -nocase "false" $ranonce] {
       set ranonce "true"
-      puts ""
-      puts "+------------------+------------------------------------+"
-      puts "| Setting          |     Configuration                  |"
-      puts "+------------------+------------------------------------+"
+      set build_params "\n"
+      append build_params "+------------------+------------------------------------+\n"
+      append build_params "| Setting          |     Configuration                  |\n"
+      append build_params "+------------------+------------------------------------+\n"
    }
    # check for BOARD parameter
    if {[string match -nocase "board=*" [lindex $argv $i]]} {
@@ -134,7 +136,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       for {set j 0} {$j < [expr $chart_wdith - [string length $board]]} {incr j} {
          append printmessage " "
       }
-      puts "| Board            |     $printmessage |"
+      append build_params "| Board            |     $printmessage |\n"
    }
    # check for PROJECT parameter
    if {[string match -nocase "project=*" [lindex $argv $i]]} {
@@ -143,7 +145,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       for {set j 0} {$j < [expr $chart_wdith - [string length $project]]} {incr j} {
          append printmessage " "
       }
-      puts "| Project          |     $printmessage |"
+      append build_params "| Project          |     $printmessage |\n"
    }
    # check for TAG parameter
    if {[string match -nocase "tag=*" [lindex $argv $i]]} {
@@ -152,7 +154,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       for {set j 0} {$j < [expr $chart_wdith - [string length $tag]]} {incr j} {
          append printmessage " "
       }
-      puts "| Tag              |     $printmessage |"
+      append build_params "| Tag              |     $printmessage |\n"
    }
    # check for SDK parameter
    if {[string match -nocase "sdk=*" [lindex $argv $i]]} {
@@ -161,7 +163,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       for {set j 0} {$j < [expr $chart_wdith - [string length $sdk]]} {incr j} {
          append printmessage " "
       }
-      puts "| SDK              |     $printmessage |"
+      append build_params "| SDK              |     $printmessage |\n"
    }
    # check for Version parameter
    if {[string match -nocase "version_override=*" [lindex $argv $i]]} {
@@ -170,7 +172,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       for {set j 0} {$j < [expr $chart_wdith - [string length $version_override]]} {incr j} {
          append printmessage " "
       }
-      puts "| Version override |     $printmessage |"
+      append build_params "| Version override |     $printmessage |\n"
    }
    # check for No Close Project parameter
    if {[string match -nocase "close_project=*" [lindex $argv $i]]} {
@@ -179,7 +181,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       for {set j 0} {$j < [expr $chart_wdith - [string length $close_project]]} {incr j} {
          append printmessage " "
       }
-      puts "| No Close Project |     $printmessage |"
+      append build_params "| No Close Project |     $printmessage |\n"
    }
    # check for JTAG parameter
    if {[string match -nocase "jtag=*" [lindex $argv $i]]} {
@@ -188,11 +190,12 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       for {set j 0} {$j < [expr $chart_wdith - [string length $jtag]]} {incr j} {
          append printmessage " "
       }
-      puts "| No Close Project |     $printmessage |"
+      append build_params "| No Close Project |     $printmessage |\n"
    }
-   puts "+------------------+------------------------------------+"
+   append build_params "+------------------+------------------------------------+\n"
 }
-puts "\n\n"
+append build_params "\n\n"
+puts $build_params
 unset printmessage
 unset ranonce
 
@@ -337,6 +340,10 @@ if {[string match -nocase "no" $jtag]} {
       puts "Not Running Tag"
    }
 }
+set end_time [clock seconds]
+set number_seconds [expr {$end_time - $start_time}]
+set time_string "Your Build Took\n[$number_seconds] seconds\n\nor a total of:\n\ndays [expr {$number_seconds/86400}]\nhrs  [expr {($number_seconds%86400)/3600}]\nmin  [expr {(($number_seconds%86400)%3600)/60}]\nsec  [expr {(($number_seconds%86400)%3600)%60}]\n\nto complete"
+
 puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -344,4 +351,19 @@ puts "
 *-            Finished Running Script                  -*
 *-                                                     -*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+$time_string"
+
+
+append build_params "\n"
+append build_params $time_string
+set out [open $projects_folder/buildInfo.log w]
+puts -nonewline $out $build_params
+close $out
+
+unset out
+unset build_params
+unset start_time
+unset end_time
+unset number_seconds
