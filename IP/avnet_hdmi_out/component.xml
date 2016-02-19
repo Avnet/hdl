@@ -400,6 +400,7 @@
         <xilinx:family xilinx:lifeCycle="Pre-Production">zynq</xilinx:family>
         <xilinx:family xilinx:lifeCycle="Pre-Production">qzynq</xilinx:family>
         <xilinx:family xilinx:lifeCycle="Pre-Production">azynq</xilinx:family>
+        <xilinx:family xilinx:lifeCycle="Pre-Production">ZYNQUPLUS</xilinx:family>
       </xilinx:supportedFamilies>
       <xilinx:taxonomies>
         <xilinx:taxonomy>/Video_&amp;_Image_Processing</xilinx:taxonomy>
