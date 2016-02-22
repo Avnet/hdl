@@ -134,7 +134,8 @@ switch -nocase $board {
 			  add_files -fileset constrs_1 -norecurse ${projects_folder}/../mz7020_fmccc_fmchc_python1300c.xdc
               }
    PZ7030_FMC2 {
-              set_property board_part em.avnet.com:picozed_7030:part0:1.0 [current_project]
+              #set_property board_part em.avnet.com:picozed_7030:part0:1.0 [current_project]
+			  set_property board_part em.avnet.com:picozed_7030_fmc2:part0:1.1 [current_project]
 			  add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz7030_fmc2_fmchc_python1300c.xdc
               }
    default    {puts "Unsupported Board!"
