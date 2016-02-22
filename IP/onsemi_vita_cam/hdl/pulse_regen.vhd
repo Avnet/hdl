@@ -2,8 +2,8 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 
-LIBRARY fifo_generator_v12_0;
-USE fifo_generator_v12_0.fifo_generator_v12_0;
+LIBRARY fifo_generator_v13_0_1;
+USE fifo_generator_v13_0_1.fifo_generator_v13_0_1;
 
 entity pulse_regen is
   generic
@@ -29,7 +29,7 @@ architecture rtl of pulse_regen is
    -- FIFO_GENERATOR
    --
    
-   COMPONENT fifo_generator_v12_0 IS
+   COMPONENT fifo_generator_v13_0_1 IS
      GENERIC (
        C_COMMON_CLOCK : INTEGER;
        C_COUNT_TYPE : INTEGER;
@@ -454,11 +454,11 @@ architecture rtl of pulse_regen is
        axis_prog_full : OUT STD_LOGIC;
        axis_prog_empty : OUT STD_LOGIC
      );
-   END COMPONENT fifo_generator_v12_0;
+   END COMPONENT fifo_generator_v13_0_1;
 
 begin
 
-   pulse_regen_l  : fifo_generator_v12_0
+   pulse_regen_l  : fifo_generator_v13_0_1
     GENERIC MAP (
       C_COMMON_CLOCK => 0,
       C_COUNT_TYPE => 0,

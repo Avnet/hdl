@@ -3,7 +3,7 @@
   <spirit:vendor>avnet</spirit:vendor>
   <spirit:library>onsemi_vita</spirit:library>
   <spirit:name>onsemi_vita_cam</spirit:name>
-  <spirit:version>3.1</spirit:version>
+  <spirit:version>3.2</spirit:version>
   <spirit:busInterfaces>
     <spirit:busInterface>
       <spirit:name>S00_AXI</spirit:name>
@@ -1703,15 +1703,14 @@
       <xilinx:displayName>ON Semiconductor VITA Camera Receiver</xilinx:displayName>
       <xilinx:vendorDisplayName>Avnet</xilinx:vendorDisplayName>
       <xilinx:vendorURL>http://em.avnet.com</xilinx:vendorURL>
-      <xilinx:coreRevision>2</xilinx:coreRevision>
+      <xilinx:coreRevision>3</xilinx:coreRevision>
       <xilinx:coreCreationDateTime>2015-01-28T21:05:29Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
-        <xilinx:tag xilinx:name="avnet:onsemi_vita:onsemi_vita_cam:2.3_ARCHIVE_LOCATION">C:/FMC_IMAGEON/2014_4/avnet_fmc_imageon_cores/onsemi_vita_cam_v3</xilinx:tag>
-        <xilinx:tag xilinx:name="avnet:onsemi_vita:onsemi_vita_cam:3.1_ARCHIVE_LOCATION">C:/FMC_IMAGEON/2014_4/avnet_fmc_imageon_cores/onsemi_vita_cam_v3</xilinx:tag>
+        <xilinx:tag xilinx:name="avnet:onsemi_vita:onsemi_vita_cam:3.1_ARCHIVE_LOCATION">C:/Avnet/hdl/IP/onsemi_vita_cam</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
-      <xilinx:xilinxVersion>2014.4</xilinx:xilinxVersion>
+      <xilinx:xilinxVersion>2015.4</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="af66e079"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="c563a989"/>
       <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="c2d35a0f"/>
