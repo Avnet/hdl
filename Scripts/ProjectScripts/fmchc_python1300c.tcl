@@ -134,9 +134,12 @@ switch -nocase $board {
 			  add_files -fileset constrs_1 -norecurse ${projects_folder}/../mz7020_fmccc_fmchc_python1300c.xdc
               }
    PZ7030_FMC2 {
-              #set_property board_part em.avnet.com:picozed_7030:part0:1.0 [current_project]
 			  set_property board_part em.avnet.com:picozed_7030_fmc2:part0:1.1 [current_project]
 			  add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz7030_fmc2_fmchc_python1300c.xdc
+              }
+   PZ7020_FMC2 {
+			  set_property board_part em.avnet.com:picozed_7020_fmc2:part0:1.1 [current_project]
+			  add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz7020_fmc2_fmchc_python1300c.xdc
               }
    default    {puts "Unsupported Board!"
                return -code ok}
@@ -158,6 +161,9 @@ switch -nocase $board {
       source ../../Scripts/ProjectScripts/microzed_preset.tcl
    }
    PZ7030_FMC2 {
+      source ../../Scripts/ProjectScripts/picozed_preset.tcl
+   }
+   PZ7020_FMC2 {
       source ../../Scripts/ProjectScripts/picozed_preset.tcl
    }
 }
@@ -212,7 +218,9 @@ switch -nocase $board {
               source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
               }
    PZ7030_FMC2 {
-              #set_property -dict [list CONFIG.preset {Microzed}] [get_bd_cells processing_system7_0]
+              source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
+              }
+   PZ7020_FMC2 {
               source ../../Scripts/ProjectScripts/fmchc_python1300c_bd.tcl
               }
    default    {puts "Unsupported Board!"

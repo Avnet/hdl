@@ -112,14 +112,21 @@ puts "\n#\n#\n# Build ${app_name} ...\n#\n#\n"
 #sdk build_project -type bsp -name ${bsp_name}
 sdk build_project -type app -name ${app_name}
 
-# Create FSBL application
-puts "\n#\n#\n# Creating zynq_fsbl ...\n#\n#\n"
-sdk create_app_project -name zynq_fsbl_app -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Zynq FSBL} -bsp zynq_fsbl_bsp
+# # Create FSBL application
+# puts "\n#\n#\n# Creating zynq_fsbl ...\n#\n#\n"
+# sdk create_app_project -name zynq_fsbl_app -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Zynq FSBL} -bsp zynq_fsbl_bsp
+# # SDK 2015.4 => no longer works, throws an error ...
 
-# Build FSBL application
-puts "\n#\n#\n# Building zynq_fsbl ...\n#\n#\n"
-sdk build_project -type bsp -name zynq_fsbl_bsp
-sdk build_project -type app -name zynq_fsbl_app
+# # Build FSBL application
+# puts "\n#\n#\n# Building zynq_fsbl ...\n#\n#\n"
+# sdk build_project -type bsp -name zynq_fsbl_bsp
+# sdk build_project -type app -name zynq_fsbl_app
+
+# Create FSBL application (with HSI, will not be visible in SDK GUI)
+puts "\n#\n#\n# Creating zynq_fsbl_app ...\n#\n#\n"
+hsi::open_hw_design ${project}.sdk/${hw_name}/system.hdf
+hsi::generate_app -app zynq_fsbl -proc ps7_cortexa9_0 -dir ${project}.sdk/zynq_fsbl_app -compile
+hsi::close_hw_design [hsi::current_hw_design]
 
 # done
 exit
