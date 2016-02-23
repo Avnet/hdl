@@ -10,7 +10,7 @@
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-#set scripts_vivado_version 2014.4
+#set scripts_vivado_version 2015.4
 #set current_vivado_version [version -short]
 #
 #if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -19,7 +19,7 @@
 #
 #   return 1
 #}
-# NOTE : validated with 2014.2, 2015.2
+# NOTE : validated with 2015.4
 
 ################################################################
 # START
@@ -167,8 +167,8 @@ proc create_hier_cell_embv_hdmio_yuv422 { parentCell nameHier } {
   set_property -dict [ list CONFIG.CONST_VAL {0}  ] $gnd
 
   # Create instance: v_axi4s_vid_out_0, and set properties
-  set v_axi4s_vid_out_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_axi4s_vid_out:3.0 v_axi4s_vid_out_0 ]
-  set_property -dict [ list CONFIG.C_S_AXIS_VIDEO_FORMAT {0}  ] $v_axi4s_vid_out_0
+  set v_axi4s_vid_out_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_axi4s_vid_out:4.0 v_axi4s_vid_out_0 ]
+  set_property -dict [ list CONFIG.C_HAS_ASYNC_CLK {1} CONFIG.C_S_AXIS_VIDEO_FORMAT {0}  ] $v_axi4s_vid_out_0
 
   # Create instance: v_tc_0, and set properties
   set v_tc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tc:6.1 v_tc_0 ]
@@ -189,7 +189,7 @@ proc create_hier_cell_embv_hdmio_yuv422 { parentCell nameHier } {
   connect_bd_net -net axi4lite_aresetn_1 [get_bd_pins axi4lite_aresetn] [get_bd_pins v_tc_0/s_axi_aresetn]
   connect_bd_net -net axi4lite_clk_1 [get_bd_pins axi4lite_clk] [get_bd_pins v_tc_0/s_axi_aclk]
   connect_bd_net -net axi4s_clk_1 [get_bd_pins axi4s_clk] [get_bd_pins v_axi4s_vid_out_0/aclk]
-  connect_bd_net -net gnd_const [get_bd_pins avnet_hdmi_out_0/reset] [get_bd_pins gnd/dout] [get_bd_pins v_axi4s_vid_out_0/rst]
+  connect_bd_net -net gnd_const [get_bd_pins avnet_hdmi_out_0/reset] [get_bd_pins gnd/dout] [get_bd_pins v_axi4s_vid_out_0/vid_io_out_reset]
   connect_bd_net -net hdmio_audio_spdif_1 [get_bd_pins hdmio_audio_spdif] [get_bd_pins avnet_hdmi_out_0/audio_spdif]
   connect_bd_net -net hdmio_clk_1 [get_bd_pins hdmio_clk] [get_bd_pins avnet_hdmi_out_0/clk] [get_bd_pins v_axi4s_vid_out_0/vid_io_out_clk] [get_bd_pins v_tc_0/clk]
   connect_bd_net -net v_axi4s_vid_out_0_vtg_ce [get_bd_pins v_axi4s_vid_out_0/vtg_ce] [get_bd_pins v_tc_0/gen_clken]
@@ -249,8 +249,8 @@ proc create_hier_cell_embv_hdmii_yuv422 { parentCell nameHier } {
   set_property -dict [ list CONFIG.CONST_VAL {0}  ] $gnd
 
   # Create instance: v_vid_in_axi4s_0, and set properties
-  set v_vid_in_axi4s_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_vid_in_axi4s:3.0 v_vid_in_axi4s_0 ]
-  set_property -dict [ list CONFIG.C_M_AXIS_VIDEO_FORMAT {0}  ] $v_vid_in_axi4s_0
+  set v_vid_in_axi4s_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_vid_in_axi4s:4.0 v_vid_in_axi4s_0 ]
+  set_property -dict [ list CONFIG.C_HAS_ASYNC_CLK {1} CONFIG.C_M_AXIS_VIDEO_FORMAT {0}  ] $v_vid_in_axi4s_0
 
   # Create instance: vcc, and set properties
   set vcc [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 vcc ]
@@ -264,7 +264,7 @@ proc create_hier_cell_embv_hdmii_yuv422 { parentCell nameHier } {
   # Create port connections
   connect_bd_net -net avnet_hdmi_in_0_audio_spdif [get_bd_pins hdmii_audio_spdif] [get_bd_pins avnet_hdmi_in_0/audio_spdif]
   connect_bd_net -net clk_1 [get_bd_pins hdmii_clk] [get_bd_pins avnet_hdmi_in_0/clk] [get_bd_pins v_vid_in_axi4s_0/vid_io_in_clk]
-  connect_bd_net -net gnd_const [get_bd_pins gnd/dout] [get_bd_pins v_vid_in_axi4s_0/rst]
+  connect_bd_net -net gnd_const [get_bd_pins gnd/dout] [get_bd_pins v_vid_in_axi4s_0/vid_io_in_reset]
   connect_bd_net -net processing_system7_0_fclk_clk1 [get_bd_pins axi4s_clk] [get_bd_pins v_vid_in_axi4s_0/aclk]
   connect_bd_net -net vcc_const [get_bd_pins v_vid_in_axi4s_0/aclken] [get_bd_pins v_vid_in_axi4s_0/aresetn] [get_bd_pins v_vid_in_axi4s_0/axis_enable] [get_bd_pins v_vid_in_axi4s_0/vid_io_in_ce] [get_bd_pins vcc/dout]
   
