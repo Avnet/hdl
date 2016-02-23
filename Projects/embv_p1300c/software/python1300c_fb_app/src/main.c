@@ -8,7 +8,7 @@
 #include "xparameters.h"
 #include "xiicps.h"
 #include "xiicps_ext.h"
-#include "xtpg.h"
+#include "xv_tpg.h"
 #include "pca9534.h"
 #include "tca9548.h"
 #include "adv7511.h"
@@ -32,7 +32,7 @@ typedef struct {
 	XAxiVdma axivdma0;
 	XAxiVdma axivdma1;
 	XOSD osd;
-	XTpg tpg;
+	XV_tpg tpg;
 	XCfa cfa;
 	onsemi_python_t python_receiver;
 
@@ -40,7 +40,7 @@ typedef struct {
 	XAxiVdma *paxivdma0;
 	XAxiVdma *paxivdma1;
 	XOSD *posd;
-	XTpg *ptpg;
+	XV_tpg *ptpg;
 	XCfa *pcfa;
 	onsemi_python_t *pPython_receiver;
 
@@ -68,7 +68,7 @@ int main()
 	XIicPs_Config *piicps_config;
 	XAxiVdma_Config *paxivdma_config;
 	XOSD_Config *posd_config;
-	XTpg_Config *ptpg_config;
+	XV_tpg_Config *ptpg_config;
 	XCfa_Config *pcfa_config;
 
 	xil_printf("\n\r");
@@ -95,8 +95,9 @@ int main()
 	posd_config = XOSD_LookupConfig(XPAR_OSD_0_DEVICE_ID);
 	XOSD_CfgInitialize(pdemo->posd, posd_config, posd_config->BaseAddress);
 
-	ptpg_config = XTpg_LookupConfig(XPAR_V_TPG_0_DEVICE_ID);
-	XTpg_CfgInitialize(pdemo->ptpg, ptpg_config, ptpg_config->BaseAddress);
+
+	ptpg_config = XV_tpg_LookupConfig(XPAR_V_TPG_0_DEVICE_ID);
+	XV_tpg_CfgInitialize(pdemo->ptpg, ptpg_config, ptpg_config->BaseAddress);
 
 	pcfa_config = XCfa_LookupConfig(XPAR_V_CFA_0_DEVICE_ID);
 	XCfa_CfgInitialize(pdemo->pcfa, pcfa_config, pcfa_config->BaseAddress);
@@ -165,13 +166,12 @@ while (1)
 	XCfa_Enable(pdemo->pcfa);
 
 	xil_printf("TPG Initialization\r\n");
-	XTpg_Reset(pdemo->ptpg);
-	XTpg_WriteReg(pdemo->ptpg, TPG_PATTERN_CONTROL, 0x100A);
-	XTpg_WriteReg(pdemo->ptpg, TPG_MOTION_SPEED, 0x1);
-	XTpg_WriteReg(pdemo->ptpg, TPG_CONTROL, 0x2);
-	//XTpg_SetPattern(pdemo->ptpg, 0x100A);
-	//XTpg_SetMotionSpeed(pdemo->ptpg, 0x1);
-	XTpg_Enable(pdemo->ptpg);
+	XV_tpg_Set_height(pdemo->ptpg, 1024);
+	XV_tpg_Set_width(pdemo->ptpg, 1280);
+	XV_tpg_Set_colorFormat(pdemo->ptpg, 2); //0);
+	XV_tpg_Set_bckgndId(pdemo->ptpg, XTPG_BKGND_TARTAN_COLOR_BARS ); //XTPG_BKGND_COLOR_BARS);
+	XV_tpg_Set_ovrlayId(pdemo->ptpg, 0);
+	XV_tpg_WriteReg(ptpg_config->BaseAddress, XV_TPG_CTRL_ADDR_AP_CTRL, 0x81);
 
 	xil_printf("VDMA 0 Initialization\r\n");
 	XAxiVdma_Reset(pdemo->paxivdma0, XAXIVDMA_WRITE);

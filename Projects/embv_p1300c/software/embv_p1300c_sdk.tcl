@@ -41,36 +41,16 @@
 #
 #  Revision:            Mar 17, 2015: 1.00 Initial version for Vivado 2014.4
 #                       Nov 19, 2015: 1.01 Updated for Vivado 2015.2
+#                       Feb 22, 2016: 1.02 Updated for Vivado 2015.4
 # 
 # ----------------------------------------------------------------------------
 
 
 #!/usr/bin/tclsh
-set project  "embv_python1300c_fb"
+set project  "embv_p1300c"
 set hw_name  "python1300c_fb_hw"
 set bsp_name "python1300c_fb_bsp"
 set app_name "python1300c_fb_app"
-
-# The param_name proc works around a bug In the tools where the MSS file isn't getting updated correctly. 
-# This is fixed in 2015.2 (or 1 hopefully). 
-# This will allow you to open the SDK project and keeps the Changes made in the HSI
-proc param_name {mss name} {
-
-        set fp [open $mss r]
-        set file_data [read $fp]
-        close $fp
-
-        set fileout [open $mss "w"]
-        set data [split $file_data "\n"]
-        for {set i 0} {$i < [llength $data]} {incr i} {
-                if {[string first "PARAMETER NAME" [lindex $data $i]] != -1 } {
-                                puts $fileout "PARAMETER NAME = ${name}"
-                } else {
-                        puts $fileout [lindex $data $i]
-                }
-        }
-        close $fileout
-}
 
 # Set workspace and import hardware platform
 sdk set_workspace ${project}.sdk
@@ -111,14 +91,21 @@ puts "\n#\n#\n# Build ${app_name} ...\n#\n#\n"
 #sdk build_project -type bsp -name ${bsp_name}
 sdk build_project -type app -name ${app_name}
 
-# Create FSBL application
-puts "\n#\n#\n# Creating zynq_fsbl ...\n#\n#\n"
-sdk create_app_project -name zynq_fsbl_app -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Zynq FSBL} -bsp zynq_fsbl_bsp
+# # Create FSBL application
+# puts "\n#\n#\n# Creating zynq_fsbl ...\n#\n#\n"
+# sdk create_app_project -name zynq_fsbl_app -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C  -bsp zynq_fsbl_bsp -app {Zynq FSBL}
+# # SDK 2015.4 => no longer works, throws an error ...
+ 
+# # Build FSBL application
+# puts "\n#\n#\n# Building zynq_fsbl ...\n#\n#\n"
+# sdk build_project -type bsp -name zynq_fsbl_bsp
+# sdk build_project -type app -name zynq_fsbl_app
 
-# Build FSBL application
-puts "\n#\n#\n# Building zynq_fsbl ...\n#\n#\n"
-sdk build_project -type bsp -name zynq_fsbl_bsp
-sdk build_project -type app -name zynq_fsbl_app
+# Create FSBL application (with HSI, will not be visible in SDK GUI)
+puts "\n#\n#\n# Creating zynq_fsbl_app ...\n#\n#\n"
+hsi::open_hw_design ${project}.sdk/${hw_name}/system.hdf
+hsi::generate_app -app zynq_fsbl -proc ps7_cortexa9_0 -dir ${project}.sdk/zynq_fsbl_app -compile
+hsi::close_hw_design [hsi::current_hw_design]
 
 # done
 exit
