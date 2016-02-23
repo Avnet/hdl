@@ -233,7 +233,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list CONFIG.HAS_AXI4_LITE {false} CONFIG.VIDEO_MODE {1280x1024p} CONFIG.enable_detection {false}  ] $v_tc_0
 
   # Create instance: v_tpg_0, and set properties
-  set v_tpg_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tpg:7.0 v_tpg_0 ]
+  #set v_tpg_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tpg:7.0 v_tpg_0 ]
   set v_tpg_0 [get_bd_cells v_tpg_0]
   set_property -dict [ list CONFIG.HAS_AXI4S_SLAVE {0}  ] $v_tpg_0
 
