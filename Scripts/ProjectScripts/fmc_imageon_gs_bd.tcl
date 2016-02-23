@@ -10,16 +10,15 @@
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-#set scripts_vivado_version 2014.4
-#set current_vivado_version [version -short]
-#
-#if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
-#   puts ""
-#   puts "ERROR: This script was generated using Vivado <$scripts_vivado_version> and is being run in <$current_vivado_version> of Vivado. Please run the script in Vivado <$scripts_vivado_version> then open the design in Vivado <$current_vivado_version>. Upgrade the design by running \"Tools => Report => Report IP Status...\", then run write_bd_tcl to create an updated script."
-#
-#   return 1
-#}
-# NOTE : validated with 2014.2, 2015.2
+set scripts_vivado_version 2015.4
+set current_vivado_version [version -short]
+
+if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
+   puts ""
+   puts "ERROR: This script was generated using Vivado <$scripts_vivado_version> and is being run in <$current_vivado_version> of Vivado. Please run the script in Vivado <$scripts_vivado_version> then open the design in Vivado <$current_vivado_version>. Upgrade the design by running \"Tools => Report => Report IP Status...\", then run write_bd_tcl to create an updated script."
+
+   return 1
+}
 
 ################################################################
 # START
@@ -30,8 +29,8 @@
 
 # If you do not already have a project created,
 # you can create a project using the following command:
-#    create_project project_1 myproj -part xc7z020clg484-1
-#    set_property BOARD_PART xilinx.com:zc702:part0:1.1 [current_project]
+#    create_project project_1 myproj -part xc7z020clg400-1
+#    set_property BOARD_PART em.avnet.com:microzed_7020:part0:1.0 [current_project]
 
 
 # # CHANGE DESIGN NAME HERE
@@ -182,10 +181,10 @@ proc create_root_design { parentCell } {
   set_property -dict [ list CONFIG.IIC_BOARD_INTERFACE {Custom} CONFIG.USE_BOARD_FLOW {true}  ] $fmc_imageon_iic_0
 
   # Create instance: onsemi_vita_cam_0, and set properties
-  set onsemi_vita_cam_0 [ create_bd_cell -type ip -vlnv avnet:onsemi_vita:onsemi_vita_cam:3.1 onsemi_vita_cam_0 ]
+  set onsemi_vita_cam_0 [ create_bd_cell -type ip -vlnv avnet:onsemi_vita:onsemi_vita_cam:3.2 onsemi_vita_cam_0 ]
 
   # Create instance: onsemi_vita_spi_0, and set properties
-  set onsemi_vita_spi_0 [ create_bd_cell -type ip -vlnv avnet:onsemi_vita:onsemi_vita_spi:3.1 onsemi_vita_spi_0 ]
+  set onsemi_vita_spi_0 [ create_bd_cell -type ip -vlnv avnet:onsemi_vita:onsemi_vita_spi:3.2 onsemi_vita_spi_0 ]
 
   # Create instance: processing_system7_0, and set properties
   #set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0 ]
@@ -206,8 +205,8 @@ proc create_root_design { parentCell } {
   set rst_processing_system7_0_76M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_processing_system7_0_76M ]
 
   # Create instance: v_axi4s_vid_out_0, and set properties
-  set v_axi4s_vid_out_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_axi4s_vid_out:3.0 v_axi4s_vid_out_0 ]
-  set_property -dict [ list CONFIG.RAM_ADDR_BITS {12} CONFIG.VTG_MASTER_SLAVE {1}  ] $v_axi4s_vid_out_0
+  set v_axi4s_vid_out_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_axi4s_vid_out:4.0 v_axi4s_vid_out_0 ]
+  set_property -dict [ list CONFIG.C_HAS_ASYNC_CLK {1} CONFIG.C_VTG_MASTER_SLAVE {1}  ] $v_axi4s_vid_out_0
 
   # Create instance: v_cfa_0, and set properties
   #set v_cfa_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cfa:7.0 v_cfa_0 ]
@@ -235,12 +234,12 @@ proc create_root_design { parentCell } {
   set_property -dict [ list CONFIG.HAS_AXI4_LITE {false} CONFIG.VIDEO_MODE {1080p} CONFIG.enable_detection {false}  ] $v_tc_0
 
   # Create instance: v_vid_in_axi4s_0, and set properties
-  set v_vid_in_axi4s_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_vid_in_axi4s:3.0 v_vid_in_axi4s_0 ]
-  set_property -dict [ list CONFIG.C_M_AXIS_VIDEO_FORMAT {12} CONFIG.RAM_ADDR_BITS {12}  ] $v_vid_in_axi4s_0
+  set v_vid_in_axi4s_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_vid_in_axi4s:4.0 v_vid_in_axi4s_0 ]
+  set_property -dict [ list CONFIG.C_HAS_ASYNC_CLK {1} CONFIG.C_M_AXIS_VIDEO_FORMAT {12}  ] $v_vid_in_axi4s_0
 
   # Create instance: v_vid_in_axi4s_1, and set properties
-  set v_vid_in_axi4s_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_vid_in_axi4s:3.0 v_vid_in_axi4s_1 ]
-  set_property -dict [ list CONFIG.C_M_AXIS_VIDEO_FORMAT {0} CONFIG.RAM_ADDR_BITS {11}  ] $v_vid_in_axi4s_1
+  set v_vid_in_axi4s_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_vid_in_axi4s:4.0 v_vid_in_axi4s_1 ]
+  set_property -dict [ list CONFIG.C_HAS_ASYNC_CLK {1}CONFIG.C_M_AXIS_VIDEO_FORMAT {0} ] $v_vid_in_axi4s_1
 
   # Create instance: xlconstant_0, and set properties
   set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0 ]
