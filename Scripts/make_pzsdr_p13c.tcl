@@ -30,19 +30,19 @@
 #  Module Name:         
 #  Project Name:        
 #  Target Devices:      
-#  Hardware Boards:     PicoZed SDR SOM + TCM3232PB Camera
+#  Hardware Boards:     PicoZed SDR SOM + PYTHON-1300-C Camera
 # 
 #  Tool versions:       Vivado 2014.4
 # 
-#  Description:         Build Script for PicoZed SDR SOM + TCM3232PB Camera
+#  Description:         Build Script for PicoZed SDR SOM + PYTHON-1300-C Camera
 # 
 #  Dependencies:        make.tcl
 # 
 # ----------------------------------------------------------------------------
 
-# Build TCM3232PB Getting Started design for the PicoZed SDR SOM + FMC Carrier Card
-set argv [list board=PZSDR7035_FMCCC project=pzsdr_tcm sdk=yes version_override=yes]
-set argc [llength $argv] 
+# Build PYTHON-1300-C Getting Started design for the PicoZed SDR SOM + FMC Carrier Card
+set argv [list board=PZSDR7035_FMCCC project=pzsdr_p13c sdk=yes version_override=yes]
+set argc [llength $argv]
 source ./make.tcl -notrace
 
 

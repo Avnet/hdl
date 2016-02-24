@@ -11,7 +11,7 @@
 #include "xosd.h"
 #include "onsemi_python_sw.h"
 #include "xcfa.h"
-#include "xtpg.h"
+#include "xv_tpg.h"
 
 #include "cat9554.h"
 #include "tca9548.h"
@@ -21,7 +21,7 @@ typedef struct {
 	XAxiVdma axivdma1;
 	XOSD osd;
 	XCfa cfa;
-	XTpg tpg;
+	XV_tpg tpg;
     fmc_iic_t fmc_hdmi_cam_iic;
     onsemi_python_t python_receiver;
     onsemi_python_status_t python_status_t1;
@@ -31,7 +31,8 @@ typedef struct {
 	XAxiVdma *paxivdma1;
 	XOSD *posd;
 	XCfa *pcfa;
-	XTpg *ptpg;
+	XV_tpg *ptpg;
+	XV_tpg_Config *ptpg_config;
     fmc_iic_t *pfmc_hdmi_cam_iic;
 	onsemi_python_t *ppython_receiver;
 

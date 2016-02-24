@@ -25,16 +25,16 @@
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         July 15, 2015
+#  Create Date:         June 16, 2015
 #  Design Name:         
 #  Module Name:         
 #  Project Name:        
 #  Target Devices:      
-#  Hardware Boards:     PicoZed SDR SOM + Toshiba TCM3232PB Camera
+#  Hardware Boards:     PicoZed SDR SOM + PYTHON-1300-C Camera
 # 
 #  Tool versions:       Vivado 2014.4
 # 
-#  Description:         Build Script for PicoZed SDR SOM , and Toshiba TCM3232PB Camera Module
+#  Description:         Build Script for PicoZed SDR SOM , and PYTHON-1300-C Camera Module
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration scripts
@@ -98,7 +98,9 @@ set release_state public
 # Generate Avnet IP
 puts "***** Generating IP..."
 source ./makeip.tcl -notrace
-#avnet_generate_ip tcm_receiver
+#avnet_generate_ip onsemi_vita_spi
+#avnet_generate_ip onsemi_vita_cam
+#avnet_generate_ip avnet_hdmi_in
 #avnet_generate_ip avnet_hdmi_out
 
 # Create Vivado project
@@ -110,7 +112,7 @@ remove_files -fileset constrs_1 *.xdc
 # Add board specific constraint file
 switch -nocase $board {
    PZSDR7035_FMCCC      {
-              add_files -fileset constrs_1 -norecurse ${projects_folder}/../pzsdr7035_fmccc_tcm3232pb.xdc
+              add_files -fileset constrs_1 -norecurse ${projects_folder}/../pzsdr7035_fmccc_python1300c.xdc
               }
    default    {puts "Unsupported Board!"
                return -code ok}
@@ -133,14 +135,14 @@ set_property target_language VHDL [current_project]
 
 # Check for Video IP core licenses
 puts "***** Check for Video IP core licenses..."
-set v_ccm_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_ccm:6.0 v_ccm_0 ]
 set v_cfa_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cfa:7.0 v_cfa_0 ]
 set v_cresample_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cresample:4.0 v_cresample_0 ]
 set v_osd_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_osd:6.0 v_osd_0 ]
 set v_rgb2ycrcb_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_rgb2ycrcb:7.1 v_rgb2ycrcb_0 ]
 set v_tc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tc:6.1 v_tc_0 ]
+set v_tpg_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tpg:7.0 v_tpg_0 ]
 report_ip_status -file "video_ip_core_status.log"
-set core_list [list "v_ccm" "v_cfa" "v_cresample" "v_osd" "v_rgb2ycrcb" "v_tc" ]
+set core_list [list "v_cfa" "v_cresample" "v_osd" "v_rgb2ycrcb" "v_tc" "v_tpg" ]
 set valid_cores [validate_core_licenses $core_list "video_ip_core_status.log"]
 if { $valid_cores < 6 } {
    puts " 
@@ -162,12 +164,11 @@ set design_name ${project}
 # Create board specific block diagram
 switch -nocase $board {
    PZSDR7035_FMCCC      {
-              source ../../Scripts/ProjectScripts/pzsdr_tcm_bd.tcl
+              source ../../Scripts/ProjectScripts/pzsdr_p13c_bd.tcl
               }
    default    {puts "Unsupported Board!"
                return -code ok}
 }
-
 
 # Add Project source files
 puts "***** Adding Source Files to Block Design..."

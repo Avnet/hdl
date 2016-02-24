@@ -21,7 +21,6 @@ int demo_init( demo_t *pdemo )
 	XAxiVdma_Config *paxivdma_config;
 	XOSD_Config *posd_config;
 	XCfa_Config *pcfa_config;
-	XTpg_Config *ptpg_config;
 
 	paxivdma_config = XAxiVdma_LookupConfig(XPAR_AXIVDMA_0_DEVICE_ID);
 	XAxiVdma_CfgInitialize(pdemo->paxivdma0, paxivdma_config,
@@ -37,8 +36,8 @@ int demo_init( demo_t *pdemo )
 	pcfa_config = XCfa_LookupConfig(XPAR_V_CFA_0_DEVICE_ID);
 	XCfa_CfgInitialize(pdemo->pcfa, pcfa_config, pcfa_config->BaseAddress);
 
-	ptpg_config = XTpg_LookupConfig(XPAR_V_TPG_0_DEVICE_ID);
-	XTpg_CfgInitialize(pdemo->ptpg, ptpg_config, ptpg_config->BaseAddress);
+	pdemo->ptpg_config = XV_tpg_LookupConfig(XPAR_V_TPG_0_DEVICE_ID);
+	XV_tpg_CfgInitialize(pdemo->ptpg, pdemo->ptpg_config, pdemo->ptpg_config->BaseAddress);
 
    status = fmc_iic_xps_init(pdemo->pfmc_hdmi_cam_iic,"PZSDR FMCCC I2C Controller", XPAR_PZSDR_FMCCC_IIC_0_BASEADDR );
    if ( !status )
@@ -65,13 +64,12 @@ int demo_init( demo_t *pdemo )
 int demo_start_tpg_in( demo_t *pdemo )
 {
 	xil_printf("TPG Initialization\r\n");
-	XTpg_Reset(pdemo->ptpg);
-	XTpg_WriteReg(pdemo->ptpg, TPG_PATTERN_CONTROL, 0x100A);
-	XTpg_WriteReg(pdemo->ptpg, TPG_MOTION_SPEED, 0x1);
-	XTpg_WriteReg(pdemo->ptpg, TPG_CONTROL, 0x2);
-	//XTpg_SetPattern(pdemo->ptpg, 0x100A);
-	//XTpg_SetMotionSpeed(pdemo->ptpg, 0x1);
-	XTpg_Enable(pdemo->ptpg);
+	XV_tpg_Set_height(pdemo->ptpg, 1024);
+	XV_tpg_Set_width(pdemo->ptpg, 1280);
+	XV_tpg_Set_colorFormat(pdemo->ptpg, 2); //0);
+	XV_tpg_Set_bckgndId(pdemo->ptpg, XTPG_BKGND_TARTAN_COLOR_BARS ); //XTPG_BKGND_COLOR_BARS);
+	XV_tpg_Set_ovrlayId(pdemo->ptpg, 0);
+	XV_tpg_WriteReg(pdemo->ptpg_config->BaseAddress, XV_TPG_CTRL_ADDR_AP_CTRL, 0x81);
 
 	return 1;
 }
