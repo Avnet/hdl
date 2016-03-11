@@ -45,6 +45,7 @@ set required_version 2015.2.1
 set debuglevel 0
 set scriptdir [pwd]
 set board "init"
+set clean "no"
 set project "init"
 set tag "init"
 set close_project "yes"
@@ -119,7 +120,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       puts "    with release_state set to public the script will release to GITHUB"
       puts "close_project=\n 'no' will prevent the script from closing the project\n used to allow 'up+enter' rebuilds of a project"
       puts "jtag=\n 'yes' will attempt to JTAG a project after synthesis and binary generation"
-      #puts "would like to add clean=, however would like to add a confirmation due to destructive nature of wiping EVERYTHING out"
+      puts "clean=\n Be careful due to destructive nature of wiping ALL output products out"
       puts "version_override=yes\n ***************************** \n CAUTION: \n Override the Version Check\n and attempt to make project\n *****************************"
       return -code ok
    } elseif [string match -nocase "false" $ranonce] {
@@ -137,6 +138,15 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
          append printmessage " "
       }
       append build_params "| Board            |     $printmessage |\n"
+   }
+   # check for CLEAN parameter
+   if {[string match -nocase "clean=*" [lindex $argv $i]]} {
+      set clean [string range [lindex $argv $i] 6 end]
+      set printmessage $clean
+      for {set j 0} {$j < [expr $chart_wdith - [string length $clean]]} {incr j} {
+         append printmessage " "
+      }
+      puts "| Clean            |     $printmessage |"
    }
    # check for PROJECT parameter
    if {[string match -nocase "project=*" [lindex $argv $i]]} {
@@ -327,8 +337,11 @@ if {[string match -nocase "no" $jtag]} {
       puts "Attempting to Build SDK..."
       cd ${projects_folder}
       exec >@stdout 2>@stderr xsdk -batch -source ../software/$project\_sdk.tcl -notrace
-      puts "Generating BOOT.BIN..."
-      exec >@stdout 2>@stderr bootgen -image ../software/$project\_sd.bif -w -o BOOT.bin
+	  # Build a BOOT.bin file only if a BIF file exists for the project.
+	  if {[file exists ../software/$project\_sd.bif]} {
+         puts "Generating BOOT.BIN..."
+         exec >@stdout 2>@stderr bootgen -image ../software/$project\_sd.bif -w -o BOOT.bin
+      }
       cd ${scripts_folder}
    }
    

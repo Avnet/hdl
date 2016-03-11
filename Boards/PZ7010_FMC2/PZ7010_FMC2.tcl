@@ -71,7 +71,24 @@ proc avnet_add_ps {project projects_folder scriptdir} {
 
 }
 
-proc avnet_add_ps {project projects_folder scriptdir} {
+proc avnet_add_ps_preset {project projects_folder scriptdir} {
+
+   # add selection for customization depending on board choice (or none)
+   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
+   apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells processing_system7_0]
+
+   set processing_system7_0 [get_bd_cells processing_system7_0]
+
+   ############################################################################
+   # Connect eMMC CD to a constant 0
+   ############################################################################
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 GND
+   set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells GND]
+   connect_bd_net [get_bd_pins GND/dout] [get_bd_pins processing_system7_0/SDIO1_CDN]
+
+}
+
+proc avnet_add_custom_ps {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
    create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
