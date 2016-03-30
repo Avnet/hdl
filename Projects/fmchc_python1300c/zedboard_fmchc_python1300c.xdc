@@ -96,7 +96,7 @@ set_property PACKAGE_PIN M21 [get_ports {IO_PYTHON_CAM_data_p[1]}]; #CAM_DATA3_P
 set_property PACKAGE_PIN M22 [get_ports {IO_PYTHON_CAM_data_n[1]}]; #CAM_DATA3_N
 set_property PACKAGE_PIN L21 [get_ports {IO_PYTHON_CAM_data_p[0]}]; #CAM_DATA2_P
 set_property PACKAGE_PIN L22 [get_ports {IO_PYTHON_CAM_data_n[0]}]; #CAM_DATA2_N
-#set_property PACKAGE_PIN N22 [get_ports {IO_PYTHON_CAM_data_p[]}]; #CAM_DATA1_N
+#set_property PACKAGE_PIN N22 [get_ports {IO_PYTHON_CAM_data_p[]}]; #CAM_DATA1_P
 #set_property PACKAGE_PIN P22 [get_ports {IO_PYTHON_CAM_data_n[]}]; #CAM_DATA1_N
 #set_property PACKAGE_PIN P17 [get_ports {IO_PYTHON_CAM_data_p[]}]; #CAM_DATA0_P
 #set_property PACKAGE_PIN P18 [get_ports {IO_PYTHON_CAM_data_n[]}]; #CAM_DATA0_N
