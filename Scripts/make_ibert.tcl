@@ -30,19 +30,29 @@
 #  Module Name:         
 #  Project Name:        
 #  Target Devices:      
-#  Hardware Boards:     PicoZed 7015 SOM + FMC Carrier Card
+#  Hardware Boards:     PicoZed 7030 SOM + FMC Carrier Card
 # 
 #  Tool versions:       Vivado 2015.2.1
 # 
-#  Description:         Build Script for PicoZed 7015 SOM + FMC Carrier Card IBERT
+#  Description:         Build Script for PicoZed 7030 SOM + FMC Carrier Card IBERT
 # 
 #  Dependencies:        make.tcl
 # 
 # ----------------------------------------------------------------------------
 
 # Set Build Variables
-set argv [list board=PZ7015_FMCCC project=ibert jtag=yes version_override=yes]
+set argv [list board=PZ7015_FMCCC project=ibert jtag=no version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
+set argv [list board=PZ7030_FMCCC project=ibert jtag=no version_override=yes]
+set argc [llength $argv]
+source ./make.tcl -notrace
 
+set argv [list board=PZ7015_FMC2 project=ibert jtag=no version_override=yes]
+set argc [llength $argv]
+source ./make.tcl -notrace
+
+set argv [list board=PZ7030_FMC2 project=ibert jtag=no version_override=yes]
+set argc [llength $argv]
+source ./make.tcl -notrace

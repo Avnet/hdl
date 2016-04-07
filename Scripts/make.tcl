@@ -33,7 +33,7 @@
 #  Hardware Boards:     
 # 
 #  Tool versions:       
-set required_version 2015.2.1
+set required_version 2015.4.2
 # 
 #  Description:         Build Script for sample project (fails build)
 # 
