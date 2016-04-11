@@ -30,7 +30,7 @@
 # 
 #  Create Date:         Apr 08, 2016
 #  Design Name:         PicoZed + FMC2 Carrier
-#  Module Name:         pz_fmc2_fat.tcl
+#  Module Name:         pz_fmc2_factest.tcl
 #  Project Name:        PicoZed FMC2 Carrier HW Factory Acceptance Test
 #  Target Devices:      Xilinx Zynq-7000
 #  Hardware Boards:     PicoZed + FMC Carrier 2
@@ -53,6 +53,11 @@
 # 'public' used to allow this project to be publicly tagged
 set release_state public
 
+# Generate Avnet IP
+#puts "***** Generating IP..."
+#source ./makeip.tcl -notrace
+#avnet_generate_ip hdmi_720p
+
 # Create Vivado project
 puts "***** Creating Vivado Project..."
 source ../Boards/$board/$board.tcl -notrace
@@ -62,7 +67,13 @@ avnet_create_project $project $projects_folder $scriptdir
 remove_files -fileset constrs_1 *.xdc
 
 # Add the constraints that are needed for testing
-add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz_fmc2_fat.xdc
+add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz_fmc2_factest.xdc
+
+# Add Avnet IP Repository
+#puts "***** Updating Vivado to include IP Folder"
+#cd ../Projects/$project
+#set_property ip_repo_paths  ../../IP [current_fileset]
+#update_ip_catalog
 
 # Create Block Design and Add PS core
 puts "***** Creating Block Design..."

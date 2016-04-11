@@ -30,7 +30,7 @@
 # 
 #  Create Date:         Apr 07, 2016
 #  Design Name:         PicoZed + FMC2 Carrier
-#  Module Name:         make_pz_fmc2_fat.tcl
+#  Module Name:         make_pz_fmc2_factest.tcl
 #  Project Name:        PicoZed FMC2 Carrier HW Factory Acceptance Test
 #  Target Devices:      Xilinx Zynq-7000
 #  Hardware Boards:     PicoZed + FMC Carrier 2
@@ -45,10 +45,10 @@
 #  Revision:            Apr 07, 2016: 1.00 Initial version
 # 
 # ----------------------------------------------------------------------------
-
+	
 
 # Build HW Factory Acceptance Test design
-# for PicoZed FMC Carrier 2 + PicoZed 7030 SOM
-set argv [list board=PZ7030_FMC2 project=pz_fmc2_valtest sdk=yes version_override=yes]
+# for PicoZed FMC Carrier 2 + PicoZed 7020 SOM
+set argv [list board=PZ7020_FMC2 project=pz_fmc2_factest sdk=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
