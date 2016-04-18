@@ -52,27 +52,6 @@
 #     "<Zynq Pin>.<SOM Net>.<Connector Ref>.<Connector Pin>.<Carrier Net>"
 # 
 # ----------------------------------------------------------------------------
-  
-# ----------------------------------------------------------------------------
-# PL User Push Buttons
-# ---------------------------------------------------------------------------- 
-# Bank 34 / JX1
-set_property PACKAGE_PIN V13 [get_ports {emio_user_tri_io[0]}];  # "V13.JX1_LVDS_2_N.JX1.19.PL_PB1"
-# Bank 13 / JX2
-set_property PACKAGE_PIN V5  [get_ports {emio_user_tri_io[1]}];  # "V5.BANK13_SE_0.JX2.100.PL_PB2"
-set_property PACKAGE_PIN Y13 [get_ports {emio_user_tri_io[2]}];  # "Y13.BANK13_LVDS_4_N.JX2.95.PL_PB3"
-set_property PACKAGE_PIN V11 [get_ports {emio_user_tri_io[3]}];  # "V11.BANK13_LVDS_5_P.JX2.94.PL_PB4"
-set_property PACKAGE_PIN V10 [get_ports {emio_user_tri_io[4]}];  # "V10.BANK13_LVDS_5_N.JX2.96.PL_PB5"
-
-# ----------------------------------------------------------------------------
-# PL User LEDs
-# ---------------------------------------------------------------------------- 
-# Bank 34 / JX1
-set_property PACKAGE_PIN U13 [get_ports {emio_user_tri_io[5]}];  # "U13.JX1_LVDS_2_P.JX1.17.PL_LED1"
-# Bank 13 / JX2
-set_property PACKAGE_PIN V6  [get_ports {emio_user_tri_io[6]}];  # "V6.BANK13_LVDS_6_P.JX2.97.PL_LED2"
-set_property PACKAGE_PIN W6  [get_ports {emio_user_tri_io[7]}];  # "W6.BANK13_LVDS_6_N.JX2.99.PL_LED3"
-set_property PACKAGE_PIN Y12 [get_ports {emio_user_tri_io[8]}];  # "Y12.BANK13_LVDS_4_P.JX2.93.PL_LED4"
 
 # ----------------------------------------------------------------------------
 # PL Clock Input - Bank 13 / JX3

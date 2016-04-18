@@ -66,6 +66,9 @@ avnet_create_project $project $projects_folder $scriptdir
 # Remove the default master constraints that are used in creating the project
 remove_files -fileset constrs_1 *.xdc
 
+# Add the User IO constraints for the verison of SOM that is being built.
+avnet_add_user_io $project $projects_folder $scriptdir
+
 # Add the constraints that are needed for testing
 add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz_fmc2_factest.xdc
 
