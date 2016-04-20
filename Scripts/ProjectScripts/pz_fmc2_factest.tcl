@@ -54,9 +54,9 @@
 set release_state public
 
 # Generate Avnet IP
-#puts "***** Generating IP..."
-#source ./makeip.tcl -notrace
-#avnet_generate_ip hdmi_720p
+puts "***** Generating IP..."
+source ./makeip.tcl -notrace
+avnet_generate_ip hdmi_720p
 
 # Create Vivado project
 puts "***** Creating Vivado Project..."
@@ -66,6 +66,12 @@ avnet_create_project $project $projects_folder $scriptdir
 # Remove the default master constraints that are used in creating the project
 remove_files -fileset constrs_1 *.xdc
 
+# Add the HDMI constraints for the verison of SOM that is being built.
+avnet_add_hdmi $project $projects_folder $scriptdir
+
+# Add the I2C constraints for the verison of SOM that is being built.
+avnet_add_i2c $project $projects_folder $scriptdir
+
 # Add the User IO constraints for the verison of SOM that is being built.
 avnet_add_user_io $project $projects_folder $scriptdir
 
@@ -73,10 +79,10 @@ avnet_add_user_io $project $projects_folder $scriptdir
 add_files -fileset constrs_1 -norecurse ${projects_folder}/../pz_fmc2_factest.xdc
 
 # Add Avnet IP Repository
-#puts "***** Updating Vivado to include IP Folder"
-#cd ../Projects/$project
-#set_property ip_repo_paths  ../../IP [current_fileset]
-#update_ip_catalog
+puts "***** Updating Vivado to include IP Folder"
+cd ../Projects/$project
+set_property ip_repo_paths  ../../IP [current_fileset]
+update_ip_catalog
 
 # Create Block Design and Add PS core
 puts "***** Creating Block Design..."
@@ -88,7 +94,7 @@ set_property target_language VHDL [current_project]
 
 # Create Block Diagram
 set design_name ${project}
-source ../Scripts/ProjectScripts/${project}_bd.tcl
+source ../../Scripts/ProjectScripts/${project}_bd.tcl
 
 # Add Project source files
 puts "***** Adding Source Files to Block Design..."

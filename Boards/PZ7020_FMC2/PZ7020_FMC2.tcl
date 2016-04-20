@@ -60,6 +60,20 @@ proc avnet_add_ali3_display_kit {project projects_folder scriptdir} {
 
 }
 
+proc avnet_add_hdmi {project projects_folder scriptdir} {
+
+   # add selection for proper xdc based on needs
+   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7020_FMC2/PZ7020_FMC2_hdmi.xdc
+
+}
+
+proc avnet_add_i2c {project projects_folder scriptdir} {
+
+   # add selection for proper xdc based on needs
+   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7020_FMC2/PZ7020_FMC2_i2c.xdc
+
+}
+
 proc avnet_add_user_io {project projects_folder scriptdir} {
 
    # add selection for proper xdc based on needs

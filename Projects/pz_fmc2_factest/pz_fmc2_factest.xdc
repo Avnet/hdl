@@ -61,8 +61,8 @@
 # ----------------------------------------------------------------------------
 # I2C Peripherals - RTC, EEPROM, Clock Generator, HDMI Output - Bank 34
 # ---------------------------------------------------------------------------- 
-set_property PACKAGE_PIN R19 [get_ports {hdmi_scl_io       }];  # "R19.JX1_SE_0.JX1.9.HDMIO_SCL"
-set_property PACKAGE_PIN T19 [get_ports {hdmi_sda_io       }];  # "T19.JX1_SE_1.JX1.10.HDMIO_SDA"
+	#set_property PACKAGE_PIN R19 [get_ports {hdmi_scl_io       }];  # "R19.JX1_SE_0.JX1.9.HDMIO_SCL"
+	#set_property PACKAGE_PIN T19 [get_ports {hdmi_sda_io       }];  # "T19.JX1_SE_1.JX1.10.HDMIO_SDA"
 
 # ----------------------------------------------------------------------------
 # RTC interrupt - Bank 13 / JX3
