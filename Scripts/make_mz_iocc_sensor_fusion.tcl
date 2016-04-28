@@ -53,7 +53,7 @@ source ./make.tcl -notrace
 
 # Build Sensor Fusion HW Platform
 # for MicroZed 7020 SOM
-#set argv [list board=MZ7020_IOCC project=mz_iocc_sensor_fusion sdk=yes version_override=yes]
-#set argc [llength $argv]
-#source ./make.tcl -notrace
+set argv [list board=MZ7020_IOCC project=mz_iocc_sensor_fusion sdk=yes version_override=yes]
+set argc [llength $argv]
+source ./make.tcl -notrace
 
