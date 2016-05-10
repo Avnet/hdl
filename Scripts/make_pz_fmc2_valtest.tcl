@@ -47,7 +47,14 @@
 
 
 # Build HW Validation Test design
-# for PicoZed FMC Carrier 2 + PicoZed 7030 SOM
-set argv [list board=PZ7030_FMC2 project=pz_fmc2_valtest sdk=yes version_override=yes]
+# for PicoZed FMC Carrier 2 + PicoZed 7015 SOM
+set argv [list board=PZ7015_FMC2 project=pz_fmc2_valtest sdk=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
+
+# for PicoZed FMC Carrier 2 + PicoZed 7030 SOM
+set argv [list board=PZ7030_FMC2 project=pz_fmc2_valtest sdk=yes]
+set argc [llength $argv]
+source ./make.tcl -notrace
+
+

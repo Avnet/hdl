@@ -33,7 +33,7 @@
 #  Hardware Boards:     
 # 
 #  Tool versions:       
-set required_version 2015.4.2
+set required_version 2015.4
 # 
 #  Description:         Build Script for sample project (fails build)
 # 
@@ -214,11 +214,11 @@ set version [version -short]
 if {[string match -nocase "yes" $version_override]} {
    puts "Overriding Version Check, Please Check the Design for Validity!"
 } else {
-   if {[string first $version $required_version]} {
-      puts "Version of Vivado acceptable, continuing..."
-   } else {
+   if { [string first $required_version $version] == -1 } {
       puts "Version $version of Vivado not acceptable, please run with Vivado $required_version to continue"
       return -code ok
+   } else {
+      puts "Version of Vivado acceptable, continuing..."
    }
 }
 
