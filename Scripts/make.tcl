@@ -304,6 +304,7 @@ switch -nocase $board {
    MITXZ7100                  -
    MZ7010_FMCCC               -
    MZ7020_FMCCC               -
+   MZ7010_ACC                 -
    MZ7010_EMBV                -
    MZ7020_EMBV                -
    MZ7010_IOCC                -

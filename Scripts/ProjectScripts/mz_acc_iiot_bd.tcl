@@ -32,17 +32,17 @@
 #    create_project project_1 myproj -part xc7z010clg400-1
 #    set_property BOARD_PART em.avnet.com:microzed_7010:part0:1.0 [current_project]
 
-# CHECKING IF PROJECT EXISTS
-if { [get_projects -quiet] eq "" } {
-   puts "ERROR: Please open or create a project!"
-   return 1
-}
-
-
-
-# CHANGE DESIGN NAME HERE
-set design_name design_1
-
+## CHECKING IF PROJECT EXISTS
+#if { [get_projects -quiet] eq "" } {
+#   puts "ERROR: Please open or create a project!"
+#   return 1
+#}
+#
+#
+#
+## CHANGE DESIGN NAME HERE
+#set design_name design_1
+#
 # If you do not already have an existing IP Integrator design open,
 # you can create a design using the following command:
 #    create_bd_design $design_name
@@ -51,55 +51,55 @@ set design_name design_1
 set errMsg ""
 set nRet 0
 
-set cur_design [current_bd_design -quiet]
-set list_cells [get_bd_cells -quiet]
-
-if { ${design_name} eq "" } {
-   # USE CASES:
-   #    1) Design_name not set
-
-   set errMsg "ERROR: Please set the variable <design_name> to a non-empty value."
-   set nRet 1
-
-} elseif { ${cur_design} ne "" && ${list_cells} eq "" } {
-   # USE CASES:
-   #    2): Current design opened AND is empty AND names same.
-   #    3): Current design opened AND is empty AND names diff; design_name NOT in project.
-   #    4): Current design opened AND is empty AND names diff; design_name exists in project.
-
-   if { $cur_design ne $design_name } {
-      puts "INFO: Changing value of <design_name> from <$design_name> to <$cur_design> since current design is empty."
-      set design_name [get_property NAME $cur_design]
-   }
-   puts "INFO: Constructing design in IPI design <$cur_design>..."
-
-} elseif { ${cur_design} ne "" && $list_cells ne "" && $cur_design eq $design_name } {
-   # USE CASES:
-   #    5) Current design opened AND has components AND same names.
-
-   set errMsg "ERROR: Design <$design_name> already exists in your project, please set the variable <design_name> to another value."
-   set nRet 1
-} elseif { [get_files -quiet ${design_name}.bd] ne "" } {
-   # USE CASES: 
-   #    6) Current opened design, has components, but diff names, design_name exists in project.
-   #    7) No opened design, design_name exists in project.
-
-   set errMsg "ERROR: Design <$design_name> already exists in your project, please set the variable <design_name> to another value."
-   set nRet 2
-
-} else {
-   # USE CASES:
-   #    8) No opened design, design_name not in project.
-   #    9) Current opened design, has components, but diff names, design_name not in project.
-
-   puts "INFO: Currently there is no design <$design_name> in project, so creating one..."
-
-   create_bd_design $design_name
-
-   puts "INFO: Making design <$design_name> as current_bd_design."
-   current_bd_design $design_name
-
-}
+#set cur_design [current_bd_design -quiet]
+#set list_cells [get_bd_cells -quiet]
+#
+#if { ${design_name} eq "" } {
+#   # USE CASES:
+#   #    1) Design_name not set
+#
+#   set errMsg "ERROR: Please set the variable <design_name> to a non-empty value."
+#   set nRet 1
+#
+#} elseif { ${cur_design} ne "" && ${list_cells} eq "" } {
+#   # USE CASES:
+#   #    2): Current design opened AND is empty AND names same.
+#   #    3): Current design opened AND is empty AND names diff; design_name NOT in project.
+#   #    4): Current design opened AND is empty AND names diff; design_name exists in project.
+#
+#   if { $cur_design ne $design_name } {
+#      puts "INFO: Changing value of <design_name> from <$design_name> to <$cur_design> since current design is empty."
+#      set design_name [get_property NAME $cur_design]
+#   }
+#   puts "INFO: Constructing design in IPI design <$cur_design>..."
+#
+#} elseif { ${cur_design} ne "" && $list_cells ne "" && $cur_design eq $design_name } {
+#   # USE CASES:
+#   #    5) Current design opened AND has components AND same names.
+#
+#   set errMsg "ERROR: Design <$design_name> already exists in your project, please set the variable <design_name> to another value."
+#   set nRet 1
+#} elseif { [get_files -quiet ${design_name}.bd] ne "" } {
+#   # USE CASES: 
+#   #    6) Current opened design, has components, but diff names, design_name exists in project.
+#   #    7) No opened design, design_name exists in project.
+#
+#   set errMsg "ERROR: Design <$design_name> already exists in your project, please set the variable <design_name> to another value."
+#   set nRet 2
+#
+#} else {
+#   # USE CASES:
+#   #    8) No opened design, design_name not in project.
+#   #    9) Current opened design, has components, but diff names, design_name not in project.
+#
+#   puts "INFO: Currently there is no design <$design_name> in project, so creating one..."
+#
+#   create_bd_design $design_name
+#
+#   puts "INFO: Making design <$design_name> as current_bd_design."
+#   current_bd_design $design_name
+#
+#}
 
 puts "INFO: Currently the variable <design_name> is equal to \"$design_name\"."
 
@@ -144,8 +144,8 @@ proc create_root_design { parentCell } {
 
 
   # Create interface ports
-  set DDR [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 DDR ]
-  set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
+#  set DDR [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 DDR ]
+#  set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
   set iic_rtl [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_rtl ]
   set spi_rtl [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:spi_rtl:1.0 spi_rtl ]
 
@@ -164,7 +164,8 @@ proc create_root_design { parentCell } {
   set_property -dict [ list CONFIG.C_USE_STARTUP {0} CONFIG.Multiples16 {2}  ] $axi_quad_spi_0
 
   # Create instance: processing_system7_0, and set properties
-  set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0 ]
+#  set processing_system7_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0 ]
+  set processing_system7_0 [get_bd_cells processing_system7_0]
   set_property -dict [ list CONFIG.PCW_APU_CLK_RATIO_ENABLE {6:2:1} \
 CONFIG.PCW_APU_PERIPHERAL_FREQMHZ {667} CONFIG.PCW_CPU_PERIPHERAL_CLKSRC {ARM PLL} \
 CONFIG.PCW_CRYSTAL_PERIPHERAL_FREQMHZ {33.333333} CONFIG.PCW_DDR_PERIPHERAL_CLKSRC {DDR PLL} \
