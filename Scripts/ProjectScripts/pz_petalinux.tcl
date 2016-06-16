@@ -80,23 +80,23 @@ remove_files -fileset constrs_1 *.xdc
 # Apply board specific project property settings
 switch -nocase $board {
    PZ7010_FMC2 {
-      puts "***** Assigning Vivado Project board_part Property to picozed_7010..."
-      set_property board_part em.avnet.com:picozed_7010:part0:1.0 [current_project]
+      puts "***** Assigning Vivado Project board_part Property to picozed_7010_fmc2..."
+      set_property board_part em.avnet.com:picozed_7010_fmc2:part0:1.1 [current_project]
    }
 
    PZ7015_FMC2 {
-      puts "***** Assigning Vivado Project board_part Property to picozed_7015..."
-      set_property board_part em.avnet.com:picozed_7015:part0:1.0 [current_project]
+      puts "***** Assigning Vivado Project board_part Property to picozed_7015_fmc2..."
+      set_property board_part em.avnet.com:picozed_7015_fmc2:part0:1.1 [current_project]
    }
 
    PZ7020_FMC2 {
-      puts "***** Assigning Vivado Project board_part Property to picozed_7020..."
-      set_property board_part em.avnet.com:picozed_7020:part0:1.0 [current_project]
+      puts "***** Assigning Vivado Project board_part Property to picozed_7020_fmc2..."
+      set_property board_part em.avnet.com:picozed_7020_fmc2:part0:1.1 [current_project]
    }
    
    PZ7030_FMC2 {
-      puts "***** Assigning Vivado Project board_part Property to picozed_7030..."
-      set_property board_part em.avnet.com:picozed_7030:part0:1.0 [current_project]
+      puts "***** Assigning Vivado Project board_part Property to picozed_7030_fmc2..."
+      set_property board_part em.avnet.com:picozed_7030_fmc2:part0:1.1 [current_project]
    }
 }
 
@@ -105,6 +105,9 @@ puts "***** Creating Block Design..."
 create_bd_design ${project}
 set design_name ${project}
 avnet_add_ps_preset $project $projects_folder $scriptdir
+
+# Add preset IP from board definitions
+avnet_add_user_io_preset $project $projects_folder $scriptdir
 
 # General Config
 puts "***** General Configuration for Design..."

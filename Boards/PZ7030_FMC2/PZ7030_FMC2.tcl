@@ -68,6 +68,19 @@ proc avnet_add_user_io {project projects_folder scriptdir} {
 
 }
 
+proc avnet_add_user_io_preset {project projects_folder scriptdir} {
+
+   # this uses board automation for the PZ SOM which is derived from the 
+   # board definition file downloadable from the PicoZed.org community site.
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0
+   apply_board_connection -board_interface "pl_leds_4bits" -ip_intf "axi_gpio_0/GPIO" -diagram $project 
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_1
+   apply_board_connection -board_interface "pl_pbs_5bits" -ip_intf "axi_gpio_1/GPIO" -diagram $project
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_0/S_AXI]
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
+   
+}
+
 proc avnet_add_ps {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
@@ -86,13 +99,6 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells processing_system7_0]
 
    set processing_system7_0 [get_bd_cells processing_system7_0]
-
-   ############################################################################
-   # Connect eMMC CD to a constant 0
-   ############################################################################
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 GND
-   set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells GND]
-   connect_bd_net [get_bd_pins GND/dout] [get_bd_pins processing_system7_0/SDIO1_CDN]
 
 }
 
