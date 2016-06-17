@@ -40,6 +40,7 @@
 #  Dependencies:        To be called from a configured make script call
 #
 #  Revision:            Mar 26, 2016: 1.00 Initial version
+#  Revision:            Jun 16, 2016: 1.01 Updated for Vivado 2015.4
 # 
 # ----------------------------------------------------------------------------
 
@@ -63,6 +64,9 @@ sdk build_project -type bsp -name ${bsp_name}
 # Create FSBL application
 puts "\n#\n#\n# Creating zynq_fsbl ...\n#\n#\n"
 sdk create_app_project -name zynq_fsbl_app -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Zynq FSBL} -bsp zynq_fsbl_bsp
+
+# Set the build type
+sdk set_build_config -app zynq_fsbl_app -type release
 
 # Build FSBL application
 puts "\n#\n#\n Building zynq_fsbl ...\n#\n#\n"
