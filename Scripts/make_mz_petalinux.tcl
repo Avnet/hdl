@@ -43,6 +43,7 @@
 #
 #  Revision:            Mar 26, 2016: 1.00 Initial version
 #                       Jun 16, 2016: 1.1  Updated to support 2015.4 tools
+#                       Jul 01, 2016: 1.2  Updated to support 2016.2 tools
 # 
 # ----------------------------------------------------------------------------
 
