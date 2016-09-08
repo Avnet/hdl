@@ -92,6 +92,9 @@ avnet_add_ps_preset $project $projects_folder $scriptdir
 # Add preset IP from board definitions
 avnet_add_user_io_preset $project $projects_folder $scriptdir
 
+# Add DisplayPort interface configuration
+avnet_add_ps_displayport $project $projects_folder $scriptdir
+
 # General Config
 puts "***** General Configuration for Design..."
 set_property target_language VHDL [current_project]

@@ -77,5 +77,45 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" }  [get_bd_cells zynq_ultra_ps_e_0]
 
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
+   
+   # Not seeing the watchdog or TTC settings being implemented by the board 
+   # definition settings from the official 2016.2 board definition from
+   # Xilinx.  Forcing this controller to be enabled.
+   set_property -dict [list CONFIG.PSU__CSU__PERIPHERAL__ENABLE {1} CONFIG.PSU__CSU__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__SWDT0__PERIPHERAL__ENABLE {1} CONFIG.PSU__SWDT0__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__SWDT1__PERIPHERAL__ENABLE {1} CONFIG.PSU__SWDT1__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__TTC0__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC0__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__TTC1__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC1__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__TTC2__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC2__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__TTC3__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC3__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
+  
+}
 
+proc avnet_add_ps_displayport {project projects_folder scriptdir} {
+
+   # DisplayPort GTR option is not enabled in 2016.2 board definition
+   # file so this must be done manually (at least for this version)
+   
+   # Add proper XDC based on DisplayPort needs.
+   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/ZCU102/zcu102_displayport.xdc
+   
+   # First disable the PCIE Port.
+   set_property -dict [list CONFIG.PSU__PCIE__LANE0__ENABLE {0} CONFIG.PSU__PCIE__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
+   
+   # Enable the two DisplayPort GTRs.
+   set_property -dict [list CONFIG.PSU__DP__LANE_SEL {Dual Lower} CONFIG.PSU__USB3_0__EMIO__ENABLE {0} CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
+   
+   # Create the DisplayPort AUX channel output enable inverter workaround.
+   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 dp_aux_data_oe_n_invert
+   set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells dp_aux_data_oe_n_invert]
+   
+   # Connect the output enable inverter from the Zynq PS OE and then to an
+   # external port.
+   create_bd_port -dir O -from 0 -to 0 dp_aux_data_oe
+   connect_bd_net [get_bd_pins /dp_aux_data_oe_n_invert/Res] [get_bd_ports dp_aux_data_oe]
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/dp_aux_data_oe_n] [get_bd_pins dp_aux_data_oe_n_invert/Op1]
+   
+   # Connect the DisplayPort AUX channel data externally.
+   create_bd_port -dir O dp_aux_data_out
+   connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/dp_aux_data_out] [get_bd_ports dp_aux_data_out]
 }
