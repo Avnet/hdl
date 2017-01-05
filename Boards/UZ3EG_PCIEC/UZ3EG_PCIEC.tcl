@@ -90,4 +90,6 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    set_property -dict [list CONFIG.PSU__TTC2__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC2__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
    set_property -dict [list CONFIG.PSU__TTC3__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC3__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
    
+   # Disable PCIe controller as well.
+   set_property -dict [list CONFIG.PSU__PCIE__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
 }

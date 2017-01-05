@@ -77,9 +77,9 @@ avnet_create_project $project $projects_folder $scriptdir
 
 # Apply board specific project property settings
 switch -nocase $board {
-   UZ3EG_PCIECC {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_3eg_pciecc..."
-      set_property board_part em.avnet.com:ultrazed_3eg_pciecc:part0:1.0 [current_project]
+   UZ3EG_PCIEC {
+      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_pciecc..."
+      set_property board_part em.avnet.com:ultrazed_eg_pciecc:part0:1.0 [current_project]
    }
 
 }
