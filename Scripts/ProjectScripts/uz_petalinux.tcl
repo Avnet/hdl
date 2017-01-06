@@ -45,6 +45,7 @@
 # 
 #
 #  Revision:            Jul 01, 2016: 1.00 Initial version
+#                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
 # 
 # ----------------------------------------------------------------------------
 
@@ -80,7 +81,10 @@ switch -nocase $board {
       puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc..."
       set_property board_part em.avnet.com:ultrazed_eg_iocc:part0:1.0 [current_project]
    }
-
+   UZ3EG_PCIEC {
+      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc..."
+      set_property board_part em.avnet.com:ultrazed_eg_pciecc:part0:1.0 [current_project]
+   }
 }
 
 # Create Block Design and Add PS core
