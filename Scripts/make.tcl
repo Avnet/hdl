@@ -54,6 +54,7 @@ set found "false"
 set ok_to_tag_public "false"
 set sdk "no"
 set jtag "no"
+set dev_arch "zynq"
 
 # create GREP process
 # From: http://wiki.tcl.tk/9395
@@ -120,6 +121,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       puts "    with release_state set to public the script will release to GITHUB"
       puts "close_project=\n 'no' will prevent the script from closing the project\n used to allow 'up+enter' rebuilds of a project"
       puts "jtag=\n 'yes' will attempt to JTAG a project after synthesis and binary generation"
+      puts "arch=\n specifies the target device architecture (zynq or zynqmp) to create a boot.bin file"
       puts "clean=\n Be careful due to destructive nature of wiping ALL output products out"
       puts "version_override=yes\n ***************************** \n CAUTION: \n Override the Version Check\n and attempt to make project\n *****************************"
       return -code ok
@@ -200,7 +202,16 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       for {set j 0} {$j < [expr $chart_wdith - [string length $jtag]]} {incr j} {
          append printmessage " "
       }
-      append build_params "| No Close Project |     $printmessage |\n"
+      append build_params "| JTAG             |     $printmessage |\n"
+   }
+   # check for DEV_ARCH parameter
+   if {[string match -nocase "dev_arch=*" [lindex $argv $i]]} {
+      set dev_arch [string range [lindex $argv $i] 9 end]
+      set printmessage $dev_arch
+      for {set j 0} {$j < [expr $chart_wdith - [string length $dev_arch]]} {incr j} {
+         append printmessage " "
+      }
+      append build_params "| Device           |     $printmessage |\n"
    }
    append build_params "+------------------+------------------------------------+\n"
 }
@@ -298,7 +309,6 @@ switch -nocase $board {
    PZ7030_FMC2                -
    PZSDR7035_FMCCC            -
    UZ3EG_IOCC                 -
-   UZ3EG_PCIEC                -
    ZC702                      -
    ZC706                      -
    ZCU102                     -
@@ -344,7 +354,7 @@ if {[string match -nocase "no" $jtag]} {
 	  # Build a BOOT.bin file only if a BIF file exists for the project.
 	  if {[file exists ../software/$project\_sd.bif]} {
          puts "Generating BOOT.BIN..."
-         exec >@stdout 2>@stderr bootgen -image ../software/$project\_sd.bif -w -o BOOT.bin
+         exec >@stdout 2>@stderr bootgen -arch $dev_arch -image ../software/$project\_sd.bif -w -o BOOT.bin
       }
       cd ${scripts_folder}
    }
