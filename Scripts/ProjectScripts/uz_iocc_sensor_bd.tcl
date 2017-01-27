@@ -10,7 +10,7 @@
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2016.2
+set scripts_vivado_version 2016.4
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -44,7 +44,9 @@ if { $nRet != 0 } {
 # Procedure to create entire design; Provide argument to make
 # procedure reusable. If parentCell is "", will use root.
 proc create_root_design { parentCell } {
-  
+
+  variable script_folder
+
   if { $parentCell eq "" } {
      set parentCell [get_bd_cells /]
   }
@@ -52,14 +54,14 @@ proc create_root_design { parentCell } {
   # Get object for parentCell
   set parentObj [get_bd_cells $parentCell]
   if { $parentObj == "" } {
-     puts "ERROR: Unable to find parent cell <$parentCell>!"
+     catch {common::send_msg_id "BD_TCL-100" "ERROR" "Unable to find parent cell <$parentCell>!"}
      return
   }
 
   # Make sure parentObj is hier blk
   set parentType [get_property TYPE $parentObj]
   if { $parentType ne "hier" } {
-     puts "ERROR: Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."
+     catch {common::send_msg_id "BD_TCL-101" "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
      return
   }
 
@@ -68,6 +70,7 @@ proc create_root_design { parentCell } {
 
   # Set parent object as current
   current_bd_instance $parentObj
+
 
   # Create interface ports
   set arduino_iic [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 arduino_iic ]
@@ -123,7 +126,7 @@ CONFIG.DIN_WIDTH {8} \
 CONFIG.DOUT_WIDTH {6} \
  ] $xlslice_0
 
-  # Create instance: zynq_ultra_ps_e_0_axi_periph, and set properties
+    # Create instance: zynq_ultra_ps_e_0_axi_periph, and set properties
   set zynq_ultra_ps_e_0_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 zynq_ultra_ps_e_0_axi_periph ]
   set_property -dict [ list \
 CONFIG.NUM_MI {6} \
@@ -159,6 +162,7 @@ CONFIG.NUM_MI {6} \
   create_bd_addr_seg -range 0x00010000 -offset 0x80030000 [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_iic_0/S_AXI/Reg] SEG_axi_iic_0_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x80040000 [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_iic_1/S_AXI/Reg] SEG_axi_iic_1_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x80050000 [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_quad_spi_0/AXI_LITE/Reg] SEG_axi_quad_spi_0_Reg
+
 
   # Restore current instance
   current_bd_instance $oldCurInst

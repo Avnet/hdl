@@ -35,7 +35,7 @@
 #  Target Devices:      Zynq UltraScale+ 3EG
 #  Hardware Boards:     UltraZed, IO Carrier
 # 
-#  Tool versions:       Vivado 2016.2
+#  Tool versions:       Vivado 2016.4
 # 
 #  Description:         Build Script for UltraZed IO Carrier
 # 
@@ -74,15 +74,15 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:1.2 zynq_ultra_ps_e_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:2.0 zynq_ultra_ps_e_0
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" }  [get_bd_cells zynq_ultra_ps_e_0]
 
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
 
    # Not seeing the watchdog or TTC settings being implemented by the board 
-   # definition settings from the official 2016.2 board definition from
+   # definition settings from the official 2016.4 board definition from
    # Xilinx.  Forcing this controller to be enabled.
-   set_property -dict [list CONFIG.PSU__CSU__PERIPHERAL__ENABLE {1} CONFIG.PSU__CSU__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__CSU__PERIPHERAL__ENABLE {1} CONFIG.PSU__CSU__PERIPHERAL__IO {MIO 26}] [get_bd_cells zynq_ultra_ps_e_0]
    set_property -dict [list CONFIG.PSU__SWDT0__PERIPHERAL__ENABLE {1} CONFIG.PSU__SWDT0__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
    set_property -dict [list CONFIG.PSU__SWDT1__PERIPHERAL__ENABLE {1} CONFIG.PSU__SWDT1__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
    set_property -dict [list CONFIG.PSU__TTC0__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC0__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]

@@ -70,9 +70,10 @@ proc make_ip {ip_name} {
    set_property vendor_display_name {Avnet} [ipx::current_core]
    set_property company_url {http://em.avnet.com} [ipx::current_core]
    set_property taxonomy {{/FPGA_Features_and_Design/IO_Interfaces}} [ipx::current_core]
-   set_property supported_families {{virtex7} {Pre-Production}\
+   set_property supported_families { \
+#									{virtex7} {Pre-Production}\
                                     {qzynq} {Pre-Production}\
-                                    {qvirtex7} {Pre-Production}\
+#                                    {qvirtex7} {Pre-Production}\
                                     {qkintex7l} {Pre-Production}\
                                     {qkintex7} {Pre-Production}\
                                     {qartix7} {Pre-Production}\

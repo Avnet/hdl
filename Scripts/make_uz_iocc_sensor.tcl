@@ -35,7 +35,7 @@
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
 #  Hardware Boards:     UltraZed SOM
 # 
-#  Tool versions:       Xilinx Vivado 2016.2
+#  Tool versions:       Xilinx Vivado 2016.4
 # 
 #  Description:         Build Script for UltraZed Pmod Sensors HW Platform
 # 

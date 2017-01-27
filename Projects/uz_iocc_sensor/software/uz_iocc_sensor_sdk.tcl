@@ -32,7 +32,7 @@
 #  Target Devices:      
 #  Hardware Boards:     UltraZed SOM
 # 
-#  Tool versions:       Vivado 2016.2
+#  Tool versions:       Vivado 2016.4
 # 
 #  Description:         SDK Build Script for UltraZed SOM + I/O CC hardware 
 #                       platform
