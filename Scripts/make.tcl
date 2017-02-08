@@ -313,6 +313,7 @@ switch -nocase $board {
    ZC706                      -
    ZCU102                     -
    ZEDBOARD                   -
+   MINIZED                    -
    MITXZ7045                  -
    MITXZ7100                  -
    MZ7010_FMCCC               -
