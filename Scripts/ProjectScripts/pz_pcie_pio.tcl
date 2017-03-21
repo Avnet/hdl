@@ -84,10 +84,15 @@ set_property target_language VHDL [current_project]
 set design_name ${project}
 source ../../Scripts/ProjectScripts/${project}_bd.tcl
 
+puts "***** Validating Layout for Block Design..."
+validate_bd_design
+puts "***** Regenerating Layout for Block Design..."
+regenerate_bd_layout
+
 # Add Project source files
 puts "***** Adding Source Files to Block Design..."
-#make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
-#add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.vhd
+make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
+add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.vhd
 
 # Build the binary
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -95,11 +100,13 @@ puts "***** Adding Source Files to Block Design..."
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 puts "***** Building Binary..."
 # add this to allow up+enter rebuild capability 
-#cd $scripts_folder
-#update_compile_order -fileset sources_1
-#update_compile_order -fileset sim_1
-#save_bd_design
-#launch_runs impl_1 -to_step write_bitstream
+cd $scripts_folder
+update_compile_order -fileset sources_1
+update_compile_order -fileset sim_1
+save_bd_design
+# Added due to HOW the PCIE IP was generated using a Board Preset
+update_ip_catalog -rebuild -scan_changes
+launch_runs impl_1 -to_step write_bitstream
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
