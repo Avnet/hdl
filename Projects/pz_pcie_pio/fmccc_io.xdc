@@ -56,8 +56,8 @@
 # Link Width   - x1
 # Link Speed   - gen1
 # Family       - zynq
-# Part         - xc7z015
-# Package      - clg485
+# Part         - xc7z015,xc7z030
+# Package      - clg485,sbg485
 # Speed grade  - -1
 # PCIe Block   - X0Y0
 ###############################################################################
@@ -142,12 +142,6 @@ set_property PACKAGE_PIN V9 [get_ports sys_clk_n]
 
 set_property PACKAGE_PIN Y18 [get_ports pl_led1]
 set_property PACKAGE_PIN Y19 [get_ports pl_led2]
-set_property IOSTANDARD LVCMOS33 [get_ports pl_led1]
-set_property IOSTANDARD LVCMOS33 [get_ports sys_rst_n]
-set_property IOSTANDARD LVCMOS33 [get_ports pl_led2]
-
 
 set_property PACKAGE_PIN T16 [get_ports user_pb1]
 set_property PACKAGE_PIN V14 [get_ports user_pb2]
-set_property IOSTANDARD LVCMOS33 [get_ports user_pb1]
-set_property IOSTANDARD LVCMOS33 [get_ports user_pb2]

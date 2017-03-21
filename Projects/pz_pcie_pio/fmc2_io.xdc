@@ -140,14 +140,9 @@ set_property PACKAGE_PIN V13 [get_ports sys_rst_n]
 set_property PACKAGE_PIN AA3 [get_ports {pci_exp_txp[0]}]
 set_property PACKAGE_PIN V9 [get_ports sys_clk_n]
 
-set_property PACKAGE_PIN Y18 [get_ports pl_led1]
-set_property PACKAGE_PIN Y19 [get_ports pl_led2]
-set_property IOSTANDARD LVCMOS33 [get_ports pl_led1]
-set_property IOSTANDARD LVCMOS33 [get_ports sys_rst_n]
-set_property IOSTANDARD LVCMOS33 [get_ports pl_led2]
+set_property PACKAGE_PIN G3   [get_ports pl_led1]
+set_property PACKAGE_PIN AA19 [get_ports pl_led2]
 
+set_property PACKAGE_PIN G2  [get_ports user_pb1]
+set_property PACKAGE_PIN T16 [get_ports user_pb2]
 
-set_property PACKAGE_PIN T16 [get_ports user_pb1]
-set_property PACKAGE_PIN V14 [get_ports user_pb2]
-set_property IOSTANDARD LVCMOS33 [get_ports user_pb1]
-set_property IOSTANDARD LVCMOS33 [get_ports user_pb2]

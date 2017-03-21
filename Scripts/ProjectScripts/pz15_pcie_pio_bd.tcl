@@ -7,49 +7,49 @@
 # IP Integrator Tcl commands easier.
 ################################################################
 
-namespace eval _tcl {
-proc get_script_folder {} {
-   set script_path [file normalize [info script]]
-   set script_folder [file dirname $script_path]
-   return $script_folder
-}
-}
-variable script_folder
-set script_folder [_tcl::get_script_folder]
-
-################################################################
-# Check if script is running in correct Vivado version.
-################################################################
-set scripts_vivado_version 2016.4
-set current_vivado_version [version -short]
-
-if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
-   puts ""
-   catch {common::send_msg_id "BD_TCL-109" "ERROR" "This script was generated using Vivado <$scripts_vivado_version> and is being run in <$current_vivado_version> of Vivado. Please run the script in Vivado <$scripts_vivado_version> then open the design in Vivado <$current_vivado_version>. Upgrade the design by running \"Tools => Report => Report IP Status...\", then run write_bd_tcl to create an updated script."}
-
-   return 1
-}
-
-################################################################
-# START
-################################################################
-
-# To test this script, run the following commands from Vivado Tcl console:
-# source design_1_script.tcl
-
-# If there is no project opened, this script will create a
-# project, but make sure you do not have an existing project
-# <./myproj/project_1.xpr> in the current working folder.
-
-set list_projs [get_projects -quiet]
-if { $list_projs eq "" } {
-   create_project project_1 myproj -part xc7z015clg485-1
-   set_property BOARD_PART em.avnet.com:picozed_7015_fmc1:part0:1.1 [current_project]
-}
-
-
-# CHANGE DESIGN NAME HERE
-set design_name design_1
+#namespace eval _tcl {
+#proc get_script_folder {} {
+#   set script_path [file normalize [info script]]
+#   set script_folder [file dirname $script_path]
+#   return $script_folder
+#}
+#}
+#variable script_folder
+#set script_folder [_tcl::get_script_folder]
+#
+#################################################################
+## Check if script is running in correct Vivado version.
+#################################################################
+#set scripts_vivado_version 2016.4
+#set current_vivado_version [version -short]
+#
+#if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
+#   puts ""
+#   catch {common::send_msg_id "BD_TCL-109" "ERROR" "This script was generated using Vivado <$scripts_vivado_version> and is being run in <$current_vivado_version> of Vivado. Please run the script in Vivado <$scripts_vivado_version> then open the design in Vivado <$current_vivado_version>. Upgrade the design by running \"Tools => Report => Report IP Status...\", then run write_bd_tcl to create an updated script."}
+#
+#   return 1
+#}
+#
+#################################################################
+## START
+#################################################################
+#
+## To test this script, run the following commands from Vivado Tcl console:
+## source design_1_script.tcl
+#
+## If there is no project opened, this script will create a
+## project, but make sure you do not have an existing project
+## <./myproj/project_1.xpr> in the current working folder.
+#
+#set list_projs [get_projects -quiet]
+#if { $list_projs eq "" } {
+#   create_project project_1 myproj -part xc7z015clg485-1
+#   set_property BOARD_PART em.avnet.com:picozed_7015_fmc1:part0:1.1 [current_project]
+#}
+#
+#
+## CHANGE DESIGN NAME HERE
+#set design_name design_1
 
 # If you do not already have an existing IP Integrator design open,
 # you can create a design using the following command:

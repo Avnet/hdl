@@ -58,8 +58,19 @@ source ../Boards/$board/[string tolower $board].tcl -notrace
 avnet_create_project $project $projects_folder $scriptdir
 #
 remove_files -fileset constrs_1 *.xdc
-add_files -fileset constrs_1 -norecurse ${projects_folder}/../fmccc_io.xdc
-#add_files -fileset constrs_1 -norecurse ${projects_folder}/../fmc2_io.xdc
+# Set the IO pin mapping
+if {[string match -nocase "PZ7015_FMCCC" $board] || [string match -nocase "PZ7030_FMCCC" $board]} { 
+         add_files -fileset constrs_1 -norecurse ${projects_folder}/../fmccc_io.xdc
+      } else {
+         add_files -fileset constrs_1 -norecurse ${projects_folder}/../fmc2_io.xdc
+      }
+
+# Set the IO voltage standard
+if {[string match -nocase "PZ7015_FMCCC" $board] || [string match -nocase "PZ7015_FMC2" $board]} { 
+         add_files -fileset constrs_1 -norecurse ${projects_folder}/../vstd_3p3.xdc
+      } else {
+         add_files -fileset constrs_1 -norecurse ${projects_folder}/../vstd_1p8.xdc
+      }
 
 # Add Avnet IP Repository
 puts "***** Updating Vivado to include IP Folder"
@@ -70,7 +81,7 @@ update_ip_catalog
 # Create Block Design and Add PS core
 puts "***** Creating Block Design..."
 create_bd_design ${project}
-avnet_add_ps $project $projects_folder $scriptdir
+#avnet_add_ps $project $projects_folder $scriptdir
 # Apply board specific settings
 #      source ../../Scripts/ProjectScripts/pz_fmcc_pcie_pio_prst.tcl
 
@@ -82,7 +93,12 @@ set_property target_language VHDL [current_project]
 
 # Create Block Diagram
 set design_name ${project}
-source ../../Scripts/ProjectScripts/${project}_bd.tcl
+if {[string match -nocase "PZ7015_FMCCC" $board] || [string match -nocase "PZ7015_FMC2" $board]} { 
+         source ../../Scripts/ProjectScripts/pz15_pcie_pio_bd.tcl
+      } else {
+         source ../../Scripts/ProjectScripts/pz30_pcie_pio_bd.tcl
+      }
+
 
 puts "***** Validating Layout for Block Design..."
 validate_bd_design
