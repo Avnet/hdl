@@ -30,7 +30,7 @@
 #  Module Name:         
 #  Project Name:        
 #  Target Devices:      
-#  Hardware Boards:     PicoZed FMC Carrier Card V1
+#  Hardware Boards:     PicoZed FMC Carrier Card V1 + V2
 # 
 #  Tool versions:       Vivado 2014.4
 # 
@@ -58,7 +58,8 @@ source ../Boards/$board/[string tolower $board].tcl -notrace
 avnet_create_project $project $projects_folder $scriptdir
 #
 remove_files -fileset constrs_1 *.xdc
-add_files -fileset constrs_1 -norecurse ${projects_folder}/../io.xdc
+add_files -fileset constrs_1 -norecurse ${projects_folder}/../fmccc_io.xdc
+#add_files -fileset constrs_1 -norecurse ${projects_folder}/../fmc2_io.xdc
 
 # Add Avnet IP Repository
 puts "***** Updating Vivado to include IP Folder"

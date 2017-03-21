@@ -41,21 +41,21 @@
 # ----------------------------------------------------------------------------
 
 # Build PCIE PIO Design for the PicoZed-7015 + FMC Carrier Card
-set argv [list board=PZ7015_FMCCC project=pz_fmcc_pcie_pio]
+set argv [list board=PZ7015_FMCCC project=pz_pcie_pio]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
 ## Build PCIE PIO Design for the PicoZed-7030 + FMC Carrier Card
-#set argv [list board=PZ7030_FMCCC project=pz_fmcc_pcie_pio]
+#set argv [list board=PZ7030_FMCCC project=pz_pcie_pio]
 #set argc [llength $argv]
 #source ./make.tcl -notrace
 #
 ## Build PCIE PIO Design for the PicoZed-7015 + FMC Carrier Card V2
-#set argv [list board=PZ7015_FMC2 project=pz_fmcc_pcie_pio]
+#set argv [list board=PZ7015_FMC2 project=pz_pcie_pio]
 #set argc [llength $argv]
 #source ./make.tcl -notrace
 #
 ## Build PCIE PIO Design for the PicoZed-7015 + FMC Carrier Card V2
-#set argv [list board=PZ7030_FMC2 project=pz_fmcc_pcie_pio]
+#set argv [list board=PZ7030_FMC2 project=pz_pcie_pio]
 #set argc [llength $argv]
 #source ./make.tcl -notrace
