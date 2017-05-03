@@ -81,7 +81,7 @@ remove_files -fileset constrs_1 *.xdc
 switch -nocase $board {
    MINIZED {
       puts "***** Assigning Vivado Project board_part Property to minized..."
-      set_property board_part em.avnet.com:minized:part0:1.0 [current_project]
+      set_property board_part em.avnet.com:minized:part0:1.1 [current_project]
    }
 }
 
