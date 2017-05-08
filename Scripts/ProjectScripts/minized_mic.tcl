@@ -115,15 +115,15 @@ set_property target_language VHDL [current_project]
 
 # Add MiniZed microphone
 puts "***** Adding MiniZed PDM microphone demodulation filter (SysGen IP)..."
-create_bd_cell -type ip -vlnv Avnet_Inc:SysGen:pdm_filter_sg:1.0 pdm_filter_sg_0
-connect_bd_net [get_bd_pins pdm_filter_sg_0/clk] [get_bd_pins processing_system7_0/FCLK_CLK2]
+create_bd_cell -type ip -vlnv Avnet_Inc:SysGen:pdm_filt:1.0 pdm_filt_0
+connect_bd_net [get_bd_pins pdm_filt_0/clk] [get_bd_pins processing_system7_0/FCLK_CLK2]
 
 
 # Create instance: microphone_mgr, and set properties
 set microphone_mgr_0 [ create_bd_cell -type ip -vlnv avnet.com:ip:microphone_mgr:1.0 microphone_mgr_0 ]
 connect_bd_net [get_bd_pins microphone_mgr_0/clk_in] [get_bd_pins processing_system7_0/FCLK_CLK2]
 connect_bd_net [get_bd_pins microphone_mgr_0/resetn_in] [get_bd_pins processing_system7_0/FCLK_RESET2_N]
-connect_bd_net [get_bd_pins pdm_filter_sg_0/PDM_IN] [get_bd_pins microphone_mgr_0/AUDIO_PDM]
+connect_bd_net [get_bd_pins pdm_filt_0/PDM_IN] [get_bd_pins microphone_mgr_0/AUDIO_PDM]
 
 # Create BD ports to external pins of microphone
 create_bd_port -dir I AUDIO_DAT
@@ -153,12 +153,12 @@ connect_bd_net [get_bd_pins microphone_mgr_0/audio_captureCE] [get_bd_pins ila_0
 
 
 # Create ILA to capture audio output of mic
-# When capturing data in ILA, use CE from pdm_filter_sg_0 to qualify capture control to capture audio data at output sample rate of 160MHz/(64*64) = 39.0625 KSPS in 160 MHz clock domain
+# When capturing data in ILA, use CE from pdm_filt_0 to qualify capture control to capture audio data at output sample rate of 160MHz/(64*64) = 39.0625 KSPS in 160 MHz clock domain
 create_bd_cell -type ip -vlnv xilinx.com:ip:ila:6.2 ila_1
 set_property -dict [list CONFIG.C_MONITOR_TYPE {Native} CONFIG.C_DATA_DEPTH {16384} CONFIG.C_PROBE1_TYPE {1} CONFIG.C_PROBE1_WIDTH {16} CONFIG.C_NUM_OF_PROBES {2} CONFIG.C_EN_STRG_QUAL {1} CONFIG.C_PROBE1_MU_CNT {2} CONFIG.C_PROBE0_MU_CNT {2} CONFIG.ALL_PROBE_SAME_MU_CNT {2}] [get_bd_cells ila_1]
 connect_bd_net [get_bd_pins ila_1/clk] [get_bd_pins processing_system7_0/FCLK_CLK2] 
-connect_bd_net [get_bd_pins pdm_filter_sg_0/audio_ce] [get_bd_pins ila_1/probe0]
-connect_bd_net [get_bd_pins pdm_filter_sg_0/audio_out] [get_bd_pins ila_1/probe1]
+connect_bd_net [get_bd_pins pdm_filt_0/audio_ce] [get_bd_pins ila_1/probe0]
+connect_bd_net [get_bd_pins pdm_filt_0/audio_out] [get_bd_pins ila_1/probe1]
 
 
 # add selection for proper xdc based on needs

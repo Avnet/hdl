@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<bd:repository xmlns:bd="http://www.xilinx.com/bd" bd:BoundaryCRC="0xDA763039AADCCDCD" bd:device="xc7z007sclg225-1" bd:isValidated="true" bd:synthFlowMode="Hierarchical" bd:tool_version="2016.4" bd:top="minized_mic" bd:version="1.00.a">
+<bd:repository xmlns:bd="http://www.xilinx.com/bd" bd:BoundaryCRC="0xDA76303990C15155" bd:device="xc7z007sclg225-1" bd:isValidated="true" bd:synthFlowMode="Hierarchical" bd:tool_version="2017.1" bd:top="minized_mic" bd:version="1.00.a">
 
   <spirit:component xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
     <spirit:vendor>xilinx.com</spirit:vendor>
@@ -19,6 +19,15 @@
         <spirit:busType spirit:library="interface" spirit:name="ddrx" spirit:vendor="xilinx.com" spirit:version="1.0"/>
         <spirit:abstractionType spirit:library="interface" spirit:name="ddrx_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
         <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>CAN_DEBUG</spirit:name>
+            <spirit:value>false</spirit:value>
+            <spirit:vendorExtensions>
+              <bd:configElementInfos>
+                <bd:configElementInfo bd:valueSource="default"/>
+              </bd:configElementInfos>
+            </spirit:vendorExtensions>
+          </spirit:parameter>
           <spirit:parameter>
             <spirit:name>TIMEPERIOD_PS</spirit:name>
             <spirit:value>1250</spirit:value>
@@ -125,6 +134,17 @@
         <spirit:master/>
         <spirit:busType spirit:library="display_processing_system7" spirit:name="fixedio" spirit:vendor="xilinx.com" spirit:version="1.0"/>
         <spirit:abstractionType spirit:library="display_processing_system7" spirit:name="fixedio_rtl" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>CAN_DEBUG</spirit:name>
+            <spirit:value>false</spirit:value>
+            <spirit:vendorExtensions>
+              <bd:configElementInfos>
+                <bd:configElementInfo bd:valueSource="default"/>
+              </bd:configElementInfos>
+            </spirit:vendorExtensions>
+          </spirit:parameter>
+        </spirit:parameters>
       </spirit:busInterface>
       <spirit:busInterface>
         <spirit:name>pl_sw_1bit</spirit:name>
@@ -223,10 +243,10 @@
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
-        <spirit:instanceName>pdm_filter_sg_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="SysGen" spirit:name="pdm_filter_sg" spirit:vendor="Avnet_Inc" spirit:version="1.0"/>
+        <spirit:instanceName>pdm_filt_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="SysGen" spirit:name="pdm_filt" spirit:vendor="Avnet_Inc" spirit:version="1.0"/>
         <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">minized_mic_pdm_filter_sg_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">minized_mic_pdm_filt_0_0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
@@ -295,9 +315,9 @@
         <spirit:internalPortReference spirit:componentRef="processing_system7_0" spirit:portRef="M_AXI_GP0_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="S00_ACLK"/>
         <spirit:internalPortReference spirit:componentRef="rst_ps7_0_100M" spirit:portRef="slowest_sync_clk"/>
-        <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="ACLK"/>
         <spirit:internalPortReference spirit:componentRef="axi_gpio_0" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="M00_ACLK"/>
+        <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="ACLK"/>
         <spirit:internalPortReference spirit:componentRef="axi_gpio_1" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="ps7_0_axi_periph" spirit:portRef="M01_ACLK"/>
       </spirit:adHocConnection>
@@ -323,7 +343,7 @@
       <spirit:adHocConnection>
         <spirit:name>processing_system7_0_FCLK_CLK2</spirit:name>
         <spirit:internalPortReference spirit:componentRef="processing_system7_0" spirit:portRef="FCLK_CLK2"/>
-        <spirit:internalPortReference spirit:componentRef="pdm_filter_sg_0" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="pdm_filt_0" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="microphone_mgr_0" spirit:portRef="clk_in"/>
         <spirit:internalPortReference spirit:componentRef="ila_0" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="ila_1" spirit:portRef="clk"/>
@@ -336,7 +356,7 @@
       <spirit:adHocConnection>
         <spirit:name>microphone_mgr_0_AUDIO_PDM</spirit:name>
         <spirit:internalPortReference spirit:componentRef="microphone_mgr_0" spirit:portRef="AUDIO_PDM"/>
-        <spirit:internalPortReference spirit:componentRef="pdm_filter_sg_0" spirit:portRef="pdm_in"/>
+        <spirit:internalPortReference spirit:componentRef="pdm_filt_0" spirit:portRef="pdm_in"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>AUDIO_DAT_1</spirit:name>
@@ -364,13 +384,13 @@
         <spirit:internalPortReference spirit:componentRef="ila_0" spirit:portRef="probe2"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
-        <spirit:name>pdm_filter_sg_0_audio_ce</spirit:name>
-        <spirit:internalPortReference spirit:componentRef="pdm_filter_sg_0" spirit:portRef="audio_ce"/>
+        <spirit:name>pdm_filt_0_audio_ce</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="pdm_filt_0" spirit:portRef="audio_ce"/>
         <spirit:internalPortReference spirit:componentRef="ila_1" spirit:portRef="probe0"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
-        <spirit:name>pdm_filter_sg_0_audio_out</spirit:name>
-        <spirit:internalPortReference spirit:componentRef="pdm_filter_sg_0" spirit:portRef="audio_out"/>
+        <spirit:name>pdm_filt_0_audio_out</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="pdm_filt_0" spirit:portRef="audio_out"/>
         <spirit:internalPortReference spirit:componentRef="ila_1" spirit:portRef="probe1"/>
       </spirit:adHocConnection>
     </spirit:adHocConnections>
@@ -428,6 +448,17 @@
             </spirit:physicalPort>
           </spirit:portMap>
         </spirit:portMaps>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>ASSOCIATED_RESET</spirit:name>
+            <spirit:value>ARESETN</spirit:value>
+            <spirit:vendorExtensions>
+              <bd:configElementInfos>
+                <bd:configElementInfo bd:valueSource="user"/>
+              </bd:configElementInfos>
+            </spirit:vendorExtensions>
+          </spirit:parameter>
+        </spirit:parameters>
       </spirit:busInterface>
       <spirit:busInterface>
         <spirit:name>RST.ARESETN</spirit:name>

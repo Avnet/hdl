@@ -1,7 +1,7 @@
---Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+--Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
---Tool Version: Vivado v.2016.4 (win64) Build 1756540 Mon Jan 23 19:11:23 MST 2017
---Date        : Wed May 03 12:07:15 2017
+--Tool Version: Vivado v.2017.1 (win64) Build 1846317 Fri Apr 14 18:55:03 MDT 2017
+--Date        : Sun May  7 17:40:10 2017
 --Host        : Luc-HPZ210 running 64-bit Service Pack 1  (build 7601)
 --Command     : generate_target minized_mic_wrapper.bd
 --Design      : minized_mic_wrapper

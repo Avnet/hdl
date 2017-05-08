@@ -1,7 +1,7 @@
---Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
+--Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
---Tool Version: Vivado v.2016.4 (win64) Build 1756540 Mon Jan 23 19:11:23 MST 2017
---Date        : Wed May 03 12:07:15 2017
+--Tool Version: Vivado v.2017.1 (win64) Build 1846317 Fri Apr 14 18:55:03 MDT 2017
+--Date        : Sun May  7 17:40:10 2017
 --Host        : Luc-HPZ210 running 64-bit Service Pack 1  (build 7601)
 --Command     : generate_target minized_mic.bd
 --Design      : minized_mic
@@ -1114,7 +1114,7 @@ entity minized_mic is
     pl_sw_1bit_tri_i : in STD_LOGIC
   );
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of minized_mic : entity is "minized_mic,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=minized_mic,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=14,numReposBlks=10,numNonXlnxBlks=2,numHierBlks=4,maxHierDepth=0,numSysgenBlks=1,numHlsBlks=0,numHdlrefBlks=0,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=2,da_ps7_cnt=1,synth_mode=OOC_per_IP}";
+  attribute CORE_GENERATION_INFO of minized_mic : entity is "minized_mic,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=minized_mic,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=14,numReposBlks=10,numNonXlnxBlks=2,numHierBlks=4,maxHierDepth=0,numSysgenBlks=1,numHlsBlks=0,numHdlrefBlks=0,numPkgbdBlks=0,bdsource=USER,synth_mode=OOC_per_IP}";
   attribute HW_HANDOFF : string;
   attribute HW_HANDOFF of minized_mic : entity is "minized_mic.hwdef";
 end minized_mic;
@@ -1252,14 +1252,14 @@ architecture STRUCTURE of minized_mic is
     peripheral_aresetn : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
   end component minized_mic_rst_ps7_0_100M_0;
-  component minized_mic_pdm_filter_sg_0_0 is
+  component minized_mic_pdm_filt_0_0 is
   port (
     pdm_in : in STD_LOGIC;
     clk : in STD_LOGIC;
     audio_ce : out STD_LOGIC;
     audio_out : out STD_LOGIC_VECTOR ( 15 downto 0 )
   );
-  end component minized_mic_pdm_filter_sg_0_0;
+  end component minized_mic_pdm_filt_0_0;
   component minized_mic_microphone_mgr_0_0 is
   port (
     clk_in : in STD_LOGIC;
@@ -1294,8 +1294,8 @@ architecture STRUCTURE of minized_mic is
   signal microphone_mgr_0_PDM_vector_full_STROBE : STD_LOGIC;
   signal microphone_mgr_0_audio_captureCE : STD_LOGIC;
   signal microphone_mgr_0_audio_data_vector_OUT : STD_LOGIC_VECTOR ( 1023 downto 0 );
-  signal pdm_filter_sg_0_audio_ce : STD_LOGIC;
-  signal pdm_filter_sg_0_audio_out : STD_LOGIC_VECTOR ( 15 downto 0 );
+  signal pdm_filt_0_audio_ce : STD_LOGIC;
+  signal pdm_filt_0_audio_out : STD_LOGIC_VECTOR ( 15 downto 0 );
   signal processing_system7_0_DDR_ADDR : STD_LOGIC_VECTOR ( 14 downto 0 );
   signal processing_system7_0_DDR_BA : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal processing_system7_0_DDR_CAS_N : STD_LOGIC;
@@ -1462,8 +1462,8 @@ ila_0: component minized_mic_ila_0_0
 ila_1: component minized_mic_ila_1_0
      port map (
       clk => processing_system7_0_FCLK_CLK2,
-      probe0(0) => pdm_filter_sg_0_audio_ce,
-      probe1(15 downto 0) => pdm_filter_sg_0_audio_out(15 downto 0)
+      probe0(0) => pdm_filt_0_audio_ce,
+      probe1(15 downto 0) => pdm_filt_0_audio_out(15 downto 0)
     );
 microphone_mgr_0: component minized_mic_microphone_mgr_0_0
      port map (
@@ -1476,10 +1476,10 @@ microphone_mgr_0: component minized_mic_microphone_mgr_0_0
       clk_in => processing_system7_0_FCLK_CLK2,
       resetn_in => processing_system7_0_FCLK_RESET2_N
     );
-pdm_filter_sg_0: component minized_mic_pdm_filter_sg_0_0
+pdm_filt_0: component minized_mic_pdm_filt_0_0
      port map (
-      audio_ce => pdm_filter_sg_0_audio_ce,
-      audio_out(15 downto 0) => pdm_filter_sg_0_audio_out(15 downto 0),
+      audio_ce => pdm_filt_0_audio_ce,
+      audio_out(15 downto 0) => pdm_filt_0_audio_out(15 downto 0),
       clk => processing_system7_0_FCLK_CLK2,
       pdm_in => microphone_mgr_0_AUDIO_PDM
     );
