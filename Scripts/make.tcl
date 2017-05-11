@@ -33,7 +33,7 @@
 #  Hardware Boards:     
 # 
 #  Tool versions:       
-set required_version 2016.2
+set required_version 2016.4
 # 
 #  Description:         Build Script for sample project (fails build)
 # 
@@ -309,10 +309,12 @@ switch -nocase $board {
    PZ7030_FMC2                -
    PZSDR7035_FMCCC            -
    UZ3EG_IOCC                 -
+   UZ3EG_PCIEC                -
    ZC702                      -
    ZC706                      -
    ZCU102                     -
    ZEDBOARD                   -
+   MINIZED                    -
    MITXZ7045                  -
    MITXZ7100                  -
    MZ7010_FMCCC               -

@@ -11,11 +11,11 @@
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 # 
-#  Please direct any questions to the UltraZed community support forum:
-#     http://www.ultrazed.org/forum
+#  Please direct any questions to the MiniZed community support forum:
+#     http://www.minized.org/forum
 # 
 #  Product information is available at:
-#     http://www.ultrazed.org/product/ultrazed
+#     http://www.minized.org/product/minized
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -23,29 +23,28 @@
 #     any errors, which may appear in this code, nor does it make a commitment
 #     to update the information contained herein. Avnet, Inc specifically
 #     disclaims any implied warranties of fitness for a particular purpose.
-#                      Copyright(c) 2016 Avnet, Inc.
+#                      Copyright(c) 2017 Avnet, Inc.
 #                              All rights reserved.
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         Jul 01, 2016
-#  Design Name:         UltraZed PetaLinux BSP HW Platform
-#  Module Name:         uz_petalinux.tcl
-#  Project Name:        UltraZed PetaLinux BSP Generator
-#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
-#  Hardware Boards:     UltraZed SOM
+#  Create Date:         Feb 03, 2017
+#  Design Name:         MiniZed PetaLinux BSP HW Platform
+#  Module Name:         minized_petalinux.tcl
+#  Project Name:        MiniZed PetaLinux BSP Generator
+#  Target Devices:      Xilinx Zynq-7007
+#  Hardware Boards:     MiniZed
 # 
-#  Tool versions:       Vivado 2016.2
+#  Tool versions:       Vivado 2016.4
 # 
-#  Description:         Build Script for UltraZed PetaLinux BSP HW Platform
+#  Description:         Build Script for MiniZed PetaLinux BSP HW Platform
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
 #                       scripts IP generation scripts or others as needed
 # 
 #
-#  Revision:            Jul 01, 2016: 1.00 Initial version
-#                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
+#  Revision:            Feb 03, 2017: 1.00 Initial version
 # 
 # ----------------------------------------------------------------------------
 
@@ -74,16 +73,15 @@ if {[string match -nocase "yes" $clean]} {
 puts "***** Creating Vivado Project..."
 source ../Boards/$board/$board.tcl -notrace
 avnet_create_project $project $projects_folder $scriptdir
+# Remove the SOM specific XDC file since no constraints are needed for 
+# the basic system design
+remove_files -fileset constrs_1 *.xdc
 
 # Apply board specific project property settings
 switch -nocase $board {
-   UZ3EG_IOCC {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc..."
-      set_property board_part em.avnet.com:ultrazed_eg_iocc:part0:1.0 [current_project]
-   }
-   UZ3EG_PCIEC {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc..."
-      set_property board_part em.avnet.com:ultrazed_eg_pciecc:part0:1.0 [current_project]
+   MINIZED {
+      puts "***** Assigning Vivado Project board_part Property to minized..."
+      set_property board_part em.avnet.com:minized:part0:1.0 [current_project]
    }
 }
 
@@ -91,28 +89,7 @@ switch -nocase $board {
 puts "***** Creating Block Design..."
 create_bd_design ${project}
 set design_name ${project}
-
-# A workaround to get this working again in 2016.2 tools, remove comments 
-# and workaround for later tools.
-# avnet_add_ps_preset $project $projects_folder $scriptdir
-# BEGIN 2016.2 WORKAROUND
-   # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:1.2 zynq_ultra_ps_e_0
-   apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" }  [get_bd_cells zynq_ultra_ps_e_0]
-
-   set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
-
-   # Not seeing the watchdog or TTC settings being implemented by the board 
-   # definition settings from the official 2016.4 board definition from
-   # Xilinx.  Forcing this controller to be enabled.
-   set_property -dict [list CONFIG.PSU__CSU__PERIPHERAL__ENABLE {1} CONFIG.PSU__CSU__PERIPHERAL__IO {MIO 26}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__SWDT0__PERIPHERAL__ENABLE {1} CONFIG.PSU__SWDT0__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__SWDT1__PERIPHERAL__ENABLE {1} CONFIG.PSU__SWDT1__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__TTC0__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC0__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__TTC1__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC1__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__TTC2__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC2__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__TTC3__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC3__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-# END 2016.2 workaround
+avnet_add_ps_preset $project $projects_folder $scriptdir
 
 # Add preset IP from board definitions
 avnet_add_user_io_preset $project $projects_folder $scriptdir
