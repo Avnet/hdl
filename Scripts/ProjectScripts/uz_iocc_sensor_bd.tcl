@@ -10,7 +10,7 @@
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2016.4
+set scripts_vivado_version 2016.2
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -44,9 +44,7 @@ if { $nRet != 0 } {
 # Procedure to create entire design; Provide argument to make
 # procedure reusable. If parentCell is "", will use root.
 proc create_root_design { parentCell } {
-
-  variable script_folder
-
+  
   if { $parentCell eq "" } {
      set parentCell [get_bd_cells /]
   }
@@ -54,14 +52,14 @@ proc create_root_design { parentCell } {
   # Get object for parentCell
   set parentObj [get_bd_cells $parentCell]
   if { $parentObj == "" } {
-     catch {common::send_msg_id "BD_TCL-100" "ERROR" "Unable to find parent cell <$parentCell>!"}
+     puts "ERROR: Unable to find parent cell <$parentCell>!"
      return
   }
 
   # Make sure parentObj is hier blk
   set parentType [get_property TYPE $parentObj]
   if { $parentType ne "hier" } {
-     catch {common::send_msg_id "BD_TCL-101" "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
+     puts "ERROR: Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."
      return
   }
 
@@ -70,7 +68,6 @@ proc create_root_design { parentCell } {
 
   # Set parent object as current
   current_bd_instance $parentObj
-
 
   # Create interface ports
   set arduino_iic [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 arduino_iic ]
@@ -81,6 +78,11 @@ proc create_root_design { parentCell } {
   set push_buttons_3bits [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 push_buttons_3bits ]
 
   # Create ports
+  set HTS221_DRDY [ create_bd_port -dir I -from 0 -to 0 HTS221_DRDY ]
+  set LIS3MDL_DRDY [ create_bd_port -dir I -from 0 -to 0 LIS3MDL_DRDY ]
+  set LIS3MDL_INT1 [ create_bd_port -dir I -from 0 -to 0 LIS3MDL_INT1 ]
+  set LPS25H_INT1 [ create_bd_port -dir I -from 0 -to 0 LPS25H_INT1 ]
+  set LSM6DS0_INT1 [ create_bd_port -dir I -from 0 -to 0 LSM6DS0_INT1 ]
   set led_6bits [ create_bd_port -dir O -from 5 -to 0 led_6bits ]
 
   # Create instance: PWM_w_Int_0, and set properties
@@ -117,6 +119,12 @@ CONFIG.GPIO_BOARD_INTERFACE {push_buttons_3bits} \
   # Create instance: rst_zynq_ultra_ps_e_0_100M, and set properties
   set rst_zynq_ultra_ps_e_0_100M [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_zynq_ultra_ps_e_0_100M ]
 
+  # Create instance: xlconcat_0, and set properties
+  set xlconcat_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0 ]
+  set_property -dict [ list \
+CONFIG.NUM_PORTS {8} \
+ ] $xlconcat_0
+
   # Create instance: xlslice_0, and set properties
   set xlslice_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_0 ]
   set_property -dict [ list \
@@ -126,7 +134,7 @@ CONFIG.DIN_WIDTH {8} \
 CONFIG.DOUT_WIDTH {6} \
  ] $xlslice_0
 
-    # Create instance: zynq_ultra_ps_e_0_axi_periph, and set properties
+  # Create instance: zynq_ultra_ps_e_0_axi_periph, and set properties
   set zynq_ultra_ps_e_0_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 zynq_ultra_ps_e_0_axi_periph ]
   set_property -dict [ list \
 CONFIG.NUM_MI {6} \
@@ -148,9 +156,18 @@ CONFIG.NUM_MI {6} \
   connect_bd_intf_net -intf_net zynq_ultra_ps_e_0_axi_periph_M05_AXI [get_bd_intf_pins axi_quad_spi_0/AXI_LITE] [get_bd_intf_pins zynq_ultra_ps_e_0_axi_periph/M05_AXI]
 
   # Create port connections
+  connect_bd_net -net In3_1 [get_bd_ports LSM6DS0_INT1] [get_bd_pins xlconcat_0/In3]
+  connect_bd_net -net In4_1 [get_bd_ports LPS25H_INT1] [get_bd_pins xlconcat_0/In4]
+  connect_bd_net -net In5_1 [get_bd_ports HTS221_DRDY] [get_bd_pins xlconcat_0/In5]
+  connect_bd_net -net In6_1 [get_bd_ports LIS3MDL_INT1] [get_bd_pins xlconcat_0/In6]
+  connect_bd_net -net In7_1 [get_bd_ports LIS3MDL_DRDY] [get_bd_pins xlconcat_0/In7]
   connect_bd_net -net PWM_w_Int_0_LEDs [get_bd_pins PWM_w_Int_0/LEDs] [get_bd_pins xlslice_0/Din]
+  connect_bd_net -net axi_iic_0_iic2intc_irpt [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In1]
+  connect_bd_net -net axi_iic_1_iic2intc_irpt [get_bd_pins axi_iic_1/iic2intc_irpt] [get_bd_pins xlconcat_0/In2]
+  connect_bd_net -net axi_quad_spi_0_ip2intc_irpt [get_bd_pins axi_quad_spi_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
   connect_bd_net -net rst_zynq_ultra_ps_e_0_100M_interconnect_aresetn [get_bd_pins rst_zynq_ultra_ps_e_0_100M/interconnect_aresetn] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/ARESETN]
   connect_bd_net -net rst_zynq_ultra_ps_e_0_100M_peripheral_aresetn [get_bd_pins PWM_w_Int_0/s00_axi_aresetn] [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_iic_0/s_axi_aresetn] [get_bd_pins axi_iic_1/s_axi_aresetn] [get_bd_pins axi_quad_spi_0/s_axi_aresetn] [get_bd_pins rst_zynq_ultra_ps_e_0_100M/peripheral_aresetn] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M00_ARESETN] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M01_ARESETN] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M02_ARESETN] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M03_ARESETN] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M04_ARESETN] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M05_ARESETN] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/S00_ARESETN]
+  connect_bd_net -net xlconcat_0_dout [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
   connect_bd_net -net xlslice_0_Dout [get_bd_ports led_6bits] [get_bd_pins xlslice_0/Dout]
   connect_bd_net -net zynq_ultra_ps_e_0_pl_clk0 [get_bd_pins PWM_w_Int_0/s00_axi_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_iic_0/s_axi_aclk] [get_bd_pins axi_iic_1/s_axi_aclk] [get_bd_pins axi_quad_spi_0/ext_spi_clk] [get_bd_pins axi_quad_spi_0/s_axi_aclk] [get_bd_pins rst_zynq_ultra_ps_e_0_100M/slowest_sync_clk] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_lpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/ACLK] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M00_ACLK] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M01_ACLK] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M02_ACLK] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M03_ACLK] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M04_ACLK] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/M05_ACLK] [get_bd_pins zynq_ultra_ps_e_0_axi_periph/S00_ACLK]
   connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_pins rst_zynq_ultra_ps_e_0_100M/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
@@ -162,7 +179,6 @@ CONFIG.NUM_MI {6} \
   create_bd_addr_seg -range 0x00010000 -offset 0x80030000 [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_iic_0/S_AXI/Reg] SEG_axi_iic_0_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x80040000 [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_iic_1/S_AXI/Reg] SEG_axi_iic_1_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x80050000 [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_quad_spi_0/AXI_LITE/Reg] SEG_axi_quad_spi_0_Reg
-
 
   # Restore current instance
   current_bd_instance $oldCurInst

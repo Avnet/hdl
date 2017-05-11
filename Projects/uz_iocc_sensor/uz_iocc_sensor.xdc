@@ -83,3 +83,17 @@ set_property IOSTANDARD LVCMOS18 [get_ports {led_6bits[4]}]
 set_property IOSTANDARD LVCMOS18 [get_ports {led_6bits[5]}]
 set_property IOSTANDARD LVCMOS18 [get_ports {led_2bits_tri_o[0]}]
 set_property IOSTANDARD LVCMOS18 [get_ports {led_2bits_tri_o[1]}]
+
+
+# ST Micro X-NUCLEO-IKS01A1 Sensor Arduino shield data DRDY and INT inputs
+
+set_property PACKAGE_PIN B12 [get_ports {HTS221_DRDY[0]}]				;# JX2_HD_SE_03_P
+set_property PACKAGE_PIN A10 [get_ports {LPS25H_INT1[0]}]				;# JX2_HD_SE_02_N
+set_property PACKAGE_PIN B11 [get_ports {LSM6DS0_INT1[0]}]				;# JX2_HD_SE_02_P
+set_property PACKAGE_PIN H11 [get_ports {LIS3MDL_INT1[0]}]				;# JX2_HD_SE_10_P
+set_property PACKAGE_PIN G11 [get_ports {LIS3MDL_DRDY[0]}]				;# JX2_HD_SE_10_N
+set_property IOSTANDARD LVCMOS33 [get_ports {LIS3MDL_DRDY[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {LSM6DS0_INT1[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {LPS25H_INT1[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {HTS221_DRDY[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {LIS3MDL_INT1[0]}]
