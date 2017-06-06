@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#  
+#        ** **        **          **  ****      **  **********  ********** ® 
+#       **   **        **        **   ** **     **  **              ** 
+#      **     **        **      **    **  **    **  **              ** 
+#     **       **        **    **     **   **   **  *********       ** 
+#    **         **        **  **      **    **  **  **              ** 
+#   **           **        ****       **     ** **  **              ** 
+#  **  .........  **        **        **      ****  **********      ** 
+#     ........... 
+#                                     Reach Further™ 
+#  
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -191,12 +195,13 @@ if {[string match -nocase "yes" $tag]} {
       #check if variable is AOK to public tag
       puts "Ready for Public Commit, if you are certain type your project name\n'$project' (no quotes):"
       set ok_to_tag_public [gets stdin]
-      if {[string match -nocase $project $ok_to_tag_public]} {
+      #if {[string match -nocase $project $ok_to_tag_public]} {
          grep "tag_public" ../.git/config
          # if false, add in the public tagging information
          if {[string match -nocase "false" $found]} {
             puts "Public GITHUB Not Found, adding to CONFIG"
-            set data "\n\[remote \"tag_public\"\]\n	url = git@xterra1.avnet.com:repo/hdl.git\n	url = git@github.com:Avnet/hdl.git"
+            #set data "\n\[remote \"tag_public\"\]\n	url = git@xterra1.avnet.com:repo/hdl.git\n	url = git@github.com:Avnet/hdl.git"
+            set data "\n\[remote \"tag_public\"\]\n	url = git@github.com:Avnet/hdl.git"
             set out [open ../.git/config a]
             puts -nonewline $out $data
             close $out
@@ -206,9 +211,9 @@ if {[string match -nocase "yes" $tag]} {
          puts "Please Wait, pushing to servers"
          tag_process $project $board $projects_folder $repo_folder $scripts_folder "tag_public"
          puts "Tagged Project for Public Release"
-      } else {
-         puts "Tagging Project for Public Release Not Allowed\nPlease Check Permissions"
-      }
+      #} else {
+      #   puts "Tagging Project for Public Release Not Allowed\nPlease Check Permissions"
+      #}
    } else { 
          tag_process $project $board $projects_folder $repo_folder $scripts_folder "origin"
    }
