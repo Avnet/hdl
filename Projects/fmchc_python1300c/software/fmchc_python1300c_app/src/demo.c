@@ -1,3 +1,48 @@
+// ----------------------------------------------------------------------------
+//  
+//        ** **        **          **  ****      **  **********  ********** ® 
+//       **   **        **        **   ** **     **  **              ** 
+//      **     **        **      **    **  **    **  **              ** 
+//     **       **        **    **     **   **   **  *********       ** 
+//    **         **        **  **      **    **  **  **              ** 
+//   **           **        ****       **     ** **  **              ** 
+//  **  .........  **        **        **      ****  **********      ** 
+//     ........... 
+//                                     Reach Further™ 
+//  
+// ----------------------------------------------------------------------------
+// 
+// This design is the property of Avnet.  Publication of this 
+// design is not authorized without written consent from Avnet. 
+// 
+// Please direct any questions to the PicoZed community support forum: 
+//    http://www.zedboard.org/forum 
+// 
+// Disclaimer: 
+//    Avnet, Inc. makes no warranty for the use of this code or design. 
+//    This code is provided  "As Is". Avnet, Inc assumes no responsibility for 
+//    any errors, which may appear in this code, nor does it make a commitment 
+//    to update the information contained herein. Avnet, Inc specifically 
+//    disclaims any implied warranties of fitness for a particular purpose. 
+//                     Copyright(c) 2017 Avnet, Inc. 
+//                             All rights reserved. 
+// 
+// ----------------------------------------------------------------------------
+//
+// Create Date:         Nov 18, 2011
+// Design Name:         Demo
+// Module Name:         demo.c
+// Project Name:        Demo
+//
+// Tool versions:       Vivado 2016.4
+//
+// Description:         PYTHON1300-C Getting Started Demo application
+//
+// Dependencies:        
+//
+// Revision:            Jun 01, 2017: 1.03 Add CFA command to set bayer
+//
+//----------------------------------------------------------------
 
 #include "demo.h"
 
@@ -13,10 +58,25 @@ int demo_init( demo_t *pdemo )
 	pdemo->pfmc_hdmi_cam = &(pdemo->fmc_hdmi_cam);
 	pdemo->ppython_receiver = &(pdemo->python_receiver);
 
+	// general command settings
+	pdemo->bVerbose = 0;
+
+    // fmc-hami-cam commands
+    pdemo->adv7611_llc_polarity = 1;
+    pdemo->adv7611_llc_delay = 0;
+
+	// cam command settings
+	pdemo->cam_aec = 0; // off
+	pdemo->cam_again = 0; // 1.0
+	pdemo->cam_dgain = 128; // 1.0
+	pdemo->cam_exposure = 90; // 90% of frame period
+
+	// start command settings
 	pdemo->cam_alpha = 0xFF;
 	pdemo->hdmi_alpha = 0x00;
 
-	pdemo->bVerbose = 0;
+	// video ip command settings
+	pdemo->cam_bayer = XCFA_RGRG_COMBINATION;
 
 	XAxiVdma_Config *paxivdma_config;
 	XOSD_Config *posd_config;
@@ -106,8 +166,8 @@ int demo_start_hdmi_in( demo_t *pdemo )
                                  1, // hdmiiEnable = 1
                                  1, // editInit = 1
                                  fmc_hdmi_cam_hdmii_edid_content,
-                                 0, //llc_polarity,
-                                 0  //llc_delay
+                                 pdemo->adv7611_llc_polarity, //0, //llc_polarity,
+								 pdemo->adv7611_llc_delay //0  //llc_delay
                                  );
     if ( !status )
     {
@@ -193,8 +253,7 @@ int demo_start_cam_in( demo_t *pdemo )
 	XCfa_RegUpdateEnable(pdemo->pcfa);
 	XCfa_Enable(pdemo->pcfa);
 
-	//XCfa_WriteReg(pdemo->pcfa, CFA_BAYER_PHASE, 0x00);
-	XCfa_SetBayerPhase(pdemo->pcfa, XCFA_RGRG_COMBINATION);
+	XCfa_SetBayerPhase(pdemo->pcfa, pdemo->cam_bayer);
 	XCfa_SetActiveSize(pdemo->pcfa, 1280, 1024);
 
 	return 1;

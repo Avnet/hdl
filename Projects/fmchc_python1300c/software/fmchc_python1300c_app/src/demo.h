@@ -1,3 +1,49 @@
+// ----------------------------------------------------------------------------
+//  
+//        ** **        **          **  ****      **  **********  ********** ® 
+//       **   **        **        **   ** **     **  **              ** 
+//      **     **        **      **    **  **    **  **              ** 
+//     **       **        **    **     **   **   **  *********       ** 
+//    **         **        **  **      **    **  **  **              ** 
+//   **           **        ****       **     ** **  **              ** 
+//  **  .........  **        **        **      ****  **********      ** 
+//     ........... 
+//                                     Reach Further™ 
+//  
+// ----------------------------------------------------------------------------
+// 
+// This design is the property of Avnet.  Publication of this 
+// design is not authorized without written consent from Avnet. 
+// 
+// Please direct any questions to the PicoZed community support forum: 
+//    http://www.zedboard.org/forum 
+// 
+// Disclaimer: 
+//    Avnet, Inc. makes no warranty for the use of this code or design. 
+//    This code is provided  "As Is". Avnet, Inc assumes no responsibility for 
+//    any errors, which may appear in this code, nor does it make a commitment 
+//    to update the information contained herein. Avnet, Inc specifically 
+//    disclaims any implied warranties of fitness for a particular purpose. 
+//                     Copyright(c) 2017 Avnet, Inc. 
+//                             All rights reserved. 
+// 
+// ----------------------------------------------------------------------------
+//
+// Create Date:         Nov 18, 2011
+// Design Name:         Demo
+// Module Name:         demo.h
+// Project Name:        Demo
+//
+// Tool versions:       Vivado 2016.4
+//
+// Description:         PYTHON1300-C Getting Started Demo application
+//
+// Dependencies:        
+//
+// Revision:            Jun 01, 2017: 1.03 Add CFA command to set bayer
+//
+//----------------------------------------------------------------
+
 #ifndef _DEMO_H_
 #define _DEMO_H_
 
@@ -41,10 +87,26 @@ typedef struct {
     Xuint32 hdmio_height;
     fmc_hdmi_cam_video_timing_t hdmio_timing;
 
+	// general commands
+    int bVerbose;
+
+    // fmc-hami-cam commands
+    Xuint32 adv7611_llc_polarity;
+    Xuint32 adv7611_llc_delay;
+
+    // cam commands
+    Xuint32 cam_aec;
+    Xuint32 cam_again;
+    Xuint32 cam_dgain;
+    Xuint32 cam_exposure;
+
+	// video ip commands
+	Xuint32 cam_bayer;
+
+    // start commands
 	u8 cam_alpha;
 	u8 hdmi_alpha;
 
-    int bVerbose;
 } demo_t;
 
 extern Xuint8 fmc_hdmi_cam_hdmii_edid_content[256];

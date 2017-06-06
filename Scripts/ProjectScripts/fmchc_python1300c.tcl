@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#  
+#        ** **        **          **  ****      **  **********  ********** ® 
+#       **   **        **        **   ** **     **  **              ** 
+#      **     **        **      **    **  **    **  **              ** 
+#     **       **        **    **     **   **   **  *********       ** 
+#    **         **        **  **      **    **  **  **              ** 
+#   **           **        ****       **     ** **  **              ** 
+#  **  .........  **        **        **      ****  **********      ** 
+#     ........... 
+#                                     Reach Further™ 
+#  
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -32,7 +36,7 @@
 #  Target Devices:      
 #  Hardware Boards:     FMC-HDMI-CAM + PYTHON-1300-C Camera
 # 
-#  Tool versions:       Vivado 2014.4
+#  Tool versions:       Vivado 2016.4
 # 
 #  Description:         Build Script for FMC-HDMI-CAM FMC module, and PYTHON-1300-C Camera Module
 # 
@@ -172,13 +176,18 @@ switch -nocase $board {
 puts "***** General Configuration for Design..."
 set_property target_language VHDL [current_project]
 
+# Enable XPM_FIFO primitives (required for new onsemi_vita_spi/cam) cores
+puts "***** Enable XPM_FIFO primitives..."
+set_property XPM_LIBRARIES XPM_FIFO [current_project]
+
+
 # Check for Video IP core licenses
 puts "***** Check for Video IP core licenses..."
-set v_cfa_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cfa:7.0 v_cfa_0 ]
-set v_cresample_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cresample:4.0 v_cresample_0 ]
-set v_osd_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_osd:6.0 v_osd_0 ]
-set v_rgb2ycrcb_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_rgb2ycrcb:7.1 v_rgb2ycrcb_0 ]
-set v_tc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tc:6.1 v_tc_0 ]
+set v_cfa_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cfa v_cfa_0 ]
+set v_cresample_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_cresample v_cresample_0 ]
+set v_osd_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_osd v_osd_0 ]
+set v_rgb2ycrcb_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_rgb2ycrcb v_rgb2ycrcb_0 ]
+set v_tc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_tc v_tc_0 ]
 report_ip_status -file "video_ip_core_status.log"
 set core_list [list "v_cfa" "v_cresample" "v_osd" "v_rgb2ycrcb" "v_tc" ]
 set valid_cores [validate_core_licenses $core_list "video_ip_core_status.log"]

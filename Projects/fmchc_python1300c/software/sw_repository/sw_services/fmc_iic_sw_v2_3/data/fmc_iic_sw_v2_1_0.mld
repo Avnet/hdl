@@ -54,8 +54,12 @@ OPTION psf_version = 2.1.0;
 
 BEGIN LIBRARY fmc_iic_sw
 
-  OPTION supported_peripherals = (xps_iic);
-  OPTION copyfiles = all;
 
+  OPTION copyfiles = all;
+  OPTION REQUIRES_OS = (standalone);
+  OPTION supported_peripherals = (xps_iic);
+  OPTION desc = "FMC-IIC Library ";
+  OPTION VERSION = 2.3;
+  OPTION NAME = fmc_iic_sw;
 END LIBRARY
 
