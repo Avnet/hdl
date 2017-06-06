@@ -1,12 +1,16 @@
-------------------------------------------------------------------
---      _____
---     /     \
---    /____   \____
---   / \===\   \==/
---  /___\===\___\/  AVNET
---       \======/
---        \====/    
------------------------------------------------------------------
+-------------------------------------------------------------------------------
+--  
+--        ** **        **          **  ****      **  **********  ********** ® 
+--       **   **        **        **   ** **     **  **              ** 
+--      **     **        **      **    **  **    **  **              ** 
+--     **       **        **    **     **   **   **  *********       ** 
+--    **         **        **  **      **    **  **  **              ** 
+--   **           **        ****       **     ** **  **              ** 
+--  **  .........  **        **        **      ****  **********      ** 
+--     ........... 
+--                                     Reach Further™ 
+--  
+-------------------------------------------------------------------------------
 --
 -- This design is the property of Avnet.  Publication of this
 -- design is not authorized without written consent from Avnet.
@@ -49,6 +53,8 @@
 --                                          Change IP_GROUP to FMC-IMAGEON
 ------------------------------------------------------------------
 --                      Feb 18, 2015: 3.01  Rename to avnet_hdmi_in
+--                      Apr 27, 2016: 4.01  Add HDMI input clock and implement
+--                                          regional clocking (BUFIO/BUFR)
 --
 ------------------------------------------------------------------
 
@@ -59,19 +65,23 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 ---- Uncomment the following library declaration if instantiating
 ---- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+library UNISIM;
+use UNISIM.VComponents.all;
 
 entity avnet_hdmi_in is
    Generic
    (
+      C_USE_BUFR           : boolean := FALSE;
+      C_IOBFF_ON_NEGEDGE   : boolean := FALSE;   
       C_DATA_WIDTH         : integer := 16;
       C_FAMILY             : string := "virtex6"
    );
    Port
    (
-      clk                  : in  std_logic;
+--      clk                  : in  std_logic;
+	  hdmii_clk            : out std_logic;
       -- IO Pins    
+      io_hdmii_clk         : in  std_logic;
       io_hdmii_spdif       : in  std_logic;
       io_hdmii_video       : in  std_logic_vector(15 downto 0);
       -- Audio Port
@@ -91,15 +101,26 @@ end avnet_hdmi_in;
 architecture rtl of avnet_hdmi_in is
 
    --
+   -- regional clocking
+   --
+   
+   signal bufio_hdmii_clk : std_logic;
+   
+   signal clk : std_logic;
+   
+   --
    -- IOB registers
    --
+
+   signal iob_spdif_r : std_logic;
+   signal iob_video_r : std_logic_vector (15 downto 0);
 
    signal spdif_r  : std_logic;
    signal video_r  : std_logic_vector (15 downto 0);
 
    attribute IOB : string;
-   attribute IOB of spdif_r: signal is "FORCE";
-   attribute IOB of video_r: signal is "FORCE";
+   attribute IOB of iob_spdif_r: signal is "FORCE";
+   attribute IOB of iob_video_r: signal is "FORCE";
 
    --
    -- Input Delay
@@ -136,15 +157,76 @@ architecture rtl of avnet_hdmi_in is
 
 begin
 
+regional_clocking_bufr : if ( C_USE_BUFR = TRUE ) generate
+
+   --
+   -- regional clocking primitives
+   --
+   
+   BUFIO_HDMI_CLK : BUFIO
+   port map (
+      I => io_hdmii_clk,
+      O => bufio_hdmii_clk
+   );
+   
+   BUFR_HDMI_CLK : BUFR
+   port map (
+      CE => '1',
+	  CLR => '0',
+      I => io_hdmii_clk,
+	  O => clk
+   );
+   
+   hdmii_clk <= clk;
+   
+end generate; -- regional_clocking_bufr
+
+global_clocking : if ( C_USE_BUFR = FALSE ) generate
+
+   bufio_hdmii_clk <= io_hdmii_clk;
+   clk <= io_hdmii_clk;
+      
+   hdmii_clk <= clk;
+   
+end generate; -- global_clocking
+
    --
    -- IOB registers
    --
 
-   io_iregs_l : process (clk)
+--   io_iregs_l : process (clk)
+--   begin
+--      if Rising_Edge(clk) then
+--         spdif_r         <= io_hdmii_spdif;
+--         video_r         <= io_hdmii_video;
+--      end if;
+--   end process;
+
+pos_edge_iob_ffs : if ( C_IOBFF_ON_NEGEDGE = FALSE ) generate
+   iob_iregs_l : process (bufio_hdmii_clk)
+   begin
+      if Rising_Edge(bufio_hdmii_clk) then
+         iob_spdif_r     <= io_hdmii_spdif;
+         iob_video_r     <= io_hdmii_video;
+      end if;
+   end process;
+end generate;
+
+neg_edge_iob_ffs : if ( C_IOBFF_ON_NEGEDGE = TRUE ) generate
+   iob_iregs_l : process (bufio_hdmii_clk)
+   begin
+      if Falling_Edge(bufio_hdmii_clk) then
+         iob_spdif_r     <= io_hdmii_spdif;
+         iob_video_r     <= io_hdmii_video;
+      end if;
+   end process;
+end generate;
+
+   regs_l : process (clk)
    begin
       if Rising_Edge(clk) then
-         spdif_r         <= io_hdmii_spdif;
-         video_r         <= io_hdmii_video;
+         spdif_r         <= iob_spdif_r;
+         video_r         <= iob_video_r;
       end if;
    end process;
 

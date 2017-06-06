@@ -3,7 +3,7 @@
   <spirit:vendor>avnet.com</spirit:vendor>
   <spirit:library>interface</spirit:library>
   <spirit:name>avnet_hdmi</spirit:name>
-  <spirit:version>1.0</spirit:version>
+  <spirit:version>2.0</spirit:version>
   <spirit:directConnection>true</spirit:directConnection>
   <spirit:isAddressable>false</spirit:isAddressable>
   <spirit:maxMasters>1</spirit:maxMasters>
