@@ -69,7 +69,7 @@ entity microphone_mgr is
            AUDIO_DAT : in STD_LOGIC;
            AUDIO_PDM : out STD_LOGIC;
            
-           audio_captureCE : out STD_LOGIC;    -- temproary for ILA verification only
+           audio_captureCE : out STD_LOGIC;    -- temporary for ILA verification only
            audio_data_vector_OUT : out STD_LOGIC_VECTOR(1023 downto 0);
            PDM_vector_full_STROBE  : out STD_LOGIC
            );
@@ -90,15 +90,15 @@ architecture Behavioral of microphone_mgr is
     ATTRIBUTE X_INTERFACE_INFO : STRING;
     ATTRIBUTE X_INTERFACE_INFO of clk_in: SIGNAL is "xilinx.com:signal:clock:1.0 clk_in CLK";
 	ATTRIBUTE X_INTERFACE_INFO OF resetn_in: SIGNAL IS "xilinx.com:signal:reset:1.0 resetn_in RST";
-    ATTRIBUTE X_INTERFACE_INFO of AUDIO_CLK: SIGNAL is "xilinx.com:signal:clock:1.0 AUDIO_CLK CLK";
+	ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
+    -- ATTRIBUTE X_INTERFACE_PARAMETER of clk_in: SIGNAL is "FREQ_HZ 153600000"; -- can't generate from IO PLL of PS ... closest is 160 MHz for 2.5 MHz clock to mic
+    ATTRIBUTE X_INTERFACE_PARAMETER of clk_in: SIGNAL is "ASSOCIATED_RESET resetn_in, FREQ_HZ 160000000";
     -- Supported parameters: ASSOCIATED_CLKEN, ASSOCIATED_RESET, ASSOCIATED_ASYNC_RESET, ASSOCIATED_BUSIF, CLK_DOMAIN, PHASE, FREQ_HZ
     -- Most of these parameters are optional.  However, when using AXI, at least one clock must be associated to the AXI interface.
     -- Use the axi interface name for ASSOCIATED_BUSIF, if there are multiple interfaces, separate each name by ':'
     -- Use the port name for ASSOCIATED_RESET.
     -- Output clocks will require FREQ_HZ to be set (note the value is in HZ and an integer is expected).
-    ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
-    -- ATTRIBUTE X_INTERFACE_PARAMETER of clk_in: SIGNAL is "FREQ_HZ 153600000"; -- can't generate from IO PLL of PS ... closest is 160 MHz for 2.5 MHz clock to mic
-    ATTRIBUTE X_INTERFACE_PARAMETER of clk_in: SIGNAL is "FREQ_HZ 160000000";
+	ATTRIBUTE X_INTERFACE_INFO of AUDIO_CLK: SIGNAL is "xilinx.com:signal:clock:1.0 AUDIO_CLK CLK";
     -- ATTRIBUTE X_INTERFACE_PARAMETER of AUDIO_CLK: SIGNAL is "FREQ_HZ 2400000";
     ATTRIBUTE X_INTERFACE_PARAMETER of AUDIO_CLK: SIGNAL is "FREQ_HZ 2500000";
                 

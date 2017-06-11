@@ -28,23 +28,23 @@
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         Feb 03, 2017
-#  Design Name:         MiniZed PetaLinux BSP HW Platform
-#  Module Name:         minized_petalinux.tcl
-#  Project Name:        MiniZed PetaLinux BSP Generator
+#  Create Date:         May 14, 2017
+#  Design Name:         MiniZed Basic Microphone HW Platform
+#  Module Name:         minized_mic.tcl
+#  Project Name:        MiniZed Basic Microphone
 #  Target Devices:      Xilinx Zynq-7007
 #  Hardware Boards:     MiniZed
 # 
-#  Tool versions:       Vivado 2016.4
+#  Tool versions:       Vivado 2017.1
 # 
-#  Description:         Build Script for MiniZed PetaLinux BSP HW Platform
+#  Description:         Build Script for MiniZed Basic Microphone HW Platform
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
 #                       scripts IP generation scripts or others as needed
 # 
 #
-#  Revision:            Feb 03, 2017: 1.00 Initial version
+#  Revision:            May 14, 2017: 1.00 Initial version
 # 
 # ----------------------------------------------------------------------------
 
@@ -182,8 +182,7 @@ cd $scripts_folder
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 save_bd_design
-# ->->->-> Don't launch implementation from script ... instead, must manually copy project to short folder name near root C:\ due to over-long path names from SysGen IP
-# launch_runs impl_1 -to_step write_bitstream -j 8
+launch_runs impl_1 -to_step write_bitstream -j 8
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
