@@ -134,7 +134,7 @@ switch -nocase $board {
               add_files -fileset constrs_1 -norecurse ${projects_folder}/../zedboard_fmchc_python1300c.xdc
               }
    MZ7020_FMCCC {
-              set_property board_part em.avnet.com:microzed_7020:part0:1.0 [current_project]
+              set_property board_part em.avnet.com:microzed_7020:part0:1.1 [current_project]
 			  add_files -fileset constrs_1 -norecurse ${projects_folder}/../mz7020_fmccc_fmchc_python1300c.xdc
               }
    PZ7030_FMC2 {
