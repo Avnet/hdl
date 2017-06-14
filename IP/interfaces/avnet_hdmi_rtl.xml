@@ -3,8 +3,8 @@
   <spirit:vendor>avnet.com</spirit:vendor>
   <spirit:library>interface</spirit:library>
   <spirit:name>avnet_hdmi_rtl</spirit:name>
-  <spirit:version>1.0</spirit:version>
-  <spirit:busType spirit:vendor="avnet.com" spirit:library="interface" spirit:name="avnet_hdmi" spirit:version="1.0"/>
+  <spirit:version>2.0</spirit:version>
+  <spirit:busType spirit:vendor="avnet.com" spirit:library="interface" spirit:name="avnet_hdmi" spirit:version="2.0"/>
   <spirit:ports>
     <spirit:port>
       <spirit:logicalName>DATA</spirit:logicalName>
@@ -34,7 +34,7 @@
           <spirit:width>1</spirit:width>
         </spirit:onMaster>
         <spirit:onSlave>
-          <spirit:presence>illegal</spirit:presence>
+          <spirit:presence>required</spirit:presence>
           <spirit:width>1</spirit:width>
           <spirit:direction>in</spirit:direction>
         </spirit:onSlave>

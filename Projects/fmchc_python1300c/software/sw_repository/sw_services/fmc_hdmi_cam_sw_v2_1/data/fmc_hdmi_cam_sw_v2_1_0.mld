@@ -46,8 +46,12 @@ OPTION psf_version = 2.1.0;
 
 BEGIN LIBRARY fmc_hdmi_cam_sw
 
-  OPTION supported_peripherals = (avnet_hdmi_in avnet_hdmi_out);
-  OPTION copyfiles = all;
 
+  OPTION copyfiles = all;
+  OPTION REQUIRES_OS = (standalone);
+  OPTION supported_peripherals = (avnet_hdmi_in avnet_hdmi_out);
+  OPTION desc = "FMC-HDMI-CAM Library ";
+  OPTION VERSION = 2.1;
+  OPTION NAME = fmc_hdmi_cam_sw;
 END LIBRARY
 

@@ -1,27 +1,31 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#  
+#        ** **        **          **  ****      **  **********  ********** ® 
+#       **   **        **        **   ** **     **  **              ** 
+#      **     **        **      **    **  **    **  **              ** 
+#     **       **        **    **     **   **   **  *********       ** 
+#    **         **        **  **      **    **  **  **              ** 
+#   **           **        ****       **     ** **  **              ** 
+#  **  .........  **        **        **      ****  **********      ** 
+#     ........... 
+#                                     Reach Further™ 
+#  
 # ----------------------------------------------------------------------------
 # 
-#  This design is the property of Avnet.  Publication of this
-#  design is not authorized without written consent from Avnet.
+# This design is the property of Avnet.  Publication of this 
+# design is not authorized without written consent from Avnet. 
 # 
-#  Please direct any questions or issues to the MicroZed Community Forums:
-#      http://www.microzed.org
+# Please direct any questions to the PicoZed community support forum: 
+#    http://www.zedboard.org/forum 
 # 
-#  Disclaimer:
-#     Avnet, Inc. makes no warranty for the use of this code or design.
-#     This code is provided  "As Is". Avnet, Inc assumes no responsibility for
-#     any errors, which may appear in this code, nor does it make a commitment
-#     to update the information contained herein. Avnet, Inc specifically
-#     disclaims any implied warranties of fitness for a particular purpose.
-#                      Copyright(c) 2015 Avnet, Inc.
-#                              All rights reserved.
+# Disclaimer: 
+#    Avnet, Inc. makes no warranty for the use of this code or design. 
+#    This code is provided  "As Is". Avnet, Inc assumes no responsibility for 
+#    any errors, which may appear in this code, nor does it make a commitment 
+#    to update the information contained herein. Avnet, Inc specifically 
+#    disclaims any implied warranties of fitness for a particular purpose. 
+#                     Copyright(c) 2017 Avnet, Inc. 
+#                             All rights reserved. 
 # 
 # ----------------------------------------------------------------------------
 # 
@@ -32,7 +36,7 @@
 #  Target Devices:      
 #  Hardware Boards:     FMC-HDMI-CAM + PYTHON-1300-C
 # 
-#  Tool versions:       Vivado 2015.2
+#  Tool versions:       Vivado 2016.4
 # 
 #  Description:         SDK Build Script for FMC-HDMI-CAM + PYTHON-1300-C Design
 # 
@@ -41,6 +45,7 @@
 #
 #  Revision:            Jun 22, 2015: 1.00 Initial version for Vivado 2014.4
 #                       Nov 16, 2015: 1.01 Updated for Vivado 2015.2
+#                       May 29, 2017: 1.02 Updated for Vivado 2016.4
 # 
 # ----------------------------------------------------------------------------
 
@@ -51,82 +56,54 @@ set hw_name  "fmchc_python1300c_hw"
 set bsp_name "fmchc_python1300c_bsp"
 set app_name "fmchc_python1300c_app"
 
-# The param_name proc works around a bug In the tools where the MSS file isn't getting updated correctly. 
-# This is fixed in 2015.2 (or 1 hopefully). 
-# This will allow you to open the SDK project and keeps the Changes made in the HSI
-proc param_name {mss name} {
-
-        set fp [open $mss r]
-        set file_data [read $fp]
-        close $fp
-
-        set fileout [open $mss "w"]
-        set data [split $file_data "\n"]
-        for {set i 0} {$i < [llength $data]} {incr i} {
-                if {[string first "PARAMETER NAME" [lindex $data $i]] != -1 } {
-                                puts $fileout "PARAMETER NAME = ${name}"
-                } else {
-                        puts $fileout [lindex $data $i]
-                }
-        }
-        close $fileout
-}
-
 # Set workspace and import hardware platform
-sdk set_workspace ${project}.sdk
+setws ${project}.sdk
 
 puts "\n#\n#\n# Adding local user repository ...\n#\n#\n"
-sdk set_user_repo_path  ../software/sw_repository
+repo -set ../software/sw_repository
 
 puts "\n#\n#\n# Importing hardware definition ${hw_name} from impl_1 folder ...\n#\n#\n"
 file copy -force ${project}.runs/impl_1/${project}_wrapper.sysdef ${project}.sdk/${hw_name}.hdf
 puts "\n#\n#\n# Create hardware definition project ...\n#\n#\n"
-sdk create_hw_project -name ${hw_name} -hwspec ${project}.sdk/${hw_name}.hdf
+sdk createhw -name ${hw_name} -hwspec ${project}.sdk/${hw_name}.hdf
 
-# Create fmchc_python1300c application
-puts "\n#\n#\n# Creating ${app_name} ...\n#\n#\n"
-sdk create_app_project -name ${app_name} -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Empty Application} -bsp ${bsp_name} 
-
-# Modify fmchc_python1300c BSP (with HSI commands)
+# Generate BSP
 puts "\n#\n#\n# Creating ${bsp_name} ...\n#\n#\n"
-#
-hsi::set_repo_path ../software/sw_repository
-hsi::open_hw_design ${project}.sdk/${hw_name}/system.hdf
-hsi::open_sw_design ${project}.sdk/${bsp_name}/system.mss
-# Add FMC_HDMI_CAM_SW library
-hsi::add_library fmc_iic_sw
-hsi::add_library fmc_hdmi_cam_sw
-# Add ONSEMI_PYTHON_SW library
-hsi::add_library onsemi_python_sw
-# Build BSP
-hsi::generate_bsp -compile -sw [hsi::current_sw_design] -dir ${project}.sdk/${bsp_name}
-#
-hsi::close_sw_design [hsi::current_sw_design]
-hsi::close_hw_design [hsi::current_hw_design]
+createbsp -name ${bsp_name} -proc ps7_cortexa9_0 -hwproject ${hw_name} -os standalone
+# add libraries for FSBL
+setlib -bsp ${bsp_name} -lib xilffs
+setlib -bsp ${bsp_name} -lib xilrsa
+# add libraries for APP
+setlib -bsp ${bsp_name} -lib fmc_iic_sw
+setlib -bsp ${bsp_name} -lib fmc_hdmi_cam_sw
+setlib -bsp ${bsp_name} -lib onsemi_python_sw
+# regen and build
+regenbsp -hw ${hw_name} -bsp ${bsp_name}
+projects -build -type bsp -name ${bsp_name}
+
+# Create APP
+puts "\n#\n#\n# Creating ${app_name} ...\n#\n#\n"
+createapp -name ${app_name} -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Empty Application} -bsp ${bsp_name} 
 
 # APP : copy sources to empty application
-sdk import_sources -name ${app_name} -path ../software/${app_name}/src
+importsources -name ${app_name} -path ../software/${app_name}/src
 
-# build EMBV application
+# build APP
 puts "\n#\n#\n# Build ${app_name} ...\n#\n#\n"
-#sdk build_project -type bsp -name ${bsp_name}
-sdk build_project -type app -name ${app_name}
+projects -build -type app -name ${app_name}
 
-# # Create FSBL application
-# puts "\n#\n#\n# Creating zynq_fsbl ...\n#\n#\n"
-# sdk create_app_project -name zynq_fsbl_app -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Zynq FSBL} -bsp zynq_fsbl_bsp
-# # SDK 2015.4 => no longer works, throws an error ...
+# Create Zynq FSBL application
+puts "\n#\n#\n# Creating zynq_fsbl ...\n#\n#\n"
+#createapp -name zynq_fsbl_app -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Zynq FSBL} -bsp zynq_fsbl_bsp
+createapp -name zynq_fsbl_app -hwproject ${hw_name} -proc ps7_cortexa9_0 -os standalone -lang C -app {Zynq FSBL} -bsp ${bsp_name}
 
-# # Build FSBL application
-# puts "\n#\n#\n# Building zynq_fsbl ...\n#\n#\n"
-# sdk build_project -type bsp -name zynq_fsbl_bsp
-# sdk build_project -type app -name zynq_fsbl_app
+# Set the build type to release
+#configapp -app zynq_fsbl_app build-config release
 
-# Create FSBL application (with HSI, will not be visible in SDK GUI)
-puts "\n#\n#\n# Creating zynq_fsbl_app ...\n#\n#\n"
-hsi::open_hw_design ${project}.sdk/${hw_name}/system.hdf
-hsi::generate_app -app zynq_fsbl -proc ps7_cortexa9_0 -dir ${project}.sdk/zynq_fsbl_app -compile
-hsi::close_hw_design [hsi::current_hw_design]
+# Build FSBL application
+puts "\n#\n#\n Building zynq_fsbl ...\n#\n#\n"
+#projects -build -type bsp -name zynq_fsbl_bsp
+projects -build -type app -name zynq_fsbl_app
 
 # done
 exit

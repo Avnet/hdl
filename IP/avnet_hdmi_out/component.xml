@@ -51,8 +51,8 @@
       <spirit:name>IO_HDMIO</spirit:name>
       <spirit:displayName>IO_HDMIO</spirit:displayName>
       <spirit:description>HDMI Output Interface (IO pins)</spirit:description>
-      <spirit:busType spirit:vendor="avnet.com" spirit:library="interface" spirit:name="avnet_hdmi" spirit:version="1.0"/>
-      <spirit:abstractionType spirit:vendor="avnet.com" spirit:library="interface" spirit:name="avnet_hdmi_rtl" spirit:version="1.0"/>
+      <spirit:busType spirit:vendor="avnet.com" spirit:library="interface" spirit:name="avnet_hdmi" spirit:version="2.0"/>
+      <spirit:abstractionType spirit:vendor="avnet.com" spirit:library="interface" spirit:name="avnet_hdmi_rtl" spirit:version="2.0"/>
       <spirit:master/>
       <spirit:portMaps>
         <spirit:portMap>

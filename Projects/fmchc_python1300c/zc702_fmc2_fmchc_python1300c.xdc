@@ -139,9 +139,13 @@ create_clock -period 3.703 -name vita_ser_clk [get_ports IO_PYTHON_CAM_clk_out_p
 # Define asynchronous clock domains
 set_clock_groups -asynchronous -group [get_clocks clk_fpga_0] \
                                -group [get_clocks clk_fpga_1] \
-                               -group [get_clocks clk_out1_fmchc_python1300c_clk_wiz_0_0_1] \
-                               -group [get_clocks clk_out2_fmchc_python1300c_clk_wiz_0_0_1] \
+                               -group [get_clocks clk_out1_*_clk_wiz_*] \
+                               -group [get_clocks clk_out2_*_clk_wiz_*] \
+                               -group [get_clocks video_clk] \
                                -group [get_clocks hdmii_clk] \
-                               -group [get_clocks CLKDIV_c_0] \
-                               -group [get_clocks vita_clk_div4_l_n_0_1]
+                               -group [get_clocks *CLKDIV*] \
+                               -group [get_clocks vita_clk*]
+
+set_input_delay -clock [get_clocks hdmii_clk] -clock_fall -min -add_delay 0.500 [get_ports {fmc_hdmii_data[*]}]
+set_input_delay -clock [get_clocks hdmii_clk] -clock_fall -max -add_delay 1.300 [get_ports {fmc_hdmii_data[*]}]
 

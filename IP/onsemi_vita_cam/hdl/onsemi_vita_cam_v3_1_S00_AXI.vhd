@@ -1,28 +1,33 @@
-------------------------------------------------------------------
---      _____
---     /     \
---    /____   \____
---   / \===\   \==/
---  /___\===\___\/  AVNET
---       \======/
---        \====/    
------------------------------------------------------------------
+-------------------------------------------------------------------------------
+--  
+--        ** **        **          **  ****      **  **********  ********** ® 
+--       **   **        **        **   ** **     **  **              ** 
+--      **     **        **      **    **  **    **  **              ** 
+--     **       **        **    **     **   **   **  *********       ** 
+--    **         **        **  **      **    **  **  **              ** 
+--   **           **        ****       **     ** **  **              ** 
+--  **  .........  **        **        **      ****  **********      ** 
+--     ........... 
+--                                     Reach Further™ 
+--  
+-------------------------------------------------------------------------------
 --
--- This design is the property of Avnet.  Publication of this
--- design is not authorized without written consent from Avnet.
+-- This design is the property of Avnet.  Publication of this 
+-- design is not authorized without written consent from Avnet. 
 -- 
--- Please direct any questions to:  technical.support@avnet.com
---
--- Disclaimer:
---    Avnet, Inc. makes no warranty for the use of this code or design.
---    This code is provided  "As Is". Avnet, Inc assumes no responsibility for
---    any errors, which may appear in this code, nor does it make a commitment
---    to update the information contained herein. Avnet, Inc specifically
---    disclaims any implied warranties of fitness for a particular purpose.
---                     Copyright(c) 2013 Avnet, Inc.
---                             All rights reserved.
---
-------------------------------------------------------------------
+-- Please direct any questions to the PicoZed community support forum: 
+--    http://www.zedboard.org/forum 
+-- 
+-- Disclaimer: 
+--    Avnet, Inc. makes no warranty for the use of this code or design. 
+--    This code is provided  "As Is". Avnet, Inc assumes no responsibility for 
+--    any errors, which may appear in this code, nor does it make a commitment 
+--    to update the information contained herein. Avnet, Inc specifically 
+--    disclaims any implied warranties of fitness for a particular purpose. 
+--                     Copyright(c) 2017 Avnet, Inc. 
+--                             All rights reserved. 
+-- 
+-------------------------------------------------------------------------------
 --
 -- Create Date:         Nov 14, 2013
 -- Design Name:         ON Semiconductor VITA camera receiver
@@ -173,6 +178,7 @@
 --                                            - remove reset pin (will be implemented with GPIO
 --                      Feb 23, 2015: 3.1  - Add version register for semantic versioning
 --                                           ref : http://semver.org 
+--                      Jun 02, 2017: 3.3  - Change version to 3.3.0
 --
 ------------------------------------------------------------------
 library ieee;
@@ -528,7 +534,7 @@ architecture arch_imp of onsemi_vita_cam_v3_1_S00_AXI is
     -- VITA Camera Receiver Core Logic
     ------------------------------------------
 
-    constant CORE_VERSION                 : std_logic_vector(31 downto 0) := X"03010000"; -- 3.1.0
+    constant CORE_VERSION                 : std_logic_vector(31 downto 0) := X"03030000"; -- 3.3.0
     constant CORE_ID                      : std_logic_vector(31 downto 0) := X"4F4E5643"; -- ASCII for "ONVC" 
 
 component onsemi_vita_cam_core is
