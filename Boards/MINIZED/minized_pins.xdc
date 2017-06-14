@@ -90,19 +90,23 @@ set_property IOSTANDARD LVCMOS33 [get_ports PL_LED_R]
 # To ARD_A5 on Arduino 6-pin  Pin 1 (and PL_SW)
 #set_property PACKAGE_PIN E11 [get_ports ARD_ADDR5]
 #set_property IOSTANDARD LVCMOS33 [get_ports ARD_ADDR5]
-set_property PACKAGE_PIN E11 [get_ports PL_SW]
-set_property IOSTANDARD LVCMOS33 [get_ports PL_SW]
+#set_property PACKAGE_PIN E11 [get_ports PL_SW]
+#set_property IOSTANDARD LVCMOS33 [get_ports PL_SW]
 
 #######################################################################
 # I2C
 #######################################################################
 # To SDA on Arduino 10-pin  Pin 9 and Motion Sensor
-set_property PACKAGE_PIN F15 [get_ports I2C_SDA]
-set_property IOSTANDARD LVCMOS33 [get_ports I2C_SDA]
+#set_property PACKAGE_PIN F15 [get_ports I2C_SDA]
+#set_property IOSTANDARD LVCMOS33 [get_ports I2C_SDA]
+set_property PACKAGE_PIN F15 [get_ports iic_rtl_sda_io]
+set_property IOSTANDARD LVCMOS33 [get_ports iic_rtl_sda_io]
 
 # To SCL on Arduino 10-pin  Pin 10 and Motion Sensor
-set_property PACKAGE_PIN G15 [get_ports I2C_SCL]
-set_property IOSTANDARD LVCMOS33 [get_ports I2C_SCL]
+#set_property PACKAGE_PIN G15 [get_ports I2C_SCL]
+#set_property IOSTANDARD LVCMOS33 [get_ports I2C_SCL]
+set_property PACKAGE_PIN G15 [get_ports iic_rtl_scl_io]
+set_property IOSTANDARD LVCMOS33 [get_ports iic_rtl_scl_io]
 
 #######################################################################
 # Pmod #1
@@ -176,17 +180,17 @@ set_property IOSTANDARD LVCMOS33 [get_ports WL_SDIO_CLK]
 set_property PACKAGE_PIN J11 [get_ports WL_SDIO_CMD]
 set_property IOSTANDARD LVCMOS33 [get_ports WL_SDIO_CMD]
 
-set_property PACKAGE_PIN J13 [get_ports WL_SDIO_DAT0]
-set_property IOSTANDARD LVCMOS33 [get_ports WL_SDIO_DAT0]
+set_property PACKAGE_PIN J13 [get_ports {WL_SDIO_DAT[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {WL_SDIO_DAT[0]}]
 
-set_property PACKAGE_PIN H11 [get_ports WL_SDIO_DAT1]
-set_property IOSTANDARD LVCMOS33 [get_ports WL_SDIO_DAT1]
+set_property PACKAGE_PIN H11 [get_ports {WL_SDIO_DAT[1]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {WL_SDIO_DAT[1]}]
 
-set_property PACKAGE_PIN K15 [get_ports WL_SDIO_DAT2]
-set_property IOSTANDARD LVCMOS33 [get_ports WL_SDIO_DAT2]
+set_property PACKAGE_PIN K15 [get_ports {WL_SDIO_DAT[2]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {WL_SDIO_DAT[2]}]
 
-set_property PACKAGE_PIN J14 [get_ports WL_SDIO_DAT3]
-set_property IOSTANDARD LVCMOS33 [get_ports WL_SDIO_DAT3]
+set_property PACKAGE_PIN J14 [get_ports {WL_SDIO_DAT[3]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {WL_SDIO_DAT[3]}]
 
 set_property PACKAGE_PIN K11 [get_ports WL_REG_ON]
 set_property IOSTANDARD LVCMOS33 [get_ports WL_REG_ON]

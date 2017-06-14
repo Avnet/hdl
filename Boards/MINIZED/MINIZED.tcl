@@ -59,8 +59,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0
    apply_board_connection -board_interface "pl_sw_1bit" -ip_intf "axi_gpio_0/GPIO" -diagram $project 
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_1
-#   apply_board_connection -board_interface "pl_led_r" -ip_intf "axi_gpio_1/GPIO" -diagram $project 
-#   apply_board_connection -board_interface "pl_led_g" -ip_intf "axi_gpio_1/GPIO" -diagram $project 
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_0/S_AXI]
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
    
