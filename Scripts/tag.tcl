@@ -200,6 +200,7 @@ if {[string match -nocase "yes" $tag]} {
          # if false, add in the public tagging information
          if {[string match -nocase "false" $found]} {
             puts "Public GITHUB Not Found, adding to CONFIG"
+            # modified in order to only tag for Public Release
             #set data "\n\[remote \"tag_public\"\]\n	url = git@xterra1.avnet.com:repo/hdl.git\n	url = git@github.com:Avnet/hdl.git"
             set data "\n\[remote \"tag_public\"\]\n	url = git@github.com:Avnet/hdl.git"
             set out [open ../.git/config a]
