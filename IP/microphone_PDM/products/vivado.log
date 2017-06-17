@@ -1,0 +1,47 @@
+#-----------------------------------------------------------
+# Vivado v2017.1 (64-bit)
+# SW Build 1846317 on Fri Apr 14 18:55:03 MDT 2017
+# IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
+# Start of session at: Sun Jun 11 11:06:26 2017
+# Process ID: 15080
+# Current directory: C:/Avnet/hdl/IP/microphone_PDM/products
+# Command line: vivado.exe -mode batch -source ProjectGeneration.tcl -notrace
+# Log file: C:/Avnet/hdl/IP/microphone_PDM/products/vivado.log
+# Journal file: C:/Avnet/hdl/IP/microphone_PDM/products\vivado.jou
+#-----------------------------------------------------------
+source ProjectGeneration.tcl -notrace
+WARNING: [Coretcl 2-176] No IPs found
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2017.1/data/ip'.
+WARNING: [IP_Flow 19-4832] The IP name 'pdm_filter_sysgen_fir_compiler_v7_2_i0' you have specified is long. The Windows operating system has path length limitations. It is recommended you use shorter names to reduce the likelihood of issues.
+create_ip: Time (s): cpu = 00:00:01 ; elapsed = 00:00:08 . Memory (MB): peak = 289.742 ; gain = 39.277
+WARNING: [Vivado 12-3523] Attempt to change 'Component_Name' from 'pdm_filter_sysgen_fir_compiler_v7_2_i0' to 'pdm_filter_sysgen_fir_compiler_v7_2_i0' is not allowed and is ignored.
+WARNING: [IP_Flow 19-4832] The IP name 'pdm_filter_sysgen_fir_compiler_v7_2_i1' you have specified is long. The Windows operating system has path length limitations. It is recommended you use shorter names to reduce the likelihood of issues.
+WARNING: [Vivado 12-3523] Attempt to change 'Component_Name' from 'pdm_filter_sysgen_fir_compiler_v7_2_i1' to 'pdm_filter_sysgen_fir_compiler_v7_2_i1' is not allowed and is ignored.
+IP Repository Located at : C:/Xilinx/Vivado/2017.1/data/ip
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2017.1/data/ip'.
+Adding File c:/Avnet/hdl/IP/microphone_PDM/products/ip_catalog/pdm_filter_sysgen.srcs/sources_1/ip/pdm_filter_sysgen_fir_compiler_v7_2_i0/pdm_filter_sysgen_fir_compiler_v7_2_i0.xci
+Adding File c:/Avnet/hdl/IP/microphone_PDM/products/ip_catalog/pdm_filter_sysgen.srcs/sources_1/ip/pdm_filter_sysgen_fir_compiler_v7_2_i1/pdm_filter_sysgen_fir_compiler_v7_2_i1.xci
+Adding File C:/Avnet/hdl/IP/microphone_PDM/products/sysgen/pdm_filter_sysgen.xdc
+INFO: [IP_Flow 19-1793] Cannot infer any bus interface that matches bus definition xilinx.com:interface:axis:1.0.
+INFO: [IP_Flow 19-1793] Cannot infer any bus interface that matches bus definition xilinx.com:interface:aximm:1.0.
+INFO: [IP_Flow 19-1793] Cannot infer any bus interface that matches bus definition xilinx.com:interface:aximm:1.0.
+INFO: [IP_Flow 19-4753] Inferred signal 'clock' from port 'clk' as interface 'clk'.
+WARNING: [IP_Flow 19-3153] Bus Interface 'clk': ASSOCIATED_BUSIF bus parameter is missing.
+INFO: [IP_Flow 19-2181] Payment Required is not set for this core.
+INFO: [IP_Flow 19-2187] The Product Guide file is missing.
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1700] Loaded user IP repository 'c:/Avnet/hdl/IP/microphone_PDM/products/ip'.
+WARNING: [IP_Flow 19-3656] If you move the project, the path for repository 'c:/Avnet/hdl/IP/microphone_PDM/products/ip' may become invalid. A better location for the repository would be in a path adjacent to the project. (Current project location is 'c:/Avnet/hdl/IP/microphone_PDM/products/ip_catalog'.)
+0
+Wrote  : <C:/Avnet/hdl/IP/microphone_PDM/products/ip_catalog/pdm_filter_sysgen.srcs/sources_1/bd/pdm_filter_sysgen_bd/pdm_filter_sysgen_bd.bd> 
+WARNING: [BD 5-232] No interface pins matched 'get_bd_intf_pins /pdm_filter_sysgen_1/*'
+WARNING: [BD 5-232] No interface pins matched 'get_bd_intf_pins /pdm_filter_sysgen_1/*'
+WARNING: [BD 5-232] No interface pins matched 'get_bd_intf_pins /pdm_filter_sysgen_1/*'
+Wrote  : <C:/Avnet/hdl/IP/microphone_PDM/products/ip_catalog/pdm_filter_sysgen.srcs/sources_1/bd/pdm_filter_sysgen_bd/pdm_filter_sysgen_bd.bd> 
+INFO: [Common 17-206] Exiting Vivado at Sun Jun 11 11:07:09 2017...
