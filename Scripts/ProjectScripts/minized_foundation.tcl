@@ -230,6 +230,15 @@ CONFIG.C_GPIO_WIDTH {8} \
   # Create instance: axi_iic_0, and set properties
   set axi_iic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0 ]
 
+  # Create AXI UART 16550 instance and set properties
+  set bluetooth_uart [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uart16550:2.0 axi_uart16550_0 ]
+  set_property name bluetooth_uart [get_bd_cells axi_uart16550_0]
+  set_property -dict [ list \
+ CONFIG.C_HAS_EXTERNAL_XIN {1} \
+ CONFIG.C_EXTERNAL_XIN_CLK_HZ_d {48} \
+ CONFIG.C_EXTERNAL_XIN_CLK_HZ {48000000}
+  ] $bluetooth_uart
+  
 # Create instance: ila_0, and set properties
 # Capture raw PDM (single-bit) output of mic -- this can be used to export raw PDM to Simulink model as input stimulus
 # Note: PDM data from the mic is collected into 1024-bit vectors in microphone_mgr_0 code
@@ -286,8 +295,8 @@ CONFIG.PCW_ACT_CAN_PERIPHERAL_FREQMHZ {10.000000} \
 CONFIG.PCW_ACT_DCI_PERIPHERAL_FREQMHZ {10.158730} \
 CONFIG.PCW_ACT_ENET0_PERIPHERAL_FREQMHZ {10.000000} \
 CONFIG.PCW_ACT_ENET1_PERIPHERAL_FREQMHZ {10.000000} \
-CONFIG.PCW_ACT_FPGA0_PERIPHERAL_FREQMHZ {50.000000} \
-CONFIG.PCW_ACT_FPGA1_PERIPHERAL_FREQMHZ {106.666664} \
+CONFIG.PCW_ACT_FPGA0_PERIPHERAL_FREQMHZ {100.000000} \
+CONFIG.PCW_ACT_FPGA1_PERIPHERAL_FREQMHZ {48.000000} \
 CONFIG.PCW_ACT_FPGA2_PERIPHERAL_FREQMHZ {160.000000} \
 CONFIG.PCW_ACT_FPGA3_PERIPHERAL_FREQMHZ {10.000000} \
 CONFIG.PCW_ACT_PCAP_PERIPHERAL_FREQMHZ {200.000000} \
@@ -304,7 +313,8 @@ CONFIG.PCW_CAN0_PERIPHERAL_ENABLE {0} \
 CONFIG.PCW_CAN1_PERIPHERAL_CLKSRC {External} \
 CONFIG.PCW_CAN1_PERIPHERAL_ENABLE {0} \
 CONFIG.PCW_CAN_PERIPHERAL_CLKSRC {IO PLL} \
-CONFIG.PCW_CLK1_FREQ {106666664} \
+CONFIG.PCW_CLK0_FREQ {100000000} \
+CONFIG.PCW_CLK1_FREQ {48000000} \
 CONFIG.PCW_CLK2_FREQ {160000000} \
 CONFIG.PCW_CLK3_FREQ {10000000} \
 CONFIG.PCW_CPU_CPU_6X4X_MAX_RANGE {667} \
@@ -355,8 +365,8 @@ CONFIG.PCW_FCLK3_PERIPHERAL_CLKSRC {IO PLL} \
 CONFIG.PCW_FCLK_CLK0_BUF {TRUE} \
 CONFIG.PCW_FCLK_CLK1_BUF {TRUE} \
 CONFIG.PCW_FCLK_CLK2_BUF {TRUE} \
-CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {50} \
-CONFIG.PCW_FPGA1_PERIPHERAL_FREQMHZ {110} \
+CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {100} \
+CONFIG.PCW_FPGA1_PERIPHERAL_FREQMHZ {48} \
 CONFIG.PCW_FPGA2_PERIPHERAL_FREQMHZ {160} \
 CONFIG.PCW_FPGA3_PERIPHERAL_FREQMHZ {50} \
 CONFIG.PCW_FPGA_FCLK0_ENABLE {1} \
@@ -714,7 +724,7 @@ CONFIG.PCW_WDT_PERIPHERAL_ENABLE {0} \
   # Create instance: ps7_0_axi_periph, and set properties
   set ps7_0_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_0_axi_periph ]
   set_property -dict [ list \
-CONFIG.NUM_MI {4} \
+CONFIG.NUM_MI {05} \
  ] $ps7_0_axi_periph
 
   # Create instance: rst_ps7_0_50M, and set properties
@@ -727,10 +737,10 @@ CONFIG.NUM_PORTS {7} \
  ] $xlconcat_0
 
   # Create instance: xlconstant_0, and set properties
-  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0 ]
-  set_property -dict [ list \
-CONFIG.CONST_VAL {0} \
- ] $xlconstant_0
+#  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0 ]
+#  set_property -dict [ list \
+#CONFIG.CONST_VAL {0} \
+# ] $xlconstant_0
 
   # Create instance: xlconstant_1, and set properties
   set xlconstant_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_1 ]
@@ -755,6 +765,7 @@ CONFIG.CONST_WIDTH {4} \
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M01_AXI [get_bd_intf_pins axi_gpio_1/S_AXI] [get_bd_intf_pins ps7_0_axi_periph/M01_AXI]
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M02_AXI [get_bd_intf_pins axi_iic_0/S_AXI] [get_bd_intf_pins ps7_0_axi_periph/M02_AXI]
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M03_AXI [get_bd_intf_pins axi_gpio_2/S_AXI] [get_bd_intf_pins ps7_0_axi_periph/M03_AXI]
+  connect_bd_intf_net -intf_net ps7_0_axi_periph_M04_AXI [get_bd_intf_pins bluetooth_uart/S_AXI] [get_bd_intf_pins ps7_0_axi_periph/M04_AXI]
 
   # Create port connections
   connect_bd_net -net ARD_ADDR0_1 [get_bd_ports ARD_ADDR0] [get_bd_pins arduino_mgr_0/ARD_ADDR0]
@@ -798,6 +809,7 @@ CONFIG.CONST_WIDTH {4} \
   connect_bd_net -net axi_gpio_2_gpio_io_o [get_bd_pins axi_gpio_2/gpio_io_o] [get_bd_pins led_mgr_0/GPIO_from_Zynq]
   connect_bd_net -net axi_gpio_2_gpio_io_t [get_bd_pins axi_gpio_2/gpio_io_t] [get_bd_pins led_mgr_0/GPIO_dir]
   connect_bd_net -net axi_iic_0_iic2intc_irpt [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In1]
+  connect_bd_net -net bluetooth_uart_INT [get_bd_pins bluetooth_uart/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
   connect_bd_net -net led_mgr_0_GPIO_to_Zynq [get_bd_pins axi_gpio_2/gpio_io_i] [get_bd_pins led_mgr_0/GPIO_to_Zynq]
   connect_bd_net -net led_mgr_0_PL_LED_G [get_bd_ports PL_LED_G] [get_bd_pins led_mgr_0/PL_LED_G]
   connect_bd_net -net led_mgr_0_PL_LED_R [get_bd_ports PL_LED_R] [get_bd_pins led_mgr_0/PL_LED_R]
@@ -817,8 +829,8 @@ CONFIG.CONST_WIDTH {4} \
   connect_bd_net -net pmod2_mgr_0_PMOD2_PIN8 [get_bd_ports PMOD2_PIN8] [get_bd_pins pmod2_mgr_0/PMOD2_PIN8]
   connect_bd_net -net pmod2_mgr_0_PMOD2_PIN9 [get_bd_ports PMOD2_PIN9] [get_bd_pins pmod2_mgr_0/PMOD2_PIN9]
   connect_bd_net -net pmod2_mgr_0_PMOD2_PIN10 [get_bd_ports PMOD2_PIN10] [get_bd_pins pmod2_mgr_0/PMOD2_PIN10]
-  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk] [get_bd_pins axi_iic_0/s_axi_aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/M02_ACLK] [get_bd_pins ps7_0_axi_periph/M03_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_0_50M/slowest_sync_clk]
-  connect_bd_net -net processing_system7_0_FCLK_CLK1 [get_bd_pins arduino_mgr_0/clk_in] [get_bd_pins pmod2_mgr_0/clk_in] [get_bd_pins processing_system7_0/FCLK_CLK1]
+  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_gpio_2/s_axi_aclk] [get_bd_pins axi_iic_0/s_axi_aclk] [get_bd_pins bluetooth_uart/s_axi_aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/M02_ACLK] [get_bd_pins ps7_0_axi_periph/M03_ACLK] [get_bd_pins ps7_0_axi_periph/M04_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_0_50M/slowest_sync_clk]
+  connect_bd_net -net processing_system7_0_FCLK_CLK1 [get_bd_pins arduino_mgr_0/clk_in] [get_bd_pins pmod2_mgr_0/clk_in] [get_bd_pins bluetooth_uart/xin] [get_bd_pins processing_system7_0/FCLK_CLK1] 
   connect_bd_net -net processing_system7_0_FCLK_CLK2 [get_bd_pins ila_0/clk] [get_bd_pins ila_1/clk] [get_bd_pins led_mgr_0/clk_in] [get_bd_pins microphone_mgr_0/clk_in] [get_bd_pins pdm_filter_sysgen_0/clk] [get_bd_pins processing_system7_0/FCLK_CLK2]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins arduino_mgr_0/resetn_in] [get_bd_pins led_mgr_0/resetn_in] [get_bd_pins pmod2_mgr_0/resetn_in] [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins rst_ps7_0_50M/ext_reset_in]
   connect_bd_net -net processing_system7_0_FCLK_RESET2_N [get_bd_pins microphone_mgr_0/resetn_in] [get_bd_pins processing_system7_0/FCLK_RESET2_N]
@@ -829,10 +841,11 @@ CONFIG.CONST_WIDTH {4} \
   connect_bd_net -net processing_system7_0_SDIO0_CMD_T [get_bd_pins processing_system7_0/SDIO0_CMD_T] [get_bd_pins wireless_mgr_0/SDIO_CMD_dir]
   connect_bd_net -net processing_system7_0_SDIO0_DATA_O [get_bd_pins processing_system7_0/SDIO0_DATA_O] [get_bd_pins wireless_mgr_0/SDIO_DATA_from_Zynq]
   connect_bd_net -net processing_system7_0_SDIO0_DATA_T [get_bd_pins processing_system7_0/SDIO0_DATA_T] [get_bd_pins wireless_mgr_0/SDIO_DATA_dir]
-  connect_bd_net -net processing_system7_0_UART0_RTSN [get_bd_pins processing_system7_0/UART0_RTSN] [get_bd_pins wireless_mgr_0/ZYNQ_UART_RTS]
-  connect_bd_net -net processing_system7_0_UART0_TX [get_bd_pins processing_system7_0/UART0_TX] [get_bd_pins wireless_mgr_0/ZYNQ_UART_TX]
+  # Disconnecting PS UART so that the 16550 UART can be used instead
+  #connect_bd_net -net processing_system7_0_UART0_RTSN [get_bd_pins processing_system7_0/UART0_RTSN] [get_bd_pins wireless_mgr_0/ZYNQ_UART_RTS]
+  #connect_bd_net -net processing_system7_0_UART0_TX [get_bd_pins processing_system7_0/UART0_TX] [get_bd_pins wireless_mgr_0/ZYNQ_UART_TX]
   connect_bd_net -net rst_ps7_0_50M_interconnect_aresetn [get_bd_pins ps7_0_axi_periph/ARESETN] [get_bd_pins rst_ps7_0_50M/interconnect_aresetn]
-  connect_bd_net -net rst_ps7_0_50M_peripheral_aresetn [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins axi_iic_0/s_axi_aresetn] [get_bd_pins ps7_0_axi_periph/M00_ARESETN] [get_bd_pins ps7_0_axi_periph/M01_ARESETN] [get_bd_pins ps7_0_axi_periph/M02_ARESETN] [get_bd_pins ps7_0_axi_periph/M03_ARESETN] [get_bd_pins ps7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_ps7_0_50M/peripheral_aresetn]
+  connect_bd_net -net rst_ps7_0_50M_peripheral_aresetn [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_gpio_2/s_axi_aresetn] [get_bd_pins axi_iic_0/s_axi_aresetn] [get_bd_pins bluetooth_uart/s_axi_aresetn] [get_bd_pins ps7_0_axi_periph/M00_ARESETN] [get_bd_pins ps7_0_axi_periph/M01_ARESETN] [get_bd_pins ps7_0_axi_periph/M02_ARESETN] [get_bd_pins ps7_0_axi_periph/M03_ARESETN] [get_bd_pins ps7_0_axi_periph/M04_ARESETN] [get_bd_pins ps7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_ps7_0_50M/peripheral_aresetn]
   connect_bd_net -net sdcard_mgr_0_PMOD1_PIN4 [get_bd_ports PMOD1_PIN4] [get_bd_pins sdcard_mgr_0/PMOD1_PIN4]
   connect_bd_net -net wireless_mgr_0_BT_CTS_IN_N [get_bd_ports BT_CTS_IN_N] [get_bd_pins wireless_mgr_0/BT_CTS_IN_N]
   connect_bd_net -net wireless_mgr_0_BT_REG_ON [get_bd_ports BT_REG_ON] [get_bd_pins wireless_mgr_0/BT_REG_ON]
@@ -843,12 +856,17 @@ CONFIG.CONST_WIDTH {4} \
   connect_bd_net -net wireless_mgr_0_SDIO_CMD_to_Zynq [get_bd_pins processing_system7_0/SDIO0_CMD_I] [get_bd_pins wireless_mgr_0/SDIO_CMD_to_Zynq]
   connect_bd_net -net wireless_mgr_0_SDIO_DATA_to_Zynq [get_bd_pins processing_system7_0/SDIO0_DATA_I] [get_bd_pins wireless_mgr_0/SDIO_DATA_to_Zynq]
   connect_bd_net -net wireless_mgr_0_SDIO_WP [get_bd_pins processing_system7_0/SDIO0_WP] [get_bd_pins wireless_mgr_0/SDIO_WP]
+  connect_bd_net -net wireless_mgr_0_UART_CTS [get_bd_pins bluetooth_uart/ctsn] [get_bd_pins wireless_mgr_0/ZYNQ_UART_CTS]
+  connect_bd_net -net wireless_mgr_0_UART_RTS [get_bd_pins bluetooth_uart/rtsn] [get_bd_pins wireless_mgr_0/ZYNQ_UART_RTS]
+  connect_bd_net -net wireless_mgr_0_UART_RX [get_bd_pins bluetooth_uart/sin] [get_bd_pins wireless_mgr_0/ZYNQ_UART_RX]
+  connect_bd_net -net wireless_mgr_0_UART_TX [get_bd_pins bluetooth_uart/sout] [get_bd_pins wireless_mgr_0/ZYNQ_UART_TX]
   connect_bd_net -net wireless_mgr_0_WL_REG_ON [get_bd_ports WL_REG_ON] [get_bd_pins wireless_mgr_0/WL_REG_ON]
   connect_bd_net -net wireless_mgr_0_WL_SDIO_CLK [get_bd_ports WL_SDIO_CLK] [get_bd_pins wireless_mgr_0/WL_SDIO_CLK]
-  connect_bd_net -net wireless_mgr_0_ZYNQ_UART_CTS [get_bd_pins processing_system7_0/UART0_CTSN] [get_bd_pins wireless_mgr_0/ZYNQ_UART_CTS]
-  connect_bd_net -net wireless_mgr_0_ZYNQ_UART_RX [get_bd_pins processing_system7_0/UART0_RX] [get_bd_pins wireless_mgr_0/ZYNQ_UART_RX]
+  # Disconnecting PS UART so that the 16550 UART can be used instead
+  # connect_bd_net -net wireless_mgr_0_ZYNQ_UART_CTS [get_bd_pins processing_system7_0/UART0_CTSN] [get_bd_pins wireless_mgr_0/ZYNQ_UART_CTS]
+  # connect_bd_net -net wireless_mgr_0_ZYNQ_UART_RX [get_bd_pins processing_system7_0/UART0_RX] [get_bd_pins wireless_mgr_0/ZYNQ_UART_RX]
+  # connect_bd_net -net xlconstant_0_dout [get_bd_pins xlconcat_0/In0] [get_bd_pins xlconstant_0/dout]
   connect_bd_net -net xlconcat_0_dout [get_bd_pins processing_system7_0/IRQ_F2P] [get_bd_pins xlconcat_0/dout]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins xlconcat_0/In0] [get_bd_pins xlconstant_0/dout]
   connect_bd_net -net xlconstant_1_dout [get_bd_pins processing_system7_0/SDIO1_CDN] [get_bd_pins processing_system7_0/SDIO1_WP] [get_bd_pins sdcard_mgr_0/SDIO_CLK] [get_bd_pins sdcard_mgr_0/SDIO_CMD_dir] [get_bd_pins sdcard_mgr_0/SDIO_CMD_from_Zynq] [get_bd_pins xlconstant_1/dout]
   connect_bd_net -net xlconstant_2_dout [get_bd_pins sdcard_mgr_0/SDIO_DATA_dir] [get_bd_pins sdcard_mgr_0/SDIO_DATA_from_Zynq] [get_bd_pins xlconstant_2/dout]
 
@@ -857,6 +875,7 @@ CONFIG.CONST_WIDTH {4} \
   create_bd_addr_seg -range 0x00010000 -offset 0x41210000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_gpio_1/S_AXI/Reg] SEG_axi_gpio_1_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x41220000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_gpio_2/S_AXI/Reg] SEG_axi_gpio_2_Reg
   create_bd_addr_seg -range 0x00010000 -offset 0x41600000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_iic_0/S_AXI/Reg] SEG_axi_iic_0_Reg
+  create_bd_addr_seg -range 0x00010000 -offset 0x43C00000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs bluetooth_uart/S_AXI/Reg] SEG_bluetooth_uart_Reg
 
 # End insert Stefan May 20 'hdl.zip'
 
