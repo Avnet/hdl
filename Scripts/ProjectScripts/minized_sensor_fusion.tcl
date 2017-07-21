@@ -722,7 +722,7 @@ CONFIG.NUM_MI {07} \
   # Create instance: xlconcat_0, and set properties
   set xlconcat_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0 ]
   set_property -dict [ list \
-CONFIG.NUM_PORTS {7} \
+CONFIG.NUM_PORTS {9} \
  ] $xlconcat_0
 
   # Create interface connections
@@ -766,16 +766,18 @@ CONFIG.NUM_PORTS {7} \
   connect_bd_net -net arduino_mgr_0_ARD_DAT11 [get_bd_ports ARD_DAT11] [get_bd_pins arduino_mgr_0/ARD_DAT11]
   connect_bd_net -net arduino_mgr_0_ARD_DAT12 [get_bd_ports ARD_DAT12] [get_bd_pins arduino_mgr_0/ARD_DAT12]
   connect_bd_net -net arduino_mgr_0_ARD_DAT13 [get_bd_ports ARD_DAT13] [get_bd_pins arduino_mgr_0/ARD_DAT13]
-  connect_bd_net -net arduino_mgr_0_HTS221_DRDY [get_bd_pins arduino_mgr_0/HTS221_DRDY] [get_bd_pins xlconcat_0/In4]
-  connect_bd_net -net arduino_mgr_0_LIS3MDL_DRDY [get_bd_pins arduino_mgr_0/LIS3MDL_DRDY] [get_bd_pins xlconcat_0/In6]
-  connect_bd_net -net arduino_mgr_0_LIS3MDL_INT1 [get_bd_pins arduino_mgr_0/LIS3MDL_INT1] [get_bd_pins xlconcat_0/In5]
-  connect_bd_net -net arduino_mgr_0_LPS25H_INT1 [get_bd_pins arduino_mgr_0/LPS25H_INT1] [get_bd_pins xlconcat_0/In3]
-  connect_bd_net -net arduino_mgr_0_LSM6DS0_INT1 [get_bd_pins arduino_mgr_0/LSM6DS0_INT1] [get_bd_pins xlconcat_0/In2]
+  connect_bd_net -net arduino_mgr_0_HTS221_DRDY [get_bd_pins arduino_mgr_0/HTS221_DRDY] [get_bd_pins xlconcat_0/In6]
+  connect_bd_net -net arduino_mgr_0_LIS3MDL_DRDY [get_bd_pins arduino_mgr_0/LIS3MDL_DRDY] [get_bd_pins xlconcat_0/In8]
+  connect_bd_net -net arduino_mgr_0_LIS3MDL_INT1 [get_bd_pins arduino_mgr_0/LIS3MDL_INT1] [get_bd_pins xlconcat_0/In7]
+  connect_bd_net -net arduino_mgr_0_LPS25H_INT1 [get_bd_pins arduino_mgr_0/LPS25H_INT1] [get_bd_pins xlconcat_0/In5]
+  connect_bd_net -net arduino_mgr_0_LSM6DS0_INT1 [get_bd_pins arduino_mgr_0/LSM6DS0_INT1] [get_bd_pins xlconcat_0/In4]
   connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins led_mgr_0/CPU_PL_LED_R]
   connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins led_mgr_0/CPU_PL_LED_G]
   connect_bd_net -net axi_gpio_2_gpio_io_o [get_bd_pins axi_gpio_2/gpio_io_o] [get_bd_pins led_mgr_0/GPIO_from_Zynq]
   connect_bd_net -net axi_gpio_2_gpio_io_t [get_bd_pins axi_gpio_2/gpio_io_t] [get_bd_pins led_mgr_0/GPIO_dir]
   connect_bd_net -net axi_iic_0_iic2intc_irpt [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In1]
+  connect_bd_net -net axi_iic_1_iic2intc_irpt [get_bd_pins axi_iic_1/iic2intc_irpt] [get_bd_pins xlconcat_0/In2]
+  connect_bd_net -net axi_iic_2_iic2intc_irpt [get_bd_pins axi_iic_2/iic2intc_irpt] [get_bd_pins xlconcat_0/In3]
   connect_bd_net -net bluetooth_uart_INT [get_bd_pins bluetooth_uart/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
   connect_bd_net -net led_mgr_0_GPIO_to_Zynq [get_bd_pins axi_gpio_2/gpio_io_i] [get_bd_pins led_mgr_0/GPIO_to_Zynq]
   connect_bd_net -net led_mgr_0_PL_LED_G [get_bd_ports PL_LED_G] [get_bd_pins led_mgr_0/PL_LED_G]
