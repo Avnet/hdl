@@ -87,6 +87,10 @@ switch -nocase $board {
       puts "***** Assigning Vivado Project board_part Property to minized..."
       set_property board_part em.avnet.com:minized:part0:1.2 [current_project]
    }
+   MINIZED7010 {
+      puts "***** Assigning Vivado Project board_part Property to minized7z010..."
+      set_property board_part em.avnet.com:minized7z010:part0:1.1 [current_project]
+   }
 }
 
 # Generate Avnet IP
