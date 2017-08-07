@@ -642,7 +642,7 @@ CONFIG.NUM_MI {06} \
   # Create instance: xlconcat_0, and set properties
   set xlconcat_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0 ]
   set_property -dict [ list \
-CONFIG.NUM_PORTS {2} \
+CONFIG.NUM_PORTS {4} \
  ] $xlconcat_0
 
   # Create instance: xlconstant_1, and set properties
@@ -678,6 +678,8 @@ CONFIG.CONST_VAL {0} \
   connect_bd_net -net axi_gpio_0_gpio2_io_o [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins led_mgr_0/CPU_PL_LED_R]
   connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins led_mgr_0/CPU_PL_LED_G]
   connect_bd_net -net axi_iic_0_iic2intc_irpt [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In1]
+  connect_bd_net -net axi_iic_1_iic2intc_irpt [get_bd_pins axi_iic_1/iic2intc_irpt] [get_bd_pins xlconcat_0/In2]
+  connect_bd_net -net axi_iic_2_iic2intc_irpt [get_bd_pins axi_iic_2/iic2intc_irpt] [get_bd_pins xlconcat_0/In3]
   connect_bd_net -net bluetooth_uart_INT [get_bd_pins bluetooth_uart/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
   connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins axi_iic_0/s_axi_aclk] [get_bd_pins axi_iic_1/s_axi_aclk] [get_bd_pins axi_iic_2/s_axi_aclk] [get_bd_pins bluetooth_uart/s_axi_aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/M02_ACLK] [get_bd_pins ps7_0_axi_periph/M03_ACLK] [get_bd_pins ps7_0_axi_periph/M04_ACLK] [get_bd_pins ps7_0_axi_periph/M05_ACLK] [get_bd_pins ps7_0_axi_periph/M06_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_0_50M/slowest_sync_clk]
   connect_bd_net -net processing_system7_0_FCLK_CLK1 [get_bd_pins bluetooth_uart/xin] [get_bd_pins processing_system7_0/FCLK_CLK1] 
@@ -695,7 +697,7 @@ CONFIG.CONST_VAL {0} \
   #connect_bd_net -net processing_system7_0_UART0_RTSN [get_bd_pins processing_system7_0/UART0_RTSN] [get_bd_pins wireless_mgr_0/ZYNQ_UART_RTS]
   #connect_bd_net -net processing_system7_0_UART0_TX [get_bd_pins processing_system7_0/UART0_TX] [get_bd_pins wireless_mgr_0/ZYNQ_UART_TX]
   connect_bd_net -net rst_ps7_0_50M_interconnect_aresetn [get_bd_pins ps7_0_axi_periph/ARESETN] [get_bd_pins rst_ps7_0_50M/interconnect_aresetn]
-  connect_bd_net -net rst_ps7_0_50M_peripheral_aresetn [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_iic_0/s_axi_aresetn] [get_bd_pins axi_iic_1/s_axi_aresetn] [get_bd_pins axi_iic_2/s_axi_aresetn] [get_bd_pins bluetooth_uart/s_axi_aresetn] [get_bd_pins ps7_0_axi_periph/M00_ARESETN] [get_bd_pins ps7_0_axi_periph/M01_ARESETN] [get_bd_pins ps7_0_axi_periph/M02_ARESETN] [get_bd_pins ps7_0_axi_periph/M03_ARESETN] [get_bd_pins ps7_0_axi_periph/M04_ARESETN] [get_bd_pins ps7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_ps7_0_50M/peripheral_aresetn]
+  connect_bd_net -net rst_ps7_0_50M_peripheral_aresetn [get_bd_pins axi_gpio_0/s_axi_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn] [get_bd_pins axi_iic_0/s_axi_aresetn] [get_bd_pins axi_iic_1/s_axi_aresetn] [get_bd_pins axi_iic_2/s_axi_aresetn] [get_bd_pins bluetooth_uart/s_axi_aresetn] [get_bd_pins ps7_0_axi_periph/M00_ARESETN] [get_bd_pins ps7_0_axi_periph/M01_ARESETN] [get_bd_pins ps7_0_axi_periph/M02_ARESETN] [get_bd_pins ps7_0_axi_periph/M03_ARESETN] [get_bd_pins ps7_0_axi_periph/M04_ARESETN] [get_bd_pins ps7_0_axi_periph/M05_ARESETN] [get_bd_pins ps7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_ps7_0_50M/peripheral_aresetn]
   connect_bd_net -net wireless_mgr_0_BT_CTS_IN_N [get_bd_ports BT_CTS_IN_N] [get_bd_pins wireless_mgr_0/BT_CTS_IN_N]
   connect_bd_net -net wireless_mgr_0_BT_REG_ON [get_bd_ports BT_REG_ON] [get_bd_pins wireless_mgr_0/BT_REG_ON]
   connect_bd_net -net wireless_mgr_0_BT_RXD_IN [get_bd_ports BT_RXD_IN] [get_bd_pins wireless_mgr_0/BT_RXD_IN]
@@ -716,7 +718,7 @@ CONFIG.CONST_VAL {0} \
   # connect_bd_net -net wireless_mgr_0_ZYNQ_UART_RX [get_bd_pins processing_system7_0/UART0_RX] [get_bd_pins wireless_mgr_0/ZYNQ_UART_RX]
   # connect_bd_net -net xlconstant_0_dout [get_bd_pins xlconcat_0/In0] [get_bd_pins xlconstant_0/dout]
   connect_bd_net -net xlconcat_0_dout [get_bd_pins processing_system7_0/IRQ_F2P] [get_bd_pins xlconcat_0/dout]
-  connect_bd_net -net xlconstant_1_dout [get_bd_pins processing_system7_0/SDIO1_CDN] [get_bd_pins processing_system7_0/SDIO1_WP] [get_bd_pins sdcard_mgr_0/SDIO_CLK] [get_bd_pins sdcard_mgr_0/SDIO_CMD_dir] [get_bd_pins sdcard_mgr_0/SDIO_CMD_from_Zynq] [get_bd_pins xlconstant_1/dout]
+  connect_bd_net -net xlconstant_1_dout [get_bd_pins processing_system7_0/SDIO1_CDN] [get_bd_pins processing_system7_0/SDIO1_WP] [get_bd_pins xlconstant_1/dout]
 
   # Create address segments
   create_bd_addr_seg -range 0x00010000 -offset 0x41200000 [get_bd_addr_spaces processing_system7_0/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] SEG_axi_gpio_0_Reg

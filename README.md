@@ -9,7 +9,7 @@ Avnet HDL libraries, project build scripts, and example software source code use
 Current Tools Version:
 ----------------------
 
-* **Xilinx Vivado Design Suite**: [Vivado 2016.2]
+* **Xilinx Vivado Design Suite**: [Vivado 2017.1]
 
 
 Where can I find documentation? 
@@ -49,8 +49,8 @@ I am an engineer at Avnet, how can I submit code changes?
 
 * If you are adding new code that you wrote, be sure to append the appropriate disclaimer headers (from the [legal] repo) to the top of your source files.
 
-[Vivado 2016.2]:http://www.xilinx.com/content/xilinx/en/downloadNav/vivado-design-tools/2016-2.html
+[Vivado 2017.1]:http://www.xilinx.com/content/xilinx/en/downloadNav/vivado-design-tools/2017-1.html
 [Avnet Technical Community]:http://community.em.avnet.com/
-[Zed Community Support Forums]:http://www.picozed.org/forum
+[Zed Community Support Forums]:http://www.minized.org/forum
 [legal]:https://github.com/Avnet/legal
 [logo]: https://github.com/Avnet/legal/blob/master/avnet_logo.png "Avnet"

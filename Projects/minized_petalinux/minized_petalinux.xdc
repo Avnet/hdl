@@ -32,23 +32,24 @@
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         July 05, 2017
-#  Design Name:         MiniZed Sensor Fusion
-#  Module Name:         minized_sensor_fusion.xdc
-#  Project Name:        minized_sensor_fusion
+#  Create Date:         August 07, 2017
+#  Design Name:         MiniZed PetaLinux
+#  Module Name:         minized_petalinux.xdc
+#  Project Name:        minized_petalinux
 #  Target Devices:      Xilinx Zynq-7000
 #  Hardware Boards:     MiniZed
 # 
 #  Tool versions:       Xilinx Vivado 2017.1
 # 
-#  Description:         MiniZed Sensor Fusion hardware constraints for I2C 
-#                       sensor Pmods
+#  Description:         MiniZed PetaLinux constraints for basic hardware 
+#                       platform which matches the one from the 2017 Fall 
+#                       SpeedWays.
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
 #                       scripts IP generation scripts or others as needed     
 #
-#  Revision:            Jul 05, 2017: 1.00 Initial version
+#  Revision:            Aug 07, 2017: 1.00 Initial version
 # 
 # ----------------------------------------------------------------------------
 
@@ -175,7 +176,6 @@ set_property PACKAGE_PIN G15 [get_ports iic_rtl_0_scl_io]
 set_property IOSTANDARD LVCMOS33 [get_ports iic_rtl_0_scl_io]
 #######################################################################
 #AXI IIC 1
-#MAX44000 PMOD
 set_property PACKAGE_PIN M14 [get_ports iic_rtl_1_sda_io]
 set_property IOSTANDARD LVCMOS33 [get_ports iic_rtl_1_sda_io]
 
@@ -183,7 +183,6 @@ set_property PACKAGE_PIN L14 [get_ports iic_rtl_1_scl_io]
 set_property IOSTANDARD LVCMOS33 [get_ports iic_rtl_1_scl_io]
 #######################################################################
 #AXI IIC 2
-#HTU21D PMOD
 set_property PACKAGE_PIN N12 [get_ports iic_rtl_2_sda_io]
 set_property IOSTANDARD LVCMOS33 [get_ports iic_rtl_2_sda_io]
 
