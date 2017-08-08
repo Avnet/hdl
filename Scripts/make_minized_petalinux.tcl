@@ -46,6 +46,6 @@
 # ----------------------------------------------------------------------------
 
 # Build PetaLinux BSP HW Platform for MiniZed 
-set argv [list board=MINIZED project=minized_petalinux sdk=yes version_override=yes]
+set argv [list board=MINIZED project=minized_petalinux sdk=yes close_project=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
