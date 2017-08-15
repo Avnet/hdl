@@ -42,6 +42,7 @@
 #  Dependencies:        make.tcl
 #
 #  Revision:            Jan 06, 2017: 1.00 Initial version
+#  Revision:            Aug 14, 2017: 1.01 Updated Avnet logo
 # 
 # ----------------------------------------------------------------------------
 
@@ -66,9 +67,10 @@ proc make_ip {ip_name} {
    set_property library {ip} [ipx::current_core]
    set_property name {PWM_w_Int} [ipx::current_core]
    set_property version {1.0} [ipx::current_core]
-   set_property display_name {PWM} [ipx::current_core]
+   set_property display_name {PWM_w_Int_v1.0} [ipx::current_core]
+   set_property description {PWM with Interrupt option} [ipx::current_core]
    set_property vendor_display_name {Avnet} [ipx::current_core]
-   set_property company_url {http://em.avnet.com} [ipx::current_core]
+   set_property company_url {http://avnet.com} [ipx::current_core]
    set_property taxonomy {{/FPGA_Features_and_Design/IO_Interfaces}} [ipx::current_core]
    set_property supported_families { \
 #									{virtex7} {Pre-Production}\
@@ -88,9 +90,9 @@ proc make_ip {ip_name} {
 
    # Set the File Groups for this IP core.
    ipx::add_file_group -type utility xilinx_utilityxitfiles [ipx::current_core]
-   ipx::add_file misc/AVNET_EM_sRGB_150x53px.png [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]
-   set_property type LOGO [ipx::get_files misc/AVNET_EM_sRGB_150x53px.png -of_objects [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]]
-   set_property is_include false [ipx::get_files misc/AVNET_EM_sRGB_150x53px.png -of_objects [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]]
+   ipx::add_file misc/avnet_logo.png [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]
+   set_property type LOGO [ipx::get_files misc/avnet_logo.png -of_objects [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]]
+   set_property is_include false [ipx::get_files misc/avnet_logo.png -of_objects [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]]
      
    # Generate the XGUI files to accompany this IP core.
    ipx::create_xgui_files [ipx::current_core]
