@@ -93,7 +93,11 @@ proc make_ip {ip_name} {
    ipx::add_file misc/avnet_logo.png [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]
    set_property type LOGO [ipx::get_files misc/avnet_logo.png -of_objects [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]]
    set_property is_include false [ipx::get_files misc/avnet_logo.png -of_objects [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]]
-     
+   
+   # Create the port map assignments for this IP core.
+   ipx::add_ports_from_hdl [ipx::current_core] -top_level_hdl_file hdl/verilog/PWM_w_Int.v -top_module_name PWM_w_Int
+   ipx::infer_bus_interface Interrupt_out xilinx.com:signal:interrupt_rtl:1.0 [ipx::current_core]
+   
    # Generate the XGUI files to accompany this IP core.
    ipx::create_xgui_files [ipx::current_core]
    
