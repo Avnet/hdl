@@ -46,6 +46,7 @@
 #
 #  Revision:            Jul 01, 2016: 1.00 Initial version
 #                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
+#                       Aug 23, 2017: 1.02 Updated for 2017.2 tools
 # 
 # ----------------------------------------------------------------------------
 
@@ -78,12 +79,12 @@ avnet_create_project $project $projects_folder $scriptdir
 # Apply board specific project property settings
 switch -nocase $board {
    UZ3EG_IOCC {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc..."
-      set_property board_part em.avnet.com:ultrazed_eg_iocc:part0:1.0 [current_project]
+      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc_production..."
+      set_property board_part em.avnet.com:ultrazed_eg_iocc_production:part0:1.0 [current_project]
    }
    UZ3EG_PCIEC {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc..."
-      set_property board_part em.avnet.com:ultrazed_eg_pciecc:part0:1.0 [current_project]
+      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_pciecc_production..."
+      set_property board_part em.avnet.com:ultrazed_eg_pciecc_production:part0:1.0 [current_project]
    }
 }
 
@@ -97,7 +98,7 @@ set design_name ${project}
 # avnet_add_ps_preset $project $projects_folder $scriptdir
 # BEGIN 2016.2 WORKAROUND
    # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:1.2 zynq_ultra_ps_e_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.0 zynq_ultra_ps_e_0
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" }  [get_bd_cells zynq_ultra_ps_e_0]
 
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]

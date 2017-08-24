@@ -35,17 +35,20 @@
 #  Target Devices:      Zynq UltraScale+ 3EG
 #  Hardware Boards:     UltraZed, IO Carrier
 # 
-#  Tool versions:       Vivado 2016.2
+#  Tool versions:       Vivado 2017.2
 # 
 #  Description:         Build Script for UltraZed IO Carrier
 # 
 #  Dependencies:        To be called from a project build script
 # 
+#  Revision:            Jul 01, 2016: 1.00 Initial version
+#                       Aug 23, 2017: 1.01 Updated to remove ES1 for 2017.2
+#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
-   create_project $project $projects_folder -part xczu3eg-sfva625-1-i-es1 -force
+   create_project $project $projects_folder -part xczu3eg-sfva625-1-i -force
    # add selection for proper xdc based on needs
    # if IO carrier, then use that xdc
    # if FMC, choose that one
