@@ -25,9 +25,9 @@ For a list of Reference Designs/Tutorials for your Avnet board, please visit the
 Where can I get support?
 ------------------------
 
-For design support please contact your local Avnet/Silica FAE or visit one of our support forums:
+For design support please contact your local Avnet FAE or visit one of our support forums:
 
-* For design-in product support for MicroZed, PicoZed, PicoZed SDR, Zynq Mini Module Plus, and Zynq Mini-ITX please access the community support forums at [Zed Community Support Forums].
+* For design-in product support for MicroZed, PicoZed, UltraZed, Zynq Mini Module Plus, and Zynq Mini-ITX please access the community support forums at [Zed Community Support Forums].
 
 * Please access the [Avnet Technical Community] forums for all other board support inquiries.
 
@@ -43,8 +43,6 @@ I am an engineer, I found a bug and I want to contribute the fix back into this 
 I am an engineer at Avnet, how can I submit code changes?
 ---------------------------------------------------------
 
-* Code changes to the HDL repository must be pushed from the internal code repo, do not push changes directly to the Github **hdl** repo. 
-
 * Please contact the Avnet Design Group for further details.
 
 * If you are adding new code that you wrote, be sure to append the appropriate disclaimer headers (from the [legal] repo) to the top of your source files.
@@ -53,4 +51,4 @@ I am an engineer at Avnet, how can I submit code changes?
 [Avnet Technical Community]:http://community.em.avnet.com/
 [Zed Community Support Forums]:http://www.minized.org/forum
 [legal]:https://github.com/Avnet/legal
-[logo]: https://github.com/Avnet/legal/blob/master/avnet_logo.png "Avnet"
+[logo]:https://github.com/Avnet/legal/blob/master/avnet_logo.png "Avnet"

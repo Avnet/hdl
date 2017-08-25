@@ -168,23 +168,11 @@ CONFIG.USE_BOARD_FLOW {true} \
   # Create instance: axi_iic_0, and set properties
   set axi_iic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0 ]
 
-  # Set the rate of this I2C controller to 50KHz to accommodate the 
-  # TE Connetivity KMA36 Pmod which requires a rate slower than 100KHz.
-  set_property -dict [list CONFIG.IIC_FREQ_KHZ {50}] $axi_iic_0
-  
   # Create instance: axi_iic_1, and set properties
   set axi_iic_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_1 ]
 
-  # Set the rate of this I2C controller to 50KHz to accommodate the 
-  # TE Connetivity KMA36 Pmod which requires a rate slower than 100KHz.
-  set_property -dict [list CONFIG.IIC_FREQ_KHZ {50}] $axi_iic_1
-  
   # Create instance: axi_iic_2, and set properties
   set axi_iic_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_2 ]
-
-  # Set the rate of this I2C controller to 50KHz to accommodate the 
-  # TE Connetivity KMA36 Pmod which requires a rate slower than 100KHz.
-  set_property -dict [list CONFIG.IIC_FREQ_KHZ {50}] $axi_iic_2
 
   # Create AXI UART 16550 instance and set properties
   set bluetooth_uart [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uart16550:2.0 axi_uart16550_0 ]
@@ -755,7 +743,7 @@ cd $scripts_folder
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 save_bd_design
-launch_runs impl_1 -to_step write_bitstream -j 8
+launch_runs impl_1 -to_step write_bitstream -j 2
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
