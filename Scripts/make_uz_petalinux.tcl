@@ -43,6 +43,7 @@
 #
 #  Revision:            Jul 01, 2016: 1.00 Initial version
 #                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
+#                       Aug 25, 2017: 1.02 Updated for 2017.2 tools
 # 
 # ----------------------------------------------------------------------------
 
@@ -54,6 +55,6 @@ source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + PCIe Carrier
-#set argv [list board=UZ3EG_PCIEC project=uz_petalinux sdk=yes version_override=yes]
-#set argc [llength $argv]
-#source ./make.tcl -notrace
+set argv [list board=UZ3EG_PCIEC project=uz_petalinux sdk=yes close_project=yes version_override=yes]
+set argc [llength $argv]
+source ./make.tcl -notrace
