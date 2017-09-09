@@ -93,29 +93,10 @@ puts "***** Creating Block Design..."
 create_bd_design ${project}
 set design_name ${project}
 
-# A workaround to get this working again in 2016.2 tools, remove comments 
-# and workaround for later tools.
-# avnet_add_ps_preset $project $projects_folder $scriptdir
-# BEGIN 2016.2 WORKAROUND
-   # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.0 zynq_ultra_ps_e_0
-   apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" }  [get_bd_cells zynq_ultra_ps_e_0]
+# Add Processing System presets from board definitions.
+avnet_add_ps_preset $project $projects_folder $scriptdir
 
-   set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
-
-   # Not seeing the watchdog or TTC settings being implemented by the board 
-   # definition settings from the official 2016.4 board definition from
-   # Xilinx.  Forcing this controller to be enabled.
-   set_property -dict [list CONFIG.PSU__CSU__PERIPHERAL__ENABLE {1} CONFIG.PSU__CSU__PERIPHERAL__IO {MIO 26}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__SWDT0__PERIPHERAL__ENABLE {1} CONFIG.PSU__SWDT0__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__SWDT1__PERIPHERAL__ENABLE {1} CONFIG.PSU__SWDT1__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__TTC0__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC0__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__TTC1__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC1__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__TTC2__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC2__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__TTC3__PERIPHERAL__ENABLE {1} CONFIG.PSU__TTC3__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-# END 2016.2 workaround
-
-# Add preset IP from board definitions
+# Add User IO presets from board definitions.
 avnet_add_user_io_preset $project $projects_folder $scriptdir
 
 # General Config
