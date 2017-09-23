@@ -80,8 +80,8 @@ avnet_create_project $project $projects_folder $scriptdir
 switch -nocase $board {
    UZ3EG_IOCC {
       puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc_production..."
-      set_property board_part em.avnet.com:ultrazed_eg_iocc:part0:1.0 [current_project]
-      #set_property board_part em.avnet.com:ultrazed_eg_iocc_production:part0:1.0 [current_project]
+      #set_property board_part em.avnet.com:ultrazed_eg_iocc:part0:1.0 [current_project]
+      set_property board_part em.avnet.com:ultrazed_eg_iocc_production:part0:1.0 [current_project]
    }
 }
 
