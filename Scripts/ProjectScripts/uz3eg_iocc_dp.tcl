@@ -100,11 +100,13 @@ puts "***** General Configuration for Design..."
 set_property target_language VHDL [current_project]
 
 # Add the constraints that are needed for testing
-add_files -fileset constrs_1 -norecurse ${projects_folder}/../uz3eg_iocc_dp.xdc
+#add_files -fileset constrs_1 -norecurse ${projects_folder}/../uz3eg_iocc_dp.xdc
+add_files -fileset constrs_1 -norecurse ${projects_folder}/../uz3eg_iocc_dp_es1.xdc
 
 # Create Block Diagram
 set design_name ${project}
-source ${projects_folder}/../../../Scripts/ProjectScripts/${project}_bd.tcl
+#source ${projects_folder}/../../../Scripts/ProjectScripts/${project}_bd.tcl
+source ${projects_folder}/../../../Scripts/ProjectScripts/${project}_bd_es1.tcl
 
 # Add Project source files
 puts "***** Adding Source Files to Block Design..."
