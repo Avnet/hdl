@@ -1,0 +1,7 @@
+//arch = zynqmp; split = false; format = BIN
+the_ROM_image:
+{
+	[bootloader,destination_cpu=a53-0]uz_pciec_ccd.sdk/zynq_fsbl_app/Release/zynq_fsbl_app.elf
+	[destination_device=pl]uz_pciec_ccd.sdk/uz_pciec_ccd_hw/uz_pciec_ccd_wrapper.bit
+	[destination_cpu=a53-0]uz_pciec_ccd.sdk/tpm_pmod_test/Debug/tpm_pmod_test.elf
+}
