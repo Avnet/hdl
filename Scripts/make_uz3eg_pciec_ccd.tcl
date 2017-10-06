@@ -34,7 +34,7 @@
 # 
 #  Create Date:         Oct 02, 2017
 #  Design Name:         UltraZed CCD HW Platform
-#  Module Name:         make_uz_pciec_ccd.tcl
+#  Module Name:         make_uz3eg_pciec_ccd.tcl
 #  Project Name:        UltraZed CCD
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
 #  Hardware Boards:     UltraZed SOM
@@ -51,6 +51,6 @@
 
 # Build CCD HW Platform
 # for UltraZed 3EG SOM + PCIe Carrier
-set argv [list board=UZ3EG_PCIEC project=uz_pciec_ccd sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+set argv [list board=UZ3EG_PCIEC project=uz3eg_pciec_ccd sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
 set argc [llength $argv]
 source ./make.tcl -notrace

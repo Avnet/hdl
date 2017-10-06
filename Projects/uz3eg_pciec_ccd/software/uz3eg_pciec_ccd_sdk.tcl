@@ -48,9 +48,9 @@
 # ----------------------------------------------------------------------------
 
 #!/usr/bin/tclsh
-set project  "uz_pciec_ccd"
-set hw_name  "uz_pciec_ccd_hw"
-set bsp_name "uz_pciec_ccd_bsp"
+set project  "uz3eg_pciec_ccd"
+set hw_name  "uz3eg_pciec_ccd_hw"
+set bsp_name "uz3eg_pciec_ccd_bsp"
 set tpm_pmod_test_name "tpm_pmod_test"
 
 # Set workspace and import hardware platform

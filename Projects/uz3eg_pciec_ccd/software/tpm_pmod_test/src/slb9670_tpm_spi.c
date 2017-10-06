@@ -292,19 +292,19 @@ int startup_tpm_get_random()
 	if (0 != tpm_transmit(tpm2startup, ARRAY_SIZE(tpm2startup), response_buffer, ARRAY_SIZE(response_buffer), &response_length))
 		goto exit;
 
-	print("TPM2 Startup: ");
+	print("TPM Startup: ");
 	hexcram(response_buffer, response_length);
 
 	memset(response_buffer, 0x00, ARRAY_SIZE(response_buffer));
 	if (0 != tpm_transmit(tpm2getrandom, ARRAY_SIZE(tpm2getrandom), response_buffer, ARRAY_SIZE(response_buffer), &response_length))
 		goto exit;
 
-	print("TPM2 GetRandom: ");
+	print("TPM GetRandom: ");
 	hexcram(response_buffer, response_length);
 	
 	u8 tmp = 0x20;
 	tpm_spi_write_bytes(TPM_ACCESS, 1, &tmp);
-	print("TPM2 control relinquished");
+	print("TPM control relinquished");
 	retval = 0;
 exit:
 	return retval;
