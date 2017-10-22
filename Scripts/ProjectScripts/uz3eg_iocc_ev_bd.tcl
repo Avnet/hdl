@@ -489,11 +489,12 @@ proc create_root_design { parentCell } {
   #set_property -dict [list CONFIG.PSU__HIGH_ADDRESS__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
   # IRQ configuration
   set_property -dict [list CONFIG.PSU__USE__IRQ0 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  set_property -dict [list CONFIG.PSU__USE__IRQ1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
   # EMIO GPIO configuration
   #set_property -dict [list CONFIG.PSU__GPIO_EMIO__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]  
   # PL fabric clocks
   set_property -dict [list CONFIG.PSU__NUM_FABRIC_RESETS {2}] [get_bd_cells zynq_ultra_ps_e_0]
-  set_property -dict [list CONFIG.PSU__CRL_APB__PL1_REF_CTRL__FREQMHZ {200}] [get_bd_cells zynq_ultra_ps_e_0]
+  set_property -dict [list CONFIG.PSU__CRL_APB__PL1_REF_CTRL__FREQMHZ {100}] [get_bd_cells zynq_ultra_ps_e_0]
 
   # Create instance: clk_wiz_1, and set properties
   set clk_wiz_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz clk_wiz_1 ]
@@ -565,9 +566,13 @@ CONFIG.C_AUX_RESET_HIGH {0} \
 CONFIG.C_AUX_RESET_HIGH {0} \
  ] $proc_sys_reset_clk300
 
-  # Create instance: xlconcat_0
-  set xlconcat_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0 ]
-  set_property -dict [ list CONFIG.NUM_PORTS {6} ] $xlconcat_0
+  # Create instance: interrupts0
+  set interrupts0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat interrupts0 ]
+  set_property -dict [ list CONFIG.NUM_PORTS {6} ] $interrupts0
+
+  # Create instance: interrupts1
+  set interrupts1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat interrupts1 ]
+  set_property -dict [ list CONFIG.NUM_PORTS {1} ] $interrupts1
 
   # Create instance: TDnext_capture_1
   create_hier_cell_TDnext_capture [current_bd_instance .] TDnext_capture_1
@@ -648,9 +653,10 @@ CONFIG.NUM_SI {2} \
   connect_bd_net -net clk_wiz_1_locked [get_bd_pins clk_wiz_1/locked] [get_bd_pins proc_sys_reset_clk50/dcm_locked] [get_bd_pins proc_sys_reset_clk75/dcm_locked] [get_bd_pins proc_sys_reset_clk150/dcm_locked] [get_bd_pins proc_sys_reset_clk300/dcm_locked]
   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn1] [get_bd_pins proc_sys_reset_clk50/ext_reset_in] [get_bd_pins proc_sys_reset_clk75/ext_reset_in] [get_bd_pins proc_sys_reset_clk150/ext_reset_in] [get_bd_pins proc_sys_reset_clk300/ext_reset_in]
   # interrupts
-  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0] [get_bd_pins xlconcat_0/dout]
-  connect_bd_net [get_bd_pins TDnext_capture_1/s2mm_introut] [get_bd_pins xlconcat_0/In0]
-  connect_bd_net [get_bd_pins TDnext_capture_2/s2mm_introut] [get_bd_pins xlconcat_0/In1]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0] [get_bd_pins interrupts0/dout]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1] [get_bd_pins interrupts1/dout]
+  connect_bd_net [get_bd_pins TDnext_capture_1/s2mm_introut] [get_bd_pins interrupts0/In0]
+  connect_bd_net [get_bd_pins TDnext_capture_2/s2mm_introut] [get_bd_pins interrupts0/In1]
   # TDNext_capture
   connect_bd_net [get_bd_pins TDnext_capture_1/s_axi_lite_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
   connect_bd_net [get_bd_pins TDnext_capture_2/s_axi_lite_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
@@ -710,10 +716,10 @@ CONFIG.NUM_SI {2} \
   connect_bd_net [get_bd_pins axi_mem_intercon/M00_ARESETN] [get_bd_pins proc_sys_reset_clk150/peripheral_aresetn]
   connect_bd_net [get_bd_pins axi_mem_intercon/S01_ARESETN] [get_bd_pins proc_sys_reset_clk150/peripheral_aresetn]
   # interrupts
-  connect_bd_net [get_bd_pins cam1_iic/iic2intc_irpt] [get_bd_pins xlconcat_0/In2]
-  connect_bd_net [get_bd_pins cam2_iic/iic2intc_irpt] [get_bd_pins xlconcat_0/In3]
-  connect_bd_net [get_bd_pins lepton_iic/iic2intc_irpt] [get_bd_pins xlconcat_0/In4]
-  connect_bd_net [get_bd_pins lepton_spi/ip2intc_irpt] [get_bd_pins xlconcat_0/In5]
+  connect_bd_net [get_bd_pins cam1_iic/iic2intc_irpt] [get_bd_pins interrupts0/In2]
+  connect_bd_net [get_bd_pins cam2_iic/iic2intc_irpt] [get_bd_pins interrupts0/In3]
+  connect_bd_net [get_bd_pins lepton_iic/iic2intc_irpt] [get_bd_pins interrupts0/In4]
+  connect_bd_net [get_bd_pins lepton_spi/ip2intc_irpt] [get_bd_pins interrupts0/In5]
   #
   connect_bd_net [get_bd_pins cam1_iic/s_axi_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
   connect_bd_net [get_bd_pins cam1_iic/s_axi_aresetn] [get_bd_pins rst_ps8_0_99M/peripheral_aresetn]

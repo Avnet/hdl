@@ -30,11 +30,11 @@
 #  Module Name:         
 #  Project Name:        
 #  Target Devices:      
-#  Hardware Boards:     UltraZed SOM
+#  Hardware Boards:     UltraZed SOM + IO Carrier Card
 # 
-#  Tool versions:       Vivado 2016.2
+#  Tool versions:       Vivado 2017.2
 # 
-#  Description:         SDK Build Script for PicoZed PetaLinux hardware 
+#  Description:         SDK Build Script for UltraZed PetaLinux hardware 
 #                       platform
 # 
 #  Dependencies:        To be called from a configured make script call
@@ -61,16 +61,16 @@ sdk createbsp -name ${bsp_name} -proc psu_cortexa53_0 -hwproject ${hw_name} -os 
 sdk projects -build -type bsp -name ${bsp_name}
 
 # Create Zynq MP FSBL application
-puts "\n#\n#\n# Creating zynq_fsbl ...\n#\n#\n"
-sdk createapp -name zynq_fsbl_app -hwproject ${hw_name} -proc psu_cortexa53_0 -os standalone -lang C -app {Zynq MP FSBL} -bsp zynq_fsbl_bsp
+puts "\n#\n#\n# Creating zynqmp_fsbl ...\n#\n#\n"
+sdk createapp -name zynqmp_fsbl_app -hwproject ${hw_name} -proc psu_cortexa53_0 -os standalone -lang C -app {Zynq MP FSBL} -bsp zynqmp_fsbl_bsp
 
 # Set the build type to release
-configapp -app zynq_fsbl_app build-config release
+configapp -app zynqmp_fsbl_app build-config release
 
 # Build FSBL application
-puts "\n#\n#\n Building zynq_fsbl ...\n#\n#\n"
-sdk projects -build -type bsp -name zynq_fsbl_bsp
-sdk projects -build -type app -name zynq_fsbl_app
+puts "\n#\n#\n Building zynqmp_fsbl ...\n#\n#\n"
+sdk projects -build -type bsp -name zynqmp_fsbl_bsp
+sdk projects -build -type app -name zynqmp_fsbl_app
 
 # done
 exit
