@@ -50,6 +50,6 @@
 # ----------------------------------------------------------------------------
 
 # Build MiniZed Foundation
-set argv [list board=MINIZED project=minized_sensor_fusion sdk=yes close_project=yes version_override=no]
+set argv [list board=MINIZED project=minized_sensor_fusion sdk=yes close_project=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace

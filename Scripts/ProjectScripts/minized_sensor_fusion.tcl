@@ -123,13 +123,27 @@ set_property target_language VHDL [current_project]
 # Add Minized-specific RTL design sources
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
-set files [list \
+set files_hdl [list \
  "[file normalize "../../IP/minized/hdl/vhdl/microphone_mgr.vhd"]"\
  "[file normalize "../../IP/minized/hdl/vhdl/arduino_mgr.vhd"]"\
  "[file normalize "../../IP/minized/hdl/vhdl/wireless_mgr.vhd"]"\
  "[file normalize "../../IP/minized/hdl/vhdl/led_mgr.vhd"]"\
 ]
-add_files -norecurse -fileset $obj $files
+# For PetaLinux 2017.2 or later, any IP module that is derived from through 
+# the use RTL-based IP modules without having to go through the process of 
+# packaging the RTL as an IP to be added through the Vivado IP catalog will
+# need to have the soruce copied into the project folder otherwise a missing
+# file reference will be encountered when opening the project outside of the
+# original build context.  Although Avnet would prefer that users take 
+# advantage of the inherant benefits of building the hardware platform from 
+# our freely provided, public revision controlled source repository, which is  
+# the preferred method for recreating a project, this is a workaround used to 
+# maintain the appearance of equivalence with other board manufacturers who 
+# do not follow revision control methodology and provide customers a hardware
+# platform as part of the PetaLinux BSP deliverable.
+#add_files -copy_to ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/ -norecurse -fileset $obj $files
+add_files -norecurse -scan_for_includes -fileset $obj $files_hdl
+import_files -force -norecurse 
 
 # Add RTL-based IP modules without having to go through the process of packaging the RTL as an IP to be added through the Vivado IP catalog. 
 # See chap 12 'Referencing RTL Modules' https://www.xilinx.com/support/documentation/sw_manuals/xilinx2017_1/ug994-vivado-ip-subsystems.pdf
@@ -853,12 +867,15 @@ CONFIG.NUM_PORTS {9} \
 # create_bd_port -dir O pl_led_g_tri_o
 # connect_bd_net [get_bd_ports pl_led_g_tri_o] [get_bd_pins axi_gpio_1/gpio_io_o]
 
-
-# add selection for proper xdc based on needs
-add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/MINIZED/minized_mic.xdc
-add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/MINIZED/minized_LEDs.xdc
-add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/bitstream_compression_enable.xdc
-add_files -fileset constrs_1 -norecurse ${projects_folder}/../minized_sensor_fusion.xdc
+# Add Minized-specific design constraints based on project needs.
+# Set 'constrs_1' fileset object
+set files_constraints [list \
+ "[file normalize "$scriptdir/../Boards/MINIZED/minized_mic.xdc"]"\
+ "[file normalize "$scriptdir/../Boards/MINIZED/minized_LEDs.xdc"]"\
+ "[file normalize "$scriptdir/../Boards/bitstream_compression_enable.xdc"]"\
+ "[file normalize "${projects_folder}/../minized_sensor_fusion.xdc"]"\
+]
+import_files -fileset constrs_1 -norecurse $files_constraints
 
 # Add Project source files
 puts "***** Adding Source Files to Block Design..."
