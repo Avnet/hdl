@@ -291,7 +291,7 @@ proc create_root_design { parentCell } {
   # EMIO GPIO configuration
   #set_property -dict [list CONFIG.PSU__GPIO_EMIO__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]  
   # PL fabric clocks
-  set_property -dict [list CONFIG.PSU__NUM_FABRIC_RESETS {2}] [get_bd_cells zynq_ultra_ps_e_0]
+  set_property -dict [list CONFIG.PSU__NUM_FABRIC_RESETS {1}] [get_bd_cells zynq_ultra_ps_e_0]
   set_property -dict [list CONFIG.PSU__CRL_APB__PL1_REF_CTRL__FREQMHZ {100}] [get_bd_cells zynq_ultra_ps_e_0]
 
   # Create instance: clk_wiz_1, and set properties
@@ -387,7 +387,7 @@ CONFIG.C_AUX_RESET_HIGH {0} \
   connect_bd_net -net clk_150mhz [get_bd_pins clk_wiz_1/clk_out3] [get_bd_pins proc_sys_reset_clk150/slowest_sync_clk]
   connect_bd_net -net clk_300mhz [get_bd_pins clk_wiz_1/clk_out4] [get_bd_pins proc_sys_reset_clk300/slowest_sync_clk]
   connect_bd_net -net clk_wiz_1_locked [get_bd_pins clk_wiz_1/locked] [get_bd_pins proc_sys_reset_clk50/dcm_locked] [get_bd_pins proc_sys_reset_clk75/dcm_locked] [get_bd_pins proc_sys_reset_clk150/dcm_locked] [get_bd_pins proc_sys_reset_clk300/dcm_locked]
-  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn1] [get_bd_pins proc_sys_reset_clk50/ext_reset_in] [get_bd_pins proc_sys_reset_clk75/ext_reset_in] [get_bd_pins proc_sys_reset_clk150/ext_reset_in] [get_bd_pins proc_sys_reset_clk300/ext_reset_in]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins proc_sys_reset_clk50/ext_reset_in] [get_bd_pins proc_sys_reset_clk75/ext_reset_in] [get_bd_pins proc_sys_reset_clk150/ext_reset_in] [get_bd_pins proc_sys_reset_clk300/ext_reset_in]
   # interrupts
   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0] [get_bd_pins interrupts0/dout]
   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1] [get_bd_pins interrupts1/dout]

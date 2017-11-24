@@ -101,8 +101,9 @@ avnet_add_user_io_preset $project $projects_folder $scriptdir
 puts "***** General Configuration for Design..."
 set_property target_language VHDL [current_project]
 
-# Add the constraints that are needed for testing
-add_files -fileset constrs_1 -norecurse ${projects_folder}/../uz3eg_iocc_dp.xdc
+# Import the constraints for the project
+add_files -fileset constrs_1 -norecurse ${projects_folder}/../uz3eg_iocc_dp_es1.xdc
+import_files -fileset constrs_1 ${projects_folder}/../uz3eg_iocc_dp_es1.xdc
 
 # Create Block Diagram
 set design_name ${project}
