@@ -293,6 +293,8 @@ proc create_root_design { parentCell } {
   # PL fabric clocks
   set_property -dict [list CONFIG.PSU__NUM_FABRIC_RESETS {1}] [get_bd_cells zynq_ultra_ps_e_0]
   set_property -dict [list CONFIG.PSU__CRL_APB__PL1_REF_CTRL__FREQMHZ {100}] [get_bd_cells zynq_ultra_ps_e_0]
+  # SD card - no WP signal
+  set_property -dict [list CONFIG.PSU__SD1__GRP_WP__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
 
   # Create instance: clk_wiz_1, and set properties
   set clk_wiz_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz clk_wiz_1 ]
