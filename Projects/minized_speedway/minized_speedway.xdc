@@ -66,9 +66,19 @@
 #######################################################################
 # MiniZed LEDs
 #######################################################################
-set_property PACKAGE_PIN E12 [get_ports {pl_led_r_tri_o[0]}]
-set_property IOSTANDARD LVCMOS33 [get_ports {pl_led_r_tri_o[0]}]
+# These constraints are used for when connecting the Red PL LED to 
+# the PWM_w_Int custom IP block during the Developing Zynq Hardware 
+# SpeedWay activities.
+set_property PACKAGE_PIN E12 [get_ports {PL_LED_R[0]}]
+set_property IOSTANDARD LVCMOS33 [get_ports {PL_LED_R[0]}]
 
+# These constraints are used for when connecting the Red PL LED to 
+# a GPIO block per UltraFast Methodology.
+#set_property PACKAGE_PIN E13 [get_ports {pl_led_g_tri_o[0]}]
+#set_property IOSTANDARD LVCMOS33 [get_ports {pl_led_g_tri_o[0]}]
+
+# These constraints are used for when connecting the Green PL LED to 
+# a GPIO block per UltraFast Methodology.
 set_property PACKAGE_PIN E13 [get_ports {pl_led_g_tri_o[0]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {pl_led_g_tri_o[0]}]
 

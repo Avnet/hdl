@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -45,6 +49,8 @@
 # 
 #
 #  Revision:            Aug 14, 2017: 1.00 Initial version
+#                       Jan 10, 2018: 1.01 Updated for 2017.4 SpeedWay 
+#                                          release
 # 
 # ----------------------------------------------------------------------------
 
@@ -124,7 +130,6 @@ avnet_generate_RTL_ip wireless_mgr wireless_mgr_0
   set iic_rtl_1 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_rtl_1 ]
   set iic_rtl_2 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_rtl_2 ]
   set pl_led_g [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 pl_led_g ]
-  set pl_led_r [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 pl_led_r ]
   set pl_sw_1bit [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 pl_sw_1bit ]
 
   # Create ports
@@ -139,6 +144,7 @@ avnet_generate_RTL_ip wireless_mgr wireless_mgr_0
   set WL_SDIO_CLK [ create_bd_port -dir O -type clk WL_SDIO_CLK ]
   set WL_SDIO_CMD [ create_bd_port -dir IO WL_SDIO_CMD ]
   set WL_SDIO_DAT [ create_bd_port -dir IO -from 3 -to 0 WL_SDIO_DAT ]
+  set PL_LED_R [ create_bd_port -dir O PL_LED_R ]
 
   # Create instance: PWM_w_Int_0, and set properties
   set PWM_w_Int_0 [ create_bd_cell -type ip -vlnv avnet.com:ip:PWM_w_Int:1.0 PWM_w_Int_0 ]
@@ -146,12 +152,8 @@ avnet_generate_RTL_ip wireless_mgr wireless_mgr_0
   # Create instance: axi_gpio_0, and set properties
   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
   set_property -dict [ list \
-CONFIG.C_ALL_INPUTS_2 {0} \
 CONFIG.C_ALL_OUTPUTS {1} \
-CONFIG.C_ALL_OUTPUTS_2 {1} \
-CONFIG.C_GPIO2_WIDTH {1} \
 CONFIG.C_GPIO_WIDTH {1} \
-CONFIG.C_IS_DUAL {1} \
 CONFIG.GPIO_BOARD_INTERFACE {Custom} \
 CONFIG.USE_BOARD_FLOW {true} \
  ] $axi_gpio_0
@@ -653,7 +655,6 @@ CONFIG.CONST_VAL {0} \
 
   # Create interface connections
   connect_bd_intf_net -intf_net axi_gpio_0_GPIO [get_bd_intf_ports pl_led_g] [get_bd_intf_pins axi_gpio_0/GPIO]
-  connect_bd_intf_net -intf_net axi_gpio_0_GPIO2 [get_bd_intf_ports pl_led_r] [get_bd_intf_pins axi_gpio_0/GPIO2]
   connect_bd_intf_net -intf_net axi_gpio_1_GPIO [get_bd_intf_ports pl_sw_1bit] [get_bd_intf_pins axi_gpio_1/GPIO]
   connect_bd_intf_net -intf_net axi_iic_0_IIC [get_bd_intf_ports iic_rtl_0] [get_bd_intf_pins axi_iic_0/IIC]
   connect_bd_intf_net -intf_net axi_iic_1_IIC [get_bd_intf_ports iic_rtl_1] [get_bd_intf_pins axi_iic_1/IIC]
@@ -678,6 +679,7 @@ CONFIG.CONST_VAL {0} \
   connect_bd_net -net Net1 [get_bd_ports WL_SDIO_DAT] [get_bd_pins wireless_mgr_0/WL_SDIO_DAT]
   connect_bd_net -net WL_HOST_WAKE_1 [get_bd_ports WL_HOST_WAKE] [get_bd_pins wireless_mgr_0/WL_HOST_WAKE]
   connect_bd_net -net PWM_w_Int_0_irpt [get_bd_pins PWM_w_Int_0/Interrupt_Out] [get_bd_pins xlconcat_0/In0]
+  connect_bd_net -net PWM_w_Int_0_LEDs [get_bd_ports PL_LED_R] [get_bd_pins PWM_w_Int_0/LEDs]
   connect_bd_net -net bluetooth_uart_INT [get_bd_pins bluetooth_uart/ip2intc_irpt] [get_bd_pins xlconcat_0/In1] 
   connect_bd_net -net axi_iic_0_iic2intc_irpt [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In2]
   connect_bd_net -net axi_iic_1_iic2intc_irpt [get_bd_pins axi_iic_1/iic2intc_irpt] [get_bd_pins xlconcat_0/In3]

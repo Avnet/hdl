@@ -1,21 +1,25 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 # 
-#  Please direct any questions to the PicoZed community support forum:
-#     http://www.picozed.org/forum
+#  Please direct any questions to the MiniZed community support forum:
+#     http://www.minized.org/forum
 # 
 #  Product information is available at:
-#     http://www.picozed.org/product/picozed
+#     http://www.minized.org/product/minized
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -23,7 +27,7 @@
 #     any errors, which may appear in this code, nor does it make a commitment
 #     to update the information contained herein. Avnet, Inc specifically
 #     disclaims any implied warranties of fitness for a particular purpose.
-#                      Copyright(c) 2016 Avnet, Inc.
+#                      Copyright(c) 2017 Avnet, Inc.
 #                              All rights reserved.
 # 
 # ----------------------------------------------------------------------------
@@ -31,18 +35,20 @@
 #  Create Date:         Jan 06, 2017
 #  Design Name:         Pulse Width Modulator with Interrupt
 #  Module Name:         PWM_w_Int.tcl
-#  Project Name:        PicoZed FMC2 Carrier Factory Acceptance Test
+#  Project Name:        MiniZed
 #  Target Devices:      Xilinx Zynq-7000
-#  Hardware Boards:     PicoZed, PicoZed FMC2 Carrier
+#  Hardware Boards:     MiniZed
 # 
-#  Tool versions:       Xilinx Vivado 2015.2
+#  Tool versions:       Xilinx Vivado 2017.1
 # 
 #  Description:         IPI script to generate the PWM_w_Int IP from source.
 # 
 #  Dependencies:        make.tcl
 #
 #  Revision:            Jan 06, 2017: 1.00 Initial version
-#  Revision:            Aug 14, 2017: 1.01 Updated Avnet logo
+#                       Aug 14, 2017: 1.01 Updated Avnet logo
+#                       Jan 08, 2018: 1.02 Updated to latest SpeedWay source
+#                                          code files
 # 
 # ----------------------------------------------------------------------------
 
@@ -50,8 +56,8 @@ proc make_ip {ip_name} {
 
    # Collect the names of the HDL source files that are used by this IP here.
    set file_list [list  "hdl/verilog/PWM_Controller_Int.v" \
-						"hdl/verilog/PWM_w_Int.v" \
-						"hdl/verilog/PWM_w_Int_S00_AXI.v" ]
+						"hdl/vhdl/PWM_w_Int.vhd" \
+						"hdl/vhdl/PWM_w_Int_S00_AXI.vhd" ]
    
    # Create a new Vivado project for this IP and add the source files.
    create_project $ip_name . -force
@@ -67,15 +73,13 @@ proc make_ip {ip_name} {
    set_property library {ip} [ipx::current_core]
    set_property name {PWM_w_Int} [ipx::current_core]
    set_property version {1.0} [ipx::current_core]
-   set_property display_name {PWM_w_Int_v1.0} [ipx::current_core]
+   set_property display_name {PWM_w_Int} [ipx::current_core]
    set_property description {PWM with Interrupt option} [ipx::current_core]
    set_property vendor_display_name {Avnet} [ipx::current_core]
    set_property company_url {http://avnet.com} [ipx::current_core]
    set_property taxonomy {{/FPGA_Features_and_Design/IO_Interfaces}} [ipx::current_core]
    set_property supported_families { \
-#									{virtex7} {Pre-Production}\
                                     {qzynq} {Pre-Production}\
-#                                    {qvirtex7} {Pre-Production}\
                                     {qkintex7l} {Pre-Production}\
                                     {qkintex7} {Pre-Production}\
                                     {qartix7} {Pre-Production}\
@@ -95,7 +99,7 @@ proc make_ip {ip_name} {
    set_property is_include false [ipx::get_files misc/avnet_logo.png -of_objects [ipx::get_file_groups xilinx_utilityxitfiles -of_objects [ipx::current_core]]]
    
    # Create the port map assignments for this IP core.
-   ipx::add_ports_from_hdl [ipx::current_core] -top_level_hdl_file hdl/verilog/PWM_w_Int.v -top_module_name PWM_w_Int
+   ipx::add_ports_from_hdl [ipx::current_core] -top_level_hdl_file hdl/vhdl/PWM_w_Int.vhd -top_module_name PWM_w_Int
    ipx::infer_bus_interface Interrupt_out xilinx.com:signal:interrupt_rtl:1.0 [ipx::current_core]
    
    # Generate the XGUI files to accompany this IP core.
