@@ -28,24 +28,24 @@
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         Jan 04, 2017
-#  Design Name:         UltraZed + I/O Carrier Pmod Sensors HW Platform
-#  Module Name:         uz_iocc_sensor.tcl
-#  Project Name:        UltraZed I/O Carrier Pmod Sensors Integration
-#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
-#  Hardware Boards:     UltraZed SOM + I/O Carrier
+#  Create Date:         Nov 13, 2017
+#  Design Name:         UltraZed-EV Factory Test HW Platform
+#  Module Name:         uz7ev_evc_factest.tcl
+#  Project Name:        UltraZed-EV Factory Test Generator
+#  Target Devices:      Xilinx Zynq UltraScale+ 7EV
+#  Hardware Boards:     UltraZed-EV SOM
 # 
-#  Tool versions:       Vivado 2016.4
+#  Tool versions:       Vivado 2017.2
+#                       Vivado 2017.3
 # 
-#  Description:         Build Script for UltraZed Pmod Sensors HW Platform
+#  Description:         Build Script for UltraZed-EV Factory Test HW Platform
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
 #                       scripts IP generation scripts or others as needed
 # 
 #
-#  Revision:            Jan 04, 2017: 1.00 Initial version
-#                       Oct 06, 2017: Update for Vivado 2017.2
+#  Revision:            Dec 21, 2017: 1.00 Initial version
 # 
 # ----------------------------------------------------------------------------
 
@@ -71,11 +71,6 @@ if {[string match -nocase "yes" $clean]} {
    reset_project
 } else {
 
-# Generate Avnet IP
-puts "***** Generating IP..."
-source ./makeip.tcl -notrace
-avnet_generate_ip PWM_w_Int
-
 # Create Vivado project
 puts "***** Creating Vivado Project..."
 source ../Boards/$board/$board.tcl -notrace
@@ -83,11 +78,10 @@ avnet_create_project $project $projects_folder $scriptdir
 
 # Apply board specific project property settings
 switch -nocase $board {
-   UZ3EG_IOCC {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc..."
-      set_property board_part em.avnet.com:ultrazed_eg_iocc:part0:1.0 [current_project]
+   UZ7EV_EVCC {
+      puts "***** Assigning Vivado Project board_part Property to ultrazed_ev_evcc_production..."
+      set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.0 [current_project]
    }
-
 }
 
 # Add Avnet IP Repository
@@ -100,6 +94,8 @@ update_ip_catalog
 puts "***** Creating Block Design..."
 create_bd_design ${project}
 set design_name ${project}
+
+# Add Processing System presets from board definitions.
 avnet_add_ps_preset $project $projects_folder $scriptdir
 
 # General Config
@@ -107,7 +103,7 @@ puts "***** General Configuration for Design..."
 set_property target_language VHDL [current_project]
 
 # Add the constraints that are needed for testing
-add_files -fileset constrs_1 -norecurse ${projects_folder}/../uz3eg_iocc_sensor.xdc
+add_files -fileset constrs_1 -norecurse ${projects_folder}/../${project}.xdc
 
 # Create Block Diagram
 set design_name ${project}
@@ -128,7 +124,7 @@ cd $scripts_folder
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 save_bd_design
-launch_runs impl_1 -to_step write_bitstream -j 2
+launch_runs impl_1 -to_step write_bitstream -j 1
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*

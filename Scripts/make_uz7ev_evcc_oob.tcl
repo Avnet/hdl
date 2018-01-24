@@ -28,26 +28,26 @@
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         Jan 04, 2017
-#  Design Name:         UltraZed + I/O Carrier Pmod Sensors HW Platform
-#  Module Name:         make_uz_iocc_sensor.tcl
-#  Project Name:        UltraZed I/O Carrier Pmod Sensors Integration
-#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
-#  Hardware Boards:     UltraZed SOM
+#  Create Date:         Nov 13, 2017
+#  Design Name:         UltraZed-EV Out Of Box Design Platform
+#  Module Name:         make_uz7ev_oob.tcl
+#  Project Name:        UltraZed-EV Out Of Box Design Generator
+#  Target Devices:      Xilinx Zynq UltraScale+ 7EV
+#  Hardware Boards:     UltraZed-EV SOM
 # 
-#  Tool versions:       Xilinx Vivado 2016.4
+#  Tool versions:       Xilinx Vivado 2017.2
 # 
-#  Description:         Build Script for UltraZed Pmod Sensors HW Platform
+#  Description:         Build Script for UltraZed-EV OOB HW Platform
 # 
 #  Dependencies:        make.tcl
 #
-#  Revision:            Jan 04, 2017: 1.00 Initial version
-#                       Oct 06, 2017: Update for Vivado 2017.2
+#  Revision:            Nov 13, 2017: 1.00 Initial version
 # 
 # ----------------------------------------------------------------------------
 
-# Build Pmod Sensors HW Platform
-# for UltraZed 3EG SOM
-set argv [list board=UZ3EG_IOCC project=uz3eg_iocc_sensor sdk=yes version_override=yes dev_arch=zynqmp]
+# Build OOB HW Platform
+# for UltraZed 7EV SOM + Carrier
+set argv [list board=UZ7EV_EVCC project=uz7ev_evcc_oob sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
 set argc [llength $argv]
 source ./make.tcl -notrace
+
