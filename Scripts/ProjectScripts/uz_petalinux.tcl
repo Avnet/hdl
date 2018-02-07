@@ -47,6 +47,7 @@
 #  Revision:            Jul 01, 2016: 1.00 Initial version
 #                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
 #                       Aug 23, 2017: 1.02 Updated for 2017.2 tools
+#                       Feb 01, 2018: 1.03 Updated for 2017.4 tools
 # 
 # ----------------------------------------------------------------------------
 
