@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -47,7 +51,7 @@
 #  Revision:            Jul 01, 2016: 1.00 Initial version
 #                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
 #                       Aug 23, 2017: 1.02 Updated for 2017.2 tools
-#                       Feb 01, 2018: 1.03 Updated for 2017.4 tools
+#                       Feb 07, 2018: 1.03 Updated for 2017.4 tools
 # 
 # ----------------------------------------------------------------------------
 
@@ -119,7 +123,7 @@ cd $scripts_folder
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 save_bd_design
-launch_runs impl_1 -to_step write_bitstream -j 2
+launch_runs impl_1 -to_step write_bitstream -j 1
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
