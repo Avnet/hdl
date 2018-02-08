@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -36,6 +40,7 @@
 #  Hardware Boards:     UltraZed SOM
 # 
 #  Tool versions:       Vivado 2016.2
+#                       Vivado 2017.3
 # 
 #  Description:         Build Script for UltraZed PetaLinux BSP HW Platform
 # 
@@ -47,6 +52,7 @@
 #  Revision:            Jul 01, 2016: 1.00 Initial version
 #                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
 #                       Aug 23, 2017: 1.02 Updated for 2017.2 tools
+#                       Jan 30, 2018: 1.03 Added support for UltraZed-EV
 # 
 # ----------------------------------------------------------------------------
 
@@ -86,7 +92,17 @@ switch -nocase $board {
       puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_pciecc_production..."
       set_property board_part em.avnet.com:ultrazed_eg_pciecc_production:part0:1.0 [current_project]
    }
+   UZ7EV_EVCC {
+      puts "***** Assigning Vivado Project board_part Property to ultrazed_ev_evcc_production..."
+      set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.0 [current_project]
+   }
 }
+
+# Add Avnet IP Repository
+puts "***** Updating Vivado to include IP Folder"
+cd ../Projects/$project
+set_property ip_repo_paths  ../../IP [current_project]
+update_ip_catalog
 
 # Create Block Design and Add PS core
 puts "***** Creating Block Design..."

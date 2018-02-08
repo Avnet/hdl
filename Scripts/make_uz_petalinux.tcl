@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -44,17 +48,25 @@
 #  Revision:            Jul 01, 2016: 1.00 Initial version
 #                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
 #                       Aug 25, 2017: 1.02 Updated for 2017.2 tools
+#                       Jan 30, 2018: 1.03 Added support for UltraZed-EV
 # 
 # ----------------------------------------------------------------------------
 
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + IO Carrier
-set argv [list board=UZ3EG_IOCC project=uz_petalinux sdk=yes close_project=yes version_override=yes]
-set argc [llength $argv]
-source ./make.tcl -notrace
+#set argv [list board=UZ3EG_IOCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+#set argc [llength $argv]
+#source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + PCIe Carrier
-set argv [list board=UZ3EG_PCIEC project=uz_petalinux sdk=yes close_project=yes version_override=yes]
+#set argv [list board=UZ3EG_PCIEC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+#set argc [llength $argv]
+#source ./make.tcl -notrace
+
+# Build PetaLinux BSP HW Platform (also used for OOB HW Platform)
+# for UltraZed 7EV SOM + EV Carrier
+set argv [list board=UZ7EV_EVCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
 set argc [llength $argv]
 source ./make.tcl -notrace
+
