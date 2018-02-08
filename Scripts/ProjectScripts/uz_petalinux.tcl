@@ -52,7 +52,11 @@
 #  Revision:            Jul 01, 2016: 1.00 Initial version
 #                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
 #                       Aug 23, 2017: 1.02 Updated for 2017.2 tools
+<<<<<<< HEAD
 #                       Jan 30, 2018: 1.03 Added support for UltraZed-EV
+=======
+#                       Feb 07, 2018: 1.03 Updated for 2017.4 tools
+>>>>>>> 3ea9596b7d7ad5dde4c1fc4ab31b507681612033
 # 
 # ----------------------------------------------------------------------------
 
@@ -134,7 +138,7 @@ cd $scripts_folder
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 save_bd_design
-launch_runs impl_1 -to_step write_bitstream -j 2
+launch_runs impl_1 -to_step write_bitstream -j 1
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
