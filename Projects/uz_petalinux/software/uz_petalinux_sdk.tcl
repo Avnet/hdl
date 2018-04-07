@@ -41,6 +41,7 @@
 #
 #  Revision:            Jul 01, 2016: 1.00 Initial version
 #                       Feb 01, 2018: 1.01 Updated for 2017.4 tools
+#                                          Replace deprecated commands with new
 # 
 # ----------------------------------------------------------------------------
 
@@ -80,10 +81,10 @@ set uart_port_name           "ps7_uart_1"
 
 # The name of the FSBL application that is created from the Zynq FSBL 
 # application template.
-set fsbl_app_name            "zynq_fsbl_app"
+set fsbl_app_name            "zynqmp_fsbl_app"
 
 # The name of the FSBL application that is generated.
-set fsbl_bsp_name            "zynq_fsbl_bsp"
+set fsbl_bsp_name            "zynqmp_fsbl_bsp"
 
 ##############################################################################
 #

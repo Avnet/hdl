@@ -56,6 +56,7 @@ if {[string match -nocase "yes" $clean]} {
    # Clean up project output products.
 
    # Open the existing project.
+   puts ""
    puts "***** Opening Vivado Project $projects_folder/$project.xpr ..."
    open_project $projects_folder/$project.xpr
    
@@ -70,6 +71,7 @@ if {[string match -nocase "yes" $clean]} {
    reset_project
 } else {
 # Create Vivado project
+puts ""
 puts "***** Creating Vivado Project..."
 source ../Boards/$board/$board.tcl -notrace
 avnet_create_project $project $projects_folder $scriptdir
@@ -80,55 +82,115 @@ remove_files -fileset constrs_1 *.xdc
 # Apply board specific project property settings
 switch -nocase $board {
    PZ7010_FMC2 {
+      puts ""
       puts "***** Assigning Vivado Project board_part Property to picozed_7010_fmc2..."
       set_property board_part em.avnet.com:picozed_7010_fmc2:part0:1.1 [current_project]
    }
 
    PZ7015_FMC2 {
+      puts ""
       puts "***** Assigning Vivado Project board_part Property to picozed_7015_fmc2..."
       set_property board_part em.avnet.com:picozed_7015_fmc2:part0:1.1 [current_project]
    }
 
    PZ7020_FMC2 {
+      puts ""
       puts "***** Assigning Vivado Project board_part Property to picozed_7020_fmc2..."
       set_property board_part em.avnet.com:picozed_7020_fmc2:part0:1.1 [current_project]
    }
    
    PZ7030_FMC2 {
+      puts ""
       puts "***** Assigning Vivado Project board_part Property to picozed_7030_fmc2..."
       set_property board_part em.avnet.com:picozed_7030_fmc2:part0:1.1 [current_project]
    }
 }
 
-# Create Block Design and Add PS core
+# Add Avnet IP Repository
+puts ""
+puts "***** Updating Vivado to include IP Folder"
+cd ../Projects/$project
+set_property ip_repo_paths  ../../IP [current_project]
+update_ip_catalog
+
+# Create Block Design and add Zynq PS
+puts ""
 puts "***** Creating Block Design..."
 create_bd_design ${project}
 set design_name ${project}
 avnet_add_ps_preset $project $projects_folder $scriptdir
 
 # Add preset IP from board definitions
+puts ""
+puts "***** Add defined IP blocks to Block Design..."
 avnet_add_user_io_preset $project $projects_folder $scriptdir
 
+# Add the AXI_IIC and associated I/O constraints
+puts ""
+puts "***** Add the AXI_IIC and constraints..."
+# Add the AXI_IIC IP block and make the connections
+avnet_add_i2c_ip $project $projects_folder $scriptdir
+# Add the constraints that are needed for testing
+avnet_add_i2c $project $projects_folder $scriptdir
+
+# Check design IPs
+set bCheckIPsPassed 1
+set bCheckIPs 1
+if { $bCheckIPs == 1 } {
+   set list_check_ips "\ 
+xilinx.com:ip:axi_gpio:2.0\
+xilinx.com:ip:axi_iic:2.0\
+xilinx.com:ip:processing_system7:5.5\
+xilinx.com:ip:proc_sys_reset:5.0\
+"
+
+   set list_ips_missing ""
+   puts "INFO: Checking if the following IPs exist in the project's IP catalog: $list_check_ips ."
+
+   foreach ip_vlnv $list_check_ips {
+      set ip_obj [get_ipdefs -all $ip_vlnv]
+      if { $ip_obj eq "" } {
+         lappend list_ips_missing $ip_vlnv
+      }
+   }
+
+   if { $list_ips_missing ne "" } {
+      puts "ERROR: The following IPs are not found in the IP Catalog:\n  $list_ips_missing\n\nResolution: Please add the repository containing the IP(s) to the project." 
+      set bCheckIPsPassed 0
+   }
+
+}
+
+if { $bCheckIPsPassed != 1 } {
+  puts "WARNING: Will not continue with creation of design due to the error(s) above."
+  return 3
+}
+
+
 # General Config
+puts ""
 puts "***** General Configuration for Design..."
 set_property target_language VHDL [current_project]
 
 # Add Project source files
+puts ""
 puts "***** Adding Source Files to Block Design..."
 make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
 add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.vhd
+
 
 # Build the binary
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+puts ""
 puts "***** Building Binary..."
 # add this to allow up+enter rebuild capability 
 cd $scripts_folder
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 save_bd_design
-launch_runs impl_1 -to_step write_bitstream -j 8
+launch_runs impl_1 -to_step write_bitstream -j 2
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*

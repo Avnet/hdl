@@ -48,25 +48,22 @@
 #  Revision:            Jul 01, 2016: 1.00 Initial version
 #                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
 #                       Aug 25, 2017: 1.02 Updated for 2017.2 tools
-<<<<<<< HEAD
 #                       Jan 30, 2018: 1.03 Added support for UltraZed-EV
-=======
 #                       Feb 01, 2018: 1.03 Updated for 2017.4 tools
->>>>>>> 3ea9596b7d7ad5dde4c1fc4ab31b507681612033
 # 
 # ----------------------------------------------------------------------------
 
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + IO Carrier
-#set argv [list board=UZ3EG_IOCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
-#set argc [llength $argv]
-#source ./make.tcl -notrace
+#~ set argv [list board=UZ3EG_IOCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+#~ set argc [llength $argv]
+#~ source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + PCIe Carrier
-#set argv [list board=UZ3EG_PCIEC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
-#set argc [llength $argv]
-#source ./make.tcl -notrace
+#~ set argv [list board=UZ3EG_PCIEC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+#~ set argc [llength $argv]
+#~ source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform (also used for OOB HW Platform)
 # for UltraZed 7EV SOM + EV Carrier

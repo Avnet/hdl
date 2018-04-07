@@ -114,29 +114,29 @@ while {1} {
       puts "Found End of Bitstream Creation..."
       break 
    }
-   # paint pretty picture - shows still running
-   if {[string match -nocase "up" $updown]} {
-      if {$dot_count < 10} { 
-         incr dot_count
-      } else {
-         incr dot_count -1
-         set updown "down"
-      }
-   } elseif {[string match -nocase "down" $updown]} {
-      if {$dot_count > 0} { 
-         incr dot_count -1
-      } else {
-         incr dot_count
-         set updown "up"
-      }
-   } else {
-      set dot_count 1
-      set updown "down"
-   }
-   for {set y 0} {$y< $dot_count} {incr y} {
-      puts -nonewline "."
-   }
-   puts "."
-   # wait 1 second to check
-   after 1000
+#   # paint pretty picture - shows still running
+#   if {[string match -nocase "up" $updown]} {
+#      if {$dot_count < 10} { 
+#         incr dot_count
+#      } else {
+#         incr dot_count -1
+#         set updown "down"
+#      }
+#   } elseif {[string match -nocase "down" $updown]} {
+#      if {$dot_count > 0} { 
+#         incr dot_count -1
+#      } else {
+#         incr dot_count
+#         set updown "up"
+#      }
+#   } else {
+#      set dot_count 1
+#      set updown "down"
+#   }
+#   for {set y 0} {$y< $dot_count} {incr y} {
+#      puts -nonewline "."
+#   }
+#   puts "."
+#   # wait 1 second to check
+#   after 1000
 }

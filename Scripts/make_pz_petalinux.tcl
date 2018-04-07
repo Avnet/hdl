@@ -66,8 +66,8 @@ set argv [list board=PZ7020_FMC2 project=pz_petalinux sdk=yes version_override=y
 set argc [llength $argv]
 source ./make.tcl -notrace
 
-# Build PetaLinux BSP HW Platform
-# for PicoZed 7030 SOM
+## Build PetaLinux BSP HW Platform
+## for PicoZed 7030 SOM
 set argv [list board=PZ7030_FMC2 project=pz_petalinux sdk=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace

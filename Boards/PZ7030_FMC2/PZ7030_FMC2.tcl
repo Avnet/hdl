@@ -61,6 +61,13 @@ proc avnet_add_ali3_display_kit {project projects_folder scriptdir} {
 
 }
 
+proc avnet_add_i2c {project projects_folder scriptdir} {
+
+   # add selection for proper xdc based on needs
+   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_FMC2_i2c.xdc
+
+}
+
 proc avnet_add_user_io {project projects_folder scriptdir} {
 
    # add selection for proper xdc based on needs
@@ -79,6 +86,17 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_0/S_AXI]
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
    
+}
+
+proc avnet_add_i2c_ip {project projects_folder scriptdir} {
+
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0
+   apply_bd_automation -rule xilinx.com:bd_rule:board  [get_bd_intf_pins axi_iic_0/IIC]
+   set_property name hdmi_i2c [get_bd_intf_ports iic_rtl]
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" intc_ip "/ps7_0_axi_periph" Clk_xbar "Auto" Clk_master "Auto" Clk_slave "Auto" }  [get_bd_intf_pins axi_iic_0/S_AXI]
+   set_property -dict [list CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_IRQ_F2P_INTR {1}] [get_bd_cells processing_system7_0]
+   connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins processing_system7_0/IRQ_F2P]
+
 }
 
 proc avnet_add_ps {project projects_folder scriptdir} {
