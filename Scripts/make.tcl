@@ -188,7 +188,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
    }
    # check for No Close Project parameter
    if {[string match -nocase "close_project=*" [lindex $argv $i]]} {
-      set close_project [string range [lindex $argv $i] 17 end]
+      set close_project [string range [lindex $argv $i] 14 end]
       set printmessage $close_project
       for {set j 0} {$j < [expr $chart_wdith - [string length $close_project]]} {incr j} {
          append printmessage " "
@@ -311,6 +311,7 @@ switch -nocase $board {
    UZ3EG_IOCC                 -
    UZ3EG_PCIEC                -
    UZ7EV_EVCC                 -
+   UZ7EV_ES2_EVCC             -
    ZC702                      -
    ZC706                      -
    ZCU102                     -

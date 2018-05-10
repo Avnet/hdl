@@ -42,12 +42,18 @@
 #  Dependencies:        make.tcl
 #
 #  Revision:            Nov 13, 2017: 1.00 Initial version
+#                       Nov 13, 2017: 1.00 Initial version
 # 
 # ----------------------------------------------------------------------------
+
+# Build OOB HW Platform
+# for UltraZed 7EV-ES2 SOM + Carrier
+#set argv [list board=UZ7EV_ES2_EVCC project=uz7ev_evcc_oob sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+#set argc [llength $argv]
+#source ./make.tcl -notrace
 
 # Build OOB HW Platform
 # for UltraZed 7EV SOM + Carrier
 set argv [list board=UZ7EV_EVCC project=uz7ev_evcc_oob sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
 set argc [llength $argv]
 source ./make.tcl -notrace
-

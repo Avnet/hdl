@@ -66,6 +66,12 @@ set argc [llength $argv]
 source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform (also used for OOB HW Platform)
+# for UltraZed 7EV-ES2 SOM + EV Carrier
+#set argv [list board=UZ7EV_ES2_EVCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+#set argc [llength $argv]
+#source ./make.tcl -notrace
+
+# Build PetaLinux BSP HW Platform (also used for OOB HW Platform)
 # for UltraZed 7EV SOM + EV Carrier
 set argv [list board=UZ7EV_EVCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
 set argc [llength $argv]

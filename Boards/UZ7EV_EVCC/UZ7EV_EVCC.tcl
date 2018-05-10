@@ -46,7 +46,7 @@
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
-   create_project $project $projects_folder -part xczu7ev-fbvb900-1-i-es2 -force
+   create_project $project $projects_folder -part xczu7ev-fbvb900-1-i -force
    # add selection for proper xdc based on needs
    # if IO carrier, then use that xdc
    # if FMC, choose that one

@@ -84,25 +84,25 @@ switch -nocase $board {
    PZ7010_FMC2 {
       puts ""
       puts "***** Assigning Vivado Project board_part Property to picozed_7010_fmc2..."
-      set_property board_part em.avnet.com:picozed_7010_fmc2:part0:1.1 [current_project]
+      set_property board_part em.avnet.com:picozed_7010_fmc2:part0:1.2 [current_project]
    }
 
    PZ7015_FMC2 {
       puts ""
       puts "***** Assigning Vivado Project board_part Property to picozed_7015_fmc2..."
-      set_property board_part em.avnet.com:picozed_7015_fmc2:part0:1.1 [current_project]
+      set_property board_part em.avnet.com:picozed_7015_fmc2:part0:1.2 [current_project]
    }
 
    PZ7020_FMC2 {
       puts ""
       puts "***** Assigning Vivado Project board_part Property to picozed_7020_fmc2..."
-      set_property board_part em.avnet.com:picozed_7020_fmc2:part0:1.1 [current_project]
+      set_property board_part em.avnet.com:picozed_7020_fmc2:part0:1.2 [current_project]
    }
    
    PZ7030_FMC2 {
       puts ""
       puts "***** Assigning Vivado Project board_part Property to picozed_7030_fmc2..."
-      set_property board_part em.avnet.com:picozed_7030_fmc2:part0:1.1 [current_project]
+      set_property board_part em.avnet.com:picozed_7030_fmc2:part0:1.2 [current_project]
    }
 }
 
