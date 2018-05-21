@@ -1,6 +1,6 @@
 
 ################################################################
-# This is a generated script based on design: uz3eg_iocc_dp_only
+# This is a generated script based on design: uz3eg_iocc_dp
 #
 # Though there are limitations about the generated script,
 # the main purpose of this utility is to make learning
@@ -34,7 +34,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 ################################################################
 
 # To test this script, run the following commands from Vivado Tcl console:
-# source uz3eg_iocc_dp_only_script.tcl
+# source uz3eg_iocc_dp_script.tcl
 
 # If there is no project opened, this script will create a
 # project, but make sure you do not have an existing project
@@ -48,7 +48,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 
 # CHANGE DESIGN NAME HERE
-#set design_name uz3eg_iocc_dp_only
+#set design_name uz3eg_iocc_dp
 
 # If you do not already have an existing IP Integrator design open,
 # you can create a design using the following command:
@@ -286,17 +286,113 @@ proc create_root_design { parentCell } {
   set_property -dict [list CONFIG.PSU__USE__M_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
   #set_property -dict [list CONFIG.PSU__HIGH_ADDRESS__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
   # IRQ configuration
-  #set_property -dict [list CONFIG.PSU__USE__IRQ0 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  set_property -dict [list CONFIG.PSU__USE__IRQ0 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  set_property -dict [list CONFIG.PSU__USE__IRQ1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
   # EMIO GPIO configuration
   #set_property -dict [list CONFIG.PSU__GPIO_EMIO__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]  
+  # PL fabric clocks
+  set_property -dict [list CONFIG.PSU__NUM_FABRIC_RESETS {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  set_property -dict [list CONFIG.PSU__CRL_APB__PL1_REF_CTRL__FREQMHZ {100}] [get_bd_cells zynq_ultra_ps_e_0]
+  # SD card - no WP signal
+  set_property -dict [list CONFIG.PSU__SD1__GRP_WP__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
+
+  # Create instance: clk_wiz_1, and set properties
+  set clk_wiz_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz clk_wiz_1 ]
+  set_property -dict [ list \
+CONFIG.CLKIN1_JITTER_PS {200.02} \
+CONFIG.CLKOUT1_DRIVES {Buffer} \
+CONFIG.CLKOUT1_JITTER {163.726} \
+CONFIG.CLKOUT1_PHASE_ERROR {154.695} \
+CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {50.000} \
+CONFIG.CLKOUT2_DRIVES {Buffer} \
+CONFIG.CLKOUT2_JITTER {148.390} \
+CONFIG.CLKOUT2_PHASE_ERROR {154.695} \
+CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {75.000} \
+CONFIG.CLKOUT2_USED {true} \
+CONFIG.CLKOUT3_DRIVES {Buffer} \
+CONFIG.CLKOUT3_JITTER {129.940} \
+CONFIG.CLKOUT3_PHASE_ERROR {154.695} \
+CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {150.000} \
+CONFIG.CLKOUT3_USED {true} \
+CONFIG.CLKOUT4_DRIVES {Buffer} \
+CONFIG.CLKOUT4_JITTER {116.512} \
+CONFIG.CLKOUT4_PHASE_ERROR {154.695} \
+CONFIG.CLKOUT4_REQUESTED_OUT_FREQ {300.000} \
+CONFIG.CLKOUT4_USED {true} \
+CONFIG.CLKOUT5_DRIVES {Buffer} \
+CONFIG.CLKOUT5_JITTER {124.151} \
+CONFIG.CLKOUT5_PHASE_ERROR {154.695} \
+CONFIG.CLKOUT5_REQUESTED_OUT_FREQ {200.000} \
+CONFIG.CLKOUT5_USED {true} \
+CONFIG.CLKOUT6_DRIVES {Buffer} \
+CONFIG.CLKOUT7_DRIVES {Buffer} \
+CONFIG.MMCM_CLKFBOUT_MULT_F {24.000} \
+CONFIG.MMCM_CLKIN1_PERIOD {20.002} \
+CONFIG.MMCM_CLKIN2_PERIOD {10.0} \
+CONFIG.MMCM_CLKOUT0_DIVIDE_F {24.000} \
+CONFIG.MMCM_CLKOUT1_DIVIDE {16} \
+CONFIG.MMCM_CLKOUT2_DIVIDE {8} \
+CONFIG.MMCM_CLKOUT3_DIVIDE {4} \
+CONFIG.MMCM_CLKOUT4_DIVIDE {6} \
+CONFIG.MMCM_DIVCLK_DIVIDE {1} \
+CONFIG.NUM_OUT_CLKS {5} \
+CONFIG.PHASESHIFT_MODE {LATENCY} \
+CONFIG.PRIM_SOURCE {No_buffer} \
+CONFIG.USE_INCLK_SWITCHOVER {false} \
+CONFIG.USE_RESET {false} \
+ ] $clk_wiz_1
+
+  # Create instance: proc_sys_reset_clk50, and set properties
+  set proc_sys_reset_clk50 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_clk50 ]
+  set_property -dict [ list \
+CONFIG.C_AUX_RESET_HIGH {0} \
+ ] $proc_sys_reset_clk50
+
+  # Create instance: proc_sys_reset_clk75, and set properties
+  set proc_sys_reset_clk75 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_clk75 ]
+  set_property -dict [ list \
+CONFIG.C_AUX_RESET_HIGH {0} \
+ ] $proc_sys_reset_clk75
+
+  # Create instance: proc_sys_reset_clk150, and set properties
+  set proc_sys_reset_clk150 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_clk150 ]
+  set_property -dict [ list \
+CONFIG.C_AUX_RESET_HIGH {0} \
+ ] $proc_sys_reset_clk150
+
+  # Create instance: proc_sys_reset_clk300, and set properties
+  set proc_sys_reset_clk300 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_clk300 ]
+  set_property -dict [ list \
+CONFIG.C_AUX_RESET_HIGH {0} \
+ ] $proc_sys_reset_clk300
+
+  # Create instance: interrupts0
+  set interrupts0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat interrupts0 ]
+  set_property -dict [ list CONFIG.NUM_PORTS {1} ] $interrupts0
+
+  # Create instance: interrupts1
+  set interrupts1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat interrupts1 ]
+  set_property -dict [ list CONFIG.NUM_PORTS {1} ] $interrupts1
 
   # Create interface connections
+  #connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_lpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]  
   connect_bd_intf_net -intf_net CLK_IN_D_1 [get_bd_intf_ports idt5901] [get_bd_intf_pins idt5901_clk/CLK_IN_D]
 
-  #connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_lpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
 
   # Create port connections
+  # IDT5901
   connect_bd_net -net video_clk_1 [get_bd_pins idt5901_clk/BUFG_O] [get_bd_pins zynq_ultra_ps_e_0/dp_video_in_clk]
+  # clock wizard + resets
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk1] [get_bd_pins clk_wiz_1/clk_in1]
+  connect_bd_net -net clk_50mhz [get_bd_pins clk_wiz_1/clk_out1] [get_bd_pins proc_sys_reset_clk50/slowest_sync_clk]
+  connect_bd_net -net clk_75mhz [get_bd_pins clk_wiz_1/clk_out2] [get_bd_pins proc_sys_reset_clk75/slowest_sync_clk]
+  connect_bd_net -net clk_150mhz [get_bd_pins clk_wiz_1/clk_out3] [get_bd_pins proc_sys_reset_clk150/slowest_sync_clk]
+  connect_bd_net -net clk_300mhz [get_bd_pins clk_wiz_1/clk_out4] [get_bd_pins proc_sys_reset_clk300/slowest_sync_clk]
+  connect_bd_net -net clk_wiz_1_locked [get_bd_pins clk_wiz_1/locked] [get_bd_pins proc_sys_reset_clk50/dcm_locked] [get_bd_pins proc_sys_reset_clk75/dcm_locked] [get_bd_pins proc_sys_reset_clk150/dcm_locked] [get_bd_pins proc_sys_reset_clk300/dcm_locked]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins proc_sys_reset_clk50/ext_reset_in] [get_bd_pins proc_sys_reset_clk75/ext_reset_in] [get_bd_pins proc_sys_reset_clk150/ext_reset_in] [get_bd_pins proc_sys_reset_clk300/ext_reset_in]
+  # interrupts
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0] [get_bd_pins interrupts0/dout]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1] [get_bd_pins interrupts1/dout]
 
   # Create address segments
 

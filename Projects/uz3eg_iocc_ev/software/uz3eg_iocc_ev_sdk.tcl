@@ -44,9 +44,9 @@
 # ----------------------------------------------------------------------------
 
 #!/usr/bin/tclsh
-set project  "uz3eg_iocc_dp"
-set hw_name  "uz3eg_iocc_dp_hw"
-set bsp_name "uz3eg_iocc_dp_bsp"
+set project  "uz3eg_iocc_ev"
+set hw_name  "uz3eg_iocc_ev_hw"
+set bsp_name "uz3eg_iocc_ev_bsp"
 
 # Set workspace and import hardware platform
 sdk setws ${project}.sdk
