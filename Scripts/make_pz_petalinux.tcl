@@ -42,29 +42,33 @@
 #  Dependencies:        make.tcl
 #
 #  Revision:            Feb 08, 2016: 1.00 Initial version
+#                       May 10, 2016: 1.1  Updated to support 2015.4 tools
+#                       Jul 01, 2016: 1.2  Updated to support 2016.2 tools
+#                       Nov 03, 2017: 1.3  Updated to support 2017.2 tools
+#                       May 03, 2018: 1.4  Updated to support 2017.4 tools
 # 
 # ----------------------------------------------------------------------------
 
-# Build PetaLinux BSP HW Platform
-# for PicoZed 7010 SOM
-set argv [list board=PZ7010_FMC2 project=pz_petalinux sdk=yes version_override=yes]
+## Build PetaLinux BSP HW Platform
+## for PicoZed 7010 SOM
+set argv [list board=PZ7010_FMC2 project=pz_petalinux sdk=yes close_project=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
-# Build PetaLinux BSP HW Platform
-# for PicoZed 7015 SOM
-set argv [list board=PZ7015_FMC2 project=pz_petalinux sdk=yes version_override=yes]
+## Build PetaLinux BSP HW Platform
+## for PicoZed 7015 SOM
+set argv [list board=PZ7015_FMC2 project=pz_petalinux sdk=yes close_project=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
-# Build PetaLinux BSP HW Platform
-# for PicoZed 7020 SOM
-set argv [list board=PZ7020_FMC2 project=pz_petalinux sdk=yes version_override=yes]
+## Build PetaLinux BSP HW Platform
+## for PicoZed 7020 SOM
+set argv [list board=PZ7020_FMC2 project=pz_petalinux sdk=yes close_project=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
-# Build PetaLinux BSP HW Platform
-# for PicoZed 7030 SOM
-set argv [list board=PZ7030_FMC2 project=pz_petalinux sdk=yes version_override=yes]
+## Build PetaLinux BSP HW Platform
+## for PicoZed 7030 SOM
+set argv [list board=PZ7030_FMC2 project=pz_petalinux sdk=yes close_project=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace

@@ -5,7 +5,7 @@
 	<spirit:vendor>avnet</spirit:vendor>
 	<spirit:library>onsemi_vita</spirit:library>
 	<spirit:name>onsemi_vita_spi</spirit:name>
-	<spirit:version>3.2</spirit:version>
+	<spirit:version>3.3</spirit:version>
 	<spirit:busInterfaces>
 		<spirit:busInterface>
 			<spirit:name>S00_AXI</spirit:name>

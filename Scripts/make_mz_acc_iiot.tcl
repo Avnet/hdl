@@ -41,12 +41,12 @@
 # ----------------------------------------------------------------------------
 
 # Build MZ IIoT design for MicroZed IIoT Kit + MicroZed 7010 SOM
-set argv [list board=MZ7010_ACC project=mz_acc_iiot sdk=no version_override=yes]
+set argv [list board=MZ7010_ACC project=mz_acc_iiot sdk=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
 # Build MZ IIoT design for MicroZed IIoT Kit + MicroZed 7020 SOM
-#set argv [list board=MZ7020_EMBV project=embv_hdmi_passthrough sdk=yes version_override=yes]
+#set argv [list board=MZ7020_EMBV project=mz_acc_iiot sdk=no version_override=yes]
 #set argc [llength $argv]
 #source ./make.tcl -notrace
  

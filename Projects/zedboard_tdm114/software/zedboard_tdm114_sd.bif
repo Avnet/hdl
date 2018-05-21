@@ -1,0 +1,6 @@
+the_ROM_image:
+{
+	[bootloader]zedboard_tdm114.sdk\zynq_fsbl_app\Debug\zynq_fsbl_app.elf
+	zedboard_tdm114.sdk\zedboard_tdm114_hw\zedboard_tdm114_wrapper.bit
+	zedboard_tdm114.sdk\zedboard_tdm114_app\Debug\zedboard_tdm114_app.elf
+}

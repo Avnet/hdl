@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spirit:design xmlns:xilinx="http://www.xilinx.com" xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <spirit:vendor>xilinx.com</spirit:vendor>
+  <spirit:library>xci</spirit:library>
+  <spirit:name>unknown</spirit:name>
+  <spirit:version>1.0</spirit:version>
+  <spirit:componentInstances>
+    <spirit:componentInstance>
+      <spirit:instanceName>pdm_filter_sysgen_fir_compiler_v7_2_i1</spirit:instanceName>
+      <spirit:componentRef spirit:vendor="xilinx.com" spirit:library="ip" spirit:name="fir_compiler" spirit:version="7.2"/>
+      <spirit:configurableElementValues>
+        <spirit:configurableElementValue spirit:referenceId="BUSIFPARAM_VALUE.ACLK_INTF.FREQ_HZ">100000000</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_ACCUM_OP_PATH_WIDTHS">31</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_ACCUM_PATH_WIDTHS">31</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_CHANNEL_PATTERN">fixed</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COEF_FILE">pdm_filter_sysgen_fir_compiler_v7_2_i1.mif</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COEF_FILE_LINES">304</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COEF_MEMTYPE">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COEF_MEM_PACKING">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COEF_PATH_SIGN">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COEF_PATH_SRC">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COEF_PATH_WIDTHS">16</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COEF_RELOAD">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COEF_WIDTH">16</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COL_CONFIG">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COL_MODE">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COL_PIPE_LEN">4</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_COMPONENT_NAME">pdm_filter_sysgen_fir_compiler_v7_2_i1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_CONFIG_PACKET_SIZE">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_CONFIG_SYNC_MODE">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_CONFIG_TDATA_WIDTH">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATAPATH_MEMTYPE">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_HAS_TLAST">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_IP_PATH_WIDTHS">14</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_MEMTYPE">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_MEM_PACKING">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_PATH_PSAMP_SRC">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_PATH_SIGN">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_PATH_SRC">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_PATH_WIDTHS">14</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_PX_PATH_WIDTHS">14</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DATA_WIDTH">14</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_DECIM_RATE">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_ELABORATION_DIR">./</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_EXT_MULT_CNFG">none</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_FILTER_TYPE">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_FILTS_PACKED">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_HAS_ACLKEN">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_HAS_ARESETn">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_HAS_CONFIG_CHANNEL">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_INPUT_RATE">4096</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_INTERP_RATE">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_IPBUFF_MEMTYPE">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_LATENCY">313</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_MEM_ARRANGEMENT">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_M_DATA_HAS_TREADY">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_M_DATA_HAS_TUSER">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_M_DATA_TDATA_WIDTH">16</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_M_DATA_TUSER_WIDTH">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_NUM_CHANNELS">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_NUM_FILTS">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_NUM_MADDS">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_NUM_RELOAD_SLOTS">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_NUM_TAPS">607</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_OPBUFF_MEMTYPE">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_OPTIMIZATION">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_OPT_MADDS">none</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_OP_PATH_PSAMP_SRC">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_OUTPUT_PATH_WIDTHS">16</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_OUTPUT_RATE">4096</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_OUTPUT_WIDTH">16</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_OVERSAMPLING_RATE">304</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_PX_PATH_SRC">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_RELOAD_TDATA_WIDTH">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_ROUND_MODE">3</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_SYMMETRY">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_S_DATA_HAS_FIFO">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_S_DATA_HAS_TUSER">0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_S_DATA_TDATA_WIDTH">16</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_S_DATA_TUSER_WIDTH">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_XDEVICEFAMILY">zynq</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.C_ZERO_PACKING_FACTOR">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.BestPrecision">true</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Blank_Output">false</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Channel_Sequence">Basic</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Clock_Frequency">300.0</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.CoefficientSource">Vector</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.CoefficientVector">binary:E63153BB4EAA7EBF772F7223F73925BF537C431C425F25BFD5FC70AA699425BFCC51F7291BAA25BF8177A452ADD025BF92A6B4D0FCD825BFC7E09C60E1EF25BF6AA1AF5328E725BF62BEDE0545EE25BFD625C89442D425BFE4DC9E734FCA25BF6E4EB451439D25BF0818885B7C8025BFBACF4C58663E25BFF5DB4AFB4D0E25BFFD7D78F48FB624BF8F7A0FC2BD7224BF18621932EB0324BF123D0F00BCAB23BF2352871E7A2423BF967DD3B7FCB822BF269F59392D1A22BF5BCA37EFD19E21BF414097FDA0E920BF1B1780CB806420BF350A9B2867361FBF075D19D4DB321EBFB67BEAAFBF861CBF584DC6BBF5CA1BBF7A5D5212D90E1
+ABF09F2D604C7FD1ABF019FE81B2F2D15BF80CC409C236D13BF8382152A35B912BF2CF516A8FC1E10BF6F9F4F6AABF60CBFEAC0EFC73FF407BFE95F3615450404BFBB87821113C6FDBE60D2FA57A207F5BED3B1ECDF86C7E4BE37022B16BA2CACBEDBCB4098F27AE43E615763A3B877F43E9E00E0A8C80E003FF99920E7CC7F053FCAA8BA2678970B3FA33626FF30AD103FDE33C6859ADD133F0B3D92BB1EE7163FE11A0F0D053C1A3F927D976B03691D3F33BB968E176F203F569D6FF53B14223F814567C610DD233FDC2BEA3AAD8C253F413D78A6F260273FCA5025C4F814293FDEA0172AA2F12A3FC66953A532A62C3F9FFC4784DD962E3F2
+F21644EF326303FA2710F06DC5B313FB70D5685114C323F4ECCB7F7571E333FA137B450A135343F972717948027353F6C02ECDE9E31363F4BC5E256B92D373F0506A4AF8A37383F0B55EC49F337393F194D897881423A3F63E2C66877463B3F10455F9E1B523C3F3D29492076583D3FE10DE1A0B6643E3F235AE4BA1F6C3F3FEA1ABCD1483C403FC5925F4556C0403FBDB08B418946413F3D80A89F7DCA413F71003D0E1E50423F7B2852081DD3423F5CD97AC35B57433F9FB8F027A2D8433F1888040DDA5A443F7EFB063381D9443FA9456CF8FA58453F9A92A7B841D4453FE3FE2F78D350463FEF07C71E60C9463FE2B452281B45473FC8321
+E8535BC473FA961F708633B483F295180E253AC483FC3CE4C5B6B11493FDD7021C7BA8B493F18BA39A405F4493F6CC3D2FF71604A3F60B3C37C90C64A3F3706ABAF5D2C4B3F5CBE350EB18C4B3F70E5514111EC4B3FDF3DE4EC83464C3F26FECC94119F4C3F66CDFF10CFF24C3F462A493E00444D3F8F17B06D60904D3F92C59142F3D94D3F32DB91C7B81E4E3F7FA95A9B3B604E3F80EC68F5A99C4E3FC6CAB55E48D54E3FD19BD10F75084F3F6EC2F92869374F3FC72B289FB6604F3FEDFDE79C67854F3F9AA12B4122A44F3FEE79B5D10EBE4F3F110CE5FEF3D14F3FA2336B013BE14F3F2A1FD304FCEA4F3F2A3759DA3FF04F3FCA8319C95
+9EF4F3FC13E82385EE94F3FBE17101949D94F3FD9E72EBFC4BD4F3F6862291C84AB4F3F78E16D5F05874F3FD2E5719D345F4F3F265E0729C9304F3FF26A227FDEFA4E3F17AB050D0DBE4E3F114D4D4F6F7A4E3F084241C1B32F4E3FB952FCBF92DD4D3F42A5063C37844D3FD690D14740234D3F740FEC2A04BB4C3FAAD01B3D334B4C3FBD296A39F8D34B3F0692B8B5CB544B3F09A2070BE8CD4A3F121F8066C03E4A3FE685C4F9AFA7493F8416B9473908493F039C6757CE60483FB528351FCBB0473F0BCEE48FC4F8463F424893012C38463F82F17BF1C36F453F8F90EDDAEB9E443FEC64DB6C9AC6433F8930D1AC54E5423F3DD4927DF6FB4
+13F2F638AC0A908413F0F7052EF660C403FA1A5425B0F0A3E3FA794EC5F88FD3B3F65D959D6A9CE393FEAE5CFAE1A91373FF1A659CD7847353F4907B8A3EDE6323F5EB9686B6378303FC5C8AF3D95EE2B3F9CE3F64DD6CC263F1D375C762C85213F3CF20A3BA33C183FAADC22E2FD4A0A3F0D07CFC8350CDD3EEE0B12B7539603BF1F26A4CAC0A515BF47F6D60D4CE420BF8B77167C401527BFDEFA5605076A2DBF71513274E3EE31BFC67B04843C3A35BF91ED4051AD9438BFDA2E872262003CBF28B81AC2B27A3FBF9A4A3E1BD28241BFC0ACA36E364F43BF10491E51B82345BF41C5BAE1E6FE46BFCA234328A1E248BF890A49B336CD4ABF8
+9FAD36B71C04CBF543C3CD2F2B94EBF8F72D34CC65D50BFE16BCA4C605F51BFF37D463F476752BF6E720DCD657253BF92B57148D27E54BFD350E4EC779055BFBD82013A09A456BF0B17F06F00BB57BF68A0A816B3D458BF542BC659ACF159BFCD29EC0311115BBFB741B05263335CBF59C6346404585DBF2B16B4825A7F5EBF90A1E0A002A95FBF133A048BA36A60BF1BD7A6A8D90161BF89B6268A3E9A61BFE6DCB8DC9A3362BFFA226E7D05CE62BFA6ED92A64E6963BF21CEBF7F8D0564BF24D344148CA264BF749824695C4065BFFB80286DCEDE65BF5C495875FD7D66BF5D747C01BC1D67BF4DFA7A3338BE67BF753C558E2E5F68BF44B96
+E81B50069BF0E058CDE79A269BF5B97788C99446ABF24DB087D85E66ABFD688DD117B896BBFA62D6610C12C6CBFD5D6E50D01CF6CBF8962CFDB86726DBF7F34937C54156EBF376A106A35B86EBF1E2E272EFD5A6FBF4495418BB0FD6FBF32A57DCAF94F70BFBAB84574FCA070BF160303D4C0F170BFB453EC02594271BF670B83DDAE9271BFEE6D2510CAE271BFC585FC098E3272BF43BEF5EC018272BF234C031A0DD172BF1344467FB61F73BF95DD6C67E96D73BFEAFE6413ABBB73BF6130D54CE40874BF51394132995574BF2A33042AB8A174BFBE94E06847ED74BFA56C8228363875BFD0B446F88A8275BF68FAED1C2CCC75BFFB46921C1
+51576BF0BA578DF345D76BF620C71978BA476BFC97A80140CEB76BF46E97BF3EB3077BFF314CAC0007677BF5D4305BCB3B977BF2117E2D10DFD77BF6237BE91293F78BF10613AD1418078BF48C66A718BC078BFD229A71CB6FF78BFA180EDE2CE3D79BFCFF088CBCB7A79BF72A031BBB8B679BF8F412BC381F179BF2835E34C332B7ABFA83CE872B0637ABF2605DE74FF9A7ABF8CC88EE40AD17ABFBF56584CDD057BBF7DA562D461397BBFE7380DB4A46B7BBF1DE590778E9C7BBFF6F3892A29CC7BBFC285D9825EFA7BBFCDDE4E583E277CBF3B2BF1F2B1527CBF69A8876BC87C7CBFC8C274F767A57CBFCBF6563A9BCC7CBFD7E14E5143F27
+CBFD2815BA97B167DBFBFDEB0C226397DBFE8496414665A7DBF2B43E638257A7DBF3DADC01A6D987DBF09BE3CA7BEB47DBFDD85A6C0FFCF7DBF45B8E53C6BE97DBF08BEEC6620017EBF5348225B8F177EBFC43D352A292C7EBFECB7C55E253F7EBF7340AC9F7F507EBFA48CF9CA47607EBF3BC9F145696E7EBF3BF39D46F07A7EBFD1E45724C6857EBF2B2363E3F38E7EBF6195C1EB71967EBF9C0BF84E4A9C7EBFC765CEB474A07EBFFD6F6C89F9A27EBFB7557A63B8C2EF3FFD6F6C89F9A27EBFC765CEB474A07EBF9C0BF84E4A9C7EBF6195C1EB71967EBF2B2363E3F38E7EBFD1E45724C6857EBF3BF39D46F07A7EBF3BC9F145696E7EBFA
+48CF9CA47607EBF7340AC9F7F507EBFECB7C55E253F7EBFC43D352A292C7EBF5348225B8F177EBF08BEEC6620017EBF45B8E53C6BE97DBFDD85A6C0FFCF7DBF09BE3CA7BEB47DBF3DADC01A6D987DBF2B43E638257A7DBFE8496414665A7DBFBFDEB0C226397DBFD2815BA97B167DBFD7E14E5143F27CBFCBF6563A9BCC7CBFC8C274F767A57CBF69A8876BC87C7CBF3B2BF1F2B1527CBFCDDE4E583E277CBFC285D9825EFA7BBFF6F3892A29CC7BBF1DE590778E9C7BBFE7380DB4A46B7BBF7DA562D461397BBFBF56584CDD057BBF8CC88EE40AD17ABF2605DE74FF9A7ABFA83CE872B0637ABF2835E34C332B7ABF8F412BC381F179BF72A03
+1BBB8B679BFCFF088CBCB7A79BFA180EDE2CE3D79BFD229A71CB6FF78BF48C66A718BC078BF10613AD1418078BF6237BE91293F78BF2117E2D10DFD77BF5D4305BCB3B977BFF314CAC0007677BF46E97BF3EB3077BFC97A80140CEB76BF620C71978BA476BF0BA578DF345D76BFFB46921C151576BF68FAED1C2CCC75BFD0B446F88A8275BFA56C8228363875BFBE94E06847ED74BF2A33042AB8A174BF51394132995574BF6130D54CE40874BFEAFE6413ABBB73BF95DD6C67E96D73BF1344467FB61F73BF234C031A0DD172BF43BEF5EC018272BFC585FC098E3272BFEE6D2510CAE271BF670B83DDAE9271BFB453EC02594271BF160303D4C
+0F170BFBAB84574FCA070BF32A57DCAF94F70BF4495418BB0FD6FBF1E2E272EFD5A6FBF376A106A35B86EBF7F34937C54156EBF8962CFDB86726DBFD5D6E50D01CF6CBFA62D6610C12C6CBFD688DD117B896BBF24DB087D85E66ABF5B97788C99446ABF0E058CDE79A269BF44B96E81B50069BF753C558E2E5F68BF4DFA7A3338BE67BF5D747C01BC1D67BF5C495875FD7D66BFFB80286DCEDE65BF749824695C4065BF24D344148CA264BF21CEBF7F8D0564BFA6ED92A64E6963BFFA226E7D05CE62BFE6DCB8DC9A3362BF89B6268A3E9A61BF1BD7A6A8D90161BF133A048BA36A60BF90A1E0A002A95FBF2B16B4825A7F5EBF59C6346404585
+DBFB741B05263335CBFCD29EC0311115BBF542BC659ACF159BF68A0A816B3D458BF0B17F06F00BB57BFBD82013A09A456BFD350E4EC779055BF92B57148D27E54BF6E720DCD657253BFF37D463F476752BFE16BCA4C605F51BF8F72D34CC65D50BF543C3CD2F2B94EBF89FAD36B71C04CBF890A49B336CD4ABFCA234328A1E248BF41C5BAE1E6FE46BF10491E51B82345BFC0ACA36E364F43BF9A4A3E1BD28241BF28B81AC2B27A3FBFDA2E872262003CBF91ED4051AD9438BFC67B04843C3A35BF71513274E3EE31BFDEFA5605076A2DBF8B77167C401527BF47F6D60D4CE420BF1F26A4CAC0A515BFEE0B12B7539603BF0D07CFC8350CDD3EA
+ADC22E2FD4A0A3F3CF20A3BA33C183F1D375C762C85213F9CE3F64DD6CC263FC5C8AF3D95EE2B3F5EB9686B6378303F4907B8A3EDE6323FF1A659CD7847353FEAE5CFAE1A91373F65D959D6A9CE393FA794EC5F88FD3B3FA1A5425B0F0A3E3F0F7052EF660C403F2F638AC0A908413F3DD4927DF6FB413F8930D1AC54E5423FEC64DB6C9AC6433F8F90EDDAEB9E443F82F17BF1C36F453F424893012C38463F0BCEE48FC4F8463FB528351FCBB0473F039C6757CE60483F8416B9473908493FE685C4F9AFA7493F121F8066C03E4A3F09A2070BE8CD4A3F0692B8B5CB544B3FBD296A39F8D34B3FAAD01B3D334B4C3F740FEC2A04BB4C3FD690D
+14740234D3F42A5063C37844D3FB952FCBF92DD4D3F084241C1B32F4E3F114D4D4F6F7A4E3F17AB050D0DBE4E3FF26A227FDEFA4E3F265E0729C9304F3FD2E5719D345F4F3F78E16D5F05874F3F6862291C84AB4F3FD9E72EBFC4BD4F3FBE17101949D94F3FC13E82385EE94F3FCA8319C959EF4F3F2A3759DA3FF04F3F2A1FD304FCEA4F3FA2336B013BE14F3F110CE5FEF3D14F3FEE79B5D10EBE4F3F9AA12B4122A44F3FEDFDE79C67854F3FC72B289FB6604F3F6EC2F92869374F3FD19BD10F75084F3FC6CAB55E48D54E3F80EC68F5A99C4E3F7FA95A9B3B604E3F32DB91C7B81E4E3F92C59142F3D94D3F8F17B06D60904D3F462A493E0
+0444D3F66CDFF10CFF24C3F26FECC94119F4C3FDF3DE4EC83464C3F70E5514111EC4B3F5CBE350EB18C4B3F3706ABAF5D2C4B3F60B3C37C90C64A3F6CC3D2FF71604A3F18BA39A405F4493FDD7021C7BA8B493FC3CE4C5B6B11493F295180E253AC483FA961F708633B483FC8321E8535BC473FE2B452281B45473FEF07C71E60C9463FE3FE2F78D350463F9A92A7B841D4453FA9456CF8FA58453F7EFB063381D9443F1888040DDA5A443F9FB8F027A2D8433F5CD97AC35B57433F7B2852081DD3423F71003D0E1E50423F3D80A89F7DCA413FBDB08B418946413FC5925F4556C0403FEA1ABCD1483C403F235AE4BA1F6C3F3FE10DE1A0B6643
+E3F3D29492076583D3F10455F9E1B523C3F63E2C66877463B3F194D897881423A3F0B55EC49F337393F0506A4AF8A37383F4BC5E256B92D373F6C02ECDE9E31363F972717948027353FA137B450A135343F4ECCB7F7571E333FB70D5685114C323FA2710F06DC5B313F2F21644EF326303F9FFC4784DD962E3FC66953A532A62C3FDEA0172AA2F12A3FCA5025C4F814293F413D78A6F260273FDC2BEA3AAD8C253F814567C610DD233F569D6FF53B14223F33BB968E176F203F927D976B03691D3FE11A0F0D053C1A3F0B3D92BB1EE7163FDE33C6859ADD133FA33626FF30AD103FCAA8BA2678970B3FF99920E7CC7F053F9E00E0A8C80E003F6
+15763A3B877F43EDBCB4098F27AE43E37022B16BA2CACBED3B1ECDF86C7E4BE60D2FA57A207F5BEBB87821113C6FDBEE95F3615450404BFEAC0EFC73FF407BF6F9F4F6AABF60CBF2CF516A8FC1E10BF8382152A35B912BF80CC409C236D13BF019FE81B2F2D15BF09F2D604C7FD1ABF7A5D5212D90E1ABF584DC6BBF5CA1BBFB67BEAAFBF861CBF075D19D4DB321EBF350A9B2867361FBF1B1780CB806420BF414097FDA0E920BF5BCA37EFD19E21BF269F59392D1A22BF967DD3B7FCB822BF2352871E7A2423BF123D0F00BCAB23BF18621932EB0324BF8F7A0FC2BD7224BFFD7D78F48FB624BFF5DB4AFB4D0E25BFBACF4C58663E25BF08188
+85B7C8025BF6E4EB451439D25BFE4DC9E734FCA25BFD625C89442D425BF62BEDE0545EE25BF6AA1AF5328E725BFC7E09C60E1EF25BF92A6B4D0FCD825BF8177A452ADD025BFCC51F7291BAA25BFD5FC70AA699425BF537C431C425F25BF772F7223F73925BFE63153BB4EAA7EBF</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Coefficient_Buffer_Type">Automatic</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Coefficient_File">no_coe_file_loaded</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Coefficient_Fractional_Bits">15</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Coefficient_Reload">false</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Coefficient_Sets">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Coefficient_Sign">Signed</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Coefficient_Structure">Symmetric</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Coefficient_Width">16</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.ColumnConfig">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Component_Name">pdm_filter_sysgen_fir_compiler_v7_2_i1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.DATA_Has_TLAST">Not_Required</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.DATA_TUSER_Width">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Data_Buffer_Type">Automatic</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Data_Fractional_Bits">11</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Data_Sign">Signed</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Data_Width">14</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Decimation_Rate">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.DisplayReloadOrder">false</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Filter_Architecture">Systolic_Multiply_Accumulate</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Filter_Selection">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Filter_Type">Single_Rate</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.GUI_Behaviour">Sysgen_uUPP</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Gen_MIF_Files">false</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Gen_MIF_from_COE">false</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Gen_MIF_from_Spec">false</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.HardwareOversamplingRate">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Has_ACLKEN">true</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Has_ARESETn">false</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Input_Buffer_Type">Automatic</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Inter_Column_Pipe_Length">4</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Interpolation_Rate">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.M_DATA_Has_TREADY">false</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.M_DATA_Has_TUSER">Not_Required</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Multi_Column_Support">Automatic</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Num_Reload_Slots">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Number_Channels">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Number_Paths">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Optimization_Goal">Area</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Optimization_List">None</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Optimization_Selection">None</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Output_Buffer_Type">Automatic</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Output_Rounding_Mode">Symmetric_Rounding_to_Infinity</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Output_Width">16</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Passband_Max">0.50000000</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Passband_Min">0.00000000</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Pattern_List">P4-0,P4-1,P4-2,P4-3,P4-4</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Preference_For_Other_Storage">Automatic</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Quantization">Maximize_Dynamic_Range</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.RateSpecification">Maximum_Possible</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Rate_Change_Type">Integer</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Reload_File">no_coe_file_loaded</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Reset_Data_Vector">true</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.S_CONFIG_Method">Single</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.S_CONFIG_Sync_Mode">On_Vector</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.S_DATA_Has_FIFO">false</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.S_DATA_Has_TUSER">Not_Required</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.SamplePeriod">4096</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Sample_Frequency">0.001</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Select_Pattern">All</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Stopband_Max">1.00000000</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Stopband_Min">0.50000000</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.Zero_Pack_Factor">1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.ARCHITECTURE">zynq</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.BOARD"/>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.DEVICE">xc7z007s</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.PACKAGE">clg225</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.PREFHDL">VHDL</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.SILICON_REVISION"/>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.SIMULATOR_LANGUAGE">MIXED</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.SPEEDGRADE">-1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.TEMPERATURE_GRADE"/>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.USE_RDI_CUSTOMIZATION">TRUE</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PROJECT_PARAM.USE_RDI_GENERATION">TRUE</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="RUNTIME_PARAM.IPCONTEXT">IP_Flow</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="RUNTIME_PARAM.IPREVISION">8</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="RUNTIME_PARAM.MANAGED">TRUE</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="RUNTIME_PARAM.OUTPUTDIR">.</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="RUNTIME_PARAM.SELECTEDSIMMODEL"/>
+        <spirit:configurableElementValue spirit:referenceId="RUNTIME_PARAM.SHAREDDIR">.</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="RUNTIME_PARAM.SWVERSION">2017.1</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="RUNTIME_PARAM.SYNTHESISFLOW">OUT_OF_CONTEXT</spirit:configurableElementValue>
+      </spirit:configurableElementValues>
+      <spirit:vendorExtensions>
+        <xilinx:componentInstanceExtensions>
+          <xilinx:configElementInfos>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.BestPrecision" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Blank_Output" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Channel_Sequence" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Clock_Frequency" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.CoefficientSource" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.CoefficientVector" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Coefficient_Buffer_Type" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Coefficient_File" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Coefficient_Fractional_Bits" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Coefficient_Reload" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Coefficient_Sets" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Coefficient_Sign" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Coefficient_Structure" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Coefficient_Width" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.ColumnConfig" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.DATA_Has_TLAST" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.DATA_TUSER_Width" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Data_Buffer_Type" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Data_Fractional_Bits" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Data_Sign" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Data_Width" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Decimation_Rate" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.DisplayReloadOrder" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Filter_Architecture" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Filter_Selection" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Filter_Type" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.GUI_Behaviour" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Gen_MIF_Files" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Gen_MIF_from_COE" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Gen_MIF_from_Spec" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.HardwareOversamplingRate" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Has_ACLKEN" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Has_ARESETn" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Input_Buffer_Type" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Inter_Column_Pipe_Length" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Interpolation_Rate" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.M_DATA_Has_TREADY" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.M_DATA_Has_TUSER" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Multi_Column_Support" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Num_Reload_Slots" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Number_Channels" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Number_Paths" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Optimization_Goal" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Optimization_List" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Optimization_Selection" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Output_Buffer_Type" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Output_Rounding_Mode" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Output_Width" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Passband_Max" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Passband_Min" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Pattern_List" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Preference_For_Other_Storage" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Quantization" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.RateSpecification" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Rate_Change_Type" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Reload_File" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Reset_Data_Vector" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.S_CONFIG_Method" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.S_CONFIG_Sync_Mode" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.S_DATA_Has_FIFO" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.S_DATA_Has_TUSER" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.SamplePeriod" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Sample_Frequency" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Select_Pattern" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Stopband_Max" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Stopband_Min" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.Zero_Pack_Factor" xilinx:valueSource="user"/>
+          </xilinx:configElementInfos>
+        </xilinx:componentInstanceExtensions>
+      </spirit:vendorExtensions>
+    </spirit:componentInstance>
+  </spirit:componentInstances>
+</spirit:design>

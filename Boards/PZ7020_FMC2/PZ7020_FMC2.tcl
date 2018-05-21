@@ -81,6 +81,30 @@ proc avnet_add_user_io {project projects_folder scriptdir} {
 
 }
 
+proc avnet_add_user_io_preset {project projects_folder scriptdir} {
+
+   # this uses board automation for the PZ SOM which is derived from the 
+   # board definition file downloadable from the PicoZed.org community site.
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0
+   apply_board_connection -board_interface "pl_leds_4bits" -ip_intf "axi_gpio_0/GPIO" -diagram $project 
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_1
+   apply_board_connection -board_interface "pl_pbs_5bits" -ip_intf "axi_gpio_1/GPIO" -diagram $project
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_0/S_AXI]
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
+   
+}
+
+proc avnet_add_i2c_ip {project projects_folder scriptdir} {
+
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0
+   apply_bd_automation -rule xilinx.com:bd_rule:board  [get_bd_intf_pins axi_iic_0/IIC]
+   set_property name hdmi_i2c [get_bd_intf_ports iic_rtl]
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" intc_ip "/ps7_0_axi_periph" Clk_xbar "Auto" Clk_master "Auto" Clk_slave "Auto" }  [get_bd_intf_pins axi_iic_0/S_AXI]
+   set_property -dict [list CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_IRQ_F2P_INTR {1}] [get_bd_cells processing_system7_0]
+   connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins processing_system7_0/IRQ_F2P]
+
+}
+
 proc avnet_add_ps {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
@@ -99,13 +123,6 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells processing_system7_0]
 
    set processing_system7_0 [get_bd_cells processing_system7_0]
-
-   ############################################################################
-   # Connect eMMC CD to a constant 0
-   ############################################################################
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 GND
-   set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells GND]
-   connect_bd_net [get_bd_pins GND/dout] [get_bd_pins processing_system7_0/SDIO1_CDN]
 
 }
 

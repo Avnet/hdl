@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2017.1 (64-bit)
+# SW Build 1846317 on Fri Apr 14 18:55:03 MDT 2017
+# IP Build 1846188 on Fri Apr 14 20:52:08 MDT 2017
+# Start of session at: Sun Jun 11 11:06:26 2017
+# Process ID: 15080
+# Current directory: C:/Avnet/hdl/IP/microphone_PDM/products
+# Command line: vivado.exe -mode batch -source ProjectGeneration.tcl -notrace
+# Log file: C:/Avnet/hdl/IP/microphone_PDM/products/vivado.log
+# Journal file: C:/Avnet/hdl/IP/microphone_PDM/products\vivado.jou
+#-----------------------------------------------------------
+source ProjectGeneration.tcl -notrace

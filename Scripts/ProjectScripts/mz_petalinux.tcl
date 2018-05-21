@@ -81,12 +81,12 @@ remove_files -fileset constrs_1 *.xdc
 switch -nocase $board {
    MZ7010_FMCCC {
       puts "***** Assigning Vivado Project board_part Property to microzed_7010..."
-      set_property board_part em.avnet.com:microzed_7010:part0:1.0 [current_project]
+      set_property board_part em.avnet.com:microzed_7010:part0:1.1 [current_project]
    }
 
    MZ7020_FMCCC {
       puts "***** Assigning Vivado Project board_part Property to microzed_7020..."
-      set_property board_part em.avnet.com:microzed_7020:part0:1.0 [current_project]
+      set_property board_part em.avnet.com:microzed_7020:part0:1.1 [current_project]
    }
 }
 
