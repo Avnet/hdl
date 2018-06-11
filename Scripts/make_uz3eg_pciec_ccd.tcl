@@ -46,6 +46,8 @@
 #  Dependencies:        make.tcl
 #
 #  Revision:            Oct 02, 2017: 1.00 Initial version
+#                       May 31, 2018: 1.01 Updated for 2017.4 and adding
+#                                          FMC Network1 peripheral
 # 
 # ----------------------------------------------------------------------------
 

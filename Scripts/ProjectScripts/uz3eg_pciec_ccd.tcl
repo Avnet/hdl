@@ -55,6 +55,55 @@
 # 
 # ----------------------------------------------------------------------------
 
+proc validate_core_licenses { core_list ip_report_filename } {
+   set valid_cores 0
+   set invalid_cores 0   
+
+   puts ""
+   puts "+-----------------------+------------------------------------+"
+   puts "| Networking IP Core    | License Status                     |"
+   puts "+-----------------------+------------------------------------+"
+
+   foreach core $core_list {
+   
+      # Format core name for display
+      set core_name $core
+      for {set j 0} {$j < [expr 16 - [string length $core]]} {incr j} {
+         append core_name " "
+      }
+      
+      # Search for core license status in ip status report
+      set file [open $ip_report_filename r]   
+      set ip_status ""
+      while {[gets $file line] >= 0} {
+         if {[regexp $core $line]} {
+            set ip_status $line
+   		 break
+         }
+      }
+      close $file
+      #puts "ip_status = ${ip_status}"
+   
+      # Validate and display status of core license
+      if {[regexp "Included" ${ip_status}]} {
+         puts "| ${core_name}       | VALID (Full License)               |"
+         incr valid_cores
+      } elseif {[regexp "Hardware_E" ${ip_status}]} {
+         puts "| ${core_name}       | VALID (Hardware Evaluation)        |"
+         incr valid_cores
+      } elseif {[regexp "Purchased" ${ip_status}]} {
+         puts "| ${core_name}       | VALID (Purchased)                  |"
+         incr valid_cores
+      } else {
+         puts "| ${core_name}       | INVALID                            |"
+         incr invalid_cores
+      }
+      puts "+-----------------------+------------------------------------+"
+      
+   }
+   return $valid_cores
+}
+
 # 'private' used to allow this project to be privately tagged
 # 'public' used to allow this project to be publicly tagged
 set release_state public
@@ -97,16 +146,45 @@ set design_name ${project}
 # Add Processing System presets from board definitions.
 avnet_add_ps_preset $project $projects_folder $scriptdir
 
-# Add User IO presets from board definitions.
-avnet_add_user_io_preset $project $projects_folder $scriptdir
-
-# Enable the PSU SPI interface on the Pmod expansion port so that the TPM Pmod
-# can be connected to the system.
-set_property -dict [list CONFIG.PSU__SPI0__PERIPHERAL__ENABLE {1} CONFIG.PSU__SPI0__PERIPHERAL__IO {MIO 38 .. 43} CONFIG.PSU__SPI1__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-
 # General Config
 puts "***** General Configuration for Design..."
 set_property target_language VHDL [current_project]
+
+# Add the constraints that are needed for testing
+add_files -fileset constrs_1 -norecurse ${projects_folder}/../uz3eg_pciec_ccd.xdc
+
+# Create Block Diagram
+set design_name ${project}
+source ${projects_folder}/../../../Scripts/ProjectScripts/${project}_bd.tcl
+
+# Check for Networking IP core licenses
+puts "***** Check for Networking IP core licenses..."
+report_ip_status -file "networking_ip_core_status.log"
+set core_list [list "axi_ethernet" ]
+set valid_cores [validate_core_licenses $core_list "networking_ip_core_status.log"]
+if { $valid_cores < 1 } {
+   puts " 
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-                                                           -*
+*-   !! Detected missing license for networking ip cores !!  -*
+*-                                                           -*
+*-     For more details, refer to IP status report:   !!     -*
+*-     networking_ip_core_status_report.log                  -*
+*-                                                           -*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   error "!! Detected missing license for networking ip cores !!"
+} else {
+puts " 
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-                                                           -*
+*-    !! Detected valid license for networking ip cores !!   -*
+*-                                                           -*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+}
 
 # Add Project source files
 puts "***** Adding Source Files to Block Design..."
