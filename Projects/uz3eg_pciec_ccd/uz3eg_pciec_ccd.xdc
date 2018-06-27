@@ -49,6 +49,7 @@
 #  Revision:            May 31, 2018: 1.00 Created based upon uz_pciec_factest
 #                                          project but adds support for Avnet 
 #                                          FMC-Network1 expansion card.
+#                       Jun 25, 2018: 1.01 Added I2C ports for MAC ID EEPROMs
 # 
 # ----------------------------------------------------------------------------
 # 
@@ -168,21 +169,26 @@ set_property PACKAGE_PIN R7 [get_ports {rgmii_port_1_td[2]}]
 set_property PACKAGE_PIN T3 [get_ports {rgmii_port_1_td[1]}]
 set_property PACKAGE_PIN V3 [get_ports {rgmii_port_1_td[0]}]
 
-set_property PACKAGE_PIN AD7 [get_ports {LED4B}];  			# JX1_HP_DP_07_N - FMC_LA24_N
-set_property PACKAGE_PIN AD8 [get_ports {LED4A}];  			# JX1_HP_DP_07_P - FMC_LA24_P
-set_property PACKAGE_PIN Y1 [get_ports {LED3B}];  			# JX1_HP_DP_09_N - FMC_LA25_N
-set_property PACKAGE_PIN W1 [get_ports {LED3A}];  			# JX1_HP_DP_09_P - FMC_LA25_P
-set_property PACKAGE_PIN W2 [get_ports {LED2B}];  			# JX1_HP_DP_12_N - FMC_LA26_N
-set_property PACKAGE_PIN W3 [get_ports {LED2A}];  			# JX1_HP_DP_12_P - FMC_LA26_P
-set_property PACKAGE_PIN AA2 [get_ports {LED1B}];  			# JX1_HP_DP_14_N - FMC_LA27_N
-set_property PACKAGE_PIN Y2 [get_ports {LED1A}];  			# JX1_HP_DP_14_P - FMC_LA27_P
-set_property PACKAGE_PIN AA3 [get_ports {LED5B}];  			# JX1_HP_DP_08_N - FMC_LA28_N
-set_property PACKAGE_PIN AA4 [get_ports {LED5A}];  			# JX1_HP_DP_08_P - FMC_LA28_P
+set_property PACKAGE_PIN AD7 [get_ports {LED4B}];  # JX1_HP_DP_07_N - FMC_LA24_N
+set_property PACKAGE_PIN AD8 [get_ports {LED4A}];  # JX1_HP_DP_07_P - FMC_LA24_P
+set_property PACKAGE_PIN Y1  [get_ports {LED3B}];  # JX1_HP_DP_09_N - FMC_LA25_N
+set_property PACKAGE_PIN W1  [get_ports {LED3A}];  # JX1_HP_DP_09_P - FMC_LA25_P
+set_property PACKAGE_PIN W2  [get_ports {LED2B}];  # JX1_HP_DP_12_N - FMC_LA26_N
+set_property PACKAGE_PIN W3  [get_ports {LED2A}];  # JX1_HP_DP_12_P - FMC_LA26_P
+set_property PACKAGE_PIN AA2 [get_ports {LED1B}];  # JX1_HP_DP_14_N - FMC_LA27_N
+set_property PACKAGE_PIN Y2  [get_ports {LED1A}];  # JX1_HP_DP_14_P - FMC_LA27_P
+set_property PACKAGE_PIN AA3 [get_ports {LED5B}];  # JX1_HP_DP_08_N - FMC_LA28_N
+set_property PACKAGE_PIN AA4 [get_ports {LED5A}];  # JX1_HP_DP_08_P - FMC_LA28_P
 
-set_property PACKAGE_PIN B10  [get_ports {FMC_SDA}];  		# JX2_HD_SE_01_N - FMC_SDA
-set_property PACKAGE_PIN C10  [get_ports {FMC_SCL}];  		# JX2_HD_SE_01_P - FMC_SCL
-set_property PACKAGE_PIN H9   [get_ports {FMC_PRSNT_M2C_N}];# JX2_HD_SE_00_N - FMC_PRSNT_M2C_N
-set_property PACKAGE_PIN H10  [get_ports {FMC_TRST_N}];  	# JX2_HD_SE_00_P - FMC_TRST_N
+set_property PACKAGE_PIN AB8  [get_ports {iic_rtl_1_scl_io}];   # JX1_HP_DP_00_P - FMC_LA32_P - SCL1
+set_property PACKAGE_PIN AB7  [get_ports {iic_rtl_1_sda_io}];   # JX1_HP_DP_00_N - FMC_LA32_N - SDA1
+set_property PACKAGE_PIN AE7  [get_ports {iic_rtl_2_scl_io}];   # JX1_HP_DP_06_P - FMC_LA31_P - SCL2
+set_property PACKAGE_PIN AE6  [get_ports {iic_rtl_2_sda_io}];   # JX1_HP_DP_06_N - FMC_LA31_N - SDA2
+
+set_property PACKAGE_PIN B10  [get_ports {iic_rtl_0_sda_io}];  	# JX2_HD_SE_01_N - FMC_SDA
+set_property PACKAGE_PIN C10  [get_ports {iic_rtl_0_scl_io}];   # JX2_HD_SE_01_P - FMC_SCL
+set_property PACKAGE_PIN H9   [get_ports {FMC_PRSNT_M2C_N}];    # JX2_HD_SE_00_N - FMC_PRSNT_M2C_N
+set_property PACKAGE_PIN H10  [get_ports {FMC_TRST_N}];  	    # JX2_HD_SE_00_P - FMC_TRST_N
 
 set_property IOSTANDARD LVCMOS18 [get_ports {ref_clk_fsel[0]}]
 set_property IOSTANDARD LVCMOS18 [get_ports {ref_clk_oe[0]}]
@@ -236,7 +242,12 @@ set_property IOSTANDARD LVCMOS18 [get_ports {LED1A}]
 set_property IOSTANDARD LVCMOS18 [get_ports {LED5B}]
 set_property IOSTANDARD LVCMOS18 [get_ports {LED5A}]
 
-set_property IOSTANDARD LVCMOS33 [get_ports {FMC_SDA}]
-set_property IOSTANDARD LVCMOS33 [get_ports {FMC_SCL}]
+set_property IOSTANDARD LVCMOS18 [get_ports {iic_rtl_1_scl_io}]
+set_property IOSTANDARD LVCMOS18 [get_ports {iic_rtl_1_sda_io}]
+set_property IOSTANDARD LVCMOS18 [get_ports {iic_rtl_2_scl_io}]
+set_property IOSTANDARD LVCMOS18 [get_ports {iic_rtl_2_sda_io}]
+
+set_property IOSTANDARD LVCMOS33 [get_ports {iic_rtl_0_sda_io}]
+set_property IOSTANDARD LVCMOS33 [get_ports {iic_rtl_0_scl_io}]
 set_property IOSTANDARD LVCMOS33 [get_ports {FMC_PRSNT_M2C_N}]
 set_property IOSTANDARD LVCMOS33 [get_ports {FMC_TRST_N}]

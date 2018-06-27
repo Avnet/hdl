@@ -52,6 +52,8 @@
 #                                          addding a call to enable PSU SPI on
 #                                          PS Pmod so that the TPM Pmod can be 
 #                                          connected for CCD.
+#  Revision:            Jun 25, 2018: 1.01 Updated to add support for 
+#                                          FMC-NETWORK1 expansion module.
 # 
 # ----------------------------------------------------------------------------
 
