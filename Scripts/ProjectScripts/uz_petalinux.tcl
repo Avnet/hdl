@@ -91,11 +91,11 @@ switch -nocase $board {
    }
    UZ3EG_PCIEC {
       puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_pciecc_production..."
-      set_property board_part em.avnet.com:ultrazed_eg_pciecc_production:part0:1.0 [current_project]
+      set_property board_part em.avnet.com:ultrazed_eg_pciecc_production:part0:1.1 [current_project]
    }
    UZ7EV_EVCC {
       puts "***** Assigning Vivado Project board_part Property to ultrazed_ev_evcc_production..."
-      set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.0 [current_project]
+      set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.1 [current_project]
    }
 }
 
@@ -135,7 +135,7 @@ cd $scripts_folder
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 save_bd_design
-launch_runs impl_1 -to_step write_bitstream -j 1
+launch_runs impl_1 -to_step write_bitstream -j 2
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*

@@ -55,6 +55,7 @@ set ok_to_tag_public "false"
 set sdk "no"
 set jtag "no"
 set dev_arch "zynq"
+set bdf_path ../../bdf
 
 # create GREP process
 # From: http://wiki.tcl.tk/9395
@@ -96,6 +97,8 @@ puts "
 *-                                                     -*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+# fetch the required Vivado Board Definition File (BDF) from the bdf git repo
+set_param board.repoPaths $bdf_path
 
 set ranonce "false"
 set start_time [clock seconds]
@@ -308,6 +311,7 @@ switch -nocase $board {
    PZ7015_FMC2                -
    PZ7030_FMC2                -
    PZSDR7035_FMCCC            -
+   ULTRA96_V1                    -
    UZ3EG_IOCC                 -
    UZ3EG_PCIEC                -
    UZ7EV_EVCC                 -
@@ -355,8 +359,8 @@ if {[string match -nocase "no" $jtag]} {
       puts "Attempting to Build SDK..."
       cd ${projects_folder}
       exec >@stdout 2>@stderr xsdk -batch -source ../software/$project\_sdk.tcl -notrace
-	  # Build a BOOT.bin file only if a BIF file exists for the project.
-	  if {[file exists ../software/$project\_sd.bif]} {
+      # Build a BOOT.bin file only if a BIF file exists for the project.
+      if {[file exists ../software/$project\_sd.bif]} {
          puts "Generating BOOT.BIN..."
          exec >@stdout 2>@stderr bootgen -arch $dev_arch -image ../software/$project\_sd.bif -w -o BOOT.bin
       }

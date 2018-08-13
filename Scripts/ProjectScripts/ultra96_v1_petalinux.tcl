@@ -1,21 +1,25 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 # 
-#  Please direct any questions to the PicoZed community support forum:
-#     http://www.picozed.org/forum
+#  Please direct any questions to the UltraZed community support forum:
+#     http://www.ultrazed.org/forum
 # 
 #  Product information is available at:
-#     http://www.picozed.org/product/picozed
+#     http://www.ultrazed.org/product/ultrazed
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -28,23 +32,23 @@
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         Mar 26, 2016
-#  Design Name:         MicroZed PetaLinux BSP HW Platform
-#  Module Name:         mz_petalinux.tcl
-#  Project Name:        MicroZed PetaLinux BSP Generator
-#  Target Devices:      Xilinx Zynq-7000
-#  Hardware Boards:     MicroZed SOM
+#  Create Date:         Aug 01, 2018
+#  Design Name:         Ultra96_v1 PetaLinux BSP HW Platform
+#  Module Name:         ultra96_v1_petalinux.tcl
+#  Project Name:        Ultra96_v1 PetaLinux BSP Generator
+#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
+#  Hardware Boards:     Ultra96_v1 Eval Board
 # 
-#  Tool versions:       Vivado 2015.2
+#  Tool versions:       Vivado 2018.2
 # 
-#  Description:         Build Script for MicroZed PetaLinux BSP HW Platform
+#  Description:         Build Script for Ultra96_v1 PetaLinux BSP HW Platform
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
 #                       scripts IP generation scripts or others as needed
 # 
 #
-#  Revision:            Mar 26, 2016: 1.00 Initial version
+#  Revision:            Aug 01, 2018: 1.00 Initial version
 # 
 # ----------------------------------------------------------------------------
 
@@ -73,32 +77,38 @@ if {[string match -nocase "yes" $clean]} {
 puts "***** Creating Vivado Project..."
 source ../Boards/$board/$board.tcl -notrace
 avnet_create_project $project $projects_folder $scriptdir
-# Remove the SOM specific XDC file since no constraints are needed for 
-# the basic system design
-remove_files -fileset constrs_1 *.xdc
 
 # Apply board specific project property settings
 switch -nocase $board {
-   MZ7010_FMCCC {
-      puts "***** Assigning Vivado Project board_part Property to microzed_7010..."
-      set_property board_part em.avnet.com:microzed_7010:part0:1.2 [current_project]
-   }
-
-   MZ7020_FMCCC {
-      puts "***** Assigning Vivado Project board_part Property to microzed_7020..."
-      set_property board_part em.avnet.com:microzed_7020:part0:1.2 [current_project]
+   ULTRA96_V1 {
+      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc_production..."
+      set_property board_part em.avnet.com:ultra96_v1:part0:1.2 [current_project]
    }
 }
+
+# Add Avnet IP Repository
+puts "***** Updating Vivado to include IP Folder"
+cd ../Projects/$project
+set_property ip_repo_paths  ../../IP [current_project]
+update_ip_catalog
 
 # Create Block Design and Add PS core
 puts "***** Creating Block Design..."
 create_bd_design ${project}
 set design_name ${project}
+
+# Add Processing System presets from board definitions.
 avnet_add_ps_preset $project $projects_folder $scriptdir
+
+# Add User IO presets from board definitions.
+avnet_add_user_io_preset $project $projects_folder $scriptdir
 
 # General Config
 puts "***** General Configuration for Design..."
 set_property target_language VHDL [current_project]
+
+# Add the constraints that are needed
+add_files -fileset constrs_1 -norecurse ${projects_folder}/../${project}.xdc
 
 # Add Project source files
 puts "***** Adding Source Files to Block Design..."
@@ -115,7 +125,7 @@ cd $scripts_folder
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 save_bd_design
-launch_runs impl_1 -to_step write_bitstream -j 8
+launch_runs impl_1 -to_step write_bitstream -j 2
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
