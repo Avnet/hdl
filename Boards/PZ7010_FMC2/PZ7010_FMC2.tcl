@@ -110,6 +110,9 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    set processing_system7_0 [get_bd_cells processing_system7_0]
 
+   startgroup
+   set_property -dict [list CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} CONFIG.PCW_SD0_GRP_WP_ENABLE {1} CONFIG.PCW_SD0_GRP_WP_IO {EMIO} CONFIG.PCW_GPIO_EMIO_GPIO_ENABLE {0}] [get_bd_cells processing_system7_0]
+   endgroup
 }
 
 proc avnet_add_custom_ps {project projects_folder scriptdir} {
@@ -220,11 +223,11 @@ CONFIG.PCW_UIPARAM_DDR_USE_INTERNAL_VREF {1} \
 ############################################################################
 # Peripheral assignments
 #   with the exception of GPIO:
-#   		eMMC/Pmod Mux Select:        0
-#   		Pmod:                        9
-#   		LED:                         47
-#   		Carrier Ethernet Reset:      50
-#   		PB:                          51 
+#        eMMC/Pmod Mux Select:        0
+#        Pmod:                        9
+#        LED:                         47
+#        Carrier Ethernet Reset:      50
+#        PB:                          51 
 ############################################################################
 set_property -dict [ list \
 CONFIG.PCW_QSPI_GRP_SINGLE_SS_IO {MIO 1 .. 6} \
@@ -391,7 +394,7 @@ connect_bd_net [get_bd_pins GND/dout] [get_bd_pins processing_system7_0/SDIO1_CD
 # Enable USB Reset last
 ############################################################################
 set_property -dict [ list \
-	CONFIG.PCW_USB0_RESET_ENABLE {1} \
+   CONFIG.PCW_USB0_RESET_ENABLE {1} \
 ] $processing_system7_0
 
 }

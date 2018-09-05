@@ -55,9 +55,9 @@
 
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + IO Carrier
-#set argv [list board=UZ3EG_IOCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
-#set argc [llength $argv]
-#source ./make.tcl -notrace
+set argv [list board=UZ3EG_IOCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+set argc [llength $argv]
+source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + PCIe Carrier

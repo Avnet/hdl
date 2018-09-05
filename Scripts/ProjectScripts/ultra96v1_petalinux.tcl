@@ -33,15 +33,15 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Aug 01, 2018
-#  Design Name:         Ultra96_v1 PetaLinux BSP HW Platform
-#  Module Name:         ultra96_v1_petalinux.tcl
-#  Project Name:        Ultra96_v1 PetaLinux BSP Generator
+#  Design Name:         Ultra96v1 PetaLinux BSP HW Platform
+#  Module Name:         ultra96v1_petalinux.tcl
+#  Project Name:        Ultra96v1 PetaLinux BSP Generator
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
-#  Hardware Boards:     Ultra96_v1 Eval Board
+#  Hardware Boards:     Ultra96v1 Eval Board
 # 
 #  Tool versions:       Vivado 2018.2
 # 
-#  Description:         Build Script for Ultra96_v1 PetaLinux BSP HW Platform
+#  Description:         Build Script for Ultra96v1 PetaLinux BSP HW Platform
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
@@ -80,9 +80,9 @@ avnet_create_project $project $projects_folder $scriptdir
 
 # Apply board specific project property settings
 switch -nocase $board {
-   ULTRA96_V1 {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc_production..."
-      set_property board_part em.avnet.com:ultra96_v1:part0:1.2 [current_project]
+   ULTRA96V1 {
+      puts "***** Assigning Vivado Project board_part Property to ultra96..."
+      set_property board_part em.avnet.com:ultra96v1:part0:1.2 [current_project]
    }
 }
 

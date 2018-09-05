@@ -102,4 +102,9 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    # specified in the 2017.2 BDF should be overridden here.
    #set_property -dict [list CONFIG.PSU__CRL_APB__SDIO0_REF_CTRL__FREQMHZ {50}] [get_bd_cells zynq_ultra_ps_e_0]
    #set_property -dict [list CONFIG.PSU__CRL_APB__SDIO1_REF_CTRL__FREQMHZ {50}] [get_bd_cells zynq_ultra_ps_e_0]
+   
+   # Connect the SD card WP pin to MIO44 and pull it down to enable software (PetaLinux) 
+   # to mount and write the SD card
+   set_property -dict [list CONFIG.PSU__SD1__GRP_WP__ENABLE {1} CONFIG.PSU_MIO_44_PULLUPDOWN {pulldown}] [get_bd_cells zynq_ultra_ps_e_0]
+   
 }
