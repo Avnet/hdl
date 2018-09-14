@@ -85,6 +85,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    apply_board_connection -board_interface "pl_pbs_5bits" -ip_intf "axi_gpio_1/GPIO" -diagram $project
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_0/S_AXI]
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
+
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
+   endgroup
+   set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells xlconstant_0]
+   connect_bd_net [get_bd_pins xlconstant_0/dout] [get_bd_pins processing_system7_0/SDIO0_WP]
    
 }
 
@@ -266,7 +272,7 @@ CONFIG.PCW_ENET0_GRP_MDIO_ENABLE {1} \
 CONFIG.PCW_ENET0_RESET_ENABLE {0} \
 CONFIG.PCW_SD0_PERIPHERAL_ENABLE {1} \
 CONFIG.PCW_SD0_GRP_CD_ENABLE {1} \
-CONFIG.PCW_SD0_GRP_WP_ENABLE {0} \
+CONFIG.PCW_SD0_GRP_WP_ENABLE {1} \
 CONFIG.PCW_SD1_PERIPHERAL_ENABLE {1} \
 CONFIG.PCW_SD1_GRP_CD_ENABLE {1} \
 CONFIG.PCW_SD1_GRP_WP_ENABLE {0} \
