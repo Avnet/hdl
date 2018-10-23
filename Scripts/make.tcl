@@ -312,6 +312,7 @@ switch -nocase $board {
    PZ7030_FMC2                -
    PZSDR7035_FMCCC            -
    ULTRA96V1                  -
+   ULTRA96V2                  -
    UZ3EG_IOCC                 -
    UZ3EG_PCIEC                -
    UZ7EV_EVCC                 -
