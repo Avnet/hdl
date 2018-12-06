@@ -56,8 +56,8 @@ proc make_ip {ip_name} {
 
    # Collect the names of the HDL source files that are used by this IP here.
    set file_list [list  "hdl/verilog/PWM_Controller_Int.v" \
-						"hdl/vhdl/PWM_w_Int.vhd" \
-						"hdl/vhdl/PWM_w_Int_S00_AXI.vhd" ]
+                  "hdl/vhdl/PWM_w_Int.vhd" \
+                  "hdl/vhdl/PWM_w_Int_S00_AXI.vhd" ]
    
    # Create a new Vivado project for this IP and add the source files.
    create_project $ip_name . -force
@@ -90,7 +90,7 @@ proc make_ip {ip_name} {
                                     {aartix7} {Pre-Production}\
                                     {artix7} {Pre-Production}\
                                     {zynq} {Production}\
-									{ZYNQUPLUS} {Pre-Production}} [ipx::current_core]
+                           {ZYNQUPLUS} {Production}} [ipx::current_core]
 
    # Set the File Groups for this IP core.
    ipx::add_file_group -type utility xilinx_utilityxitfiles [ipx::current_core]

@@ -359,7 +359,9 @@ if {[string match -nocase "no" $jtag]} {
    if {[string match -nocase "yes" $sdk]} {
       puts "Attempting to Build SDK..."
       cd ${projects_folder}
-      exec >@stdout 2>@stderr xsdk -batch -source ../software/$project\_sdk.tcl -notrace
+      # Change starting with 2018.2 (Ultra96v2 validation test, Nov 2018) to use xsct instead of xsdk
+      # https://www.xilinx.com/html_docs/xilinx2018_2/SDK_Doc/xsct/use_cases/xsct_howtoruntclscriptfiles.html
+      exec >@stdout 2>@stderr xsct ../software/$project\_sdk.tcl -notrace
       # Build a BOOT.bin file only if a BIF file exists for the project.
       if {[file exists ../software/$project\_sd.bif]} {
          puts "Generating BOOT.BIN..."
