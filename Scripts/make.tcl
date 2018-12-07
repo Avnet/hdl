@@ -55,7 +55,6 @@ set ok_to_tag_public "false"
 set sdk "no"
 set jtag "no"
 set dev_arch "zynq"
-set bdf_path ../../bdf
 
 # create GREP process
 # From: http://wiki.tcl.tk/9395
@@ -98,7 +97,10 @@ puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 # fetch the required Vivado Board Definition File (BDF) from the bdf git repo
+set bdf_path [file normalize [pwd]/../../bdf]
 set_param board.repoPaths $bdf_path
+puts "\nBDF path set to $bdf_path \n\n"
+
 
 set ranonce "false"
 set start_time [clock seconds]
