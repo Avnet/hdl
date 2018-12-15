@@ -51,7 +51,7 @@
 
 # Build PetaLinux BSP HW Platform
 # for Ultra96v2 Board
-set argv [list board=ULTRA96V2 project=ultra96v2_valtest sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+set argv [list board=ULTRA96V2 project=ultra96v2_valtest sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
