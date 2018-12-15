@@ -45,10 +45,10 @@
 #  Revision:            May 1, 2017: 1.00 Initial version
 #
 # ----------------------------------------------------------------------------
-	
+   
 
 # Build MiniZed with microphone support
 # Don't launch implementation from script ... instead, must manually copy project to short folder name near root C:\ due to over-long path names from SysGen IP
-set argv [list board=minized project=minized_mic sdk=no close_project=no version_override=no]
+set argv [list board=MINIZED project=minized_mic sdk=no close_project=no version_override=no]
 set argc [llength $argv]
 source ./make.tcl -notrace
