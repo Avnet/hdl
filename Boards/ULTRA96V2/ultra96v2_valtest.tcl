@@ -158,5 +158,8 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    set_property -dict [list CONFIG.PSU__PMU__GPO2__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
    endgroup
    
+#   startgroup
+#   set_property -dict [list CONFIG.PSU__USB2_0__EMIO__ENABLE {1} CONFIG.PSU__USB2_1__EMIO__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
+#   endgroup
 
 }
