@@ -1,0 +1,13 @@
+--- system.mss 2018-10-29 14:02:20.503616000 -0400
++++ system.mss 2018-10-30 10:01:56.161352000 -0400
+@@ -6,8 +6,8 @@
+  PARAMETER OS_NAME = standalone
+  PARAMETER OS_VER = 6.7
+  PARAMETER PROC_INSTANCE = psu_cortexa53_0
+- PARAMETER stdin = psu_uart_0
+- PARAMETER stdout = psu_uart_0
++ PARAMETER stdin = psu_uart_1
++ PARAMETER stdout = psu_uart_1
+ END
+ 
+ 
