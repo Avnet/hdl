@@ -101,7 +101,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
    connect_bd_net [get_bd_pins axi_uart16550_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
 
-
    startgroup
    set_property -dict [list CONFIG.PSU__GPIO_EMIO__PERIPHERAL__ENABLE {1} CONFIG.PSU__GPIO_EMIO__PERIPHERAL__IO {1}] [get_bd_cells zynq_ultra_ps_e_0]
    endgroup
@@ -121,7 +120,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.1 zynq_ultra_ps_e_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.2 zynq_ultra_ps_e_0
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" } [get_bd_cells zynq_ultra_ps_e_0]
 
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
@@ -154,12 +153,12 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/maxihpm1_fpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
    
    # Disable PMU GPO2 (disconnect MIO34) (work-around for PMU power-off issue)
+   #~ startgroup
+   #~ set_property -dict [list CONFIG.PSU__PMU__GPO2__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
+   #~ endgroup
+
    startgroup
-   set_property -dict [list CONFIG.PSU__PMU__GPO2__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__PMU__GPO2__POLARITY {high}] [get_bd_cells zynq_ultra_ps_e_0]
    endgroup
-   
-#   startgroup
-#   set_property -dict [list CONFIG.PSU__USB2_0__EMIO__ENABLE {1} CONFIG.PSU__USB2_1__EMIO__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-#   endgroup
 
 }

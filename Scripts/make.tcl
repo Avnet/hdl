@@ -55,6 +55,7 @@ set ok_to_tag_public "false"
 set sdk "no"
 set jtag "no"
 set dev_arch "zynq"
+set vivado_ver "2018_2"
 
 # create GREP process
 # From: http://wiki.tcl.tk/9395
@@ -260,7 +261,7 @@ if {[file isfile ./ProjectScripts/$project.tcl]} {
 # create variables with absolute folders for all necessary folders
 set boards_folder [file normalize [pwd]/../Boards]
 set ip_folder [file normalize [pwd]/../IP]
-set projects_folder [file normalize [pwd]/../Projects/$project/$board]
+set projects_folder [file normalize [pwd]/../Projects/${project}/${board}_${vivado_ver}]
 set scripts_folder [file normalize [pwd]]
 set repo_folder [file normalize [pwd]../../]
 
