@@ -102,17 +102,17 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins axi_uart16550_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
 
 
-   startgroup
-   set_property -dict [list CONFIG.PSU__GPIO_EMIO__PERIPHERAL__ENABLE {1} CONFIG.PSU__GPIO_EMIO__PERIPHERAL__IO {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
+   #startgroup
+   #set_property -dict [list CONFIG.PSU__GPIO_EMIO__PERIPHERAL__ENABLE {1} CONFIG.PSU__GPIO_EMIO__PERIPHERAL__IO {1}] [get_bd_cells zynq_ultra_ps_e_0]
+   #endgroup
 
    # Comment the following 4 lines if the WiFi radio reset is driven via MIO7 (JT5 set to pins 2-3)
    # Un-comment these lines if the WiFi radio reset is driven via EMIO (ZU+ device pin A3) (JT5 set to pins 1-2)
    # This setting has implications for the device tree, so be sure to make sure this setting matches the device tree
-   startgroup
-   make_bd_intf_pins_external  [get_bd_intf_pins zynq_ultra_ps_e_0/GPIO_0]
-   endgroup
-   set_property name wifi_radio_rstn [get_bd_intf_ports GPIO_0_0]
+   #startgroup
+   #make_bd_intf_pins_external  [get_bd_intf_pins zynq_ultra_ps_e_0/GPIO_0]
+   #endgroup
+   #set_property name wifi_radio_rstn [get_bd_intf_ports GPIO_0_0]
 
    regenerate_bd_layout
    validate_bd_design
