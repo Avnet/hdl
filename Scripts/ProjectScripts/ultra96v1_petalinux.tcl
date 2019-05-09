@@ -109,6 +109,7 @@ set_property target_language VHDL [current_project]
 
 # Add the constraints that are needed
 add_files -fileset constrs_1 -norecurse ${projects_folder}/../${project}.xdc
+import_files -fileset constrs_1 -norecurse ${projects_folder}/../${project}.xdc
 
 # Add Project source files
 puts "***** Adding Source Files to Block Design..."

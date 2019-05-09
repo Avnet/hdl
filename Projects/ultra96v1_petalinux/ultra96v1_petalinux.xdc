@@ -1,25 +1,58 @@
-set_property IOSTANDARD LVCMOS18 [get_ports mezz*]
+#######################################################################
+# Ultra96 LS Mezzanine PWMs
+#######################################################################
+# These constraints are used for when connecting the LS Mezzanine PWM to 
+# the PWM_w_Int custom IP block.
+set_property IOSTANDARD LVCMOS18 [get_ports ls_mezz_pwm_out*]
 
-#HD_GPIO_2 on FPGA / Connector pin 7 / mezz_uart_0_txd
-set_property PACKAGE_PIN F8 [get_ports mezz_uart_0_txd]
-#HD_GPIO_1 on FPGA / Connector pin 5 / mezz_uart_0_rxd
-set_property PACKAGE_PIN F7 [get_ports mezz_uart_0_rxd]
+set_property PACKAGE_PIN A6 [get_ports {ls_mezz_pwm_out1[0]}]
+set_property PACKAGE_PIN C7 [get_ports {ls_mezz_pwm_out2[0]}]
 
-#HD_GPIO_5 on FPGA / Connector pin 13 / mezz_uart_1_rxd
-set_property PACKAGE_PIN G5 [get_ports mezz_uart_1_rxd]
-#HD_GPIO_4 on FPGA / Connector pin 11 / mezz_uart_1_txd
-set_property PACKAGE_PIN F6 [get_ports mezz_uart_1_txd]
+#######################################################################
+# Ultra96 LS Mezzanine UARTs
+#######################################################################
+set_property IOSTANDARD LVCMOS18 [get_ports ls_mezz_uart*]
 
-#HD_GPIO_11 on FPGA / Connector pin 20 / mezz_int_0
-set_property PACKAGE_PIN D6 [get_ports {mezz_int_0[0]}]
+#HD_GPIO_2 on Ultra96 / Connector pin 7
+set_property PACKAGE_PIN F8 [get_ports ls_mezz_uart1_rx]
+#HD_GPIO_1 on Ultra96 / Connector pin 5
+set_property PACKAGE_PIN F7 [get_ports ls_mezz_uart1_tx]
 
-#HD_GPIO_12 on FPGA / Connector pin 22 / mezz_int_1
-set_property PACKAGE_PIN D5 [get_ports {mezz_int_1[0]}]
+#HD_GPIO_5 on Ultra96 / Connector pin 13
+set_property PACKAGE_PIN G5 [get_ports ls_mezz_uart2_rx]
+#HD_GPIO_4 on Ultra96 / Connector pin 11
+set_property PACKAGE_PIN F6 [get_ports ls_mezz_uart2_tx]
 
-set_property IOSTANDARD LVCMOS18 [get_ports BT*]
+#######################################################################
+# Ultra96 LS Mezzanine Resets
+#######################################################################
+set_property IOSTANDARD LVCMOS18 [get_ports {ls_mezz_rst*}]
+#HD_GPIO_7 on Ultra96
+set_property PACKAGE_PIN A7 [get_ports {ls_mezz_rst[0]}]
+#HD_GPIO_14 on Ultra96
+set_property PACKAGE_PIN B6 [get_ports {ls_mezz_rst[1]}]
 
-#BT_HCI_RTS on FPGA / emio_uart0_ctsn 
-set_property PACKAGE_PIN B7 [get_ports BT_ctsn]
-#BT_HCI_CTS on FPGA / emio_uart0_rtsn
-set_property PACKAGE_PIN B5 [get_ports BT_rtsn]
+#######################################################################
+# Ultra96 LS Mezzanine Interrupts
+#######################################################################
+set_property IOSTANDARD LVCMOS18 [get_ports {ls_mezz_int*}]
+#HD_GPIO_8 on Ultra96
+set_property PACKAGE_PIN G6 [get_ports {ls_mezz_int[0]}]
+#HD_GPIO_15 on Ultra96
+set_property PACKAGE_PIN C5 [get_ports {ls_mezz_int[1]}]
 
+#######################################################################
+# Ultra96 Fan
+#######################################################################
+set_property IOSTANDARD LVCMOS12 [get_ports {fan_pwm[0]}]
+#FAN_PWM on Ultra96
+set_property PACKAGE_PIN F4 [get_ports {fan_pwm[0]}]
+
+#######################################################################
+# Ultra96 Bluetooth UART Modem Signals
+#######################################################################
+set_property IOSTANDARD LVCMOS18 [get_ports bt*]
+#BT_HCI_RTS on Ultra96 / emio_uart0_ctsn
+set_property PACKAGE_PIN B7 [get_ports bt_ctsn]
+#BT_HCI_CTS on Ultra96 / emio_uart0_rtsn
+set_property PACKAGE_PIN B5 [get_ports bt_rtsn]
