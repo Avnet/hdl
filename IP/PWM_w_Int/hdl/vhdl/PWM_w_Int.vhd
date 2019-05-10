@@ -16,7 +16,7 @@ entity PWM_w_Int is
 	);
 	port (
 		-- Users to add ports here
-           LEDs : out std_logic_vector( 0 downto 0);
+           PWM_out : out std_logic_vector( 0 downto 0);
            Interrupt_Out : out std_logic;
            PWM_Counter: out std_logic_vector(PWM_PERIOD-1 downto 0);
            DutyCycle : out std_logic_vector(31 downto 0);
@@ -144,7 +144,7 @@ PWM_Controller_Int_Inst : PWM_Controller_Int
                 Clk =>s00_axi_aclk,
                 DutyCycle =>DutyCycle_int,
                 Reset =>s00_axi_aresetn,
-                PWM_out =>LEDs,
+                PWM_out =>PWM_out,
                 Interrupt =>Interrupt_Out,
                 count =>PWM_Counter
              );

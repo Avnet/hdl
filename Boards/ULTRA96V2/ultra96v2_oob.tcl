@@ -56,7 +56,9 @@ proc avnet_create_project {project projects_folder scriptdir} {
 
 proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
-   # Add PL UART 0 to the BD, connect it to the AXI, make the I/Os external and name them
+   #
+   # Add LS Mezzanine UARTs
+   #
    startgroup
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uart16550:2.0 axi_uart16550_0
    endgroup
@@ -68,14 +70,13 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    startgroup
    make_bd_pins_external  [get_bd_pins axi_uart16550_0/sin]
    endgroup
-   set_property name ls_mezz_uart0_rxd [get_bd_ports sin_0]
+   set_property name ls_mezz_uart0_rx [get_bd_ports sin_0]
 
    startgroup
    make_bd_pins_external  [get_bd_pins axi_uart16550_0/sout]
    endgroup
-   set_property name ls_mezz_uart0_txd [get_bd_ports sout_0]
+   set_property name ls_mezz_uart0_tx [get_bd_ports sout_0]
 
-   # Add PL UART 1 to the BD, connect it to the AXI, make the I/Os external and name them
    startgroup
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uart16550:2.0 axi_uart16550_1
    endgroup
@@ -87,24 +88,16 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    startgroup
    make_bd_pins_external  [get_bd_pins axi_uart16550_1/sin]
    endgroup
-   set_property name ls_mezz_uart1_rxd [get_bd_ports sin_0]
+   set_property name ls_mezz_uart1_rx [get_bd_ports sin_0]
 
    startgroup
    make_bd_pins_external  [get_bd_pins axi_uart16550_1/sout]
    endgroup
-   set_property name ls_mezz_uart1_txd [get_bd_ports sout_0]
+   set_property name ls_mezz_uart1_tx [get_bd_ports sout_0]
 
-   # Make the PS UART 0 handshaking I/Os external and name them
-   startgroup
-   make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/emio_uart0_ctsn]
-   endgroup
-   set_property name bt_ctsn [get_bd_ports emio_uart0_ctsn_0]
-   startgroup
-   make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/emio_uart0_rtsn]
-   endgroup
-   set_property name bt_rtsn [get_bd_ports emio_uart0_rtsn_0]
-
-   # Add PL GPIO 0 to the BD, connect it to the AXI, set the GPIO properties, make the I/Os external and name them
+   #
+   # Add the GPIO block for the WiFi and BT LEDs
+   #
    startgroup
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0
    endgroup
@@ -124,7 +117,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    set_property name wifi_en_led [get_bd_intf_ports GPIO_0]
    set_property name bt_en_led [get_bd_intf_ports GPIO2_0]
 
-   # Add PL GPIO 1 to the BD, connect it to the AXI, set the GPIO properties, make the I/Os external and name them
+   #
+   # Add the GPIO block for the fan control
+   #
    startgroup
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_1
    endgroup
@@ -142,148 +137,34 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    endgroup
    set_property name fan_pwm [get_bd_intf_ports GPIO_0]
 
-   # Add XLSLICE blocks to carve the 30 bits of PS EMIO GPIO into smaller chunks
-   # Add XLSLICE 0 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   # Add the GPIO block for the LS mezzanine INT inputs and RST outputs
+   #
    startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_2
    endgroup
    
-   set_property -dict [list CONFIG.DIN_TO {28} CONFIG.DIN_FROM {29} CONFIG.DIN_FROM {29} CONFIG.DOUT_WIDTH {2}] [get_bd_cells xlslice_0]
-
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_0/Din]
-
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {Auto} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/axi_gpio_2/S_AXI} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins axi_gpio_2/S_AXI]
+   
    startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_0/Dout]
-   endgroup
-   set_property name hs_mezz_csi0_c [get_bd_ports Dout_0]
-
-   # Add XLSLICE 1 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_1
+   set_property -dict [list CONFIG.C_GPIO_WIDTH {2} CONFIG.C_GPIO2_WIDTH {2} CONFIG.C_IS_DUAL {1} CONFIG.C_ALL_INPUTS {1} CONFIG.C_ALL_OUTPUTS_2 {1}] [get_bd_cells axi_gpio_2]
    endgroup
    
-   set_property -dict [list CONFIG.DIN_TO {20} CONFIG.DIN_FROM {27} CONFIG.DIN_FROM {27} CONFIG.DOUT_WIDTH {8}] [get_bd_cells xlslice_1]
-
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_1/Din]
-
    startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_1/Dout]
-   endgroup
-   set_property name hs_mezz_csi0_d [get_bd_ports Dout_0]
-
-   # Add XLSLICE 2 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_2
+   make_bd_pins_external  [get_bd_pins axi_gpio_2/gpio_io_i]
    endgroup
    
-   set_property -dict [list CONFIG.DIN_TO {18} CONFIG.DIN_FROM {19} CONFIG.DIN_FROM {19} CONFIG.DOUT_WIDTH {2}] [get_bd_cells xlslice_2]
-
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_2/Din]
-
+   set_property name ls_mezz_int [get_bd_ports gpio_io_i_0]
+   
    startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_2/Dout]
-   endgroup
-   set_property name hs_mezz_csi1_c [get_bd_ports Dout_0]
-
-   # Add XLSLICE 3 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_3
+   make_bd_pins_external  [get_bd_pins axi_gpio_2/gpio2_io_o]
    endgroup
    
-   set_property -dict [list CONFIG.DIN_TO {14} CONFIG.DIN_FROM {17} CONFIG.DIN_FROM {17} CONFIG.DOUT_WIDTH {4}] [get_bd_cells xlslice_3]
-
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_3/Din]
-
-   startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_3/Dout]
-   endgroup
-   set_property name hs_mezz_csi1_d [get_bd_ports Dout_0]
-
-   # Add XLSLICE 4 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_4
-   endgroup
+   set_property name ls_mezz_rst [get_bd_ports gpio2_io_o_0]
    
-   set_property -dict [list CONFIG.DIN_TO {13} CONFIG.DIN_FROM {13} CONFIG.DIN_FROM {13} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_4]
-   
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_4/Din]
-
-   startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_4/Dout]
-   endgroup
-   set_property name hs_mezz_csi0_mclk [get_bd_ports Dout_0]
-
-   # Add XLSLICE 5 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_5
-   endgroup
-   
-   set_property -dict [list CONFIG.DIN_TO {12} CONFIG.DIN_FROM {12} CONFIG.DIN_FROM {12} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_5]
-
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_5/Din]
-
-   startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_5/Dout]
-   endgroup
-   set_property name hs_mezz_csi1_mclk [get_bd_ports Dout_0]
-
-   # Add XLSLICE 6 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_6
-   endgroup
-   
-   set_property -dict [list CONFIG.DIN_TO {10} CONFIG.DIN_FROM {11} CONFIG.DIN_FROM {11} CONFIG.DOUT_WIDTH {2}] [get_bd_cells xlslice_6]
-
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_6/Din]
-
-   startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_6/Dout]
-   endgroup
-   set_property name hs_mezz_dsi_clk [get_bd_ports Dout_0]
-
-   # Add XLSLICE 7 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_7
-   endgroup
-   
-   set_property -dict [list CONFIG.DIN_TO {2} CONFIG.DIN_FROM {9} CONFIG.DIN_FROM {9} CONFIG.DOUT_WIDTH {8}] [get_bd_cells xlslice_7]
-
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_7/Din]
-
-   startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_7/Dout]
-   endgroup
-   set_property name hs_mezz_dsi_d [get_bd_ports Dout_0]
-
-   # Add XLSLICE 8 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_8
-   endgroup
-   
-   set_property -dict [list CONFIG.DIN_TO {1} CONFIG.DIN_FROM {1} CONFIG.DIN_FROM {1} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_8]
-
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_8/Din]
-
-   startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_8/Dout]
-   endgroup
-   set_property name hs_mezz_hsic_str [get_bd_ports Dout_0]
-
-   # Add XLSLICE 9 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_9
-   endgroup
-
-   set_property -dict [list CONFIG.DIN_TO {0} CONFIG.DIN_FROM {0} CONFIG.DIN_FROM {0} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_9]
-
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_9/Din]
-
-   startgroup
-   make_bd_pins_external  [get_bd_pins xlslice_9/Dout]
-   endgroup
-   set_property name hs_mezz_hsic_d [get_bd_ports Dout_0]
-
-   # Add PWM 0 IP block to the BD, connect it to the AXI, make the I/Os external and name them
+   #
+   # Add the PWM IP blocks
+   #
    startgroup
    create_bd_cell -type ip -vlnv avnet.com:ip:PWM_w_Int:1.0 PWM_w_Int_0
    endgroup
@@ -293,11 +174,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    endgroup
 
    startgroup
-   make_bd_pins_external  [get_bd_pins PWM_w_Int_0/LEDs]
+   make_bd_pins_external  [get_bd_pins PWM_w_Int_0/PWM_out]
    endgroup
-   set_property name ls_mezz_pwm0 [get_bd_ports LEDs_0]
+   set_property name ls_mezz_pwm0 [get_bd_ports PWM_out_0]
 
-   # Add PWM 1 IP block to the BD, connect it to the AXI, make the I/Os external and name them
    startgroup
    create_bd_cell -type ip -vlnv avnet.com:ip:PWM_w_Int:1.0 PWM_w_Int_1
    endgroup
@@ -307,11 +187,26 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    endgroup
 
    startgroup
-   make_bd_pins_external  [get_bd_pins PWM_w_Int_1/LEDs]
+   make_bd_pins_external  [get_bd_pins PWM_w_Int_1/PWM_out]
    endgroup
-   set_property name ls_mezz_pwm1 [get_bd_ports LEDs_0]
+   set_property name ls_mezz_pwm1 [get_bd_ports PWM_out_0]
 
-   # Add XLCONCAT block to the BD, set the property for the number of input ports, connect it to the PS block interrupt input, and connect the interrupt outputs from the UARTs and PWMs to it
+   #
+   # Add the System Management Wizard 
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:system_management_wiz:1.3 system_management_wiz_0
+   endgroup
+   
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {Auto} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/system_management_wiz_0/S_AXI_LITE} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins system_management_wiz_0/S_AXI_LITE]
+
+   startgroup
+   set_property -dict [ list CONFIG.CHANNEL_ENABLE_VP_VN {false} CONFIG.ENABLE_VCCPSAUX_ALARM {false} CONFIG.ENABLE_VCCPSINTFP_ALARM {false} CONFIG.ENABLE_VCCPSINTLP_ALARM {false} CONFIG.OT_ALARM {false} CONFIG.USER_TEMP_ALARM {false} CONFIG.VCCAUX_ALARM {false} CONFIG.VCCINT_ALARM {false} ] [get_bd_cells system_management_wiz_0]
+   endgroup
+
+   #
+   # Add the Concat block for the interrupts
+   #
    startgroup
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
    endgroup
@@ -323,6 +218,179 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins PWM_w_Int_0/Interrupt_Out] [get_bd_pins xlconcat_0/In2]
    connect_bd_net [get_bd_pins PWM_w_Int_1/Interrupt_Out] [get_bd_pins xlconcat_0/In3]
 
+   #
+   # Connect the UART modem signals for PS UART0 (Bluetooth UART)
+   #
+   startgroup
+   make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/emio_uart0_ctsn]
+   endgroup
+   set_property name bt_ctsn [get_bd_ports emio_uart0_ctsn_0]
+   startgroup
+   make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/emio_uart0_rtsn]
+   endgroup
+   set_property name bt_rtsn [get_bd_ports emio_uart0_rtsn_0]
+
+   #
+   # Add XLSLICE blocks to carve the 30 bits of PS EMIO GPIO into smaller chunks
+   # Add XLSLICE 0 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_0
+   endgroup
+   
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {28} CONFIG.DIN_FROM {29} CONFIG.DOUT_WIDTH {2}] [get_bd_cells xlslice_0]
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_0/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_0/Dout]
+   endgroup
+   set_property name hs_mezz_csi0_c [get_bd_ports Dout_0]
+
+   #
+   # Add XLSLICE 1 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_1
+   endgroup
+   
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {20} CONFIG.DIN_FROM {27} CONFIG.DOUT_WIDTH {8}] [get_bd_cells xlslice_1]
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_1/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_1/Dout]
+   endgroup
+   set_property name hs_mezz_csi0_d [get_bd_ports Dout_0]
+
+   #
+   # Add XLSLICE 2 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_2
+   endgroup
+   
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {18} CONFIG.DIN_FROM {19} CONFIG.DOUT_WIDTH {2}] [get_bd_cells xlslice_2]
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_2/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_2/Dout]
+   endgroup
+   set_property name hs_mezz_csi1_c [get_bd_ports Dout_0]
+
+   #
+   # Add XLSLICE 3 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_3
+   endgroup
+   
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {14} CONFIG.DIN_FROM {17} CONFIG.DOUT_WIDTH {4}] [get_bd_cells xlslice_3]
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_3/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_3/Dout]
+   endgroup
+   set_property name hs_mezz_csi1_d [get_bd_ports Dout_0]
+
+   #
+   # Add XLSLICE 4 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_4
+   endgroup
+   
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {13} CONFIG.DIN_FROM {13} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_4]
+   
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_4/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_4/Dout]
+   endgroup
+   set_property name hs_mezz_csi0_mclk [get_bd_ports Dout_0]
+
+   #
+   # Add XLSLICE 5 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_5
+   endgroup
+   
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {12} CONFIG.DIN_FROM {12} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_5]
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_5/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_5/Dout]
+   endgroup
+   set_property name hs_mezz_csi1_mclk [get_bd_ports Dout_0]
+
+   #
+   # Add XLSLICE 6 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_6
+   endgroup
+   
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {10} CONFIG.DIN_FROM {11} CONFIG.DOUT_WIDTH {2}] [get_bd_cells xlslice_6]
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_6/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_6/Dout]
+   endgroup
+   set_property name hs_mezz_dsi_clk [get_bd_ports Dout_0]
+
+   #
+   # Add XLSLICE 7 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_7
+   endgroup
+   
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {2} CONFIG.DIN_FROM {9} CONFIG.DOUT_WIDTH {8}] [get_bd_cells xlslice_7]
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_7/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_7/Dout]
+   endgroup
+   set_property name hs_mezz_dsi_d [get_bd_ports Dout_0]
+
+   #
+   # Add XLSLICE 8 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_8
+   endgroup
+   
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {1} CONFIG.DIN_FROM {1} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_8]
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_8/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_8/Dout]
+   endgroup
+   set_property name hs_mezz_hsic_str [get_bd_ports Dout_0]
+
+   #
+   # Add XLSLICE 9 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
+   #
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_9
+   endgroup
+
+   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {0} CONFIG.DIN_FROM {0} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_9]
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_9/Din]
+
+   startgroup
+   make_bd_pins_external  [get_bd_pins xlslice_9/Dout]
+   endgroup
+   set_property name hs_mezz_hsic_d [get_bd_ports Dout_0]
+
    # Redraw the BD and validate the design
    regenerate_bd_layout
    validate_bd_design
@@ -331,7 +399,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.2 zynq_ultra_ps_e_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.1 zynq_ultra_ps_e_0
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" } [get_bd_cells zynq_ultra_ps_e_0]
 
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
@@ -360,6 +428,10 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    startgroup
    set_property -dict [list CONFIG.PSU__GPIO_EMIO__PERIPHERAL__ENABLE {1} CONFIG.PSU__GPIO_EMIO__PERIPHERAL__IO {30}] [get_bd_cells zynq_ultra_ps_e_0]
+   endgroup
+
+   startgroup
+   set_property -dict [list CONFIG.PSU__SPI0__GRP_SS1__ENABLE {1} CONFIG.PSU__SPI0__GRP_SS2__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
    endgroup
 
 }
