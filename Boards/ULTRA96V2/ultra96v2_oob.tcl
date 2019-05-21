@@ -418,9 +418,9 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/maxihpm1_fpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
    
    # Disable PMU GPO2 (disconnect MIO34) (work-around for PMU power-off issue)
-   #startgroup
-   #set_property -dict [list CONFIG.PSU__PMU__GPO2__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-   #endgroup
+   startgroup
+   set_property -dict [list CONFIG.PSU__PMU__GPO2__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
+   endgroup
 
    #startgroup
    #set_property -dict [list CONFIG.PSU__PMU__GPO2__POLARITY {high}] [get_bd_cells zynq_ultra_ps_e_0]
