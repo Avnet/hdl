@@ -125,20 +125,6 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
    
-   # The 2017.2 and later BDF enables SWDT and TTC peripherals by default
-   # so these do not need to be explicitly enabled.
-   #set_property -dict [list CONFIG.PSU__SWDT0__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   #set_property -dict [list CONFIG.PSU__SWDT1__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   #set_property -dict [list CONFIG.PSU__TTC0__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   #set_property -dict [list CONFIG.PSU__TTC1__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   #set_property -dict [list CONFIG.PSU__TTC2__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   #set_property -dict [list CONFIG.PSU__TTC3__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-
-   # Disable SPI0 so we can use MIO[38:43] as GPIO to test the LS mezzanine loopback
-   startgroup
-   set_property -dict [list CONFIG.PSU__SPI0__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
-   
    # MIO25 is used as GPIO for USB Vbus detect.  Change to pullup instead of default pulldown
    startgroup
    set_property -dict [list CONFIG.PSU_MIO_25_PULLUPDOWN {pullup}] [get_bd_cells zynq_ultra_ps_e_0]
@@ -157,6 +143,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    #~ set_property -dict [list CONFIG.PSU__PMU__GPO2__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
    #~ endgroup
 
+   # Set PMU GPO2 (connected to on/off controller KILL_N signal) initial state to '1'   
    startgroup
    set_property -dict [list CONFIG.PSU__PMU__GPO2__POLARITY {high}] [get_bd_cells zynq_ultra_ps_e_0]
    endgroup

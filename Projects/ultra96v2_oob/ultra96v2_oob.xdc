@@ -10,14 +10,32 @@ set_property PACKAGE_PIN B5 [get_ports bt_rtsn]
 set_property IOSTANDARD LVCMOS18 [get_ports ls_mezz_uart*]
 
 #HD_GPIO_2 on FPGA / Connector pin 7
-set_property PACKAGE_PIN F8 [get_ports ls_mezz_uart0_rxd]
+set_property PACKAGE_PIN F8 [get_ports ls_mezz_uart0_rx]
 #HD_GPIO_1 on FPGA / Connector pin 5
-set_property PACKAGE_PIN F7 [get_ports ls_mezz_uart0_txd]
+set_property PACKAGE_PIN F7 [get_ports ls_mezz_uart0_tx]
 
 #HD_GPIO_5 on FPGA / Connector pin 13
-set_property PACKAGE_PIN G5 [get_ports ls_mezz_uart1_rxd]
+set_property PACKAGE_PIN G5 [get_ports ls_mezz_uart1_rx]
 #HD_GPIO_4 on FPGA / Connector pin 11
-set_property PACKAGE_PIN F6 [get_ports ls_mezz_uart1_txd]
+set_property PACKAGE_PIN F6 [get_ports ls_mezz_uart1_tx]
+
+###
+
+set_property IOSTANDARD LVCMOS18 [get_ports ls_mezz_rst*]
+
+#HD_GPIO_7 on FPGA / Connector pin 31
+set_property PACKAGE_PIN B6 [get_ports {ls_mezz_rst[1]}]
+#HD_GPIO_14 on FPGA / Connector pin 32
+set_property PACKAGE_PIN A7 [get_ports {ls_mezz_rst[0]}]
+
+###
+
+set_property IOSTANDARD LVCMOS18 [get_ports ls_mezz_int*]
+
+#HD_GPIO_8 on FPGA / Connector pin 33
+set_property PACKAGE_PIN G6 [get_ports {ls_mezz_int[0]}]
+#HD_GPIO_15 on FPGA / Connector pin 34
+set_property PACKAGE_PIN C5 [get_ports {ls_mezz_int[1]}]
 
 ###
 
@@ -148,4 +166,5 @@ set_property IOSTANDARD LVCMOS12 [get_ports {hs_mezz_hsic_d[0]}]
 
 #HSIC_DATA on FPGA / Connector pin 59
 set_property PACKAGE_PIN C2 [get_ports {hs_mezz_hsic_d[0]}]
+
 
