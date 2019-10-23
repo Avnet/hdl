@@ -41,12 +41,13 @@
 # 
 #  Dependencies:        make.tcl
 #
-#  Revision:            Feb 08, 2016: 1.00 Initial version
+#  Revision:            Feb 08, 2016: 1.0  Initial version
 #                       May 10, 2016: 1.1  Updated to support 2015.4 tools
 #                       Jul 01, 2016: 1.2  Updated to support 2016.2 tools
 #                       Nov 03, 2017: 1.3  Updated to support 2017.2 tools
 #                       May 03, 2018: 1.4  Updated to support 2017.4 tools
 #                       Aug 11, 2018: 1.5  Updated to support 2018.2 tools
+#                       Sep 27, 2019: 1.6  Updated to support 2019.1 tools
 # 
 # ----------------------------------------------------------------------------
 

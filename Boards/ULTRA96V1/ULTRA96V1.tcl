@@ -28,20 +28,21 @@
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         Dec 21, 2016
+#  Create Date:         Aug 01, 2018
 #  Design Name:         
 #  Module Name:         
 #  Project Name:        
 #  Target Devices:      Zynq UltraScale+ 3EG
-#  Hardware Boards:     Ultra96_v1 board
+#  Hardware Boards:     Ultra96v1 board
 # 
 #  Tool versions:       Vivado 2018.2
 # 
-#  Description:         Build Script for Ultra96_v1
+#  Description:         Build Script for Ultra96v1
 # 
 #  Dependencies:        To be called from a project build script
 #
 #  Revision:            Aug 01, 2018: 1.00 Initial version
+#                       Oct 14, 2019: 1.01 Updated for Vivado 2019.1
 #
 # ----------------------------------------------------------------------------
 
@@ -260,13 +261,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #
    regenerate_bd_layout
    validate_bd_design
-
 }
 
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.2 zynq_ultra_ps_e_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.3 zynq_ultra_ps_e_0
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" } [get_bd_cells zynq_ultra_ps_e_0]
 
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]

@@ -29,15 +29,15 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Aug 14, 2017
-#  Design Name:         MiniZed SpeedWay HW Platform
-#  Module Name:         make_minized_speedway.tcl
-#  Project Name:        MiniZed SpeedWay Training
+#  Design Name:         MiniZed TTC HW Platform
+#  Module Name:         make_minized_ttc.tcl
+#  Project Name:        MiniZed TTC Training
 #  Target Devices:      Xilinx Zynq-7000
 #  Hardware Boards:     MiniZed SOM
 # 
 #  Tool versions:       Xilinx Vivado 2017.1
 # 
-#  Description:         Build Script for MiniZed SpeedWay HW Platform
+#  Description:         Build Script for MiniZed TTC HW Platform
 # 
 #  Dependencies:        make.tcl
 #
@@ -45,7 +45,7 @@
 # 
 # ----------------------------------------------------------------------------
 
-# Build SpeedWay HW Platform for MiniZed 
-set argv [list board=MINIZED project=minized_speedway sdk=yes close_project=yes version_override=yes]
+# Build TTC HW Platform for MiniZed 
+set argv [list board=MINIZED project=minized_ttc sdk=yes close_project=yes version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
