@@ -53,7 +53,9 @@
 #                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
 #                       Aug 23, 2017: 1.02 Updated for 2017.2 tools
 #                       Jan 30, 2018: 1.03 Added support for UltraZed-EV
-#                       Feb 07, 2018: 1.03 Updated for 2017.4 tools
+#                       Feb 07, 2018: 1.04 Updated for 2017.4 tools
+#                       Oct 25, 2018: 1.05 Updated for 2018.2 tools
+#                       Feb 07, 2018: 1.06 Updated for 2019.1 tools
 # 
 # ----------------------------------------------------------------------------
 
@@ -78,65 +80,103 @@ if {[string match -nocase "yes" $clean]} {
    # Reset project.
    reset_project
 } else {
-# Create Vivado project
-puts "***** Creating Vivado Project..."
-source ../Boards/$board/$board.tcl -notrace
-avnet_create_project $project $projects_folder $scriptdir
-
-# Apply board specific project property settings
-switch -nocase $board {
-   UZ3EG_IOCC {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc_production..."
-      set_property board_part em.avnet.com:ultrazed_eg_iocc_production:part0:1.0 [current_project]
+   # Create Vivado project
+   puts "***** Creating Vivado Project..."
+   source ../Boards/$board/$board.tcl -notrace
+   avnet_create_project $project $projects_folder $scriptdir
+   
+   # Apply board specific project property settings
+   switch -nocase $board {
+      UZ3EG_IOCC {
+         puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc_production..."
+         set_property board_part em.avnet.com:ultrazed_eg_iocc_production:part0:1.0 [current_project]
+      }
+      UZ3EG_PCIEC {
+         puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_pciecc_production..."
+         set_property board_part em.avnet.com:ultrazed_eg_pciecc_production:part0:1.1 [current_project]
+      }
+      UZ7EV_EVCC {
+         puts "***** Assigning Vivado Project board_part Property to ultrazed_ev_evcc_production..."
+         set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.1 [current_project]
+      }
    }
-   UZ3EG_PCIEC {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_pciecc_production..."
-      set_property board_part em.avnet.com:ultrazed_eg_pciecc_production:part0:1.1 [current_project]
-   }
-   UZ7EV_EVCC {
-      puts "***** Assigning Vivado Project board_part Property to ultrazed_ev_evcc_production..."
-      set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.1 [current_project]
-   }
-}
 
-# Add Avnet IP Repository
-puts "***** Updating Vivado to include IP Folder"
-cd ../Projects/$project
-set_property ip_repo_paths  ../../IP [current_project]
-update_ip_catalog
+   # Generate Avnet IP
+   puts "***** Generating IP..."
+   source ./makeip.tcl -notrace
+   #avnet_generate_ip PWM_w_Int
 
-# Create Block Design and Add PS core
-puts "***** Creating Block Design..."
-create_bd_design ${project}
-set design_name ${project}
+   # Add Avnet IP Repository
+   # The IP_REPO_PATHS looks for a <component>.xml file, where <component> is the name of the IP to add to the catalog. The XML file identifies the various files that define the IP.
+   # The IP_REPO_PATHS property does not have to point directly at the XML file for each IP in the repository.
+   # The IP catalog searches through the sub-folders of the specified IP repositories, looking for IP to add to the catalog. 
+   # Add Avnet IP Repository
+   puts "***** Updating Vivado to include IP Folder"
+   cd ../Projects/$project
+   set_property ip_repo_paths  ../../IP [current_fileset]
+   update_ip_catalog
+   
+   # Add Avnet IP Repository
+   #puts "***** Updating Vivado to include IP Folder"
+   #cd ../Projects/$project
+   #set_property ip_repo_paths  ../../IP [current_project]
+   #update_ip_catalog
+   
+   # Create Block Design and Add PS core
+   puts "***** Creating Block Design..."
+   create_bd_design ${project}
+   set design_name ${project}
+   
+   # Add Processing System presets from board definitions.
+   avnet_add_ps_preset $project $projects_folder $scriptdir
+   
+   # Add User IO presets from board definitions.
+   avnet_add_user_io_preset $project $projects_folder $scriptdir
+   
+   # General Config
+   puts "***** General Configuration for Design..."
+   set_property target_language VHDL [current_project]
+   
+   # Add the constraints that are needed
+   #import_files -fileset constrs_1 -norecurse ${projects_folder}/../${project}.xdc
+   #add_files -fileset constrs_1 -norecurse ../${project}.xdc
+   #add_files -fileset constrs_1 -norecurse ${projects_folder}/../${project}.xdc
 
-# Add Processing System presets from board definitions.
-avnet_add_ps_preset $project $projects_folder $scriptdir
-
-# Add User IO presets from board definitions.
-avnet_add_user_io_preset $project $projects_folder $scriptdir
-
-# General Config
-puts "***** General Configuration for Design..."
-set_property target_language VHDL [current_project]
-
-# Add Project source files
-puts "***** Adding Source Files to Block Design..."
-make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
-add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.vhd
-
-# Build the binary
-#*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-#*- KEEP OUT, do not touch this section unless you know what you are doing! -*
-#*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-puts "***** Building Binary..."
-# add this to allow up+enter rebuild capability 
-cd $scripts_folder
-update_compile_order -fileset sources_1
-update_compile_order -fileset sim_1
-save_bd_design
-launch_runs impl_1 -to_step write_bitstream -j 2
-#*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-#*- KEEP OUT, do not touch this section unless you know what you are doing! -*
-#*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   # Add Project source files
+   puts "***** Adding Source Files to Block Design..."
+   make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
+   add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.vhd
+   #add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.v
+   
+   # Add SDSoC directives
+   puts "***** Adding SDSoC Directves to Design..."
+   avnet_add_sdsoc_directives $project $projects_folder $scriptdir
+   update_compile_order -fileset sources_1
+   import_files
+   
+   # Build the binary
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   puts "***** Building Binary..."
+   # add this to allow up+enter rebuild capability 
+   cd $scripts_folder
+   update_compile_order -fileset sources_1
+   update_compile_order -fileset sim_1
+   save_bd_design
+   launch_runs impl_1 -to_step write_bitstream -j 4
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   #save_bd_design
+   #launch_runs impl_1 -to_step write_bitstream -jobs [numberOfCPUs]
+   puts "***** Wait for bitstream to be written..."
+   wait_on_run impl_1
+   puts "***** Open the implemented design..."
+   open_run impl_1
+   puts "***** Write and validate the DSA..."
+   write_dsa ${projects_folder}/${project}.dsa -include_bit -force
+   validate_dsa ${projects_folder}/${project}.dsa -verbose
+   puts "***** Close the implemented design..."
+   close_design
 }

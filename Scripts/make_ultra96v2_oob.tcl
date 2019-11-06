@@ -39,13 +39,15 @@
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
 #  Hardware Boards:     Ultra96v2 Board
 # 
-#  Tool versions:       Xilinx Vivado 2018.3
+#  Tool versions:       Xilinx Vivado 2018.2
 # 
 #  Description:         Build Script for Ultra96v2 OOB PetaLinux BSP HW Platform
 # 
 #  Dependencies:        make.tcl
 #
 #  Revision:            Apr 04, 2019: 1.00 Initial version
+#  Revision:            Aug 29, 2019: 1.01 Updated for 2018.3
+#  Revision:            Oct 23, 2019: 1.02 Updated for 2019.1
 # 
 # ----------------------------------------------------------------------------
 

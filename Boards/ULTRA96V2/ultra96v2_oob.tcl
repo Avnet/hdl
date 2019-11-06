@@ -42,7 +42,8 @@
 #  Dependencies:        To be called from a project build script
 #
 #  Revision:            Apr 04, 2019: 1.00 Initial version
-#                       Oct 14, 2019: 1.01 Updated for Vivado 2019.1
+#                       Aug 29, 2019: 1.01 Updated for Vivado 2018.3
+#                       Oct 14, 2019: 1.02 Updated for Vivado 2019.1
 #
 # ----------------------------------------------------------------------------
 

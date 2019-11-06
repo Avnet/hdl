@@ -161,7 +161,7 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Open the implemented design..."
    open_run impl_1
    puts "***** Write and validate the DSA..."
-   write_dsa ${projects_folder}/${project}.dsa -include_bit
+   write_dsa ${projects_folder}/${project}.dsa -include_bit -force
    validate_dsa ${projects_folder}/${project}.dsa -verbose
    puts "***** Close the implemented design..."
    close_design
