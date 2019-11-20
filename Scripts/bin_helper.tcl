@@ -84,33 +84,33 @@ set x 0
 
 while {1} {
    # stop if an error is detected
-   if {[file exists $projects_folder/$project.runs/synth_1/runme.log]} {
-      grep "ERROR:" $projects_folder/$project.runs/synth_1/runme.log
+   if {[file exists $projects_folder/$board.runs/synth_1/runme.log]} {
+      grep "ERROR:" $projects_folder/$board.runs/synth_1/runme.log
       if {[string match -nocase "true" $found]} { 
          puts "Found Error in Synthesis..."
          break
       }
    }
    # stop if an error is detected
-   if {[file exists $projects_folder/$project.runs/impl_1/runme.log]} {
-      grep "ERROR:" $projects_folder/$project.runs/impl_1/runme.log
+   if {[file exists $projects_folder/$board.runs/impl_1/runme.log]} {
+      grep "ERROR:" $projects_folder/$board.runs/impl_1/runme.log
       if {[string match -nocase "true" $found]} { 
          puts "Found Error in Bitstream Creation..."
          break
       }
    }
    # stop if an error is detected
-   if {[file exists $projects_folder/$project.runs/impl_1/.vivado.error.rst]} { 
+   if {[file exists $projects_folder/$board.runs/impl_1/.vivado.error.rst]} { 
       puts "Found Error in Implementation..."
       break 
    }
    # stop if an error is detected
-   if {[file exists $projects_folder/$project.runs/synth_1/.vivado.error.rst]} { 
+   if {[file exists $projects_folder/$board.runs/synth_1/.vivado.error.rst]} { 
       puts "Found Error in Synthesis..."
       break 
    }
    # stop if end of run detected
-   if {[file exists $projects_folder/$project.runs/impl_1/.vivado.end.rst]} { 
+   if {[file exists $projects_folder/$board.runs/impl_1/.vivado.end.rst]} { 
       puts "Found End of Bitstream Creation..."
       break 
    }
