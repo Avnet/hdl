@@ -172,12 +172,12 @@ if {[string match -nocase "yes" $clean]} {
    update_compile_order -fileset sources_1
    update_compile_order -fileset sim_1
    save_bd_design
-   launch_runs impl_1 -to_step write_bitstream -j 6
+   #launch_runs impl_1 -to_step write_bitstream -j 6
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    #save_bd_design
-   #launch_runs impl_1 -to_step write_bitstream -jobs [numberOfCPUs]
+   launch_runs impl_1 -to_step write_bitstream -jobs $numberOfCores
    puts "***** Wait for bitstream to be written..."
    wait_on_run impl_1
    puts "***** Open the implemented design..."

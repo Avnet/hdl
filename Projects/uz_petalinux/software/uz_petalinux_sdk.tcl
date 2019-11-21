@@ -54,7 +54,9 @@
 
 # This is the project name and should match the name of the Vivado HW project 
 # folder.
-set project                  "uz_petalinux"
+#set project                  "uz_petalinux"
+set lastIndex                 [expr {$argc-1}]
+set project                   [lindex $argv $lastIndex]
 
 # This is the Hardware Definition and will contain the exported HDF file from
 # the Vivado HW project and can be named anything but for historical purposes
@@ -103,6 +105,7 @@ set fsbl_bsp_name            "zynqmp_fsbl_bsp"
 # Set workspace and import hardware platform
 setws ${project}.sdk
 puts "\n#\n#\n# Importing hardware definition ${hw_name} from impl_1 folder ...\n#\n#\n"
+file mkdir ./${project}.sdk
 file copy -force ${project}.runs/impl_1/${project}_wrapper.sysdef ${project}.sdk/${hw_name}.hdf
 puts "\n#\n#\n# Create hardware definition project ...\n#\n#\n"
 createhw -name ${hw_name} -hwspec ${project}.sdk/${hw_name}.hdf

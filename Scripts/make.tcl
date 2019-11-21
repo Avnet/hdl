@@ -89,6 +89,40 @@ proc grep0 {prefix pattern handle} {
     }
 }
 
+# From StackOverflow
+# https://stackoverflow.com/questions/29482303/how-to-find-the-number-of-cpus-in-tcl
+
+proc numberOfCPUs {} {
+    # Windows puts it in an environment variable
+    global tcl_platform env
+    if {$tcl_platform(platform) eq "windows"} {
+        return $env(NUMBER_OF_PROCESSORS)
+    }
+
+    # Check for sysctl (OSX, BSD)
+    set sysctl [auto_execok "sysctl"]
+    if {[llength $sysctl]} {
+        if {![catch {exec {*}$sysctl -n "hw.ncpu"} cores]} {
+            return $cores
+        }
+    }
+
+    # Assume Linux, which has /proc/cpuinfo, but be careful
+    if {![catch {open "/proc/cpuinfo"} f]} {
+        set cores [regexp -all -line {^processor\s} [read $f]]
+        close $f
+        if {$cores > 0} {
+            return $cores
+        }
+    }
+
+    # No idea what the actual number of cores is; exhausted all our options
+    # Fall back to returning 1; there must be at least that because we're running on it!
+    return 1
+}
+
+set numberOfCores [numberOfCPUs] 
+
 puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -364,7 +398,9 @@ if {[string match -nocase "no" $jtag]} {
       cd ${projects_folder}
       # Change starting with 2018.2 (Ultra96v2 validation test, Nov 2018) to use xsct instead of xsdk
       # https://www.xilinx.com/html_docs/xilinx2018_2/SDK_Doc/xsct/use_cases/xsct_howtoruntclscriptfiles.html
-      exec >@stdout 2>@stderr xsct ../software/$project\_sdk.tcl -notrace
+      # added the Board variable so it could be used when needed - see uz_petalinux SDK build script for 
+      # how to use this
+      exec >@stdout 2>@stderr xsct ../software/$project\_sdk.tcl -notrace $board
       # Build a BOOT.bin file only if a BIF file exists for the project.
       if {[file exists ../software/$project\_sd.bif]} {
          puts "Generating BOOT.BIN..."
