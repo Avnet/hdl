@@ -44,16 +44,20 @@
 # ----------------------------------------------------------------------------
 
 #!/usr/bin/tclsh
+set board  "MINIZED"
 set project  "minized_petalinux"
-set hw_name  "minized_petalinux_hw"
-set bsp_name "minized_petalinux_bsp"
+set hw_name  "${board}_hw"
+set bsp_name "${board}_bsp"
 
 # Set workspace and import hardware platform
-sdk set_workspace ${project}.sdk
+#TC sdk setws ${project}.sdk
+sdk setws ${board}.sdk
 puts "\n#\n#\n# Importing hardware definition ${hw_name} from impl_1 folder ...\n#\n#\n"
-file copy -force ${project}.runs/impl_1/${project}_wrapper.sysdef ${project}.sdk/${hw_name}.hdf
+#TC file copy -force ${project}.runs/impl_1/${project}_wrapper.sysdef ${project}.sdk/${hw_name}.hdf
+file copy -force ${board}.runs/impl_1/${board}_wrapper.sysdef ${board}.sdk/${hw_name}.hdf
 puts "\n#\n#\n# Create hardware definition project ...\n#\n#\n"
-sdk createhw -name ${hw_name} -hwspec ${project}.sdk/${hw_name}.hdf
+#TC sdk createhw -name ${hw_name} -hwspec ${project}.sdk/${hw_name}.hdf
+sdk createhw -name ${hw_name} -hwspec ${board}.sdk/${hw_name}.hdf
 
 # Generate BSP
 puts "\n#\n#\n# Creating ${bsp_name} ...\n#\n#\n"

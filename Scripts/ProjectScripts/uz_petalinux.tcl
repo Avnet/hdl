@@ -111,7 +111,6 @@ if {[string match -nocase "yes" $clean]} {
    # The IP_REPO_PATHS looks for a <component>.xml file, where <component> is the name of the IP to add to the catalog. The XML file identifies the various files that define the IP.
    # The IP_REPO_PATHS property does not have to point directly at the XML file for each IP in the repository.
    # The IP catalog searches through the sub-folders of the specified IP repositories, looking for IP to add to the catalog. 
-   # Add Avnet IP Repository
    puts "***** Updating Vivado to include IP Folder"
    cd ../Projects/$project
    set_property ip_repo_paths  ../../IP [current_fileset]
