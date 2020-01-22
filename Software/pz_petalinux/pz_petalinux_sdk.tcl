@@ -53,6 +53,11 @@
 #
 ##############################################################################
 
+# Fetch the $board name from the make.tcl command line
+# The command line is $project\_sdk.tcl -notrace $board $vivado_ver
+set board                   [lindex $argv 0]
+set vivado_ver              [lindex $argv 1]
+
 # This is the project name and should match the name of the Vivado HW project 
 # folder.
 set project  "pz_petalinux"
@@ -60,7 +65,7 @@ set project  "pz_petalinux"
 # This is the Hardware Definition and will contain the exported HDF file from
 # the Vivado HW project and can be named anything but for historical purposes
 # you should consider naming it "${project}_hw" to keep it simple.
-set hw_name  "${project}_hw"
+set hw_name  "${board}_hw"
 
 # This is the Board Support Package name and will contain the generated BSP 
 # based upon the Vivado HW project.  Although it can be named anything you 
@@ -68,7 +73,7 @@ set hw_name  "${project}_hw"
 # it simple. It is NOT to be confused with the BSP that gets generated for the
 # FSBL which should have its own BSP due to library dependencies upon xilffs 
 # and xilrsa libraries which may not be desired in the application BSP.
-set bsp_name "${project}_bsp"
+set bsp_name "${board}_bsp"
 
 # This is the Standalone application that tests the LED_w_Int AXI IP instance
 # which proves that the Custom IP functions as expected from a processor 
@@ -102,11 +107,13 @@ set fsbl_bsp_name            "zynq_fsbl_bsp"
 ##############################################################################
 
 # Set workspace and import hardware platform
-setws ${project}.sdk
+setws ${board}.sdk
+puts "\n#\n# ${board} \n#\n#"
 puts "\n#\n#\n# Importing hardware definition ${hw_name} from impl_1 folder ...\n#\n#\n"
-file copy -force ${project}.runs/impl_1/${project}_wrapper.sysdef ${project}.sdk/${hw_name}.hdf
+file mkdir ./${board}.sdk
+file copy -force ${board}.runs/impl_1/${board}_wrapper.sysdef ${board}.sdk/${hw_name}.hdf
 puts "\n#\n#\n# Create hardware definition project ...\n#\n#\n"
-createhw -name ${hw_name} -hwspec ${project}.sdk/${hw_name}.hdf
+createhw -name ${hw_name} -hwspec ${board}.sdk/${hw_name}.hdf
 
 
 ##############################################################################

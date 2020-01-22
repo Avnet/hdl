@@ -74,7 +74,8 @@ if {[string match -nocase "yes" $clean]} {
 puts ""
 puts "***** Creating Vivado Project..."
 source ../Boards/$board/$board.tcl -notrace
-avnet_create_project $project $projects_folder $scriptdir
+#avnet_create_project $project $projects_folder $scriptdir
+avnet_create_project $board $projects_folder $scriptdir
 # Remove the SOM specific XDC file since no constraints are needed for 
 # the basic system design
 remove_files -fileset constrs_1 *.xdc
@@ -116,22 +117,28 @@ update_ip_catalog
 # Create Block Design and add Zynq PS
 puts ""
 puts "***** Creating Block Design..."
-create_bd_design ${project}
-set design_name ${project}
-avnet_add_ps_preset $project $projects_folder $scriptdir
+#create_bd_design ${project}
+#set design_name ${project}
+create_bd_design ${board}
+set design_name ${board}
+#avnet_add_ps_preset $project $projects_folder $scriptdir
+avnet_add_ps_preset $board $projects_folder $scriptdir
 
 # Add preset IP from board definitions
 puts ""
 puts "***** Add defined IP blocks to Block Design..."
-avnet_add_user_io_preset $project $projects_folder $scriptdir
+#avnet_add_user_io_preset $project $projects_folder $scriptdir
+avnet_add_user_io_preset $board $projects_folder $scriptdir
 
 # Add the AXI_IIC and associated I/O constraints
 puts ""
 puts "***** Add the AXI_IIC and constraints..."
 # Add the AXI_IIC IP block and make the connections
-avnet_add_i2c_ip $project $projects_folder $scriptdir
+#avnet_add_i2c_ip $project $projects_folder $scriptdir
+avnet_add_i2c_ip $board $projects_folder $scriptdir
 # Add the constraints that are needed for testing
-avnet_add_i2c $project $projects_folder $scriptdir
+#avnet_add_i2c $project $projects_folder $scriptdir
+avnet_add_i2c $board $projects_folder $scriptdir
 
 # Check design IPs
 set bCheckIPsPassed 1
@@ -175,8 +182,10 @@ set_property target_language VHDL [current_project]
 # Add Project source files
 puts ""
 puts "***** Adding Source Files to Block Design..."
-make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
-add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.vhd
+#make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
+#add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.vhd
+   make_wrapper -files [get_files ${projects_folder}/${board}.srcs/sources_1/bd/${board}/${board}.bd] -top
+   add_files -norecurse ${projects_folder}/${board}.srcs/sources_1/bd/${board}/hdl/${board}_wrapper.vhd
 
 
 # Build the binary
@@ -190,7 +199,7 @@ cd $scripts_folder
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
 save_bd_design
-launch_runs impl_1 -to_step write_bitstream -j 2
+launch_runs impl_1 -to_step write_bitstream -j 6
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
 #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
