@@ -128,8 +128,11 @@ if {[string match -nocase "yes" $clean]} {
    #add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.v
    
    # Add SDSoC directives
-   puts "***** Adding SDSoC Directves to Design..."
-   avnet_add_sdsoc_directives $board $projects_folder $scriptdir
+   #puts "***** Adding SDSoC Directves to Design..."
+   #avnet_add_sdsoc_directives $board $projects_folder $scriptdir
+   # Add VITIS directives
+   puts "***** Adding VITIS Directves to Design..."
+   avnet_add_vitis_directives $board $projects_folder $scriptdir
    update_compile_order -fileset sources_1
    import_files
    
