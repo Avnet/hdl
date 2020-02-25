@@ -51,31 +51,32 @@
 #                       Jan 30, 2018: 1.03 Added support for UltraZed-EV
 #                       Feb 01, 2018: 1.04 Updated for 2017.4 tools
 #                       Oct 25, 2018: 1.05 Updated for 2018.2 tools
-#                       Feb 01, 2018: 1.06 Updated for 2019.1 tools
+#                       Oct 01, 2019: 1.06 Updated for 2019.1 tools
+#                       Feb 20, 2020: 1.06 Updated for 2019.2 tools
 # 
 # ----------------------------------------------------------------------------
 
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + IO Carrier
-#~ set argv [list board=UZ3EG_IOCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
-#~ set argc [llength $argv]
-#~ source ./make.tcl -notrace
+set argv [list board=UZ3EG_IOCC project=uz_petalinux sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
+set argc [llength $argv]
+source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + PCIe Carrier
-#~ set argv [list board=UZ3EG_PCIEC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
-#~ set argc [llength $argv]
-#~ source ./make.tcl -notrace
+set argv [list board=UZ3EG_PCIEC project=uz_petalinux sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
+set argc [llength $argv]
+source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform (also used for OOB HW Platform)
 # for UltraZed 7EV-ES2 SOM + EV Carrier
-#set argv [list board=UZ7EV_ES2_EVCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+#set argv [list board=UZ7EV_ES2_EVCC project=uz_petalinux sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
 #set argc [llength $argv]
 #source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform (also used for OOB HW Platform)
 # for UltraZed 7EV SOM + EV Carrier
-set argv [list board=UZ7EV_EVCC project=uz_petalinux sdk=yes close_project=yes version_override=yes dev_arch=zynqmp]
+set argv [list board=UZ7EV_EVCC project=uz_petalinux sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
 set argc [llength $argv]
 source ./make.tcl -notrace
 

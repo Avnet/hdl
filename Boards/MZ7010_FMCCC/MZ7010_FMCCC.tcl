@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -54,7 +58,6 @@ proc avnet_add_ps {project projects_folder scriptdir} {
    create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" }  [get_bd_cells processing_system7_0]
 
-
 }
 
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
@@ -66,3 +69,10 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    set processing_system7_0 [get_bd_cells processing_system7_0]
 
 }
+
+proc avnet_add_user_io_preset {project projects_folder scriptdir} {
+
+   # placeholder for future use
+   
+}
+

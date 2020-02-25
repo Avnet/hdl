@@ -48,18 +48,19 @@
 #                       May 03, 2018: 1.4  Updated to support 2017.4 tools
 #                       Aug 11, 2018: 1.5  Updated to support 2018.2 tools
 #                       Sep 20, 2019: 1.6  Updated to support 2019.1 tools
+#                       Feb 12, 2020: 1.7  Updated to support 2019.2 tools
 # 
 # ----------------------------------------------------------------------------
 
 # Build PetaLinux BSP HW Platform
 # for MicroZed 7010 SOM
-set argv [list board=MZ7010_FMCCC project=mz_petalinux sdk=yes version_override=yes]
+set argv [list board=MZ7010_FMCCC project=mz_petalinux sdk=no version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 
 # Build PetaLinux BSP HW Platform
 # for MicroZed 7020 SOM
-set argv [list board=MZ7020_FMCCC project=mz_petalinux sdk=yes version_override=yes]
+set argv [list board=MZ7020_FMCCC project=mz_petalinux sdk=no version_override=yes]
 set argc [llength $argv]
 source ./make.tcl -notrace
 

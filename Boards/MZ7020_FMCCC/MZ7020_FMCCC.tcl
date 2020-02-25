@@ -67,3 +67,9 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
 }
 
+proc avnet_add_user_io_preset {project projects_folder scriptdir} {
+
+   # placeholder for future use
+   
+}
+

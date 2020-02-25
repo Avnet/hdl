@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -49,29 +53,22 @@ proc avnet_create_project {project projects_folder scriptdir} {
    # add selection for proper xdc based on needs
    # if IO carrier, then use that xdc
    # if FMC, choose that one
-   # for now, uses the same master constraints file as PZ7015
-   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_7015_RevC_FMCV2_RevA_v1.xdc
+   import_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_7015_RevC_FMCV2_RevA_v1.xdc
 
 }
 
 proc avnet_add_ali3_display_kit {project projects_folder scriptdir} {
 
    # add selection for proper xdc based on needs
-   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_FMC2_ali3_pmod.xdc
-
-}
-
-proc avnet_add_i2c {project projects_folder scriptdir} {
-
-   # add selection for proper xdc based on needs
-   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_FMC2_i2c.xdc
+   import_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_FMC2_ali3_pmod.xdc
 
 }
 
 proc avnet_add_user_io {project projects_folder scriptdir} {
 
    # add selection for proper xdc based on needs
-   add_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_FMC2_user_io.xdc
+   import_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_FMC2_user_io.xdc
+   import_files -fileset constrs_1 -norecurse $scriptdir/../Boards/PZ7030_FMC2/PZ7030_FMC2_i2c.xdc
 
 }
 
@@ -86,22 +83,18 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_0/S_AXI]
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
 
-   startgroup
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
-   endgroup
-   set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells xlconstant_0]
-   connect_bd_net [get_bd_pins xlconstant_0/dout] [get_bd_pins processing_system7_0/SDIO0_WP]
-   
-}
-
-proc avnet_add_i2c_ip {project projects_folder scriptdir} {
-
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0
    apply_bd_automation -rule xilinx.com:bd_rule:board  [get_bd_intf_pins axi_iic_0/IIC]
    set_property name hdmi_i2c [get_bd_intf_ports iic_rtl]
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/processing_system7_0/M_AXI_GP0" intc_ip "/ps7_0_axi_periph" Clk_xbar "Auto" Clk_master "Auto" Clk_slave "Auto" }  [get_bd_intf_pins axi_iic_0/S_AXI]
    set_property -dict [list CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_IRQ_F2P_INTR {1}] [get_bd_cells processing_system7_0]
    connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins processing_system7_0/IRQ_F2P]
+
+   startgroup
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
+   endgroup
+   set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells xlconstant_0]
+   connect_bd_net [get_bd_pins xlconstant_0/dout] [get_bd_pins processing_system7_0/SDIO0_WP]
 
 }
 
@@ -112,7 +105,6 @@ proc avnet_add_ps {project projects_folder scriptdir} {
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" }  [get_bd_cells processing_system7_0]
    create_bd_port -dir I -type clk M_AXI_GP0_ACLK
    connect_bd_net [get_bd_pins /processing_system7_0/M_AXI_GP0_ACLK] [get_bd_ports M_AXI_GP0_ACLK]
-
 
 }
 
@@ -132,8 +124,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
 proc avnet_add_custom_ps {project projects_folder scriptdir} {
 
-   # Add selection for customized PS settings, these ones here are based
-   # upon guidelines found in the Zynq Hardware SpeedWay Training.
+   # add selection for customization depending on board choice (or none)
    create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" }  [get_bd_cells processing_system7_0]
 
