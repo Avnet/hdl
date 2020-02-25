@@ -126,7 +126,7 @@ if {[string match -nocase "yes" $clean]} {
    set_property ip_repo_paths  ../../IP [current_fileset]
    update_ip_catalog
    
-   # Create Block Design and add PS core
+   # Create Block Design and Add PS core
    puts ""
    puts "***** Creating Block Design..."
 #TC   create_bd_design ${project}
