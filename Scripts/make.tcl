@@ -33,7 +33,7 @@
 #  Hardware Boards:     
 # 
 #  Tool versions:       
-set required_version 2019.1
+set required_version 2019.2
 # 
 #  Description:         Build Script for sample project (fails build)
 # 
@@ -188,7 +188,7 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
       for {set j 0} {$j < [expr $chart_wdith - [string length $clean]]} {incr j} {
          append printmessage " "
       }
-      puts "| Clean            |     $printmessage |"
+      append build_params  "| Clean            |     $printmessage |\n"
    }
    # check for PROJECT parameter
    if {[string match -nocase "project=*" [lindex $argv $i]]} {
@@ -298,7 +298,7 @@ if {[file isfile ./ProjectScripts/$project.tcl]} {
    puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
 } else {
    puts "Project Script Does NOT Exist, Check Name and Try Again!"
-   return -code ok
+   #return -code ok
 }
 
 # create variables with absolute folders for all necessary folders
@@ -307,6 +307,12 @@ set ip_folder [file normalize [pwd]/../IP]
 set projects_folder [file normalize [pwd]/../Projects/${project}/${board}_${vivado_ver}]
 set scripts_folder [file normalize [pwd]]
 set repo_folder [file normalize [pwd]../../]
+
+if {[string match -nocase "yes" $clean]} {
+   puts "Cleaning Project..."
+   file delete -force ${projects_folder}
+   return -code ok
+}
 
 # IF tagging - check for modified files
 set GUI $rdi::mode

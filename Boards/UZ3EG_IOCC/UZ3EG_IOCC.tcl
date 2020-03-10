@@ -249,6 +249,11 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #
    connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_pins clk_wiz_0/resetn] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins proc_sys_reset_1/ext_reset_in] [get_bd_pins proc_sys_reset_2/ext_reset_in] [get_bd_pins proc_sys_reset_3/ext_reset_in] [get_bd_pins proc_sys_reset_4/ext_reset_in] [get_bd_pins proc_sys_reset_5/ext_reset_in] [get_bd_pins proc_sys_reset_6/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
 
+
+   #
+   # VITIS ADDITIONS - END
+   #  
+
    # Redraw the BD and validate the design
    regenerate_bd_layout
    validate_bd_design
@@ -268,11 +273,28 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    # when turning the DisplayPort audio on.
    #set_property -dict [list CONFIG.PSU__VIDEO_REF_CLK__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
    #set_property -dict [list CONFIG.PSU__PSS_ALT_REF_CLK__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
+   #set_property -dict [list CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
 
    # Connect the SD card WP pin to MIO44 and pull it down to enable software (PetaLinux) 
    # to mount and write the SD card
    set_property -dict [list CONFIG.PSU__SD1__GRP_WP__ENABLE {1} CONFIG.PSU_MIO_44_PULLUPDOWN {pulldown}] [get_bd_cells zynq_ultra_ps_e_0]
+
+   startgroup
+   #set_property -dict [list CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} CONFIG.PSU__DP__LANE_SEL {Single Higher} CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} CONFIG.PSU__DP__LANE_SEL {Single Higher} CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1} CONFIG.PSU__CRF_APB__DP_VIDEO_REF_CTRL__SRCSEL {VPLL} CONFIG.PSU__CRF_APB__DP_AUDIO_REF_CTRL__SRCSEL {RPLL} CONFIG.PSU__CRF_APB__DP_STC_REF_CTRL__SRCSEL {RPLL}] [get_bd_cells zynq_ultra_ps_e_0]
+   endgroup
+
+   startgroup
+   set_property -dict [list CONFIG.PSU__CRF_APB__TOPSW_MAIN_CTRL__SRCSEL {DPLL}] [get_bd_cells zynq_ultra_ps_e_0]
+   endgroup
+   
+   startgroup
+   set_property -dict [list CONFIG.PSU__USB0__REF_CLK_SEL {Ref Clk2}] [get_bd_cells zynq_ultra_ps_e_0]
+   endgroup
+
+   startgroup
+   set_property -dict [list CONFIG.PSU__CRL_APB__PCAP_CTRL__SRCSEL {IOPLL}] [get_bd_cells zynq_ultra_ps_e_0]
+   endgroup
 
 }
 
@@ -339,7 +361,6 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    # define AXI ports
    set_property PFM.AXI_PORT { \
 	M_AXI_HPM1_FPD {memport "M_AXI_GP"} \
-   	M_AXI_HPM0_LPD {memport "M_AXI_GP"} \
 	S_AXI_HPC0_FPD {memport "S_AXI_HPC" sptag "HPC0" memory "zynq_ultra_ps_e_0 HPC0_DDR_LOW"} \
 	S_AXI_HPC1_FPD {memport "S_AXI_HPC" sptag "HPC1" memory "zynq_ultra_ps_e_0 HPC1_DDR_LOW"} \
 	S_AXI_HP0_FPD {memport "S_AXI_HP" sptag "HP0" memory "zynq_ultra_ps_e_0 HP0_DDR_LOW"} \
@@ -373,3 +394,4 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property STEPS.PHYS_OPT_DESIGN.ARGS.DIRECTIVE Explore [get_runs impl_1]
    set_property STEPS.ROUTE_DESIGN.ARGS.DIRECTIVE Explore [get_runs impl_1]
 }
+

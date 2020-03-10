@@ -135,6 +135,11 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/ARESETN]
    
+   ###DEBUG
+      save_bd_design
+      #break
+   ###DEBUG
+   
    connect_bd_intf_net [get_bd_intf_pins axi_interconnect_0/S00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD]
    connect_bd_net [get_bd_pins axi_interconnect_0/ACLK] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
    
@@ -324,6 +329,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    endgroup
 
    set_property -dict [list CONFIG.NUM_PORTS {5}] [get_bd_cells xlconcat_0]
+   
+   ###DEBUG
+      save_bd_design
+      #break
+   ###DEBUG
+   
    connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
    connect_bd_net [get_bd_pins axi_uart16550_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
    connect_bd_net [get_bd_pins axi_uart16550_1/ip2intc_irpt] [get_bd_pins xlconcat_0/In1]
@@ -618,6 +629,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
    create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.3 zynq_ultra_ps_e_0
+
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" } [get_bd_cells zynq_ultra_ps_e_0]
 
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
@@ -633,7 +645,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    endgroup
 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/maxihpm1_fpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
+   #connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
    
    # Set PMU GPO2 (connected to on/off controller KILL_N signal) initial state to '1'
    startgroup
@@ -714,7 +726,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 
    # define AXI ports
    set_property PFM.AXI_PORT { \
-	M_AXI_HPM1_FPD {memport "M_AXI_GP"}  \
+	M_AXI_HPM1_FPD {memport "M_AXI_GP"} \
 	S_AXI_HPC0_FPD {memport "S_AXI_HPC" sptag "HPC0" memory "zynq_ultra_ps_e_0 HPC0_DDR_LOW"} \
 	S_AXI_HPC1_FPD {memport "S_AXI_HPC" sptag "HPC1" memory "zynq_ultra_ps_e_0 HPC1_DDR_LOW"} \
 	S_AXI_HP0_FPD {memport "S_AXI_HP" sptag "HP0" memory "zynq_ultra_ps_e_0 HP0_DDR_LOW"} \
@@ -747,7 +759,5 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property STEPS.PHYS_OPT_DESIGN.IS_ENABLED true [get_runs impl_1]
    set_property STEPS.PHYS_OPT_DESIGN.ARGS.DIRECTIVE Explore [get_runs impl_1]
    set_property STEPS.ROUTE_DESIGN.ARGS.DIRECTIVE Explore [get_runs impl_1]
-
-
 }
 

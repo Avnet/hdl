@@ -79,29 +79,15 @@ if {[string match -nocase "yes" $clean]} {
    # Create Vivado project
    puts ""
    puts "***** Creating Vivado Project..."
-   source ../Boards/$board/$board.tcl -notrace
+   source ../Boards/$board/$project.tcl -notrace
 #TC   avnet_create_project $project $projects_folder $scriptdir
    avnet_create_project $board $projects_folder $scriptdir
-   # Remove the SOM specific XDC file since no constraints are needed for 
-   # the basic system design
-   remove_files -fileset constrs_1 *.xdc
    
    # Apply board specific project property settings
    switch -nocase $board {
-      UZ3EG_IOCC {
-         puts ""
-         puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc_production..."
-         set_property board_part em.avnet.com:ultrazed_eg_iocc_production:part0:1.0 [current_project]
-      }
-      UZ3EG_PCIEC {
-         puts ""
-         puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_pciecc_production..."
-         set_property board_part em.avnet.com:ultrazed_eg_pciecc_production:part0:1.1 [current_project]
-      }
-      UZ7EV_EVCC {
-         puts ""
-         puts "***** Assigning Vivado Project board_part Property to ultrazed_ev_evcc_production..."
-         set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.1 [current_project]
+      ULTRA96V2 {
+         puts "***** Assigning Vivado Project board_part Property to ultra96v2..."
+         set_property board_part em.avnet.com:ultra96v2:part0:1.0 [current_project]
       }
    }
 
@@ -132,7 +118,7 @@ if {[string match -nocase "yes" $clean]} {
    # Add Processing System presets from board definitions.
 #TC   avnet_add_ps_preset $project $projects_folder $scriptdir
    avnet_add_ps_preset $board $projects_folder $scriptdir
-   
+
    # Add User IO presets from board definitions.
    puts ""
    puts "***** Add defined IP blocks to Block Design..."
@@ -162,7 +148,6 @@ if {[string match -nocase "yes" $clean]} {
 #TC   puts "***** Adding SDSoC Directves to Design..."
 #TC   avnet_add_sdsoc_directives $project $projects_folder $scriptdir
 #TC   avnet_add_sdsoc_directives $board $projects_folder $scriptdir
-   # Add Vitis directives
    puts "***** Adding Vitis Directves to Design..."
    avnet_add_vitis_directives $board $projects_folder $scriptdir
    update_compile_order -fileset sources_1

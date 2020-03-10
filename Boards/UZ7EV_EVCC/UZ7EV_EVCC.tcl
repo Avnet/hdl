@@ -249,6 +249,11 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #
    connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_pins clk_wiz_0/resetn] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins proc_sys_reset_1/ext_reset_in] [get_bd_pins proc_sys_reset_2/ext_reset_in] [get_bd_pins proc_sys_reset_3/ext_reset_in] [get_bd_pins proc_sys_reset_4/ext_reset_in] [get_bd_pins proc_sys_reset_5/ext_reset_in] [get_bd_pins proc_sys_reset_6/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
 
+
+   #
+   # VITIS ADDITIONS - END
+   #  
+
    # Redraw the BD and validate the design
    regenerate_bd_layout
    validate_bd_design
@@ -332,7 +337,6 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    # define AXI ports
    set_property PFM.AXI_PORT { \
 	M_AXI_HPM1_FPD {memport "M_AXI_GP"} \
-   	M_AXI_HPM0_LPD {memport "M_AXI_GP"} \
 	S_AXI_HPC0_FPD {memport "S_AXI_HPC" sptag "HPC0" memory "zynq_ultra_ps_e_0 HPC0_DDR_LOW"} \
 	S_AXI_HPC1_FPD {memport "S_AXI_HPC" sptag "HPC1" memory "zynq_ultra_ps_e_0 HPC1_DDR_LOW"} \
 	S_AXI_HP0_FPD {memport "S_AXI_HP" sptag "HP0" memory "zynq_ultra_ps_e_0 HP0_DDR_LOW"} \
@@ -366,3 +370,4 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property STEPS.PHYS_OPT_DESIGN.ARGS.DIRECTIVE Explore [get_runs impl_1]
    set_property STEPS.ROUTE_DESIGN.ARGS.DIRECTIVE Explore [get_runs impl_1]
 }
+

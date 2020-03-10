@@ -56,6 +56,14 @@
 # 
 # ----------------------------------------------------------------------------
 
+if {$argc != 0} {
+	# Build PetaLinux BSP HW Platform
+	# for UltraZed Defined from external source
+	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
+	set argc [llength $argv]
+	source ./make.tcl -notrace
+} else {
+
 # Build PetaLinux BSP HW Platform
 # for UltraZed 3EG SOM + IO Carrier
 set argv [list board=UZ3EG_IOCC project=uz_petalinux sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
@@ -80,3 +88,4 @@ set argv [list board=UZ7EV_EVCC project=uz_petalinux sdk=no close_project=yes ve
 set argc [llength $argv]
 source ./make.tcl -notrace
 
+}

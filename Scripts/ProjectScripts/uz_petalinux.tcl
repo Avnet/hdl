@@ -137,7 +137,7 @@ if {[string match -nocase "yes" $clean]} {
    # Add Processing System presets from board definitions.
 #TC   avnet_add_ps_preset $project $projects_folder $scriptdir
    avnet_add_ps_preset $board $projects_folder $scriptdir
-   
+
    # Add User IO presets from board definitions.
    puts ""
    puts "***** Add defined IP blocks to Block Design..."
@@ -167,7 +167,6 @@ if {[string match -nocase "yes" $clean]} {
 #TC   puts "***** Adding SDSoC Directves to Design..."
 #TC   avnet_add_sdsoc_directives $project $projects_folder $scriptdir
 #TC   avnet_add_sdsoc_directives $board $projects_folder $scriptdir
-   # Add Vitis directives
    puts "***** Adding Vitis Directves to Design..."
    avnet_add_vitis_directives $board $projects_folder $scriptdir
    update_compile_order -fileset sources_1
