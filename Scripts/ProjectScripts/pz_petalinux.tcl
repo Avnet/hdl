@@ -16,10 +16,10 @@
 #  design is not authorized without written consent from Avnet.
 # 
 #  Please direct any questions to the PicoZed community support forum:
-#     http://www.picozed.org/forum
+#     http://avnet.me/picozed_forum
 # 
 #  Product information is available at:
-#     http://www.picozed.org/product/picozed
+#     http://avnet.me/picozed
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -134,7 +134,7 @@ if {[string match -nocase "yes" $clean]} {
    set_property ip_repo_paths  ../../IP [current_fileset]
    update_ip_catalog
    
-   # Create Block Design and add PS core
+   # Create Block Design and Add PS core
    puts ""
    puts "***** Creating Block Design..."
 #TC   create_bd_design ${project}
@@ -145,7 +145,7 @@ if {[string match -nocase "yes" $clean]} {
    # Add Processing System presets from board definitions.
 #TC   avnet_add_ps_preset $project $projects_folder $scriptdir
    avnet_add_ps_preset $board $projects_folder $scriptdir
-   
+
    # Add User IO presets from board definitions.
    puts ""
    puts "***** Add defined IP blocks to Block Design..."
@@ -159,7 +159,8 @@ if {[string match -nocase "yes" $clean]} {
    #set_property target_language Verilog [current_project]
    
    # Add the constraints that are needed
-   #import_files -fileset constrs_1 -norecurse ../../Boards/${board}/${project}.xdc
+   import_files -fileset constrs_1 -norecurse ../../Boards/${board}/${board}_i2c.xdc
+   import_files -fileset constrs_1 -norecurse ../../Boards/${board}/${board}_user_io.xdc
    
    # Add Project source files
    puts ""
@@ -170,16 +171,6 @@ if {[string match -nocase "yes" $clean]} {
    add_files -norecurse ${projects_folder}/${board}.srcs/sources_1/bd/${board}/hdl/${board}_wrapper.vhd
    #add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.v
    
-   # Add Vitis directives
-   puts ""
-#TC   puts "***** Adding SDSoC Directves to Design..."
-#TC   avnet_add_sdsoc_directives $project $projects_folder $scriptdir
-#TC   avnet_add_sdsoc_directives $board $projects_folder $scriptdir
-   # Add Vitis directives
-   puts "***** Adding Vitis Directves to Design..."
-   avnet_add_vitis_directives $board $projects_folder $scriptdir
-   update_compile_order -fileset sources_1
-   import_files
    
    # Build the binary
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -205,9 +196,7 @@ if {[string match -nocase "yes" $clean]} {
    open_run impl_1
    puts ""
    puts "***** Write and validate the design archive..."
-#TC   write_dsa ${projects_folder}/${project}.dsa -include_bit -force
-#TC   validate_dsa ${projects_folder}/${project}.dsa -verbose
-   write_hw_platform ${projects_folder}/${board}.xsa -include_bit -force
+   write_hw_platform -fixed -file ${projects_folder}/${board}.xsa -include_bit -force
    validate_hw_platform ${projects_folder}/${board}.xsa -verbose
    puts "***** Close the implemented design..."
    close_design

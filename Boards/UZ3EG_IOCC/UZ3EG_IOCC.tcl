@@ -279,19 +279,27 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    # to mount and write the SD card
    set_property -dict [list CONFIG.PSU__SD1__GRP_WP__ENABLE {1} CONFIG.PSU_MIO_44_PULLUPDOWN {pulldown}] [get_bd_cells zynq_ultra_ps_e_0]
 
+   # Set the DP_VIDEO, DP_AUDIO, and DP_STC to their correct PLL sources
    startgroup
-   #set_property -dict [list CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} CONFIG.PSU__DP__LANE_SEL {Single Higher} CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} CONFIG.PSU__DP__LANE_SEL {Single Higher} CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1} CONFIG.PSU__CRF_APB__DP_VIDEO_REF_CTRL__SRCSEL {VPLL} CONFIG.PSU__CRF_APB__DP_AUDIO_REF_CTRL__SRCSEL {RPLL} CONFIG.PSU__CRF_APB__DP_STC_REF_CTRL__SRCSEL {RPLL}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__CRF_APB__DP_VIDEO_REF_CTRL__SRCSEL {VPLL} CONFIG.PSU__CRF_APB__DP_AUDIO_REF_CTRL__SRCSEL {RPLL} CONFIG.PSU__CRF_APB__DP_STC_REF_CTRL__SRCSEL {RPLL}] [get_bd_cells zynq_ultra_ps_e_0]
+   endgroup
+   
+   # Enable DisplayPort and set it to use 2 GTR lanes
+   startgroup
+   set_property -dict [list CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} CONFIG.PSU__DP__LANE_SEL {Dual Higher} CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
    endgroup
 
+   # Set the USB and DisplayPort to their correct reference clocks
+   startgroup
+   set_property -dict [list CONFIG.PSU__USB0__REF_CLK_SEL {Ref Clk0} CONFIG.PSU__DP__REF_CLK_SEL {Ref Clk3}] [get_bd_cells zynq_ultra_ps_e_0]
+   endgroup
+
+   # Set the TOPSW_MAIN to its correct PLL source
    startgroup
    set_property -dict [list CONFIG.PSU__CRF_APB__TOPSW_MAIN_CTRL__SRCSEL {DPLL}] [get_bd_cells zynq_ultra_ps_e_0]
    endgroup
    
-   startgroup
-   set_property -dict [list CONFIG.PSU__USB0__REF_CLK_SEL {Ref Clk2}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
-
+   # Set the PCAP_CTRL to its correct PLL source
    startgroup
    set_property -dict [list CONFIG.PSU__CRL_APB__PCAP_CTRL__SRCSEL {IOPLL}] [get_bd_cells zynq_ultra_ps_e_0]
    endgroup

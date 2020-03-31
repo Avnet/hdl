@@ -52,15 +52,23 @@
 # 
 # ----------------------------------------------------------------------------
 
-# Build PetaLinux BSP HW Platform
-# for MicroZed 7010 SOM
-set argv [list board=MZ7010_FMCCC project=mz_petalinux sdk=no version_override=yes]
-set argc [llength $argv]
-source ./make.tcl -notrace
+if {$argc != 0} {
+	# Build PetaLinux BSP HW Platform
+	# for MicroZed Defined from external source
+	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynq]
+	set argc [llength $argv]
+	source ./make.tcl -notrace
+} else {
 
-# Build PetaLinux BSP HW Platform
-# for MicroZed 7020 SOM
-set argv [list board=MZ7020_FMCCC project=mz_petalinux sdk=no version_override=yes]
-set argc [llength $argv]
-source ./make.tcl -notrace
-
+   # Build PetaLinux BSP HW Platform
+   # for MicroZed 7010 SOM
+   set argv [list board=MZ7010_FMCCC project=mz_petalinux sdk=no version_override=yes]
+   set argc [llength $argv]
+   source ./make.tcl -notrace
+   
+   # Build PetaLinux BSP HW Platform
+   # for MicroZed 7020 SOM
+   set argv [list board=MZ7020_FMCCC project=mz_petalinux sdk=no version_override=yes]
+   set argc [llength $argv]
+   source ./make.tcl -notrace
+}

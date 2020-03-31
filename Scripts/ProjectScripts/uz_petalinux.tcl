@@ -96,17 +96,17 @@ if {[string match -nocase "yes" $clean]} {
       UZ3EG_IOCC {
          puts ""
          puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_iocc_production..."
-         set_property board_part em.avnet.com:ultrazed_eg_iocc_production:part0:1.0 [current_project]
+         set_property board_part em.avnet.com:ultrazed_eg_iocc_production:part0:1.1 [current_project]
       }
       UZ3EG_PCIEC {
          puts ""
          puts "***** Assigning Vivado Project board_part Property to ultrazed_eg_pciecc_production..."
-         set_property board_part em.avnet.com:ultrazed_eg_pciecc_production:part0:1.1 [current_project]
+         set_property board_part em.avnet.com:ultrazed_eg_pciecc_production:part0:1.2 [current_project]
       }
       UZ7EV_EVCC {
          puts ""
          puts "***** Assigning Vivado Project board_part Property to ultrazed_ev_evcc_production..."
-         set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.1 [current_project]
+         set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.2 [current_project]
       }
    }
 
