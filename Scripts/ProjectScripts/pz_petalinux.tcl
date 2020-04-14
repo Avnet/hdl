@@ -87,6 +87,7 @@ if {[string match -nocase "yes" $clean]} {
    source ../Boards/$board/$board.tcl -notrace
 #TC   avnet_create_project $project $projects_folder $scriptdir
    avnet_create_project $board $projects_folder $scriptdir
+   
    # Remove the SOM specific XDC file since no constraints are needed for 
    # the basic system design
    remove_files -fileset constrs_1 *.xdc
@@ -171,6 +172,15 @@ if {[string match -nocase "yes" $clean]} {
    add_files -norecurse ${projects_folder}/${board}.srcs/sources_1/bd/${board}/hdl/${board}_wrapper.vhd
    #add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.v
    
+   # Add Vitis directives
+   puts ""
+#TC   puts "***** Adding SDSoC Directves to Design..."
+#TC   avnet_add_sdsoc_directives $project $projects_folder $scriptdir
+#TC   avnet_add_sdsoc_directives $board $projects_folder $scriptdir
+   puts "***** Adding Vitis Directves to Design..."
+   avnet_add_vitis_directives $board $projects_folder $scriptdir
+   update_compile_order -fileset sources_1
+   import_files
    
    # Build the binary
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -196,8 +206,9 @@ if {[string match -nocase "yes" $clean]} {
    open_run impl_1
    puts ""
    puts "***** Write and validate the design archive..."
-   write_hw_platform -fixed -file ${projects_folder}/${board}.xsa -include_bit -force
+   write_hw_platform -file ${projects_folder}/${board}.xsa -include_bit -force
    validate_hw_platform ${projects_folder}/${board}.xsa -verbose
+   puts ""
    puts "***** Close the implemented design..."
    close_design
 }

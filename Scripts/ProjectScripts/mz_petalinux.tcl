@@ -49,13 +49,13 @@
 # 
 #
 #  Revision:            Mar 26, 2016: 1.00 Initial version
-#                       Jun 16, 2016: 1.1  Updated to support 2015.4 tools
-#                       Jul 01, 2016: 1.2  Updated to support 2016.2 tools
-#                       Oct 10, 2017: 1.3  Updated to support 2017.2 tools
-#                       May 03, 2018: 1.4  Updated to support 2017.4 tools
-#                       Aug 11, 2018: 1.5  Updated to support 2018.2 tools
-#                       Sep 20, 2019: 1.6  Updated to support 2019.1 tools
-#                       Feb 12, 2020: 1.7  Updated to support 2019.2 tools
+#                       Jun 16, 2016: 1.01  Updated to support 2015.4 tools
+#                       Jul 01, 2016: 1.02  Updated to support 2016.2 tools
+#                       Oct 10, 2017: 1.03  Updated to support 2017.2 tools
+#                       May 03, 2018: 1.04  Updated to support 2017.4 tools
+#                       Aug 11, 2018: 1.05  Updated to support 2018.2 tools
+#                       Sep 20, 2019: 1.06  Updated to support 2019.1 tools
+#                       Apr 09, 2020: 1.07  Updated to support 2019.2 tools
 # 
 # ----------------------------------------------------------------------------
 
@@ -87,6 +87,7 @@ if {[string match -nocase "yes" $clean]} {
    source ../Boards/$board/$board.tcl -notrace
 #TC   avnet_create_project $project $projects_folder $scriptdir
    avnet_create_project $board $projects_folder $scriptdir
+   
    # Remove the SOM specific XDC file since no constraints are needed for 
    # the basic system design
    remove_files -fileset constrs_1 *.xdc
@@ -158,6 +159,15 @@ if {[string match -nocase "yes" $clean]} {
    add_files -norecurse ${projects_folder}/${board}.srcs/sources_1/bd/${board}/hdl/${board}_wrapper.vhd
    #add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.v
    
+   # Add Vitis directives
+   puts ""
+#TC   puts "***** Adding SDSoC Directves to Design..."
+#TC   avnet_add_sdsoc_directives $project $projects_folder $scriptdir
+#TC   avnet_add_sdsoc_directives $board $projects_folder $scriptdir
+   puts "***** Adding Vitis Directves to Design..."
+   avnet_add_vitis_directives $board $projects_folder $scriptdir
+   update_compile_order -fileset sources_1
+   import_files
    
    # Build the binary
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -183,8 +193,9 @@ if {[string match -nocase "yes" $clean]} {
    open_run impl_1
    puts ""
    puts "***** Write and validate the design archive..."
-   write_hw_platform -fixed -file ${projects_folder}/${board}.xsa -include_bit -force
+   write_hw_platform -file ${projects_folder}/${board}.xsa -include_bit -force
    validate_hw_platform ${projects_folder}/${board}.xsa -verbose
+   puts ""
    puts "***** Close the implemented design..."
    close_design
 }
