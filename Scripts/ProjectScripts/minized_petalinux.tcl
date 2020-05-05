@@ -114,19 +114,15 @@ if {[string match -nocase "yes" $clean]} {
    set_property ip_repo_paths  ../../IP [current_fileset]
    update_ip_catalog
    
-   # Add Avnet IP Repository
-   #puts "***** Updating Vivado to include IP Folder"
-   #cd ../Projects/$project
-   #set_property ip_repo_paths  ../../IP [current_project]
-   #update_ip_catalog
-   
    # Add Project source files
    puts "***** Adding Source Files to Block Design..."
    # Add Minized-specific RTL design sources
    # Set 'sources_1' fileset object
    set obj [get_filesets sources_1]
    set files [list \
-    "[file normalize "../../IP/minized/hdl/vhdl/wireless_mgr.vhd"]"\
+    "[file normalize "../../IP/minized/hdl/vhdl/wireless_mgr.vhd"]" \
+    "[file normalize "../../IP/minized/hdl/vhdl/led_mgr.vhd"]" \
+    "[file normalize "../../IP/minized/hdl/vhdl/microphone_mgr.vhd"]" \
    ]
    add_files -norecurse -fileset $obj $files
    update_compile_order -fileset sources_1
@@ -143,6 +139,8 @@ if {[string match -nocase "yes" $clean]} {
    # See 'Referencing RTL Modules' in Xilinx UG994
    source ../../Scripts/make_RTL_ip.tcl
    avnet_generate_RTL_ip wireless_mgr wireless_mgr_0
+   avnet_generate_RTL_ip led_mgr led_mgr_0
+   avnet_generate_RTL_ip microphone_mgr microphone_mgr_0
    
    # Add Processing System presets from board definitions.
 #TC   avnet_add_ps_preset $project $projects_folder $scriptdir
@@ -161,7 +159,8 @@ if {[string match -nocase "yes" $clean]} {
    #set_property target_language Verilog [current_project]
    
    # Add the constraints that are needed
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/minized_LEDs.xdc
+#   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/minized_LEDs.xdc
+#   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/minized_mic.xdc
    import_files -fileset constrs_1 -norecurse ${boards_folder}/bitstream_compression_enable.xdc
    import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}.xdc
 

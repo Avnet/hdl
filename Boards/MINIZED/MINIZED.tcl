@@ -154,8 +154,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    # board definition file downloadable from the MiniZed.org community site.
    # Create interface ports
    set iic_rtl_0 [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 iic_rtl_0 ]
-   set pl_led_g [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 pl_led_g ]
-   set pl_led_r [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 pl_led_r ]
    set pl_sw_1bit [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:gpio_rtl:1.0 pl_sw_1bit ]
    
    # Create ports
@@ -170,10 +168,11 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    set WL_SDIO_CLK [ create_bd_port -dir O -type clk WL_SDIO_CLK ]
    set WL_SDIO_CMD [ create_bd_port -dir IO WL_SDIO_CMD ]
    set WL_SDIO_DAT [ create_bd_port -dir IO -from 3 -to 0 WL_SDIO_DAT ]
+   set PL_LED_G [ create_bd_port -dir O PL_LED_G ]
+   set PL_LED_R [ create_bd_port -dir O PL_LED_R ]
+   set AUDIO_CLK [ create_bd_port -dir O AUDIO_CLK ]
+   set AUDIO_DAT [ create_bd_port -dir I AUDIO_DAT ]
 
-   # Create instance: axi_gpio_0, and set properties
-   #create_bd_cell -type module -reference wireless_mgr wireless_mgr_0
-   
    # Create instance: axi_gpio_0, and set properties
    set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
    set_property -dict [ list \
@@ -183,8 +182,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    CONFIG.C_GPIO2_WIDTH {1} \
    CONFIG.C_GPIO_WIDTH {1} \
    CONFIG.C_IS_DUAL {1} \
-   CONFIG.GPIO_BOARD_INTERFACE {Custom} \
-   CONFIG.USE_BOARD_FLOW {true} \
    ] [get_bd_cells axi_gpio_0]
    
    # Create instance: axi_gpio_1, and set properties
@@ -195,6 +192,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    CONFIG.GPIO_BOARD_INTERFACE {pl_sw_1bit} \
    CONFIG.USE_BOARD_FLOW {true} \
    ] [get_bd_cells axi_gpio_1]
+
+   # Create instance: axi_gpio_2, and set properties
+   set axi_gpio_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_2 ]
+   set_property -dict [list CONFIG.C_GPIO_WIDTH {8}] [get_bd_cells axi_gpio_2]
    
    # Create instance: axi_iic_0, and set properties
    set axi_iic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0 ]
@@ -221,6 +222,8 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    ] [get_bd_cells xlconstant_1]
 
    set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
+
+   set pdm_filt_0 [ create_bd_cell -type ip -vlnv Avnet_Inc:SysGen:pdm_filt:1.0 pdm_filt_0 ]
 
    save_bd_design
    
@@ -285,8 +288,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
 
    # Create interface connections
-   connect_bd_intf_net [get_bd_intf_pins axi_gpio_0/GPIO] [get_bd_intf_ports pl_led_g]
-   connect_bd_intf_net [get_bd_intf_pins axi_gpio_0/GPIO2] [get_bd_intf_ports pl_led_r]
    connect_bd_intf_net [get_bd_intf_pins axi_gpio_1/GPIO] [get_bd_intf_ports pl_sw_1bit]
    connect_bd_intf_net [get_bd_intf_pins axi_iic_0/IIC] [get_bd_intf_ports iic_rtl_0]
    connect_bd_intf_net [get_bd_intf_pins ps7/M_AXI_GP0] [get_bd_intf_pins ps7_axi_periph/S00_AXI]
@@ -295,6 +296,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_intf_net [get_bd_intf_pins axi_iic_0/S_AXI] [get_bd_intf_pins ps7_axi_periph/M02_AXI]
    connect_bd_intf_net [get_bd_intf_pins bluetooth_uart/S_AXI] [get_bd_intf_pins ps7_axi_periph/M03_AXI]
    connect_bd_intf_net [get_bd_intf_pins axi_intc_0/s_axi] [get_bd_intf_pins ps7_axi_periph/M04_AXI] 
+   connect_bd_intf_net [get_bd_intf_pins axi_gpio_2/S_AXI] [get_bd_intf_pins ps7_axi_periph/M05_AXI] 
       
    # Connect the IP blocks, clocks, resets, etc.
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] \
@@ -304,8 +306,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       [get_bd_pins ps7_axi_periph/M02_ACLK] \
       [get_bd_pins ps7_axi_periph/M03_ACLK] \
       [get_bd_pins ps7_axi_periph/M04_ACLK] \
+      [get_bd_pins ps7_axi_periph/M05_ACLK] \
       [get_bd_pins axi_gpio_0/s_axi_aclk] \
       [get_bd_pins axi_gpio_1/s_axi_aclk] \
+      [get_bd_pins axi_gpio_2/s_axi_aclk] \
       [get_bd_pins axi_iic_0/s_axi_aclk] \
       [get_bd_pins bluetooth_uart/s_axi_aclk] \
       [get_bd_pins ps7/M_AXI_GP0_ACLK] \
@@ -317,6 +321,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins proc_sys_reset_100MHz/peripheral_aresetn] \
       [get_bd_pins axi_gpio_0/s_axi_aresetn] \
       [get_bd_pins axi_gpio_1/s_axi_aresetn] \
+      [get_bd_pins axi_gpio_2/s_axi_aresetn] \
       [get_bd_pins axi_iic_0/s_axi_aresetn] \
       [get_bd_pins bluetooth_uart/s_axi_aresetn] \
       [get_bd_pins axi_intc_0/s_axi_aresetn] \
@@ -325,7 +330,26 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       [get_bd_pins ps7_axi_periph/M01_ARESETN] \
       [get_bd_pins ps7_axi_periph/M02_ARESETN] \
       [get_bd_pins ps7_axi_periph/M03_ARESETN] \
-      [get_bd_pins ps7_axi_periph/M04_ARESETN] 
+      [get_bd_pins ps7_axi_periph/M04_ARESETN] \
+      [get_bd_pins ps7_axi_periph/M05_ARESETN] 
+
+   connect_bd_net [get_bd_pins ps7/FCLK_CLK2] \
+      [get_bd_pins microphone_mgr_0/clk_in] \
+      [get_bd_pins pdm_filt_0/clk] \
+      [get_bd_pins led_mgr_0/clk_in]
+
+   connect_bd_net [get_bd_pins ps7/FCLK_RESET2_N] [get_bd_pins microphone_mgr_0/resetn_in] 
+
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins led_mgr_0/CPU_PL_LED_G]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins led_mgr_0/CPU_PL_LED_R]
+
+   connect_bd_net [get_bd_pins microphone_mgr_0/AUDIO_PDM] [get_bd_pins pdm_filt_0/pdm_in]
+
+   connect_bd_net [get_bd_pins pdm_filt_0/audio_out] [get_bd_pins led_mgr_0/AUDIO_RAW]
+
+   connect_bd_net [get_bd_pins axi_gpio_2/gpio_io_t] [get_bd_pins led_mgr_0/GPIO_dir]
+   connect_bd_net [get_bd_pins axi_gpio_2/gpio_io_o] [get_bd_pins led_mgr_0/GPIO_from_Zynq]
+   connect_bd_net [get_bd_pins axi_gpio_2/gpio_io_i] [get_bd_pins led_mgr_0/GPIO_to_Zynq]
 
    connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In1]
    connect_bd_net [get_bd_pins bluetooth_uart/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
@@ -347,7 +371,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       [get_bd_pins proc_sys_reset_200MHz/dcm_locked] \
       [get_bd_pins proc_sys_reset_50MHz/dcm_locked] \
       [get_bd_pins proc_sys_reset_41MHz/dcm_locked]
-   connect_bd_net [get_bd_pins clk_wiz_0/resetn] [get_bd_pins ps7/FCLK_RESET0_N]
+   
+   connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] \
+      [get_bd_pins clk_wiz_0/resetn] \
+      [get_bd_pins led_mgr_0/resetn_in]
 
    connect_bd_net [get_bd_pins ps7/FCLK_RESET0_N] \
       [get_bd_pins proc_sys_reset_41MHz/ext_reset_in] \
@@ -387,6 +414,11 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_ports BT_REG_ON] [get_bd_pins wireless_mgr_0/BT_REG_ON]
    connect_bd_net [get_bd_ports BT_CTS_IN_N] [get_bd_pins wireless_mgr_0/BT_CTS_IN_N]
    
+   connect_bd_net [get_bd_ports PL_LED_G] [get_bd_pins led_mgr_0/PL_LED_G]
+   connect_bd_net [get_bd_ports PL_LED_R] [get_bd_pins led_mgr_0/PL_LED_R]
+   connect_bd_net [get_bd_ports AUDIO_CLK] [get_bd_pins microphone_mgr_0/AUDIO_CLK]
+   connect_bd_net [get_bd_ports AUDIO_DAT] [get_bd_pins microphone_mgr_0/AUDIO_DAT]
+
    save_bd_design
 
    assign_bd_address
@@ -427,14 +459,14 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
       CONFIG.PCW_FPGA2_PERIPHERAL_FREQMHZ {160} \
       CONFIG.PCW_FPGA3_PERIPHERAL_FREQMHZ {50} \
       CONFIG.PCW_EN_CLK1_PORT {1} \
-      CONFIG.PCW_EN_CLK2_PORT {0} \
-      CONFIG.PCW_EN_RST2_PORT {0} \
+      CONFIG.PCW_EN_CLK2_PORT {1} \
+      CONFIG.PCW_EN_RST2_PORT {1} \
 	] [get_bd_cells ps7]
 
    set ps7_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_axi_periph ]
    
    set_property -dict [ list \
-   CONFIG.NUM_MI {05} \
+   CONFIG.NUM_MI {06} \
    ] [get_bd_cells ps7_axi_periph]
 
    save_bd_design
@@ -469,7 +501,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    # set_property PFM.AXI_PORT { M05_AXI {memport "M_AXI_GP" }} [get_bd_cells /ps7_axi_periph]
    # for all the interfaces M05_AXI to M31_AXI
    set parVal []
-   for {set i 5} {$i < 32} {incr i} {
+   for {set i 6} {$i < 32} {incr i} {
       lappend parVal M[format %02d $i]_AXI \
    {memport "M_AXI_GP"}
    }

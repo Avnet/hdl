@@ -1,7 +1,7 @@
 proc make_ip {ip_name} {
 
    # Collect the names of the HDL source files that are used by this IP here.
-   set file_list [list  "hdl/vhdl/microphone_mgr.vhd" ]
+   set file_list [list  "hdl/vhdl/led_mgr.vhd" ]
    
    # Create a new Vivado project for this IP and add the source files.
    create_project $ip_name . -force
