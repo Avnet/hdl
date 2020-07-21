@@ -55,7 +55,7 @@ set ok_to_tag_public "false"
 set sdk "no"
 set jtag "no"
 set dev_arch "zynq"
-set vivado_ver "2019_2"
+set vivado_ver "2020_1"
 
 # create GREP process
 # From: http://wiki.tcl.tk/9395

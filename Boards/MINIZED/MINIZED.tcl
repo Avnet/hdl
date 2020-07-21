@@ -212,7 +212,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    # Create instance: xlconcat_0, and set properties
    set xlconcat_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0 ]
    set_property -dict [ list \
-   CONFIG.NUM_PORTS {3} \
+   CONFIG.NUM_PORTS {4} \
    ] [get_bd_cells xlconcat_0]
    
    # Create instance: xlconstant_1, and set properties
@@ -221,9 +221,26 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    CONFIG.CONST_VAL {0} \
    ] [get_bd_cells xlconstant_1]
 
+   # Create instance: axi_intc_0
    set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
 
+   # Create instance: pdm_filt_0
    set pdm_filt_0 [ create_bd_cell -type ip -vlnv Avnet_Inc:SysGen:pdm_filt:1.0 pdm_filt_0 ]
+
+   # Create instance: xadc_wiz_0, and set properties
+   set xadc_wiz_0 [create_bd_cell -type ip -vlnv xilinx.com:ip:xadc_wiz:3.3 xadc_wiz_0 ]
+   set_property -dict [list \
+   CONFIG.XADC_STARUP_SELECTION {channel_sequencer} \
+   CONFIG.CHANNEL_ENABLE_CALIBRATION {true} \
+   CONFIG.CHANNEL_ENABLE_TEMPERATURE {true} \
+   CONFIG.CHANNEL_ENABLE_VCCINT {true} \
+   CONFIG.CHANNEL_ENABLE_VCCAUX {true} \
+   CONFIG.CHANNEL_ENABLE_VBRAM {true} \
+   CONFIG.SEQUENCER_MODE {Continuous} \
+   CONFIG.EXTERNAL_MUX_CHANNEL {VP_VN} \
+   CONFIG.SINGLE_CHANNEL_SELECTION {TEMPERATURE} \
+   CONFIG.CHANNEL_ENABLE_VP_VN {true} \
+   ] [get_bd_cells xadc_wiz_0]
 
    save_bd_design
    
@@ -297,7 +314,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_intf_net [get_bd_intf_pins bluetooth_uart/S_AXI] [get_bd_intf_pins ps7_axi_periph/M03_AXI]
    connect_bd_intf_net [get_bd_intf_pins axi_intc_0/s_axi] [get_bd_intf_pins ps7_axi_periph/M04_AXI] 
    connect_bd_intf_net [get_bd_intf_pins axi_gpio_2/S_AXI] [get_bd_intf_pins ps7_axi_periph/M05_AXI] 
+   connect_bd_intf_net [get_bd_intf_pins xadc_wiz_0/s_axi_lite] [get_bd_intf_pins ps7_axi_periph/M06_AXI] 
       
+   save_bd_design
+
    # Connect the IP blocks, clocks, resets, etc.
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] \
       [get_bd_pins ps7_axi_periph/S00_ACLK] \
@@ -307,6 +327,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       [get_bd_pins ps7_axi_periph/M03_ACLK] \
       [get_bd_pins ps7_axi_periph/M04_ACLK] \
       [get_bd_pins ps7_axi_periph/M05_ACLK] \
+      [get_bd_pins ps7_axi_periph/M06_ACLK] \
       [get_bd_pins axi_gpio_0/s_axi_aclk] \
       [get_bd_pins axi_gpio_1/s_axi_aclk] \
       [get_bd_pins axi_gpio_2/s_axi_aclk] \
@@ -314,7 +335,8 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       [get_bd_pins bluetooth_uart/s_axi_aclk] \
       [get_bd_pins ps7/M_AXI_GP0_ACLK] \
       [get_bd_pins ps7_axi_periph/ACLK] \
-      [get_bd_pins axi_intc_0/s_axi_aclk]
+      [get_bd_pins axi_intc_0/s_axi_aclk] \
+      [get_bd_pins xadc_wiz_0/s_axi_aclk]
 
    connect_bd_net [get_bd_pins ps7/FCLK_CLK1] [get_bd_pins bluetooth_uart/xin] 
    connect_bd_net [get_bd_pins proc_sys_reset_100MHz/interconnect_aresetn] [get_bd_pins ps7_axi_periph/ARESETN] 
@@ -325,13 +347,15 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       [get_bd_pins axi_iic_0/s_axi_aresetn] \
       [get_bd_pins bluetooth_uart/s_axi_aresetn] \
       [get_bd_pins axi_intc_0/s_axi_aresetn] \
+      [get_bd_pins xadc_wiz_0/s_axi_aresetn] \
       [get_bd_pins ps7_axi_periph/S00_ARESETN] \
       [get_bd_pins ps7_axi_periph/M00_ARESETN] \
       [get_bd_pins ps7_axi_periph/M01_ARESETN] \
       [get_bd_pins ps7_axi_periph/M02_ARESETN] \
       [get_bd_pins ps7_axi_periph/M03_ARESETN] \
       [get_bd_pins ps7_axi_periph/M04_ARESETN] \
-      [get_bd_pins ps7_axi_periph/M05_ARESETN] 
+      [get_bd_pins ps7_axi_periph/M05_ARESETN] \
+      [get_bd_pins ps7_axi_periph/M06_ARESETN] 
 
    connect_bd_net [get_bd_pins ps7/FCLK_CLK2] \
       [get_bd_pins microphone_mgr_0/clk_in] \
@@ -356,6 +380,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins ps7/IRQ_F2P] [get_bd_pins xlconcat_0/dout]
    connect_bd_net [get_bd_pins ps7/SDIO1_CDN] [get_bd_pins ps7/SDIO1_WP] [get_bd_pins xlconstant_1/dout]
    connect_bd_net [get_bd_pins axi_intc_0/irq] [get_bd_pins xlconcat_0/In2]
+   connect_bd_net [get_bd_pins xadc_wiz_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In3]
    connect_bd_net [get_bd_pins interrupt_concat/dout] [get_bd_pins axi_intc_0/intr]
 
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins proc_sys_reset_100MHz/slowest_sync_clk]
@@ -383,6 +408,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       [get_bd_pins proc_sys_reset_200MHz/ext_reset_in] \
       [get_bd_pins proc_sys_reset_142MHz/ext_reset_in] \
       [get_bd_pins proc_sys_reset_166MHz/ext_reset_in] 
+
    connect_bd_net [get_bd_pins ps7/FCLK_CLK0] [get_bd_pins clk_wiz_0/clk_in1]
 
    connect_bd_net [get_bd_pins ps7/SDIO0_CLK] [get_bd_pins wireless_mgr_0/SDIO_CLK]
@@ -466,7 +492,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    set ps7_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_axi_periph ]
    
    set_property -dict [ list \
-   CONFIG.NUM_MI {06} \
+   CONFIG.NUM_MI {07} \
    ] [get_bd_cells ps7_axi_periph]
 
    save_bd_design
@@ -498,10 +524,10 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    
    
    # The following creates the equivalent of
-   # set_property PFM.AXI_PORT { M05_AXI {memport "M_AXI_GP" }} [get_bd_cells /ps7_axi_periph]
+   # set_property PFM.AXI_PORT { M0<x>_AXI {memport "M_AXI_GP" }} [get_bd_cells /ps7_axi_periph]
    # for all the interfaces M05_AXI to M31_AXI
    set parVal []
-   for {set i 6} {$i < 32} {incr i} {
+   for {set i 7} {$i < 32} {incr i} {
       lappend parVal M[format %02d $i]_AXI \
    {memport "M_AXI_GP"}
    }

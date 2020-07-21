@@ -53,7 +53,7 @@
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
-   create_project $project $projects_folder -part xczu3eg-sbva484-1-e -force
+   create_project $project $projects_folder -part xczu3eg-sbva484-1-i -force
    # add selection for proper xdc based on needs
    # if IO carrier, then use that xdc
    # if FMC, choose that one
@@ -668,7 +668,7 @@ proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
    set design_name ${project}
    
    #set_property PFM_NAME "em.avnet.com:av:${design_name}:1.0" [get_files ./${design_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd]
-   set_property PFM_NAME "em.avnet.com:av:${project}:1.0" [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
+   set_property PFM_NAME "avnet.com:av:${project}:1.0" [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
 
 
    # define clock and reset ports
@@ -710,7 +710,7 @@ proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set design_name ${project}
    
-   set_property PFM_NAME "em.avnet.com:av:${project}:1.0" [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
+   set_property PFM_NAME "avnet.com:av:${project}:1.0" [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
 
    # define clock and reset ports
    set_property PFM.CLOCK { \
@@ -747,7 +747,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    #set_property platform.post_sys_link_tcl_hook        ./scripts/dynamic_postlink.tcl [current_project]
    set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../Boards/ULTRA96V2/ultra96v2_oob_dynamic_postlink.tcl [current_project]
 
-   set_property platform.vendor                        "em.avnet.com" [current_project]
+   set_property platform.vendor                        "avnet.com" [current_project]
    set_property platform.board_id                      ${project} [current_project]
    set_property platform.name                          ${design_name} [current_project]
    set_property platform.version                       "1.0" [current_project]

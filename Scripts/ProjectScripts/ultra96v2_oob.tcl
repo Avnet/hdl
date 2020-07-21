@@ -87,7 +87,7 @@ if {[string match -nocase "yes" $clean]} {
    switch -nocase $board {
       ULTRA96V2 {
          puts "***** Assigning Vivado Project board_part Property to ultra96v2..."
-         set_property board_part em.avnet.com:ultra96v2:part0:1.0 [current_project]
+         set_property board_part avnet.com:ultra96v2:part0:1.1 [current_project]
       }
    }
 
