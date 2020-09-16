@@ -149,6 +149,8 @@ if {[string match -nocase "yes" $clean]} {
    
    # Add the constraints that are needed
    #import_files -fileset constrs_1 -norecurse ../../Boards/${board}/${project}.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/bitstream_compression_enable.xdc
+
    
    # Add Project source files
    puts ""
