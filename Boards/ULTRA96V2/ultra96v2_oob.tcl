@@ -48,6 +48,7 @@
 #  Revision:            Apr 04, 2019: 1.00 Initial version
 #                       Aug 29, 2019: 1.01 Updated for Vivado 2018.3
 #                       Oct 14, 2019: 1.02 Updated for Vivado 2019.1
+#                       Oct 01, 2020: 1.03 Updated for Vitis 2020.1
 #
 # ----------------------------------------------------------------------------
 
@@ -529,8 +530,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.C_IRQ_IS_LEVEL {1} \
    ] $axi_intc_0
    #
-   create_hier_cell_interrupt_concat [current_bd_instance .] interrupt_concat
-   connect_bd_net -net interrupt_concat_dout [get_bd_pins axi_intc_0/intr] [get_bd_pins interrupt_concat/dout]
+   # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
+   # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
+   #create_hier_cell_interrupt_concat [current_bd_instance .] interrupt_concat
+   #connect_bd_net -net interrupt_concat_dout [get_bd_pins axi_intc_0/intr] [get_bd_pins interrupt_concat/dout]
    #
    set_property -dict [list CONFIG.NUM_PORTS {6}] [get_bd_cells xlconcat_0]
    connect_bd_net [get_bd_pins xlconcat_0/In5] [get_bd_pins axi_intc_0/irq]
@@ -734,6 +737,11 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 	S_AXI_HP2_FPD {memport "S_AXI_HP" sptag "HP2" memory "zynq_ultra_ps_e_0 HP2_DDR_LOW"} \
 	S_AXI_HP3_FPD {memport "S_AXI_HP" sptag "HP3" memory "zynq_ultra_ps_e_0 HP3_DDR_LOW"} \
    } [get_bd_cells /zynq_ultra_ps_e_0]
+
+   # required for Vitis 2020.1
+   # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
+   # define interrupt ports
+   set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
   
    # Set platform project properties
    set_property platform.description                   "Base Ultra96-V2 development platform" [current_project]
@@ -744,8 +752,8 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property platform.design_intent.embedded        "true" [current_project]
    set_property platform.design_intent.datacenter      "false" [current_proj]
 
-   #set_property platform.post_sys_link_tcl_hook        ./scripts/dynamic_postlink.tcl [current_project]
-   set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../Boards/ULTRA96V2/ultra96v2_oob_dynamic_postlink.tcl [current_project]
+   # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
+   #set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../Boards/ULTRA96V2/ultra96v2_oob_dynamic_postlink.tcl [current_project]
 
    set_property platform.vendor                        "avnet.com" [current_project]
    set_property platform.board_id                      ${project} [current_project]
@@ -754,7 +762,10 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property platform.platform_state                "pre_synth" [current_project]
    set_property platform.ip_cache_dir                  [get_property ip_output_repo [current_project]] [current_project]
 
-   set_property platform.default_output_type           "xclbin" [current_project]
+   # recommnded to use "sd_card" for Vitis 2020.1
+   # reference : https://github.com/Xilinx/Vitis_Embedded_Platform_Source/blob/2020.1/Xilinx_Official_Platforms/zcu104_base/vivado/xilinx_zcu104_base_202010_1_xsa.tcl
+   #set_property platform.default_output_type           "xclbin" [current_project]
+   set_property platform.default_output_type           "sd_card" [current_project]
 
    set_property STEPS.PHYS_OPT_DESIGN.IS_ENABLED true [get_runs impl_1]
    set_property STEPS.PHYS_OPT_DESIGN.ARGS.DIRECTIVE Explore [get_runs impl_1]
