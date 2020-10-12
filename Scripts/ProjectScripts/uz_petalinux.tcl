@@ -106,7 +106,7 @@ if {[string match -nocase "yes" $clean]} {
       UZ7EV_EVCC {
          puts ""
          puts "***** Assigning Vivado Project board_part Property to ultrazed_ev_evcc_production..."
-         set_property board_part em.avnet.com:ultrazed_7ev_cc:part0:1.3 [current_project]
+         set_property board_part avnet.com:ultrazed_7ev_cc:part0:1.4 [current_project]
       }
    }
 
