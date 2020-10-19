@@ -294,11 +294,14 @@ if {[string match -nocase "init" $project]} {
 
 if {[file isfile ./ProjectScripts/$project.tcl]} {
    puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-   puts " Selected Board and Project as:\n$board and $project"
+   puts " Selected Board and Project as:\n $board and $project"
    puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
 } else {
-   puts "Project Script Does NOT Exist, Check Name and Try Again!"
-   #return -code ok
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Selected Board and Project as:\n $board and $project"
+   puts " Project Script Does NOT Exist, Check Name and Try Again!"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
+   return -code ok
 }
 
 # create variables with absolute folders for all necessary folders
