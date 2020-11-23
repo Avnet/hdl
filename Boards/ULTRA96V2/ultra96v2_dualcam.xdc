@@ -1,0 +1,20 @@
+#set_property PACKAGE_PIN A6 [get_ports {TRG_INPUT[0]}]
+#set_property PACKAGE_PIN A7 [get_ports {SP2[0]}]
+#set_property PACKAGE_PIN G6 [get_ports {SP3[0]}]
+
+set_property PACKAGE_PIN A7 [get_ports {TRG_INPUT[0]}]
+set_property PACKAGE_PIN A6 [get_ports {ICP3_I2C_ID_SELECT[0]}]
+set_property PACKAGE_PIN G6 [get_ports {SP3[0]}]
+
+set_property IOSTANDARD LVCMOS18 [get_ports {ICP3_I2C_ID_SELECT[0]}]
+set_property IOSTANDARD LVCMOS18 [get_ports {SP3[0]}]
+set_property IOSTANDARD LVCMOS18 [get_ports {TRG_INPUT[0]}]
+set_property PACKAGE_PIN E8 [get_ports CLK48M]
+set_property IOSTANDARD LVCMOS18 [get_ports CLK48M]
+#set_false_path -from [get_clocks -of_objects [get_pins design_1_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT0]] -to [get_clocks -of_objects [get_pins {design_1_i/mipi_csi2_rx_subsyst_0/inst/phy/inst/inst/bd_d10d_phy_0_rx_support_i/slave_rx.bd_d10d_phy_0_rx_hssio_i/inst/top_inst/bs_top_inst/u_rx_bs/RX_BS[13].rx_bitslice_if_bs/FIFO_WRCLK_OUT}]]
+#set_false_path -from [get_clocks -of_objects [get_pins design_1_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT0]] -to [get_clocks -of_objects [get_pins design_1_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT2]]
+set_false_path -from [get_clocks -of_objects [get_pins ultra96v2_dualcam_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT0]] -to [get_clocks -of_objects [get_pins {ultra96v2_dualcam_i/mipi_csi2_rx_subsyst_0/inst/phy/inst/inst/bd_d10d_phy_0_rx_support_i/slave_rx.bd_d10d_phy_0_rx_hssio_i/inst/top_inst/bs_top_inst/u_rx_bs/RX_BS[13].rx_bitslice_if_bs/FIFO_WRCLK_OUT}]]
+set_false_path -from [get_clocks -of_objects [get_pins ultra96v2_dualcam_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT0]] -to [get_clocks -of_objects [get_pins ultra96v2_dualcam_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT2]]
+set_false_path -from [get_clocks -of_objects [get_pins ultra96v2_dualcam_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT1]] -to [get_clocks -of_objects [get_pins ultra96v2_dualcam_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT3]]
+# machine generated below
+#set_false_path -from [get_clocks -of_objects [get_pins ultra96v2_dualcam_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT0]] -to [get_clocks -of_objects [get_pins ultra96v2_dualcam_i/clk_wiz/inst/mmcme4_adv_inst/CLKOUT2]]
