@@ -80,8 +80,8 @@ if {[string match -nocase "yes" $clean]} {
    puts ""
    puts "***** Creating Vivado Project..."
    source ../Boards/$board/$project.tcl -notrace
-   avnet_create_project $project $projects_folder $scriptdir
-#DWR   avnet_create_project $board $projects_folder $scriptdir
+#TC   avnet_create_project $project $projects_folder $scriptdir
+   avnet_create_project $board $projects_folder $scriptdir
    
    # Apply board specific project property settings
    switch -nocase $board {
@@ -133,10 +133,10 @@ if {[string match -nocase "yes" $clean]} {
    # Create Block Design and Add PS core
    puts ""
    puts "***** Creating Block Design..."
-   create_bd_design ${project}
-   set design_name ${project}
-#DWR   create_bd_design ${board}
-#DWR   set design_name ${board}
+#TC   create_bd_design ${project}
+#TC   set design_name ${project}
+   create_bd_design ${board}
+   set design_name ${board}
    
    # Add Processing System presets from board definitions.
    #avnet_add_ps_preset $project $projects_folder $scriptdir
@@ -151,9 +151,10 @@ if {[string match -nocase "yes" $clean]} {
 ########################################
 #DWR need to remove puts and create new puts to alert the stages - for now ignore and add in the heir blocks as they are
   # Create interface ports
+save_bd_design
   set mipi_phy_if_0 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 mipi_phy_if_0 ]
 
-
+save_bd_design
   # Create ports
   set CLK48M [ create_bd_port -dir O -type clk CLK48M ]
   set_property -dict [ list \
@@ -162,19 +163,19 @@ if {[string match -nocase "yes" $clean]} {
   set ICP3_I2C_ID_SELECT [ create_bd_port -dir O -from 0 -to 0 ICP3_I2C_ID_SELECT ]
   set SP3 [ create_bd_port -dir O -from 0 -to 0 SP3 ]
   set TRG_INPUT [ create_bd_port -dir O -from 0 -to 0 TRG_INPUT ]
-
+save_bd_design
   # Create instance: CAPTURE_PIPLINE
   create_hier_cell_CAPTURE_PIPLINE [current_bd_instance .] CAPTURE_PIPLINE
-
+save_bd_design
   # Create instance: GPIO
   create_hier_cell_GPIO [current_bd_instance .] GPIO
-
+save_bd_design
   # Create instance: LIVE_VIDEO_DP
   create_hier_cell_LIVE_VIDEO_DP [current_bd_instance .] LIVE_VIDEO_DP
-
+save_bd_design
   # Create instance: ZYNQ
   create_hier_cell_ZYNQ [current_bd_instance .] ZYNQ
-
+save_bd_design
 ########################################
 
   set clk_wiz [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz ]
@@ -273,9 +274,12 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Adding Source Files to Block Design..."
    
    # initially try importaing JUST his wrapper - later change to making and importing our dynamic wrapper
-   make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
+#TC   make_wrapper -files [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd] -top
+   make_wrapper -files [get_files ${projects_folder}/${board}.srcs/sources_1/bd/${board}/${board}.bd] -top
    #add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.vhd
-   add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.v
+#TC   add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.v
+   add_files -norecurse ${projects_folder}/${board}.srcs/sources_1/bd/${board}/hdl/${board}_wrapper.v
+
    
    #add_files -norecurse ../../Boards/${board}/design_1_wrapper.v
    #set obj [get_filesets sources_1]
@@ -293,7 +297,8 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Adding Vitis Directves to Design..."
 #DWR   avnet_add_vitis_directives $board $projects_folder $scriptdir
 #DWR removed for now, do not use hacked function in boards folder
-   avnet_add_vitis_directives $project $projects_folder $scriptdir
+#TC   avnet_add_vitis_directives $project $projects_folder $scriptdir
+   avnet_add_vitis_directives $board $projects_folder $scriptdir
    update_compile_order -fileset sources_1
    import_files
    
@@ -326,10 +331,10 @@ if {[string match -nocase "yes" $clean]} {
 #DWR need to check on IP folder?  Error seemed to think there was a missing IP folder under cache, so maybe need to copy into that folder?
 #    ERROR: [Common 17-53] User Exception: Specified ip cache dir /media/training/BUILD/projects/mipiDesign/ONSEMI_MIPI_AR0144_AR1335/hdl/Projects/ultra96v2_dualcam/ULTRA96V2_2020_1/project_1.cache/ip does not exist. Unable to copy into Shell.
 
-#DWR   write_hw_platform ${projects_folder}/${board}.xsa -include_bit -force
-#DWR   validate_hw_platform ${projects_folder}/${board}.xsa -verbose
-   write_hw_platform ${projects_folder}/${project}.xsa -include_bit -force
-   validate_hw_platform ${projects_folder}/${project}.xsa -verbose
+   write_hw_platform ${projects_folder}/${board}.xsa -include_bit -force
+   validate_hw_platform ${projects_folder}/${board}.xsa -verbose
+#TC   write_hw_platform ${projects_folder}/${project}.xsa -include_bit -force
+#TC   validate_hw_platform ${projects_folder}/${project}.xsa -verbose
    puts "***** Close the implemented design..."
    close_design
 }
