@@ -57,14 +57,14 @@ set argc [llength $argv]
 # Pause function borrowed from:
 # https://stackoverflow.com/questions/18993122/tcl-pause-waiting-for-key-pressed-to-continue
 
-proc pause {{message "Hit Enter to continue ==> "}} {
-    puts -nonewline $message
-    flush stdout
-    gets stdin
-}
-puts "This design may hang after the bistream creation completes"
-puts "After the bitstream creation, you may cancel the process and all files will still be created properly"
-pause
+#proc pause {{message "Hit Enter to continue ==> "}} {
+    #puts -nonewline $message
+    #flush stdout
+    #gets stdin
+#}
+#puts "This design may hang after the bistream creation completes"
+#puts "After the bitstream creation, you may cancel the process and all files will still be created properly"
+#pause
 
 source ./make.tcl -notrace
 
