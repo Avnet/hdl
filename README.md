@@ -9,7 +9,7 @@ Avnet HDL libraries, project build scripts, and example software source code use
 Current Tools Version:
 ----------------------
 
-* **Xilinx Vivado Design Suite**: [Vivado 2017.4]
+* Denoted by Branch
 
 
 Where can I find documentation? 
