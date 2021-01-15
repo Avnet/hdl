@@ -1,6 +1,0 @@
-the_ROM_image:
-{
-	[bootloader]mz_fmccc_ali3_amp10.sdk/zynq_fsbl_app/Debug/zynq_fsbl_app.elf
-	mz_fmccc_ali3_amp10.sdk/zed_ali3_hw/mz_fmccc_ali3_amp10_wrapper.bit
-	mz_fmccc_ali3_amp10.sdk/zed_ali3_console_app/Debug/zed_ali3_console_app.elf
-}

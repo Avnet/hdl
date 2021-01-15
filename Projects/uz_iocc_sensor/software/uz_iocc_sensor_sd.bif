@@ -1,8 +1,0 @@
-//arch = zynqmp; split = false; format = BIN
-the_ROM_image:
-{
-	[fsbl_config]a53_x64
-	[bootloader]uz_iocc_sensor.sdk/zynq_fsbl_app/Release/zynq_fsbl_app.elf
-	[destination_device = pl]uz_iocc_sensor.sdk/uz_iocc_sensor_hw/uz_iocc_sensor_wrapper.bit
-	[destination_cpu = a53-0]uz_iocc_sensor.sdk/sensor_demo/Debug/sensor_demo.elf
-}

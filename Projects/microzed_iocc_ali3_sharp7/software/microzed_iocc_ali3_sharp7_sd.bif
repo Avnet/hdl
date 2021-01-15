@@ -1,6 +1,0 @@
-the_ROM_image:
-{
-	[bootloader]microzed_iocc_ali3_sharp7.sdk/zynq_fsbl_app/Debug/zynq_fsbl_app.elf
-	microzed_iocc_ali3_sharp7.sdk/zed_ali3_hw/microzed_iocc_ali3_sharp7_wrapper.bit
-	microzed_iocc_ali3_sharp7.sdk/zed_ali3_console_app/Debug/zed_ali3_console_app.elf
-}

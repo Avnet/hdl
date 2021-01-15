@@ -1,6 +1,0 @@
-the_ROM_image:
-{
-	[bootloader]mz_iocc_sensor_fusion.sdk/zynq_fsbl_app/Debug/zynq_fsbl_app.elf
-	mz_iocc_sensor_fusion.sdk/sensor_fusion_hw/mz_iocc_sensor_fusion_wrapper.bit
-	mz_iocc_sensor_fusion.sdk/SPI_TempSensor_MAX31723/Debug/SPI_TempSensor_MAX31723.elf
-}

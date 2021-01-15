@@ -1,6 +1,0 @@
-the_ROM_image:
-{
-	[bootloader]embv_hdmi_passthrough.sdk\zynq_fsbl_app\executable.elf
-	embv_hdmi_passthrough.sdk\hdmi_passthrough_hw\embv_hdmi_passthrough_wrapper.bit
-	embv_hdmi_passthrough.sdk\hdmi_passthrough_app\Debug\hdmi_passthrough_app.elf
-}

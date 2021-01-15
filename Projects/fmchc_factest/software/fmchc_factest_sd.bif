@@ -1,6 +1,0 @@
-the_ROM_image:
-{
-	[bootloader]fmchc_factest.sdk\zynq_fsbl_app\executable.elf
-	fmchc_factest.sdk\fmchc_factest_hw\fmchc_factest_wrapper.bit
-	fmchc_factest.sdk\fmchc_factest_app\Debug\fmchc_factest_app.elf
-}

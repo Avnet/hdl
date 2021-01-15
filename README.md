@@ -1,5 +1,10 @@
 ![alt text][logo]
 
+WARNING! Large Changes forthcoming
+This 2020.2 Branch is unstable at the moment.  Please use the 2020.1 branch.
+This extends to all 2020.2 branches in the Avnet repository
+15JAN2021
+
 Avnet HDL Reference Designs
 ===========================
 

@@ -1,6 +1,0 @@
-the_ROM_image:
-{
-	[bootloader]embv_p1300c.sdk\zynq_fsbl_app\executable.elf
-	embv_p1300c.sdk\python1300c_fb_hw\embv_p1300c_wrapper.bit
-	embv_p1300c.sdk\python1300c_fb_app\Debug\python1300c_fb_app.elf
-}

@@ -1,6 +1,0 @@
-the_ROM_image:
-{
-	[bootloader]pzsdr_p13c.sdk\zynq_fsbl_app\executable.elf
-	pzsdr_p13c.sdk\pzsdr_python1300c_hw\pzsdr_p13c_wrapper.bit
-	pzsdr_p13c.sdk\pzsdr_python1300c_app\Debug\pzsdr_python1300c_app.elf
-}

@@ -1,6 +1,0 @@
-the_ROM_image:
-{
-	[bootloader]mitx_ali3_sharp7.sdk/zynq_fsbl_app/Debug/zynq_fsbl_app.elf
-	mitx_ali3_sharp7.sdk/zed_ali3_hw/mitx_ali3_sharp7_wrapper.bit
-	mitx_ali3_sharp7.sdk/zed_ali3_console_app/Debug/zed_ali3_console_app.elf
-}

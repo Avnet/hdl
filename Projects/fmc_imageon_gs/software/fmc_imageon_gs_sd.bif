@@ -1,6 +1,0 @@
-the_ROM_image:
-{
-	[bootloader]fmc_imageon_gs.sdk\zynq_fsbl_app\executable.elf
-	fmc_imageon_gs.sdk\fmc_imageon_gs_hw\fmc_imageon_gs_wrapper.bit
-	fmc_imageon_gs.sdk\fmc_imageon_gs_app\Debug\fmc_imageon_gs_app.elf
-}

@@ -1,7 +1,0 @@
-//arch = zynqmp; split = false; format = BIN
-the_ROM_image:
-{
-   [bootloader, destination_cpu=a53-0]ultra96v2_valtest.sdk/zynqmp_fsbl_app/Release/zynqmp_fsbl_app.elf
-   [destination_device = pl]ultra96v2_valtest.sdk/ultra96v2_valtest_hw/ultra96v2_valtest_wrapper.bit
-   [destination_cpu = a53-0]ultra96v2_valtest.sdk/zynqmp_dram_diag_app/Debug/zynqmp_dram_diag_app.elf
-}
