@@ -365,7 +365,8 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property platform.design_intent.datacenter      "false" [current_proj]
 
    #set_property platform.post_sys_link_tcl_hook        ./scripts/dynamic_postlink.tcl [current_project]
-   set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/mz7010_fmccc/mz7010_fmccc_dynamic_postlink.tcl [current_project]
+   #set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/mz7010_som/mz7010_som_dynamic_postlink.tcl [current_project]
+   set_property platform.post_sys_link_overlay_tcl_hook        ${projects_folder}/../../../boards/mz7010_som/mz7010_som_dynamic_postlink.tcl [current_project]
 
    set_property platform.vendor                        "em.avnet.com" [current_project]
    set_property platform.board_id                      ${project} [current_project]

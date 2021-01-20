@@ -283,22 +283,22 @@ if {[string match -nocase "yes" $version_override]} {
 }
 
 # If variables do not exist, exit script
-if {[string match -nocase "init" $board]} {
+if {[string match -nocase "init" ${board}]} {
    puts "Board was not defined, please define and try again!"
    return -code ok
 }
-if {[string match -nocase "init" $project]} {
+if {[string match -nocase "init" ${project}]} {
    puts "Project was not defined, please define and try again!"
    return -code ok
 }
 
-if {[file isfile ./project_scripts/$project.tcl]} {
+if {[file isfile ./project_scripts/${board}_${project}.tcl]} {
    puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-   puts " Selected Board and Project as:\n $board and $project"
+   puts " Selected Board and Project as:\n ${board} and ${project}"
    puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
 } else {
    puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-   puts " Selected Board and Project as:\n $board and $project"
+   puts " Selected Board and Project as:\n ${board} and ${project}"
    puts " Project Script Does NOT Exist, Check Name and Try Again!"
    puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    return -code ok
@@ -370,8 +370,8 @@ switch -nocase $board {
    uz7ev_evcc                 -
    minized_sbc                -
    mz7010_som                 -
-   mz7020_som                 {puts "Setting Up Project $project..."
-                                 source ./project_scripts/$project.tcl -notrace}
+   mz7020_som                 {puts "Setting Up Project ${board}_${project}..."
+                                 source ./project_scripts/${board}_${project}.tcl -notrace}
    default                    {puts "Error in Selecting Board!"
                                  puts "Boards are defined in [file normalize [pwd]/../boards]"
                                  return -code ok}
