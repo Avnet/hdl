@@ -84,7 +84,7 @@ if {[string match -nocase "yes" $clean]} {
    # Create Vivado project
    puts ""
    puts "***** Creating Vivado Project..."
-   source ../boards/$board/$board.tcl -notrace
+   source ../boards/$board/${board}_${project}.tcl -notrace
    avnet_create_project ${board}_${project} $projects_folder $scriptdir
    
    # Remove the SOM specific XDC file since no constraints are needed for 

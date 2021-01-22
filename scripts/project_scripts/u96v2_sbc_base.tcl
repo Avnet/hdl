@@ -63,11 +63,11 @@ if {[string match -nocase "yes" $clean]} {
 
    # Open the existing project.
    puts ""
-   puts "***** Opening Vivado Project $projects_folder/$project.xpr ..."
-   open_project $projects_folder/$project.xpr
+   puts "***** Opening Vivado Project ${projects_folder}/${board}_${project}.xpr ..."
+   open_project ${projects_folder}/${board}_${project}.xpr
    
    # Reset output products.
-   reset_target all [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
+   reset_target all [get_files ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/${project}.bd]
 
    # Reset design runs.
    reset_run impl_1
@@ -79,16 +79,17 @@ if {[string match -nocase "yes" $clean]} {
    # Create Vivado project
    puts ""
    puts "***** Creating Vivado Project..."
-   source ../boards/$board/$project.tcl -notrace
-   avnet_create_project $board $projects_folder $scriptdir
+   source ../boards/$board/${board}_${project}.tcl -notrace
+   avnet_create_project ${board}_${project} $projects_folder $scriptdir
+   
+   # Remove the SOM specific XDC file since no constraints are needed for 
+   # the basic system design
+   remove_files -fileset constrs_1 *.xdc
    
    # Apply board specific project property settings
-   switch -nocase $board {
-      u96v2_sbc {
-         puts "***** Assigning Vivado Project board_part Property to ultra96v2..."
-         set_property board_part avnet.com:ultra96v2:part0:1.1 [current_project]
-      }
-   }
+   puts ""
+   puts "***** Assigning Vivado Project board_part Property to ultra96v2..."
+   set_property board_part avnet.com:ultra96v2:part0:1.1 [current_project]
 
    # Generate Avnet IP
    puts ""
@@ -109,16 +110,24 @@ if {[string match -nocase "yes" $clean]} {
    # Create Block Design and Add PS core
    puts ""
    puts "***** Creating Block Design..."
-   create_bd_design ${board}
-   set design_name ${board}
+   create_bd_design ${board}_${project}
+   set design_name ${board}_${project}
    
    # Add Processing System presets from board definitions.
-   avnet_add_ps_preset $board $projects_folder $scriptdir
+   avnet_add_ps_preset ${board}_${project} $projects_folder $scriptdir
 
    # Add User IO presets from board definitions.
    puts ""
    puts "***** Add defined IP blocks to Block Design..."
-   avnet_add_user_io_preset $board $projects_folder $scriptdir
+   avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
+
+   # Assign the peripheral addresses
+   assign_bd_address
+
+   # Regenerate the BD to make it more readable and validate it 
+   regenerate_bd_layout
+   save_bd_design
+   validate_bd_design
 
    # General Config
    puts ""
@@ -127,19 +136,19 @@ if {[string match -nocase "yes" $clean]} {
    #set_property target_language Verilog [current_project]
    
    # Add the constraints that are needed
-   import_files -fileset constrs_1 -norecurse ../boards/${board}/${project}.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${board}_${project}.xdc
    
    # Add Project source files
    puts ""
    puts "***** Adding Source Files to Block Design..."
-   make_wrapper -files [get_files ${projects_folder}/${board}.srcs/sources_1/bd/${board}/${board}.bd] -top
-   add_files -norecurse ${projects_folder}/${board}.srcs/sources_1/bd/${board}/hdl/${board}_wrapper.vhd
-   #add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.v
+   make_wrapper -files [get_files ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/${board}_${project}.bd] -top
+   add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.vhd
+   #add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
    
    # Add Vitis directives
    puts ""
    puts "***** Adding Vitis Directves to Design..."
-   avnet_add_vitis_directives $board $projects_folder $scriptdir
+   avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
    update_compile_order -fileset sources_1
    import_files
    
@@ -166,8 +175,9 @@ if {[string match -nocase "yes" $clean]} {
    open_run impl_1
    puts ""
    puts "***** Write and validate the design archive..."
-   write_hw_platform ${projects_folder}/${board}.xsa -include_bit -force
-   validate_hw_platform ${projects_folder}/${board}.xsa -verbose
+   write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
+   validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
+   puts ""
    puts "***** Close the implemented design..."
    close_design
 }

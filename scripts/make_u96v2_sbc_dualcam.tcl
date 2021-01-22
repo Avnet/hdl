@@ -50,8 +50,8 @@
 # ----------------------------------------------------------------------------
 
 # Build PetaLinux BSP HW Platform
-# for Ultra96v2 Board
-set argv [list board=ultra96v2 project=ultra96v2_dualcam sdk=no close_project=no version_override=yes dev_arch=zynqmp]
+# for Ultra96v2 Board + Dual Camera Mezzanine
+set argv [list board=u96v2_sbc project=dualcam sdk=no close_project=no version_override=yes dev_arch=zynqmp]
 set argc [llength $argv]
 
 source ./make.tcl -notrace
