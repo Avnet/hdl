@@ -60,8 +60,6 @@ proc avnet_create_project {project projects_folder scriptdir} {
 
    create_project $project $projects_folder -part xc7z010clg400-1 -force
    # add selection for proper xdc based on needs
-   # if IO carrier, then use that xdc
-   # if FMC, choose that one
    import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7010_fmc2/pz7010_revc_fmcv2_reva_v1.xdc
 
 }
@@ -207,8 +205,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
    set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells xlconstant_0]
 
+   # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
+   # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
    # Create instance: interrupt_concat
-   create_hier_cell_interrupt_concat [current_bd_instance .] interrupt_concat
+   #create_hier_cell_interrupt_concat [current_bd_instance .] interrupt_concat
    
    # Create instance: proc_sys_reset_100MHz, and set properties
    set proc_sys_reset_100MHz [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_100MHz ]
@@ -267,16 +267,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    save_bd_design
 
-
-   #~ # Create interface connections
+   # Create interface connections
    connect_bd_intf_net [get_bd_intf_pins ps7/M_AXI_GP0] [get_bd_intf_pins ps7_axi_periph/S00_AXI]
    connect_bd_intf_net [get_bd_intf_pins axi_intc_0/s_axi] [get_bd_intf_pins ps7_axi_periph/M03_AXI] 
       
    # Connect the IP blocks, clocks, resets, etc.
    connect_bd_net [get_bd_pins xlconstant_0/dout] [get_bd_pins ps7/SDIO0_WP]
-
-   save_bd_design
-
 
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] \
       [get_bd_pins ps7_axi_periph/S00_ACLK] \
@@ -305,11 +301,14 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       [get_bd_pins axi_gpio_0/s_axi_aresetn] \
       [get_bd_pins axi_gpio_1/s_axi_aresetn] \
       [get_bd_pins axi_intc_0/s_axi_aresetn]
-      
+
    connect_bd_net [get_bd_pins ps7/IRQ_F2P] [get_bd_pins xlconcat_0/dout]
    connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In0]
    connect_bd_net [get_bd_pins axi_intc_0/irq] [get_bd_pins xlconcat_0/In1]
-   connect_bd_net [get_bd_pins interrupt_concat/dout] [get_bd_pins axi_intc_0/intr]
+
+   # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
+   # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
+   #connect_bd_net [get_bd_pins interrupt_concat/dout] [get_bd_pins axi_intc_0/intr]
 
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins proc_sys_reset_100MHz/slowest_sync_clk]
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out2] [get_bd_pins proc_sys_reset_142MHz/slowest_sync_clk]
@@ -337,20 +336,18 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       [get_bd_pins clk_wiz_0/resetn]
 
    save_bd_design
-   
-   assign_bd_address
-   regenerate_bd_layout
-   validate_bd_design
 }
 
 proc avnet_add_ps {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
    create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7
-   apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" }  [get_bd_cells ps7]
+   apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config \
+      {make_external "FIXED_IO, DDR" }  [get_bd_cells ps7]
    create_bd_port -dir I -type clk M_AXI_GP0_ACLK
    connect_bd_net [get_bd_pins /ps7/M_AXI_GP0_ACLK] [get_bd_ports M_AXI_GP0_ACLK]
 
+   save_bd_design
 }
 
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
@@ -372,7 +369,6 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    set_property -dict [list CONFIG.PCW_SD0_GRP_WP_ENABLE {1} CONFIG.PCW_SD0_GRP_WP_IO {EMIO}] [get_bd_cells ps7]
 
    save_bd_design
-   
 }
 
 proc avnet_add_custom_ps {project projects_folder scriptdir} {
@@ -660,9 +656,7 @@ set_property -dict [ list \
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set design_name ${project}
    
-   #set_property PFM_NAME "em.avnet.com:av:${design_name}:1.0" [get_files ./${design_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd]
    set_property PFM_NAME "em.avnet.com:av:${project}:1.0" [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
-
 
    # define clock and reset ports
    set_property PFM.CLOCK { \
@@ -694,6 +688,11 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 
    #set_property PFM.AXI_PORT {M04_AXI {memport "M_AXI_GP" sptag "" memory ""} M05_AXI {memport "M_AXI_GP" sptag "" memory ""} M06_AXI {memport "M_AXI_GP" sptag "" memory ""} M07_AXI {memport "M_AXI_GP" sptag "" memory ""} M08_AXI {memport "M_AXI_GP" sptag "" memory ""} M09_AXI {memport "M_AXI_GP" sptag "" memory ""} M10_AXI {memport "M_AXI_GP" sptag "" memory ""} M11_AXI {memport "M_AXI_GP" sptag "" memory ""} M12_AXI {memport "M_AXI_GP" sptag "" memory ""} M13_AXI {memport "M_AXI_GP" sptag "" memory ""} M14_AXI {memport "M_AXI_GP" sptag "" memory ""} M15_AXI {memport "M_AXI_GP" sptag "" memory ""} M16_AXI {memport "M_AXI_GP" sptag "" memory ""} M17_AXI {memport "M_AXI_GP" sptag "" memory ""} M18_AXI {memport "M_AXI_GP" sptag "" memory ""} M19_AXI {memport "M_AXI_GP" sptag "" memory ""} M20_AXI {memport "M_AXI_GP" sptag "" memory ""} M21_AXI {memport "M_AXI_GP" sptag "" memory ""} M22_AXI {memport "M_AXI_GP" sptag "" memory ""} M23_AXI {memport "M_AXI_GP" sptag "" memory ""} M24_AXI {memport "M_AXI_GP" sptag "" memory ""} M25_AXI {memport "M_AXI_GP" sptag "" memory ""} M26_AXI {memport "M_AXI_GP" sptag "" memory ""} M27_AXI {memport "M_AXI_GP" sptag "" memory ""} M28_AXI {memport "M_AXI_GP" sptag "" memory ""} M29_AXI {memport "M_AXI_GP" sptag "" memory ""} M30_AXI {memport "M_AXI_GP" sptag "" memory ""} M31_AXI {memport "M_AXI_GP" sptag "" memory ""}} [get_bd_cells /ps7_axi_periph]
  
+   # required for Vitis 2020.1
+   # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
+   # define interrupt ports
+   set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
+
    # Set platform project properties
    set_property platform.description                   "Base MiniZed development platform" [current_project]
    set_property platform.uses_pr                       false         [current_project]
@@ -703,8 +702,10 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property platform.design_intent.embedded        "true" [current_project]
    set_property platform.design_intent.datacenter      "false" [current_proj]
 
+   # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
    #set_property platform.post_sys_link_tcl_hook        ./scripts/dynamic_postlink.tcl [current_project]
-   set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/pz7010_fmc2/pz7010_fmc2_dynamic_postlink.tcl [current_project]
+   #set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/pz7010_fmc2/pz7010_fmc2_dynamic_postlink.tcl [current_project]
+   #set_property platform.post_sys_link_overlay_tcl_hook        ${projects_folder}/../../../boards/pz7010_fmc2/pz7010_fmc2_dynamic_postlink.tcl [current_project]
 
    set_property platform.vendor                        "em.avnet.com" [current_project]
    set_property platform.board_id                      ${project} [current_project]
@@ -713,7 +714,10 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property platform.platform_state                "pre_synth" [current_project]
    set_property platform.ip_cache_dir                  [get_property ip_output_repo [current_project]] [current_project]
 
-   set_property platform.default_output_type           "xclbin" [current_project]
+   # recommnded to use "sd_card" for Vitis 2020.1
+   # reference : https://github.com/Xilinx/Vitis_Embedded_Platform_Source/blob/2020.1/Xilinx_Official_Platforms/zcu104_base/vivado/xilinx_zcu104_base_202010_1_xsa.tcl
+   #set_property platform.default_output_type           "xclbin" [current_project]
+   set_property platform.default_output_type           "sd_card" [current_project]
 
    set_property STEPS.PHYS_OPT_DESIGN.IS_ENABLED true [get_runs impl_1]
    set_property STEPS.PHYS_OPT_DESIGN.ARGS.DIRECTIVE Explore [get_runs impl_1]

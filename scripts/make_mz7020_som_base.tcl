@@ -30,7 +30,7 @@
 # 
 #  Create Date:         Mar 26, 2016
 #  Design Name:         MicroZed PetaLinux BSP HW Platform
-#  Module Name:         make_mz_petalinux.tcl
+#  Module Name:         make_mz7020_som_base.tcl
 #  Project Name:        MicroZed PetaLinux BSP Generator
 #  Target Devices:      Xilinx Zynq-7000
 #  Hardware Boards:     MicroZed SOM
@@ -52,9 +52,17 @@
 # 
 # ----------------------------------------------------------------------------
 
-# Build PetaLinux BSP HW Platform
-# for MicroZed 7010 SOM
-set argv [list board=mz7020_som project=base sdk=no version_override=yes]
-set argc [llength $argv]
-source ./make.tcl -notrace
+if {$argc != 0} {
+	# Build PetaLinux BSP HW Platform
+	# for MicroZed Defined from external source
+	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynq]
+	set argc [llength $argv]
+	source ./make.tcl -notrace
+} else {
+   # Build PetaLinux BSP HW Platform
+   # for MicroZed 7020 SOM
+   set argv [list board=mz7020_som project=base sdk=no version_override=yes]
+   set argc [llength $argv]
+   source ./make.tcl -notrace
+}
    

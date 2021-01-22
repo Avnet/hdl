@@ -16,10 +16,10 @@
 #  design is not authorized without written consent from Avnet.
 # 
 #  Please direct any questions to the PicoZed community support forum:
-#     http://avnet.me/microzed_forum
+#     http://avnet.me/picozed_forum
 # 
 #  Product information is available at:
-#     http://avnet.me/microzed
+#     http://avnet.me/picozed
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -32,30 +32,30 @@
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         Mar 26, 2016
-#  Design Name:         MicroZed PetaLinux BSP HW Platform
-#  Module Name:         mz7020_som_base.tcl
-#  Project Name:        MicroZed PetaLinux BSP Generator
+#  Create Date:         Feb 08, 2016
+#  Design Name:         PicoZed PetaLinux BSP HW Platform
+#  Module Name:         pz7020_fmc2_base.tcl
+#  Project Name:        PicoZed PetaLinux BSP Generator
 #  Target Devices:      Xilinx Zynq-7000
-#  Hardware Boards:     MicroZed SOM
+#  Hardware Boards:     PicoZed SOM
 # 
 #  Tool versions:       Vivado 2015.2
 # 
-#  Description:         Build Script for MicroZed PetaLinux BSP HW Platform
+#  Description:         Build Script for PicoZed PetaLinux BSP HW Platform
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
 #                       scripts IP generation scripts or others as needed
 # 
 #
-#  Revision:            Mar 26, 2016: 1.00 Initial version
-#                       Jun 16, 2016: 1.01  Updated to support 2015.4 tools
-#                       Jul 01, 2016: 1.02  Updated to support 2016.2 tools
-#                       Oct 10, 2017: 1.03  Updated to support 2017.2 tools
-#                       May 03, 2018: 1.04  Updated to support 2017.4 tools
-#                       Aug 11, 2018: 1.05  Updated to support 2018.2 tools
-#                       Sep 20, 2019: 1.06  Updated to support 2019.1 tools
-#                       Apr 09, 2020: 1.07  Updated to support 2019.2 tools
+#  Revision:            Feb 08, 2016: 1.00 Initial version
+#                       May 10, 2016: 1.1  Updated to support 2015.4 tools
+#                       Jul 01, 2016: 1.2  Updated to support 2016.2 tools
+#                       Nov 03, 2017: 1.3  Updated to support 2017.2 tools
+#                       May 03, 2018: 1.4  Updated to support 2017.4 tools
+#                       Aug 11, 2018: 1.5  Updated to support 2018.2 tools
+#                       Sep 27, 2019: 1.6  Updated to support 2019.1 tools
+#                       Jan 15, 2020: 1.7  Updated to support 2019.2 tools
 # 
 # ----------------------------------------------------------------------------
 
@@ -93,8 +93,8 @@ if {[string match -nocase "yes" $clean]} {
    
    # Apply board specific project property settings
    puts ""
-   puts "***** Assigning Vivado Project board_part Property to microzed_7020..."
-   set_property board_part em.avnet.com:microzed_7020:part0:1.2 [current_project]
+   puts "***** Assigning Vivado Project board_part Property to picozed_7020_fmc2..."
+   set_property board_part em.avnet.com:picozed_7020_fmc2:part0:1.2 [current_project]
 
    # Generate Avnet IP
    puts ""
@@ -141,6 +141,8 @@ if {[string match -nocase "yes" $clean]} {
    #set_property target_language Verilog [current_project]
    
    # Add the constraints that are needed
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${board}_i2c.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${board}_user_io.xdc
    import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/bitstream_compression_enable.xdc
    
    # Add Project source files

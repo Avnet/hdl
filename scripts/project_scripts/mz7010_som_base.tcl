@@ -34,7 +34,7 @@
 # 
 #  Create Date:         Mar 26, 2016
 #  Design Name:         MicroZed PetaLinux BSP HW Platform
-#  Module Name:         mz_petalinux.tcl
+#  Module Name:         mz7010_som_base.tcl
 #  Project Name:        MicroZed PetaLinux BSP Generator
 #  Target Devices:      Xilinx Zynq-7000
 #  Hardware Boards:     MicroZed SOM
@@ -85,7 +85,6 @@ if {[string match -nocase "yes" $clean]} {
    puts ""
    puts "***** Creating Vivado Project..."
    source ../boards/$board/$board.tcl -notrace
-#TC   avnet_create_project $project $projects_folder $scriptdir
    avnet_create_project ${board}_${project} $projects_folder $scriptdir
    
    # Remove the SOM specific XDC file since no constraints are needed for 
@@ -93,6 +92,8 @@ if {[string match -nocase "yes" $clean]} {
    remove_files -fileset constrs_1 *.xdc
    
    # Apply board specific project property settings
+   puts ""
+   puts "***** Assigning Vivado Project board_part Property to microzed_7010..."
    set_property board_part em.avnet.com:microzed_7010:part0:1.2 [current_project]
 
    # Generate Avnet IP
@@ -125,6 +126,14 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Add defined IP blocks to Block Design..."
    avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
 
+   # Assign the peripheral addresses
+   assign_bd_address
+
+   # Regenerate the BD to make it more readable and validate it 
+   regenerate_bd_layout
+   save_bd_design
+   validate_bd_design
+
    # General Config
    puts ""
    puts "***** General Configuration for Design..."
@@ -132,16 +141,14 @@ if {[string match -nocase "yes" $clean]} {
    #set_property target_language Verilog [current_project]
    
    # Add the constraints that are needed
-   #import_files -fileset constrs_1 -norecurse ../../boards/${board}/${project}.xdc
    import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/bitstream_compression_enable.xdc
-
    
    # Add Project source files
    puts ""
    puts "***** Adding Source Files to Block Design..."
    make_wrapper -files [get_files ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/${board}_${project}.bd] -top
    add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.vhd
-   #add_files -norecurse ${projects_folder}/${project}.srcs/sources_1/bd/${project}/hdl/${project}_wrapper.v
+   #add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
    
    # Add Vitis directives
    puts ""
