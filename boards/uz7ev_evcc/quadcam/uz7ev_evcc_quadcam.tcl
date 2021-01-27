@@ -447,7 +447,7 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
 proc avnet_add_fmc_quad {project projects_folder scriptdir} {
 
   # fmc_quad blocks
-  source $projects_folder/../../boards/uz7ev_evcc/hdmi_quad/fmc_quad.tcl
+  source $projects_folder/../../boards/uz7ev_evcc/quadcam/fmc_quad.tcl
   create_hier_cell_fmc_quad ./ fmc_quad
 
   # Create interface ports
@@ -633,7 +633,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
   
    # Set platform project properties
-   set_property platform.description                   "UZ7EV_EVCC_HDMI_QUAD development platform" [current_project]
+   set_property platform.description                   "UZ7EV_EVCC_QUADCAM development platform" [current_project]
    set_property platform.uses_pr                       false         [current_project]
 
    set_property platform.design_intent.server_managed  "false" [current_project]

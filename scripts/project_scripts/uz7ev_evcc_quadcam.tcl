@@ -33,8 +33,8 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Dec 11, 2020
-#  Design Name:         HDMI and Quad AR0231AT Camera HW Platform
-#  Module Name:         hdmi_quad.tcl
+#  Design Name:         Quad AR0231AT Camera HW Platform + HDMI
+#  Module Name:         quadcam.tcl
 #  Project Name:        UltraZed with HDMI and Quad AR0231AT Camera BSP Generator
 #  Target Devices:      Zynq UltraScale+ 7EV
 #  Hardware Boards:     UltraZed-EV SOM Carrier
@@ -145,8 +145,8 @@ if {[string match -nocase "yes" $clean]} {
    validate_bd_design
 
    # Add the constraints that are needed
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/hdmi_quad/hdmi.xdc
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/hdmi_quad/fmc_quad.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/quadcam/hdmi.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/quadcam/fmc_quad.xdc
 
 
    # Add Project source files
