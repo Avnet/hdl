@@ -418,6 +418,8 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Slave "/zynq_ultra_ps_e_0/S_AXI_HP0_FPD" }  [get_bd_intf_pins hdmi_tx/m_axi_mm_video5]
   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Slave "/zynq_ultra_ps_e_0/S_AXI_HP0_FPD" }  [get_bd_intf_pins hdmi_tx/m_axi_mm_video6]
   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Slave "/zynq_ultra_ps_e_0/S_AXI_HP0_FPD" }  [get_bd_intf_pins hdmi_tx/m_axi_mm_video7]
+  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Slave "/zynq_ultra_ps_e_0/S_AXI_HP0_FPD" }  [get_bd_intf_pins hdmi_tx/m_axi_mm_video8]
+  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Slave "/zynq_ultra_ps_e_0/S_AXI_HP0_FPD" }  [get_bd_intf_pins hdmi_tx/m_axi_mm_video9]
   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Slave "/zynq_ultra_ps_e_0/S_AXI_HP0_FPD" }  [get_bd_intf_pins hdmi_rx/m_axi_mm_video]
 
   connect_bd_net [get_bd_ports LED1] [get_bd_pins hdmi_tx/LED1]

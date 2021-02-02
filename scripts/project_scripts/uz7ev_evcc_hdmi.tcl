@@ -137,6 +137,14 @@ if {[string match -nocase "yes" $clean]} {
    save_bd_design
    validate_bd_design
 
+   puts ""
+   puts "***** Validate IP licenses..."
+   source $scripts_folder/validate_ip_licenses.tcl
+   set ret [validate_ip_licenses ${board}_${project}]
+   if {$ret != 0} {
+      error "!! Detected missing license !!"
+   }
+
    # Add the constraints that are needed
    import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/hdmi/hdmi.xdc
 

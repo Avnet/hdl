@@ -445,7 +445,7 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/saxihp0_fpd_aclk] [get_bd_pins clk_wiz_0/clk_out2]
 
   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_1
-  set_property -dict [list CONFIG.NUM_SI {8} CONFIG.NUM_MI {1}] [get_bd_cells axi_interconnect_1]
+  set_property -dict [list CONFIG.NUM_SI {10} CONFIG.NUM_MI {1}] [get_bd_cells axi_interconnect_1]
 
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/S00_AXI] [get_bd_intf_pins hdmi_tx/m_axi_mm_video1]
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/S01_AXI] [get_bd_intf_pins hdmi_tx/m_axi_mm_video2]
@@ -454,7 +454,9 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/S04_AXI] [get_bd_intf_pins hdmi_tx/m_axi_mm_video5]
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/S05_AXI] [get_bd_intf_pins hdmi_tx/m_axi_mm_video6]
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/S06_AXI] [get_bd_intf_pins hdmi_tx/m_axi_mm_video7]
-  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins hdmi_rx/m_axi_mm_video] [get_bd_intf_pins axi_interconnect_1/S07_AXI]
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/S07_AXI] [get_bd_intf_pins hdmi_tx/m_axi_mm_video8]
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/S08_AXI] [get_bd_intf_pins hdmi_tx/m_axi_mm_video9]
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins hdmi_rx/m_axi_mm_video] [get_bd_intf_pins axi_interconnect_1/S09_AXI]
   connect_bd_net [get_bd_pins axi_interconnect_1/ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
   connect_bd_net [get_bd_pins axi_interconnect_1/S00_ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
   connect_bd_net [get_bd_pins axi_interconnect_1/M00_ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
@@ -465,6 +467,8 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   connect_bd_net [get_bd_pins axi_interconnect_1/S05_ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
   connect_bd_net [get_bd_pins axi_interconnect_1/S06_ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
   connect_bd_net [get_bd_pins axi_interconnect_1/S07_ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
+  connect_bd_net [get_bd_pins axi_interconnect_1/S08_ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
+  connect_bd_net [get_bd_pins axi_interconnect_1/S09_ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
   connect_bd_net [get_bd_pins clk_wiz_0/clk_out2] [get_bd_pins axi_interconnect_1/ACLK]
   connect_bd_net [get_bd_pins axi_interconnect_1/S00_ACLK] [get_bd_pins clk_wiz_0/clk_out2]
   connect_bd_net [get_bd_pins axi_interconnect_1/M00_ACLK] [get_bd_pins clk_wiz_0/clk_out2]
@@ -475,6 +479,8 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   connect_bd_net [get_bd_pins axi_interconnect_1/S05_ACLK] [get_bd_pins clk_wiz_0/clk_out2]
   connect_bd_net [get_bd_pins axi_interconnect_1/S06_ACLK] [get_bd_pins clk_wiz_0/clk_out2]
   connect_bd_net [get_bd_pins axi_interconnect_1/S07_ACLK] [get_bd_pins clk_wiz_0/clk_out2]
+  connect_bd_net [get_bd_pins axi_interconnect_1/S08_ACLK] [get_bd_pins clk_wiz_0/clk_out2]
+  connect_bd_net [get_bd_pins axi_interconnect_1/S09_ACLK] [get_bd_pins clk_wiz_0/clk_out2]
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD]
 
 
