@@ -137,6 +137,10 @@ proc create_hier_cell_hdmi_tx { parentCell nameHier } {
 
   create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 m_axi_mm_video7
 
+  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 m_axi_mm_video8
+
+  create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 m_axi_mm_video9
+
   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 s_axi_CTRL
 
 
@@ -183,22 +187,26 @@ proc create_hier_cell_hdmi_tx { parentCell nameHier } {
    CONFIG.C_M_AXI_MM_VIDEO8_DATA_WIDTH {128} \
    CONFIG.C_M_AXI_MM_VIDEO9_DATA_WIDTH {128} \
    CONFIG.LAYER1_ALPHA {true} \
-   CONFIG.LAYER1_VIDEO_FORMAT {12} \
+   CONFIG.LAYER1_VIDEO_FORMAT {28} \
    CONFIG.LAYER2_ALPHA {true} \
-   CONFIG.LAYER2_VIDEO_FORMAT {12} \
+   CONFIG.LAYER2_VIDEO_FORMAT {28} \
    CONFIG.LAYER3_ALPHA {true} \
    CONFIG.LAYER3_VIDEO_FORMAT {28} \
    CONFIG.LAYER4_ALPHA {true} \
    CONFIG.LAYER4_VIDEO_FORMAT {28} \
    CONFIG.LAYER5_ALPHA {true} \
-   CONFIG.LAYER5_VIDEO_FORMAT {28} \
+   CONFIG.LAYER5_VIDEO_FORMAT {29} \
    CONFIG.LAYER6_ALPHA {true} \
-   CONFIG.LAYER6_VIDEO_FORMAT {28} \
+   CONFIG.LAYER6_VIDEO_FORMAT {29} \
    CONFIG.LAYER7_ALPHA {true} \
    CONFIG.LAYER7_UPSAMPLE {false} \
-   CONFIG.LAYER7_VIDEO_FORMAT {26} \
+   CONFIG.LAYER7_VIDEO_FORMAT {29} \
+   CONFIG.LAYER8_ALPHA {true} \
+   CONFIG.LAYER8_VIDEO_FORMAT {29} \
+   CONFIG.LAYER9_ALPHA {true} \
+   CONFIG.LAYER9_VIDEO_FORMAT {26} \
    CONFIG.LOGO_LAYER {false} \
-   CONFIG.NR_LAYERS {8} \
+   CONFIG.NR_LAYERS {10} \
    CONFIG.SAMPLES_PER_CLOCK {2} \
  ] $v_mix_0
 
@@ -210,6 +218,8 @@ proc create_hier_cell_hdmi_tx { parentCell nameHier } {
  ] $xlconstant_0
 
   # Create interface connections
+  connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins m_axi_mm_video8] [get_bd_intf_pins v_mix_0/m_axi_mm_video8]
+  connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins m_axi_mm_video9] [get_bd_intf_pins v_mix_0/m_axi_mm_video9]
   connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins m_axi_mm_video1] [get_bd_intf_pins v_mix_0/m_axi_mm_video1]
   connect_bd_intf_net -intf_net S02_AXI_1 [get_bd_intf_pins m_axi_mm_video2] [get_bd_intf_pins v_mix_0/m_axi_mm_video2]
   connect_bd_intf_net -intf_net S03_AXI_1 [get_bd_intf_pins m_axi_mm_video3] [get_bd_intf_pins v_mix_0/m_axi_mm_video3]
