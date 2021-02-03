@@ -55,7 +55,7 @@ if {$argc != 0} {
 
    # Build QUADCAM HW Platform
    # for UltraZed 7EV SOM + EV Carrier
-   set argv [list board=uz7ev_evcc project=quad_cam sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
+   set argv [list board=uz7ev_evcc project=quadcam sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
 
