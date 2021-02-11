@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -29,15 +33,15 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Dec 11, 2020
-#  Design Name:         UltraZed QUADCAM Design Platform
-#  Module Name:         make_uz_quadcam.tcl
-#  Project Name:        UltraZed QUADCAM Design Generator
-#  Target Devices:      UltraZed
-#  Hardware Boards:     UltraZed
+#  Design Name:         UltraZed-EV QUADCAM HW Platform
+#  Module Name:         make_uz7ev_evcc_quadcam.tcl
+#  Project Name:        UltraZed-EV QUADCAM
+#  Target Devices:      Xilinx Zynq UltraScale+ 7EV
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier + Quad Camera FMC
 # 
 #  Tool versions:       Xilinx Vivado 2020.2
 # 
-#  Description:         Build Script for UltraZed QUADCAM HW Platform
+#  Description:         Build Script for UltraZed-EV QUADCAM HW Platform
 # 
 #  Dependencies:        make.tcl
 #
@@ -47,16 +51,14 @@
 
 if {$argc != 0} {
     # Build QUADCAM HW Platform
-    # for UltraZed Defined from external source
+    # for UltraZed-EV Defined from external source
     set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
     set argc [llength $argv]
     source ./make.tcl -notrace
 } else {
-
    # Build QUADCAM HW Platform
    # for UltraZed 7EV SOM + EV Carrier
    set argv [list board=uz7ev_evcc project=quadcam sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
-
 }

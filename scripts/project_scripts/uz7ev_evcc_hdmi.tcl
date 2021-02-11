@@ -33,15 +33,15 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Nov 19, 2020
-#  Design Name:         HDMI HW Platform
-#  Module Name:         hdmi.tcl
-#  Project Name:        HDMI BSP Generator
-#  Target Devices:      Zynq UltraScale+ 7EV
-#  Hardware Boards:     UltraZed-EV SOM Carrier
+#  Design Name:         UltraZed-EV HDMI HW Platform
+#  Module Name:         uz7ev_evcc_hdmi.tcl
+#  Project Name:        UltraZed-EV with HDMI
+#  Target Devices:      Xilinx Zynq UltraScale+ 7EV
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier
 # 
 #  Tool versions:       Vivado 2020.2
 # 
-#  Description:         Build Script for HDMI support HW Platform
+#  Description:         Build Script for UltraZed-EV HDMI HW Platform
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
@@ -146,8 +146,7 @@ if {[string match -nocase "yes" $clean]} {
    }
 
    # Add the constraints that are needed
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/hdmi/hdmi.xdc
-
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/hdmi.xdc
 
    # Add Project source files
    puts ""

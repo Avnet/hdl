@@ -33,15 +33,15 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Jul 01, 2016
-#  Design Name:         UltraZed PetaLinux BSP HW Platform
-#  Module Name:         uz_petalinux.tcl
-#  Project Name:        UltraZed PetaLinux BSP Generator
-#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
-#  Hardware Boards:     UltraZed SOM
+#  Design Name:         UltraZed-EV Base HW Platform
+#  Module Name:         uz7ev_evcc_base.tcl
+#  Project Name:        UltraZed-EV Base
+#  Target Devices:      Xilinx Zynq UltraScale+ 7EV
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier
 # 
 #  Tool versions:       Vivado 2016.2
 # 
-#  Description:         Build Script for UltraZed PetaLinux BSP HW Platform
+#  Description:         Build Script for UltraZed-EV Base HW Platform
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
@@ -84,7 +84,7 @@ if {[string match -nocase "yes" $clean]} {
    # Create Vivado project
    puts ""
    puts "***** Creating Vivado Project..."
-   source ../boards/$board/${board}_${project}.tcl -notrace
+   source ${boards_folder}/$board/$project/${board}_${project}.tcl -notrace
    avnet_create_project ${board}_${project} $projects_folder $scriptdir
    
    # Remove the SOM specific XDC file since no constraints are needed for 
@@ -126,22 +126,29 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Add defined IP blocks to Block Design..."
    avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
 
-   # Assign the peripheral addresses
-   assign_bd_address
-
-   # Regenerate the BD to make it more readable and validate it 
-   regenerate_bd_layout
-   save_bd_design
-   validate_bd_design
-
    # General Config
    puts ""
    puts "***** General Configuration for Design..."
    set_property target_language VHDL [current_project]
    #set_property target_language Verilog [current_project]
-   
+
+   avnet_assign_addresses ${board}_${project} $projects_folder $scriptdir
+
+   # Redraw the BD and validate the design
+   regenerate_bd_layout
+   save_bd_design
+   validate_bd_design
+
+   puts ""
+   puts "***** Validate IP licenses..."
+   source $scripts_folder/validate_ip_licenses.tcl
+   set ret [validate_ip_licenses ${board}_${project}]
+   if {$ret != 0} {
+      error "!! Detected missing license !!"
+   }
+
    # Add the constraints that are needed
-   #import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${board}_${project}.xdc
+   #import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
    
    # Add Project source files
    puts ""

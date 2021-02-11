@@ -33,15 +33,15 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Dec 11, 2020
-#  Design Name:         Quad AR0231AT Camera HW Platform + HDMI
-#  Module Name:         quadcam.tcl
-#  Project Name:        UltraZed with HDMI and Quad AR0231AT Camera BSP Generator
-#  Target Devices:      Zynq UltraScale+ 7EV
-#  Hardware Boards:     UltraZed-EV SOM Carrier
+#  Design Name:         UltraZed-EV Quad AR0231AT Camera HW Platform + HDMI
+#  Module Name:         uz7ev_evcc_quadcam.tcl
+#  Project Name:        UltraZed-EV with HDMI and Quad AR0231AT Camera
+#  Target Devices:      Xilinx Zynq UltraScale+ 7EV
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier + Quad Camera FMC
 # 
 #  Tool versions:       Vivado 2020.2
 # 
-#  Description:         Build Script for HDMI support and Quad AR0231AT Camera FMC Bundle HW Platform
+#  Description:         Build Script for UltraZed-EV HDMI and Quad AR0231AT Camera FMC Bundle HW Platform
 # 
 #  Dependencies:        To be called from a configured make script call
 #                       Calls support scripts, such as board configuration 
@@ -153,9 +153,8 @@ if {[string match -nocase "yes" $clean]} {
    }
 
    # Add the constraints that are needed
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/quadcam/hdmi.xdc
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/quadcam/fmc_quad.xdc
-
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/hdmi.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/fmc_quad.xdc
 
    # Add Project source files
    puts ""

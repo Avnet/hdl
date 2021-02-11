@@ -320,6 +320,17 @@ proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
    set_property PFM.IRQ $parVal [get_bd_cells /xlconcat_0]
 }
 
+proc avnet_assign_addresses {project projects_folder scriptdir} {
+    # Unassign all address segments
+  delete_bd_objs [get_bd_addr_segs]
+  delete_bd_objs [get_bd_addr_segs -excluded]
+
+  # Hard-code specific address segments (used in device-tree or applications)
+  assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  
+  assign_bd_address
+
+}
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set design_name ${project}
    

@@ -33,15 +33,15 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Jul 01, 2016
-#  Design Name:         UltraZed PetaLinux BSP HW Platform
-#  Module Name:         make_uz_petalinux.tcl
-#  Project Name:        UltraZed PetaLinux BSP Generator
+#  Design Name:         UltraZed-EV Base HW Platform
+#  Module Name:         make_uz7ev_evcc_base.tcl
+#  Project Name:        UltraZed-EV Base
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
-#  Hardware Boards:     UltraZed SOM
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier
 # 
 #  Tool versions:       Xilinx Vivado 2016.2
 # 
-#  Description:         Build Script for UltraZed PetaLinux BSP HW Platform
+#  Description:         Build Script for UltraZed-EV HW Platform
 # 
 #  Dependencies:        make.tcl
 #
@@ -57,13 +57,13 @@
 # ----------------------------------------------------------------------------
 
 if {$argc != 0} {
-	# Build PetaLinux BSP HW Platform
-	# for UltraZed Defined from external source
+	# Build Base HW Platform
+	# for UltraZed-EV Defined from external source
 	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
 	set argc [llength $argv]
 	source ./make.tcl -notrace
 } else {
-   # Build PetaLinux BSP HW Platform (also used for OOB HW Platform)
+   # Build Base HW Platform
    # for UltraZed 7EV SOM + EV Carrier
    set argv [list board=uz7ev_evcc project=base sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
    set argc [llength $argv]
