@@ -33,38 +33,24 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         December 02, 2014
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      Zynq-7010
-#  Hardware Boards:     MicroZed, FMC Carrier
+#  Design Name:         MicroZed Base HW Platform
+#  Module Name:         mz7010_som_base.tcl
+#  Project Name:        MicroZed Base HW
+#  Target Devices:      Xilinx Zynq-7010
+#  Hardware Boards:     MicroZed SOM
 # 
-#  Tool versions:       Vivado 2014.4
-# 
-#  Description:         Build Script for MicroZed FMC Carrier
-# 
-#  Dependencies:        To be called from a project build script
-# 
-#  Revision:            Mar 26, 2016: 1.00 Initial version
-#                       Jun 16, 2016: 1.01  Updated to support 2015.4 tools
-#                       Jul 01, 2016: 1.02  Updated to support 2016.2 tools
-#                       Oct 10, 2017: 1.03  Updated to support 2017.2 tools
-#                       May 03, 2018: 1.04  Updated to support 2017.4 tools
-#                       Aug 11, 2018: 1.05  Updated to support 2018.2 tools
-#                       Sep 20, 2019: 1.06  Updated to support 2019.1 tools
-#                       Apr 09, 2020: 1.07  Updated to support 2019.2 tools
-#
 # ----------------------------------------------------------------------------
-
 proc avnet_create_project {project projects_folder scriptdir} {
 
    create_project $project $projects_folder -part xc7z010clg400-1 -force
-   # add selection for proper xdc based on needs
-   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/mz7010_som/mbcc-fmc-pcb-b_v2.xdc
-
 }
 
-# Hierarchical cell: interrupt_concat
+proc avnet_import_constraints {boards_folder board project} {
+
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/bitstream_compression_enable.xdc
+}
+
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {
 
    variable script_folder
@@ -326,6 +312,18 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    ] [get_bd_cells ps7_axi_periph]
 
    save_bd_design
+}
+
+proc avnet_assign_addresses {project projects_folder scriptdir} {
+    # Unassign all address segments
+  delete_bd_objs [get_bd_addr_segs]
+  delete_bd_objs [get_bd_addr_segs -excluded]
+
+  # Hard-code specific address segments (used in device-tree or applications)
+  #assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  
+  assign_bd_address
+
 }
 
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {

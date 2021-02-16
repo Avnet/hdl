@@ -16,10 +16,10 @@
 #  design is not authorized without written consent from Avnet.
 # 
 #  Please direct any questions to the UltraZed community support forum:
-#     http://www.ultrazed.org/forum
+#     http://avnet.me/Ultra96_Forum
 # 
 #  Product information is available at:
-#     http://www.ultrazed.org/product/ultrazed
+#     http://avnet.me/ultra96-v2
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -39,20 +39,17 @@
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
 #  Hardware Boards:     Ultra96v2 Board with OnSemi Mezzanine
 # 
-#  Tool versions:       Xilinx Vivado 2020.1
-# 
-#  Description:         Build Script for Ultra96v2 Dual Camera Mezzanine BSP HW Platform
-# 
-#  Dependencies:        make.tcl
-#
-#  Revision:            Nov 4, 2020: 1.00 Initial version
-# 
 # ----------------------------------------------------------------------------
 
-# Build PetaLinux BSP HW Platform
-# for Ultra96v2 Board + Dual Camera Mezzanine
-set argv [list board=u96v2_sbc project=dualcam sdk=no close_project=no version_override=yes dev_arch=zynqmp]
-set argc [llength $argv]
-
-source ./make.tcl -notrace
+if {$argc != 0} {
+	# Build dualcam hw platform
+	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
+	set argc [llength $argv]
+	source ./make.tcl -notrace
+} else {
+	# Build dualcam hw platform
+   set argv [list board=u96v2_sbc project=dualcam sdk=no close_project=no version_override=yes dev_arch=zynqmp]
+   set argc [llength $argv]
+   source ./make.tcl -notrace
+}
 

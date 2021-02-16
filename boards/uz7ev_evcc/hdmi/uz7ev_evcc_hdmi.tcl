@@ -33,29 +33,22 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Nov 19, 2020
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      Zynq UltraScale+ 7EV
-#  Hardware Boards:     UltraZed-EV SOM Carrier
+#  Design Name:         UltraZed-EV HDMI HW Platform
+#  Module Name:         make_uz7ev_evcc_hdmi.tcl
+#  Project Name:        UltraZed-EV HDMI
+#  Target Devices:      Xilinx Zynq UltraScale+ 7EV
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier
 # 
-#  Tool versions:       Vivado 2020.2
-# 
-#  Description:         Build Script for UltraZed-EV Carrier
-# 
-#  Dependencies:        To be called from a project build script
-#
-#  Revision:            Nov 19, 2020: 1.00 Initial version
-#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
    create_project $project $projects_folder -part xczu7ev-fbvb900-1-i -force
-   # add selection for proper xdc based on needs
-   # if IO carrier, then use that xdc
-   # if FMC, choose that one
+}
 
+proc avnet_import_constraints {boards_folder board project} {
+
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/hdmi.xdc
 }
 
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {

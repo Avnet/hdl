@@ -1,18 +1,19 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
-# 
-#  Please direct any questions or issues to the MicroZed Community Forums:
-#      http://www.microzed.org
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -32,14 +33,13 @@
 #  Target Devices:      
 #  Hardware Boards:     
 # 
-#  Tool versions:       
-# 
-#  Description:         Build Script for IP
-# 
-#  Dependencies:        To be called from make scripts to generate RTL-based IP modules without having to go through the full process of packaging the RTL as an IP to be added through the Vivado IP catalog. 
-# 						See chap 12 'Referencing RTL Modules' https://www.xilinx.com/support/documentation/sw_manuals/xilinx2017_1/ug994-vivado-ip-subsystems.pdf
-# 
 # ----------------------------------------------------------------------------
+
+# To be called from make scripts to generate RTL-based IP modules without 
+# having to go through the full process of packaging the RTL as an IP to 
+# be added through the Vivado IP catalog. 
+# See chap 12 'Referencing RTL Modules' of Xilinx UG994
+# https://www.xilinx.com/support/documentation/sw_manuals/xilinx2020_2/ug994-vivado-ip-subsystems.pdf
 
 proc avnet_generate_RTL_ip {ip_name ip_inst_name} {
    puts "Making $ip_name instance $ip_inst_name ..."

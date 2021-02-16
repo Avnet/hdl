@@ -39,25 +39,15 @@
 #  Target Devices:      Xilinx Zynq UltraScale+ 7EV
 #  Hardware Boards:     UltraZed-EV SOM + EV Carrier + Quad Camera FMC
 # 
-#  Tool versions:       Xilinx Vivado 2020.2
-# 
-#  Description:         Build Script for UltraZed-EV QUADCAM HW Platform
-# 
-#  Dependencies:        make.tcl
-#
-#  Revision:            Dec 11, 2020: 1.00 Initial version
-# 
 # ----------------------------------------------------------------------------
 
 if {$argc != 0} {
-    # Build QUADCAM HW Platform
-    # for UltraZed-EV Defined from external source
-    set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
-    set argc [llength $argv]
-    source ./make.tcl -notrace
+	# Build quadcam hw platform
+   set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
+   set argc [llength $argv]
+   source ./make.tcl -notrace
 } else {
-   # Build QUADCAM HW Platform
-   # for UltraZed 7EV SOM + EV Carrier
+	# Build quadcam hw platform
    set argv [list board=uz7ev_evcc project=quadcam sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace

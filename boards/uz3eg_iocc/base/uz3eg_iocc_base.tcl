@@ -33,32 +33,22 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         July 01, 2016
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      Zynq UltraScale+ 3EG
-#  Hardware Boards:     UltraZed, IO Carrier
+#  Design Name:         UltraZed-EG Base HW Platform
+#  Module Name:         uz3eg_iocc_base.tcl
+#  Project Name:        UltraZed-EG Base
+#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
+#  Hardware Boards:     UltraZed-EG SOM + I/O Carrier
 # 
-#  Tool versions:       Vivado 2017.2
-# 
-#  Description:         Build Script for UltraZed IO Carrier
-# 
-#  Dependencies:        To be called from a project build script
-#
-#  Revision:            Jul 01, 2016: 1.00 Initial version
-#                       Aug 23, 2017: 1.01 Updated to remove ES1 for 2017.2
-#                       Feb 20, 2020: 1.02 Updated to Vivado 2019.2
-#                       Oct 01, 2020: 1.03 Updated for Vitis 2020.1
-#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
    create_project $project $projects_folder -part xczu3eg-sfva625-1-i -force
-   # add selection for proper xdc based on needs
-   # if IO carrier, then use that xdc
-   # if FMC, choose that one
+}
 
+proc avnet_import_constraints {boards_folder board project} {
+
+   #import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
 }
 
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {
@@ -350,6 +340,30 @@ proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
       lappend parVal In$i {}
    }
    set_property PFM.IRQ $parVal [get_bd_cells /xlconcat_0]
+}
+
+proc avnet_assign_addresses {project projects_folder scriptdir} {
+    # Unassign all address segments
+  delete_bd_objs [get_bd_addr_segs]
+  delete_bd_objs [get_bd_addr_segs -excluded]
+
+  # Hard-code specific address segments (used in device-tree or applications)
+  assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  
+  assign_bd_address
+
+}
+
+proc avnet_assign_addresses {project projects_folder scriptdir} {
+    # Unassign all address segments
+  delete_bd_objs [get_bd_addr_segs]
+  delete_bd_objs [get_bd_addr_segs -excluded]
+
+  # Hard-code specific address segments (used in device-tree or applications)
+  assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  
+  assign_bd_address
+
 }
 
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {

@@ -33,23 +33,11 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Feb 03, 2017
-#  Design Name:         MiniZed PetaLinux BSP HW Platform
-#  Module Name:         minized_petalinux.tcl
-#  Project Name:        MiniZed PetaLinux BSP Generator
+#  Design Name:         MiniZed Base HW Platform
+#  Module Name:         minized_sbc_base.tcl
+#  Project Name:        MiniZed Base HW
 #  Target Devices:      Xilinx Zynq-7007
 #  Hardware Boards:     MiniZed
-# 
-#  Tool versions:       Vivado 2016.4
-# 
-#  Description:         Build Script for MiniZed PetaLinux BSP HW Platform
-# 
-#  Dependencies:        To be called from a configured make script call
-#                       Calls support scripts, such as board configuration 
-#                       scripts IP generation scripts or others as needed
-# 
-#
-#  Revision:            Feb 03, 2017: 1.00 Initial version
-#                       Apr 06, 2020: 1.01 Updated for 2019.2 tools
 # 
 # ----------------------------------------------------------------------------
 
@@ -62,7 +50,7 @@ if {[string match -nocase "yes" $clean]} {
 
    # Open the existing project.
    puts ""
-   puts "***** Opening Vivado Project ${projects_folder}/${board}_${project}.xpr ..."
+   puts "***** Opening Vivado project ${projects_folder}/${board}_${project}.xpr ..."
    open_project ${projects_folder}/${board}_${project}.xpr
    
    # Reset output products.
@@ -77,17 +65,22 @@ if {[string match -nocase "yes" $clean]} {
 } else {
    # Create Vivado project
    puts ""
-   puts "***** Creating Vivado Project..."
-   source ../boards/$board/${board}_${project}.tcl -notrace
+   puts "***** Creating Vivado project..."
+   source ${boards_folder}/$board/$project/${board}_${project}.tcl -notrace
    avnet_create_project ${board}_${project} $projects_folder $scriptdir
    
    # Remove the SOM specific XDC file since no constraints are needed for 
    # the basic system design
-   remove_files -fileset constrs_1 *.xdc
+   #remove_files -fileset constrs_1 *.xdc
    
+   # Import the constraints that are needed
+   puts ""
+   puts "***** Importing constraints file(s)..."
+   avnet_import_constraints ${boards_folder} ${board} ${project}
+
    # Apply board specific project property settings
    puts ""
-   puts "***** Assigning Vivado Project board_part Property to minized..."
+   puts "***** Assigning Vivado project board_part property to minized..."
    set_property board_part em.avnet.com:minized:part0:1.2 [current_project]
 
    # Generate Avnet IP
@@ -96,35 +89,38 @@ if {[string match -nocase "yes" $clean]} {
    source ./makeip.tcl -notrace
    #avnet_generate_ip microphone_mgr
 
-   # Add Avnet IP Repository
+   # Add Avnet IP repository
    # The IP_REPO_PATHS looks for a <component>.xml file, where <component> is the name of the IP to add to the catalog. The XML file identifies the various files that define the IP.
    # The IP_REPO_PATHS property does not have to point directly at the XML file for each IP in the repository.
    # The IP catalog searches through the sub-folders of the specified IP repositories, looking for IP to add to the catalog. 
    puts ""
-   puts "***** Updating Vivado to include IP Folder"
+   puts "***** Updating Vivado to include IP folder"
    cd ../projects
    set_property ip_repo_paths  ../ip [current_fileset]
    update_ip_catalog
    
-   # Add Project source files
-   puts "***** Adding Source Files to Block Design..."
+   # Add project RTL source files
+   puts "***** Adding RTL source Files to design..."
    # Add Minized-specific RTL design sources
    # Set 'sources_1' fileset object
    set obj [get_filesets sources_1]
    set files [list \
-    "[file normalize "../ip/minized/hdl/vhdl/wireless_mgr.vhd"]" \
-    "[file normalize "../ip/minized/hdl/vhdl/led_mgr.vhd"]" \
-    "[file normalize "../ip/minized/hdl/vhdl/microphone_mgr.vhd"]" \
+      "[file normalize "../ip/minized/hdl/vhdl/wireless_mgr.vhd"]" \
+      "[file normalize "../ip/minized/hdl/vhdl/led_mgr.vhd"]" \
+      "[file normalize "../ip/minized/hdl/vhdl/microphone_mgr.vhd"]" \
    ]
    add_files -norecurse -fileset $obj $files
    update_compile_order -fileset sources_1
-      
-   # Create Block Design and Add PS core
+   
+   # Create block design
    puts ""
-   puts "***** Creating Block Design..."
+   puts "***** Creating block design..."
    create_bd_design ${board}_${project}
    set design_name ${board}_${project}
 
+   # Add custom RTL IP blocks
+   puts ""
+   puts "***** Adding custom RTL IP blocks to block design..."
    # Add RTL-based IP modules without having to go through the process of packaging the RTL as an IP to be added through the Vivado IP catalog. 
    # See 'Referencing RTL Modules' in Xilinx UG994
    source ../scripts/make_RTL_ip.tcl
@@ -132,42 +128,53 @@ if {[string match -nocase "yes" $clean]} {
    avnet_generate_RTL_ip led_mgr led_mgr_0
    avnet_generate_RTL_ip microphone_mgr microphone_mgr_0
    
-   # Add Processing System presets from board definitions.
+   # Add processing system presets from board definitions.
+   puts ""
+   puts "***** Adding processing system presets from board definition..."
    avnet_add_ps_preset ${board}_${project} $projects_folder $scriptdir
 
    # Add User IO presets from board definitions.
    puts ""
-   puts "***** Add defined IP blocks to Block Design..."
+   puts "***** Adding defined IP blocks to block design..."
    avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
 
-   # Assign the peripheral addresses
-   assign_bd_address
+   # General Config
+   puts ""
+   puts "***** General configuration for design..."
+   set_property target_language VHDL [current_project]
+   #set_property target_language Verilog [current_project]
 
-   # Regenerate the BD to make it more readable and validate it 
+   # Assign peripheral addresses
+   puts ""
+   puts "***** Assigning peripheral addresses..."
+   avnet_assign_addresses ${board}_${project} $projects_folder $scriptdir
+
+   # Redraw the BD and validate the design
+   puts ""
+   puts "***** Validating the block design..."
    regenerate_bd_layout
    save_bd_design
    validate_bd_design
 
-   # General Config
+   # Make sure user has required IP licenses before building the design
    puts ""
-   puts "***** General Configuration for Design..."
-   set_property target_language VHDL [current_project]
-   #set_property target_language Verilog [current_project]
-   
-   # Add the constraints that are needed
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/bitstream_compression_enable.xdc
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${board}_${project}.xdc
+   puts "***** Validating IP licenses..."
+   source $scripts_folder/validate_ip_licenses.tcl
+   set ret [validate_ip_licenses ${board}_${project}]
+   if {$ret != 0} {
+      error "!! Detected missing license !!"
+   }
 
    # Add Project source files
    puts ""
-   puts "***** Adding Source Files to Block Design..."
+   puts "***** Creating top level wrapper for design..."
    make_wrapper -files [get_files ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/${board}_${project}.bd] -top
    add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.vhd
    #add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
    
    # Add Vitis directives
    puts ""
-   puts "***** Adding Vitis Directves to Design..."
+   puts "***** Adding Vitis directves to design..."
    avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
    update_compile_order -fileset sources_1
    import_files
@@ -177,7 +184,7 @@ if {[string match -nocase "yes" $clean]} {
    #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    puts ""
-   puts "***** Building Binary..."
+   puts "***** Building binary..."
    # add this to allow up+enter rebuild capability 
    cd $scripts_folder
    update_compile_order -fileset sources_1

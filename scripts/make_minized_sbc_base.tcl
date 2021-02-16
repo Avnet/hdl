@@ -33,24 +33,24 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Feb 03, 2017
-#  Design Name:         MiniZed PetaLinux BSP HW Platform
-#  Module Name:         make_minized_petalinux.tcl
-#  Project Name:        MiniZed PetaLinux BSP Generator
-#  Target Devices:      Xilinx Zynq-7000
-#  Hardware Boards:     MiniZed SOM
-# 
-#  Tool versions:       Xilinx Vivado 2016.4
-# 
-#  Description:         Build Script for MiniZed PetaLinux BSP HW Platform
-# 
-#  Dependencies:        make.tcl
-#
-#  Revision:            Feb 03, 2017: 1.00 Initial version
-#                       Apr 06, 2020: 1.01 Updated for 2019.2 tools
+#  Design Name:         MiniZed Base HW Platform
+#  Module Name:         minized_sbc_base.tcl
+#  Project Name:        MiniZed Base HW
+#  Target Devices:      Xilinx Zynq-7007
+#  Hardware Boards:     MiniZed
 # 
 # ----------------------------------------------------------------------------
 
-# Build PetaLinux BSP HW Platform for MiniZed 
-set argv [list board=minized_sbc project=base sdk=no close_project=yes version_override=yes]
-set argc [llength $argv]
-source ./make.tcl -notrace
+if {$argc != 0} {
+	# Build base hw platform
+	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynq]
+	set argc [llength $argv]
+	source ./make.tcl -notrace
+} else {
+	# Build base hw platform
+   set argv [list board=minized_sbc project=base sdk=no close_project=yes version_override=yes dev_arch=zynq]
+   set argc [llength $argv]
+   source ./make.tcl -notrace
+}
+
+

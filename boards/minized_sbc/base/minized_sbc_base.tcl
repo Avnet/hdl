@@ -33,28 +33,23 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Feb 03, 2017
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      Zynq-7007
+#  Design Name:         MiniZed Base HW Platform
+#  Module Name:         minized_sbc_base.tcl
+#  Project Name:        MiniZed Base HW
+#  Target Devices:      Xilinx Zynq-7007
 #  Hardware Boards:     MiniZed
 # 
-#  Tool versions:       Vivado 2016.4
-# 
-#  Description:         Build Script for MiniZed
-# 
-#  Dependencies:        To be called from a project build script
-#
-#  Revision:            Apr 30, 2017: Update to Vivado 2017.1
-#                       Apr 09, 2020: 1.01 Updated for Vivado 2019.2
-#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
    create_project $project $projects_folder -part xc7z007sclg225-1 -force
-   # add selection for proper xdc based on needs
+}
 
+proc avnet_import_constraints {boards_folder board project} {
+
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/bitstream_compression_enable.xdc
 }
 
 # Hierarchical cell: interrupt_concat
@@ -498,6 +493,18 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    ] [get_bd_cells ps7_axi_periph]
 
    save_bd_design
+}
+
+proc avnet_assign_addresses {project projects_folder scriptdir} {
+    # Unassign all address segments
+  delete_bd_objs [get_bd_addr_segs]
+  delete_bd_objs [get_bd_addr_segs -excluded]
+
+  # Hard-code specific address segments (used in device-tree or applications)
+  #assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  
+  assign_bd_address
+
 }
 
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {

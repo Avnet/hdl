@@ -33,38 +33,27 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         November 23, 2015
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      Zynq-7020
-#  Hardware Boards:     PicoZed, FMC Carrier V2
+#  Design Name:         PicoZed Base HW Platform
+#  Module Name:         pz7015_fmc2_base.tcl
+#  Project Name:        PicoZed Base HW
+#  Target Devices:      Xilinx Zynq-7015
+#  Hardware Boards:     PicoZed SOM + FMC2 Carrier
 # 
-#  Tool versions:       Vivado 2015.2.1
-# 
-#  Description:         Build Script for PicoZed FMC Carrier V2
-# 
-#  Dependencies:        To be called from a project build script
-# 
-#  Revision:            Feb 08, 2016: 1.00 Initial version
-#                       May 10, 2016: 1.01  Updated to support 2015.4 tools
-#                       Jul 01, 2016: 1.02  Updated to support 2016.2 tools
-#                       Nov 03, 2017: 1.03  Updated to support 2017.2 tools
-#                       May 03, 2018: 1.04  Updated to support 2017.4 tools
-#                       Aug 11, 2018: 1.05  Updated to support 2018.2 tools
-#                       Sep 27, 2019: 1.06  Updated to support 2019.1 tools
-#                       Apr 09, 2020: 1.07  Updated to support 2019.2 tools
-#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
-   create_project $project $projects_folder -part xc7z020clg400-1 -force
-   # add selection for proper xdc based on needs
-   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7020_fmc2/pz7020_revc_fmcv2_reva_v1.xdc
-
+   create_project $project $projects_folder -part xc7z015clg485-1 -force
 }
 
-# Hierarchical cell: interrupt_concat
+proc avnet_import_constraints {boards_folder board project} {
+
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/pz7030_7015_revc_fmcv2_reva_v1.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_i2c.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_user_io.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/bitstream_compression_enable.xdc
+}
+
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {
 
    variable script_folder
@@ -158,22 +147,15 @@ proc create_hier_cell_interrupt_concat { parentCell nameHier } {
 proc avnet_add_ali3_display_kit {project projects_folder scriptdir} {
 
    # add selection for proper xdc based on needs
-   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7020_fmc2/pz7020_fmc2_ali3_pmod.xdc
-
-}
-
-proc avnet_add_hdmi {project projects_folder scriptdir} {
-
-   # add selection for proper xdc based on needs
-   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7020_fmc2/pz7020_fmc2_hdmi.xdc
+   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7015_fmc2/pz7015_fmc2_ali3_pmod.xdc
 
 }
 
 proc avnet_add_user_io {project projects_folder scriptdir} {
 
    # add selection for proper xdc based on needs
-   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7020_fmc2/pz7020_fmc2_user_io.xdc
-   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7020_fmc2/pz7020_fmc2_i2c.xdc
+   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7015_fmc2/pz7015_fmc2_user_io.xdc
+   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7015_fmc2/pz7015_fmc2_i2c.xdc
 
 }
 
@@ -462,29 +444,29 @@ CONFIG.PCW_UIPARAM_DDR_CWL {6} \
 CONFIG.PCW_UIPARAM_DDR_DRAM_WIDTH {16 Bits} \
 CONFIG.PCW_UIPARAM_DDR_T_RAS_MIN {35.0} \
 CONFIG.PCW_UIPARAM_DDR_SPEED_BIN {DDR3_1066F} \
-CONFIG.PCW_UIPARAM_DDR_CLOCK_0_LENGTH_MM {39.7} \
-CONFIG.PCW_UIPARAM_DDR_CLOCK_1_LENGTH_MM {39.7} \
-CONFIG.PCW_UIPARAM_DDR_CLOCK_2_LENGTH_MM {54.14} \
-CONFIG.PCW_UIPARAM_DDR_CLOCK_3_LENGTH_MM {54.14} \
-CONFIG.PCW_UIPARAM_DDR_DQ_0_LENGTH_MM {49.59} \
-CONFIG.PCW_UIPARAM_DDR_DQ_1_LENGTH_MM {51.74} \
-CONFIG.PCW_UIPARAM_DDR_DQ_2_LENGTH_MM {50.32} \
-CONFIG.PCW_UIPARAM_DDR_DQ_3_LENGTH_MM {48.55} \
-CONFIG.PCW_UIPARAM_DDR_DQS_0_LENGTH_MM {50.05} \
-CONFIG.PCW_UIPARAM_DDR_DQS_1_LENGTH_MM {50.43} \
-CONFIG.PCW_UIPARAM_DDR_DQS_2_LENGTH_MM {50.10} \
-CONFIG.PCW_UIPARAM_DDR_DQS_3_LENGTH_MM {50.01} \
+CONFIG.PCW_UIPARAM_DDR_CLOCK_0_LENGTH_MM {33.621} \
+CONFIG.PCW_UIPARAM_DDR_CLOCK_1_LENGTH_MM {33.621} \
+CONFIG.PCW_UIPARAM_DDR_CLOCK_2_LENGTH_MM {48.166} \
+CONFIG.PCW_UIPARAM_DDR_CLOCK_3_LENGTH_MM {48.166} \
+CONFIG.PCW_UIPARAM_DDR_DQ_0_LENGTH_MM {38.671} \
+CONFIG.PCW_UIPARAM_DDR_DQ_1_LENGTH_MM {38.635} \
+CONFIG.PCW_UIPARAM_DDR_DQ_2_LENGTH_MM {38.671} \
+CONFIG.PCW_UIPARAM_DDR_DQ_3_LENGTH_MM {38.679} \
+CONFIG.PCW_UIPARAM_DDR_DQS_0_LENGTH_MM {38.200} \
+CONFIG.PCW_UIPARAM_DDR_DQS_1_LENGTH_MM {38.692} \
+CONFIG.PCW_UIPARAM_DDR_DQS_2_LENGTH_MM {38.778} \
+CONFIG.PCW_UIPARAM_DDR_DQS_3_LENGTH_MM {38.635} \
 CONFIG.PCW_UIPARAM_DDR_TRAIN_DATA_EYE {1} \
 CONFIG.PCW_UIPARAM_DDR_TRAIN_WRITE_LEVEL {1} \
 CONFIG.PCW_UIPARAM_DDR_TRAIN_READ_GATE {1} \
-CONFIG.PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_0 {-0.073} \
-CONFIG.PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_1 {-0.072} \
-CONFIG.PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_2 {0.024} \
-CONFIG.PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_3 {0.023} \
-CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY0 {0.294} \
-CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY1 {0.298} \
-CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY2 {0.338} \
-CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY3 {0.334} \
+CONFIG.PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_0 {-0.036} \
+CONFIG.PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_1 {-0.036} \
+CONFIG.PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_2 {0.058} \
+CONFIG.PCW_UIPARAM_DDR_DQS_TO_CLK_DELAY_3 {0.057} \
+CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY0 {0.240} \
+CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY1 {0.238} \
+CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY2 {0.283} \
+CONFIG.PCW_UIPARAM_DDR_BOARD_DELAY3 {0.284} \
 CONFIG.PCW_UIPARAM_DDR_USE_INTERNAL_VREF {1} \
 ] $ps7
 
@@ -667,6 +649,18 @@ set_property -dict [ list \
 
 }
 
+proc avnet_assign_addresses {project projects_folder scriptdir} {
+    # Unassign all address segments
+  delete_bd_objs [get_bd_addr_segs]
+  delete_bd_objs [get_bd_addr_segs -excluded]
+
+  # Hard-code specific address segments (used in device-tree or applications)
+  #assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  
+  assign_bd_address
+
+}
+
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set design_name ${project}
    
@@ -718,8 +712,8 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 
    # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
    #set_property platform.post_sys_link_tcl_hook        ./scripts/dynamic_postlink.tcl [current_project]
-   #set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/pz7020_fmc2/pz7020_fmc2_dynamic_postlink.tcl [current_project]
-   #set_property platform.post_sys_link_overlay_tcl_hook        ${projects_folder}/../../../boards/pz7020_fmc2/pz7020_fmc2_dynamic_postlink.tcl [current_project]
+   #set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/pz7015_fmc2/pz7015_fmc2_dynamic_postlink.tcl [current_project]
+   #set_property platform.post_sys_link_overlay_tcl_hook        ${projects_folder}/../../../boards/pz7015_fmc2/pz7015_fmc2_dynamic_postlink.tcl [current_project]
 
    set_property platform.vendor                        "em.avnet.com" [current_project]
    set_property platform.board_id                      ${project} [current_project]

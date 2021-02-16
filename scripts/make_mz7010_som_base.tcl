@@ -1,11 +1,15 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
@@ -29,39 +33,22 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Mar 26, 2016
-#  Design Name:         MicroZed PetaLinux BSP HW Platform
+#  Design Name:         MicroZed Base HW Platform
 #  Module Name:         make_mz7010_som_base.tcl
-#  Project Name:        MicroZed PetaLinux BSP Generator
+#  Project Name:        MicroZed Base HW
 #  Target Devices:      Xilinx Zynq-7000
 #  Hardware Boards:     MicroZed SOM
-# 
-#  Tool versions:       Xilinx Vivado 2015.2
-# 
-#  Description:         Build Script for MicroZed PetaLinux BSP HW Platform
-# 
-#  Dependencies:        make.tcl
-#
-#  Revision:            Mar 26, 2016: 1.0  Initial version
-#                       Jun 16, 2016: 1.1  Updated to support 2015.4 tools
-#                       Jul 01, 2016: 1.2  Updated to support 2016.2 tools
-#                       Oct 10, 2017: 1.3  Updated to support 2017.2 tools
-#                       May 03, 2018: 1.4  Updated to support 2017.4 tools
-#                       Aug 11, 2018: 1.5  Updated to support 2018.2 tools
-#                       Sep 20, 2019: 1.6  Updated to support 2019.1 tools
-#                       Feb 12, 2020: 1.7  Updated to support 2019.2 tools
 # 
 # ----------------------------------------------------------------------------
 
 if {$argc != 0} {
-	# Build PetaLinux BSP HW Platform
-	# for MicroZed Defined from external source
+	# Build base hw platform
 	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynq]
 	set argc [llength $argv]
 	source ./make.tcl -notrace
 } else {
-   # Build PetaLinux BSP HW Platform
-   # for MicroZed 7010 SOM
-   set argv [list board=mz7010_som project=base sdk=no version_override=yes]
+	# Build base hw platform
+   set argv [list board=mz7010_som project=base sdk=no close_project=yes version_override=yes dev_arch=zynq]
    set argc [llength $argv]
    source ./make.tcl -notrace
 }

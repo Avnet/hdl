@@ -33,31 +33,22 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Nov 10, 2017
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      Zynq UltraScale+ 7EV
-#  Hardware Boards:     UltraZed-EV SOM Carrier
+#  Design Name:         UltraZed-EV Base HW Platform
+#  Module Name:         uz7ev_evcc_base.tcl
+#  Project Name:        UltraZed-EV Base
+#  Target Devices:      Xilinx Zynq UltraScale+ 7EV
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier
 # 
-#  Tool versions:       Vivado 2017.2
-# 
-#  Description:         Build Script for UltraZed-EV Carrier
-# 
-#  Dependencies:        To be called from a project build script
-#
-#  Revision:            Nov 10, 2017: 1.00 Initial version
-#                       Feb 20, 2020: 1.02 Updated to Vivado 2019.2
-#                       Oct 01, 2020: 1.03 Updated for Vitis 2020.1
-#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
    create_project $project $projects_folder -part xczu7ev-fbvb900-1-i -force
-   # add selection for proper xdc based on needs
-   # if IO carrier, then use that xdc
-   # if FMC, choose that one
+}
 
+proc avnet_import_constraints {boards_folder board project} {
+
+   #import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
 }
 
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {
@@ -331,6 +322,7 @@ proc avnet_assign_addresses {project projects_folder scriptdir} {
   assign_bd_address
 
 }
+
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set design_name ${project}
    

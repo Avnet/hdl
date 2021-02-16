@@ -33,32 +33,22 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Apr 04, 2019
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      Zynq UltraScale+ 3EG
-#  Hardware Boards:     Ultra96v2 board
+#  Design Name:         Ultra96v2 Base HW Platform
+#  Module Name:         u96v2_sbc_base.tcl
+#  Project Name:        Ultra96v2 Base HW
+#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
+#  Hardware Boards:     Ultra96v2 Board
 # 
-#  Tool versions:       Vivado 2018.3
-# 
-#  Description:         Build Script for Ultra96v2
-# 
-#  Dependencies:        To be called from a project build script
-#
-#  Revision:            Apr 04, 2019: 1.00 Initial version
-#                       Aug 29, 2019: 1.01 Updated for Vivado 2018.3
-#                       Oct 14, 2019: 1.02 Updated for Vivado 2019.1
-#                       Oct 01, 2020: 1.03 Updated for Vitis 2020.1
-#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
    create_project $project $projects_folder -part xczu3eg-sbva484-1-i -force
-   # add selection for proper xdc based on needs
-   # if IO carrier, then use that xdc
-   # if FMC, choose that one
+}
 
+proc avnet_import_constraints {boards_folder board project} {
+
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
 }
 
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {
@@ -539,6 +529,18 @@ proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
       lappend parVal In$i {}
    }
    set_property PFM.IRQ $parVal [get_bd_cells /xlconcat_0]
+}
+
+proc avnet_assign_addresses {project projects_folder scriptdir} {
+    # Unassign all address segments
+  delete_bd_objs [get_bd_addr_segs]
+  delete_bd_objs [get_bd_addr_segs -excluded]
+
+  # Hard-code specific address segments (used in device-tree or applications)
+  assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  
+  assign_bd_address
+
 }
 
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {

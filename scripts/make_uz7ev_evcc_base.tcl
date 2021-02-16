@@ -39,32 +39,15 @@
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
 #  Hardware Boards:     UltraZed-EV SOM + EV Carrier
 # 
-#  Tool versions:       Xilinx Vivado 2016.2
-# 
-#  Description:         Build Script for UltraZed-EV HW Platform
-# 
-#  Dependencies:        make.tcl
-#
-#  Revision:            Jul 01, 2016: 1.00 Initial version
-#                       Jan 05, 2017: 1.01 Added support for PCIe Carrier
-#                       Aug 25, 2017: 1.02 Updated for 2017.2 tools
-#                       Jan 30, 2018: 1.03 Added support for UltraZed-EV
-#                       Feb 01, 2018: 1.04 Updated for 2017.4 tools
-#                       Oct 25, 2018: 1.05 Updated for 2018.2 tools
-#                       Oct 01, 2019: 1.06 Updated for 2019.1 tools
-#                       Feb 20, 2020: 1.06 Updated for 2019.2 tools
-# 
 # ----------------------------------------------------------------------------
 
 if {$argc != 0} {
-	# Build Base HW Platform
-	# for UltraZed-EV Defined from external source
+	# Build base hw platform
 	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
 	set argc [llength $argv]
 	source ./make.tcl -notrace
 } else {
-   # Build Base HW Platform
-   # for UltraZed 7EV SOM + EV Carrier
+	# Build base hw platform
    set argv [list board=uz7ev_evcc project=base sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace

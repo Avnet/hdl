@@ -32,33 +32,23 @@
 # 
 # ----------------------------------------------------------------------------
 # 
-#  Create Date:         Apr 04, 2019
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      Zynq UltraScale+ 3EG
-#  Hardware Boards:     Ultra96v2 board
+#  Create Date:         Nov 4, 2020
+#  Design Name:         Ultra96v2 Dual Camera Mezzanine HW Platform
+#  Module Name:         make_ultra96v2_dualcam_projscript.tcl
+#  Project Name:        Ultra96v2 Dual Camera Mezzanine HW
+#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
+#  Hardware Boards:     Ultra96v2 Board + Dual Camera Mezzanine
 # 
-#  Tool versions:       Vivado 2018.3
-# 
-#  Description:         Build Script for Ultra96v2
-# 
-#  Dependencies:        To be called from a project build script
-#
-#  Revision:            Apr 04, 2019: 1.00 Initial version
-#                       Aug 29, 2019: 1.01 Updated for Vivado 2018.3
-#                       Oct 14, 2019: 1.02 Updated for Vivado 2019.1
-#                       Oct 01, 2020: 1.03 Updated for Vitis 2020.1
-#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
    create_project $project $projects_folder -part xczu3eg-sbva484-1-i -force
-   # add selection for proper xdc based on needs
-   # if IO carrier, then use that xdc
-   # if FMC, choose that one
+}
 
+proc avnet_import_constraints {boards_folder board project} {
+
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
 }
 
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {
@@ -3115,3 +3105,16 @@ pagesize -pg 1 -db -bbox -sgen -1090 0 430 1360
   # Restore current instance
   current_bd_instance $oldCurInst
 }
+
+proc avnet_assign_addresses {project projects_folder scriptdir} {
+    # Unassign all address segments
+  delete_bd_objs [get_bd_addr_segs]
+  delete_bd_objs [get_bd_addr_segs -excluded]
+
+  # Hard-code specific address segments (used in device-tree or applications)
+  #assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  
+  assign_bd_address
+
+}
+

@@ -33,24 +33,11 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Apr 04, 2019
-#  Design Name:         Ultra96v2 OOB PetaLinux BSP HW Platform
+#  Design Name:         Ultra96v2 Dualcam HW Platform
 #  Module Name:         make_ultra96v2_oob.tcl
-#  Project Name:        Ultra96v2 OOB PetaLinux BSP Generator
+#  Project Name:        Ultra96v2 Dualcam HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
 #  Hardware Boards:     Ultra96v2 Board
-# 
-#  Tool versions:       Xilinx Vivado 2018.3
-# 
-#  Description:         Build Script for Ultra96v2 OOB PetaLinux BSP HW Platform
-# 
-#  Dependencies:        To be called from a configured make script call
-#                       Calls support scripts, such as board configuration 
-#                       scripts IP generation scripts or others as needed
-# 
-#
-#  Revision:            Apr 04, 2019: 1.00 Initial version
-#                       Oct 14, 2019: 1.01 Updated for Vivado 2019.1
-#                       Jan 22, 2020: 1.02 Updated for Vivado 2019.2
 # 
 # ----------------------------------------------------------------------------
 
@@ -63,7 +50,7 @@ if {[string match -nocase "yes" $clean]} {
 
    # Open the existing project.
    puts ""
-   puts "***** Opening Vivado Project ${projects_folder}/${board}_${project}.xpr ..."
+   puts "***** Opening Vivado project ${projects_folder}/${board}_${project}.xpr ..."
    open_project ${projects_folder}/${board}_${project}.xpr
    
    # Reset output products.
@@ -78,17 +65,22 @@ if {[string match -nocase "yes" $clean]} {
 } else {
    # Create Vivado project
    puts ""
-   puts "***** Creating Vivado Project..."
+   puts "***** Creating Vivado project..."
    source ${boards_folder}/$board/$project/${board}_${project}.tcl -notrace
    avnet_create_project ${board}_${project} $projects_folder $scriptdir
    
    # Remove the SOM specific XDC file since no constraints are needed for 
    # the basic system design
-   remove_files -fileset constrs_1 *.xdc
+   #remove_files -fileset constrs_1 *.xdc
    
+   # Import the constraints that are needed
+   puts ""
+   puts "***** Importing constraints file(s)..."
+   avnet_import_constraints ${boards_folder} ${board} ${project}
+
    # Apply board specific project property settings
    puts ""
-   puts "***** Assigning Vivado Project board_part Property to ultra96v2..."
+   puts "***** Assigning Vivado project board_part property to ultra96v2..."
    set_property board_part avnet.com:ultra96v2:part0:1.1 [current_project]
    #DWR merged in
    set obj [current_project]
@@ -120,29 +112,31 @@ if {[string match -nocase "yes" $clean]} {
    source ./makeip.tcl -notrace
    #avnet_generate_ip PWM_w_Int
 
-   # Add Avnet IP Repository
+   # Add Avnet IP repository
    # The IP_REPO_PATHS looks for a <component>.xml file, where <component> is the name of the IP to add to the catalog. The XML file identifies the various files that define the IP.
    # The IP_REPO_PATHS property does not have to point directly at the XML file for each IP in the repository.
    # The IP catalog searches through the sub-folders of the specified IP repositories, looking for IP to add to the catalog. 
    puts ""
-   puts "***** Updating Vivado to include IP Folder"
+   puts "***** Updating Vivado to include IP folder"
    cd ../projects
    set_property ip_repo_paths  ../ip [current_fileset]
    update_ip_catalog
    
-   # Create Block Design and Add PS core
+   # Create block design
    puts ""
-   puts "***** Creating Block Design..."
+   puts "***** Creating block design..."
    create_bd_design ${board}_${project}
    set design_name ${board}_${project}
    
-   # Add Processing System presets from board definitions.
+   # Add processing system presets from board definitions.
+   puts ""
+   puts "***** Adding processing system presets from board definition..."
    avnet_add_ps_preset ${board}_${project} $projects_folder $scriptdir
 
    # Add User IO presets from board definitions.
    puts ""
-   puts "***** Add defined IP blocks to Block Design..."
-   #avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
+   puts "***** Adding defined IP blocks to block design..."
+   avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
 
 ########################################
 #DWR need to remove puts and create new puts to alert the stages
@@ -255,34 +249,43 @@ if {[string match -nocase "yes" $clean]} {
    save_bd_design
 ########################################
 
+   # General Config
+   puts ""
+   puts "***** General configuration for design..."
+   #set_property target_language VHDL [current_project]
+   set_property target_language Verilog [current_project]
 
-   # Assign the peripheral addresses
-   #assign_bd_address
+   # Assign peripheral addresses
+   puts ""
+   puts "***** Assigning peripheral addresses..."
+   avnet_assign_addresses ${board}_${project} $projects_folder $scriptdir
 
-   # Regenerate the BD to make it more readable and validate it 
+   # Redraw the BD and validate the design
+   puts ""
+   puts "***** Validating the block design..."
    regenerate_bd_layout
    save_bd_design
    validate_bd_design
 
-   # General Config
+   # Make sure user has required IP licenses before building the design
    puts ""
-   puts "***** General Configuration for Design..."
-   #set_property target_language VHDL [current_project]
-   set_property target_language Verilog [current_project]
-   
-   # Add the constraints that are needed
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${board}_${project}.xdc
-   
+   puts "***** Validating IP licenses..."
+   source $scripts_folder/validate_ip_licenses.tcl
+   set ret [validate_ip_licenses ${board}_${project}]
+   if {$ret != 0} {
+      error "!! Detected missing license !!"
+   }
+
    # Add Project source files
    puts ""
-   puts "***** Adding Source Files to Block Design..."
+   puts "***** Creating top level wrapper for design..."
    make_wrapper -files [get_files ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/${board}_${project}.bd] -top
    #add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.vhd
    add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
    
    # Add Vitis directives
    puts ""
-   puts "***** Adding Vitis Directves to Design..."
+   puts "***** Adding Vitis directves to design..."
    avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
    update_compile_order -fileset sources_1
    import_files
@@ -292,7 +295,7 @@ if {[string match -nocase "yes" $clean]} {
    #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    puts ""
-   puts "***** Building Binary..."
+   puts "***** Building binary..."
    # add this to allow up+enter rebuild capability 
    cd $scripts_folder
    update_compile_order -fileset sources_1

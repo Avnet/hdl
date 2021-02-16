@@ -1,18 +1,19 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
-# 
-#  Please direct any questions or issues to the MicroZed Community Forums:
-#      http://www.microzed.org
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -32,16 +33,9 @@
 #  Target Devices:      
 #  Hardware Boards:     
 # 
-#  Tool versions:       
-set required_version 2020.2
-# 
-#  Description:         Build Script for sample project (fails build)
-# 
-#  Dependencies:        Variable Configuration Scripts, Project Build Scripts,
-#                       Tagging Scripts
-# 
 # ----------------------------------------------------------------------------
 
+set required_version 2020.2
 set debuglevel 0
 set scriptdir [pwd]
 set board "init"

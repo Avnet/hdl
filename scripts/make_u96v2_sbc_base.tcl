@@ -39,22 +39,17 @@
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
 #  Hardware Boards:     Ultra96v2 Board
 # 
-#  Tool versions:       Xilinx Vivado 2018.2
-# 
-#  Description:         Build Script for Ultra96v2 OOB PetaLinux BSP HW Platform
-# 
-#  Dependencies:        make.tcl
-#
-#  Revision:            Apr 04, 2019: 1.00 Initial version
-#                       Aug 29, 2019: 1.01 Updated for 2018.3
-#                       Oct 23, 2019: 1.02 Updated for 2019.1
-#                       Jan 22, 2020: 1.03 Updated for 2019.2
-# 
 # ----------------------------------------------------------------------------
 
-# Build PetaLinux BSP HW Platform
-# for Ultra96v2 Board
-set argv [list board=u96v2_sbc project=base sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
-set argc [llength $argv]
-source ./make.tcl -notrace
+if {$argc != 0} {
+	# Build base hw platform
+	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
+	set argc [llength $argv]
+	source ./make.tcl -notrace
+} else {
+	# Build base hw platform
+   set argv [list board=u96v2_sbc project=base sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
+   set argc [llength $argv]
+   source ./make.tcl -notrace
+}
 

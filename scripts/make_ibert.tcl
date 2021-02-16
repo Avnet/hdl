@@ -1,18 +1,19 @@
 # ----------------------------------------------------------------------------
-#       _____
-#      *     *
-#     *____   *____
-#    * *===*   *==*
-#   *___*===*___**  AVNET
-#        *======*
-#         *====*
+#
+#        ** **        **          **  ****      **  **********  ********** ®
+#       **   **        **        **   ** **     **  **              **
+#      **     **        **      **    **  **    **  **              **
+#     **       **        **    **     **   **   **  *********       **
+#    **         **        **  **      **    **  **  **              **
+#   **           **        ****       **     ** **  **              **
+#  **  .........  **        **        **      ****  **********      **
+#     ...........
+#                                     Reach Further™
+#
 # ----------------------------------------------------------------------------
 # 
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
-# 
-#  Please direct any questions or issues to the MicroZed Community Forums:
-#      http://www.microzed.org
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -31,12 +32,6 @@
 #  Project Name:        
 #  Target Devices:      
 #  Hardware Boards:     PicoZed 7030 SOM + FMC Carrier Card
-# 
-#  Tool versions:       Vivado 2015.2.1
-# 
-#  Description:         Build Script for PicoZed 7030 SOM + FMC Carrier Card IBERT
-# 
-#  Dependencies:        make.tcl
 # 
 # ----------------------------------------------------------------------------
 

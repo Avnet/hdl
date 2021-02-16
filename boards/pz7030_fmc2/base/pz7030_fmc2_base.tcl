@@ -33,38 +33,27 @@
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         November 23, 2015
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      Zynq-7030
-#  Hardware Boards:     PicoZed, FMC Carrier V2
+#  Design Name:         PicoZed Base HW Platform
+#  Module Name:         pz7030_fmc2_base.tcl
+#  Project Name:        PicoZed Base HW
+#  Target Devices:      Xilinx Zynq-7030
+#  Hardware Boards:     PicoZed SOM + FMC2 Carrier
 # 
-#  Tool versions:       Vivado 2015.2.1
-# 
-#  Description:         Build Script for PicoZed FMC Carrier V2
-# 
-#  Dependencies:        To be called from a project build script
-# 
-#  Revision:            Feb 08, 2016: 1.00 Initial version
-#                       May 10, 2016: 1.01  Updated to support 2015.4 tools
-#                       Jul 01, 2016: 1.02  Updated to support 2016.2 tools
-#                       Nov 03, 2017: 1.03  Updated to support 2017.2 tools
-#                       May 03, 2018: 1.04  Updated to support 2017.4 tools
-#                       Aug 11, 2018: 1.05  Updated to support 2018.2 tools
-#                       Sep 27, 2019: 1.06  Updated to support 2019.1 tools
-#                       Apr 09, 2020: 1.07  Updated to support 2019.2 tools
-#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
    create_project $project $projects_folder -part xc7z030sbg485-1 -force
-   # add selection for proper xdc based on needs
-   import_files -fileset constrs_1 -norecurse $scriptdir/../boards/pz7030_fmc2/pz7030_7015_revc_fmcv2_reva_v1.xdc
-
 }
 
-# Hierarchical cell: interrupt_concat
+proc avnet_import_constraints {boards_folder board project} {
+
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/pz7030_7015_revc_fmcv2_reva_v1.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_i2c.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_user_io.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/bitstream_compression_enable.xdc
+}
+
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {
 
    variable script_folder
@@ -657,6 +646,18 @@ connect_bd_net [get_bd_pins GND/dout] [get_bd_pins ps7/SDIO1_CDN]
 set_property -dict [ list \
    CONFIG.PCW_USB0_RESET_ENABLE {1} \
 ] $ps7
+
+}
+
+proc avnet_assign_addresses {project projects_folder scriptdir} {
+    # Unassign all address segments
+  delete_bd_objs [get_bd_addr_segs]
+  delete_bd_objs [get_bd_addr_segs -excluded]
+
+  # Hard-code specific address segments (used in device-tree or applications)
+  #assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  
+  assign_bd_address
 
 }
 
