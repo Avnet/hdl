@@ -82,6 +82,11 @@ if {[string match -nocase "yes" $clean]} {
    puts ""
    puts "***** Assigning Vivado project board_part property to ultra96v2..."
    set_property board_part avnet.com:ultra96v2:part0:1.1 [current_project]
+
+   # Add project-specific settings that are needed
+   puts ""
+   puts "***** Adding project-specific settings..."
+   #avnet_add_project_settings ${boards_folder} ${board} ${project}
    #DWR merged in
    set obj [current_project]
    set proj_dir [get_property directory [current_project]]
@@ -131,20 +136,21 @@ if {[string match -nocase "yes" $clean]} {
    # Add processing system presets from board definitions.
    puts ""
    puts "***** Adding processing system presets from board definition..."
-   avnet_add_ps_preset ${board}_${project} $projects_folder $scriptdir
+   #avnet_add_ps_preset ${board}_${project} $projects_folder $scriptdir
 
    # Add User IO presets from board definitions.
    puts ""
    puts "***** Adding defined IP blocks to block design..."
-   avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
+   #avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
 
 ########################################
 #DWR need to remove puts and create new puts to alert the stages
 #for now ignore and add in the heir blocks as they are
-
+   save_bd_design
    # Create interface ports
    set mipi_phy_if_0 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 mipi_phy_if_0 ]
 
+   save_bd_design
    # Create ports
    set CLK48M [ create_bd_port -dir O -type clk CLK48M ]
    set_property -dict [ list \
@@ -154,15 +160,20 @@ if {[string match -nocase "yes" $clean]} {
    set SP3 [ create_bd_port -dir O -from 0 -to 0 SP3 ]
    set TRG_INPUT [ create_bd_port -dir O -from 0 -to 0 TRG_INPUT ]
    
+   save_bd_design
    # Create instance: CAPTURE_PIPLINE
    create_hier_cell_CAPTURE_PIPLINE [current_bd_instance .] CAPTURE_PIPLINE
+   
+   save_bd_design
    
    # Create instance: GPIO
    create_hier_cell_GPIO [current_bd_instance .] GPIO
 
+   save_bd_design
    # Create instance: LIVE_VIDEO_DP
    create_hier_cell_LIVE_VIDEO_DP [current_bd_instance .] LIVE_VIDEO_DP
 
+   save_bd_design
    # Create instance: ZYNQ
    create_hier_cell_ZYNQ [current_bd_instance .] ZYNQ
 
