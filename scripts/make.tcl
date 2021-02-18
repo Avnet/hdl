@@ -127,9 +127,24 @@ puts "
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
 # fetch the required Vivado Board Definition File (BDF) from the bdf git repo
 set bdf_path [file normalize [pwd]/../../bdf]
-set_param board.repoPaths $bdf_path
-puts "\nBDF path set to $bdf_path \n\n"
+if {[expr {![catch {file lstat $bdf_path finfo}]}]} {
+   set_param board.repoPaths $bdf_path
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Selected \n BDF path $bdf_path \n\n"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
+} else {
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Selected \n BDF path set to $bdf_path \n\n"
+   puts " BDF Repository Does NOT Exist!"
+   puts " Please Clone BDF repository to same parent level as hdl!"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
+   return -code ok
+}
 
+# in TCL mkdir is like running mkdir -p in Linux
+# no need for directory exists check
+puts "Creating projects Folder"
+file mkdir [file normalize $scriptdir/../projects]
 
 set ranonce "false"
 set start_time [clock seconds]
