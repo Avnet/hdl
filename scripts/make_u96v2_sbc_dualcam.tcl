@@ -54,21 +54,21 @@ if {$argc != 0} {
 	# Build dualcam hw platform
 	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
 	set argc [llength $argv]
-   puts "This design will not build in the Vivado 2020.2 tools."
-   puts "This design uses the obsolete v_osd on screen display IP which has now been removed from the Vivado IP library."
-   puts "We are working on a fix to replace the on screen display IP with the video mixer IP.  Completion date is TBD."
-   puts "Exiting gracefully without doing anything."
-   pause
-#	source ./make.tcl -notrace
+   #puts "This design will not build in the Vivado 2020.2 tools."
+   #puts "This design uses the obsolete v_osd on screen display IP which has now been removed from the Vivado IP library."
+   #puts "We are working on a fix to replace the on screen display IP with the video mixer IP.  Completion date is TBD."
+   #puts "Exiting gracefully without doing anything."
+   #pause
+	source ./make.tcl -notrace
 } else {
 	# Build dualcam hw platform
    set argv [list board=u96v2_sbc project=dualcam sdk=no close_project=no version_override=yes dev_arch=zynqmp]
    set argc [llength $argv]
-   puts "This design will not build in the Vivado 2020.2 tools."
-   puts "This design uses the obsolete v_osd on screen display IP which has now been removed from the Vivado IP library."
-   puts "We are working on a fix to replace the on screen display IP with the video mixer IP.  Completion date is TBD."
-   puts "Exiting gracefully without doing anything."
-   pause
-#   source ./make.tcl -notrace
+   #puts "This design will not build in the Vivado 2020.2 tools."
+   #puts "This design uses the obsolete v_osd on screen display IP which has now been removed from the Vivado IP library."
+   #puts "We are working on a fix to replace the on screen display IP with the video mixer IP.  Completion date is TBD."
+   #puts "Exiting gracefully without doing anything."
+   #pause
+   source ./make.tcl -notrace
 }
 
