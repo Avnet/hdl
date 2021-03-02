@@ -15,7 +15,7 @@
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 #
-#  Please direct any questions to the UltraZed community support forum:
+#  Please direct any questions to the Ultra96 community support forum:
 #     http://avnet.me/Ultra96_Forum
 #
 #  Product information is available at:

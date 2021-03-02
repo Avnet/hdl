@@ -16,10 +16,10 @@
 #  design is not authorized without written consent from Avnet.
 # 
 #  Please direct any questions to the MiniZed community support forum:
-#     http://www.minized.org/forum
+#     http://avnet.me/minized_forum
 # 
 #  Product information is available at:
-#     http://www.minized.org/product/minized
+#     http://avnet.me/minized
 # 
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
