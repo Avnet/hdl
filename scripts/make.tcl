@@ -35,7 +35,12 @@
 # 
 # ----------------------------------------------------------------------------
 
+# must be format [4 digit major][period][1 digit minor]
+# i.e. 2020.2
 set required_version 2020.2
+# properly set vivado version for secondary check and folder creation
+set vivado_ver [string replace $required_version 4 4 _ ]
+
 set debuglevel 0
 set scriptdir [pwd]
 set board "init"
@@ -49,7 +54,6 @@ set ok_to_tag_public "false"
 set sdk "no"
 set jtag "no"
 set dev_arch "zynq"
-set vivado_ver "2020_2"
 
 # create GREP process
 # From: http://wiki.tcl.tk/9395
@@ -130,7 +134,7 @@ set bdf_path [file normalize [pwd]/../../bdf]
 if {[expr {![catch {file lstat $bdf_path finfo}]}]} {
    set_param board.repoPaths $bdf_path
    puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
-   puts " Selected \n BDF path $bdf_path \n\n"
+   puts " Selected \n BDF path $bdf_path"
    puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
 } else {
    puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
@@ -273,7 +277,6 @@ for {set i 0} {$i < [llength $argv]} {incr i} {
    }
    append build_params "+------------------+------------------------------------+\n"
 }
-append build_params "\n\n"
 puts $build_params
 unset printmessage
 unset ranonce
@@ -284,20 +287,33 @@ if {[string match -nocase "yes" $version_override]} {
    puts "Overriding Version Check, Please Check the Design for Validity!"
 } else {
    if { [string first $required_version $version] == -1 } {
-      puts "Version $version of Vivado not acceptable, please run with Vivado $required_version to continue"
+      puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts " Vivado version $version"
+      puts "      not acceptable"
+      puts " Please run with Vivado $required_version"
+      puts "      to continue"
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
       return -code ok
    } else {
-      puts "Version of Vivado acceptable, continuing..."
+      puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts " Vivado version $version acceptable, \ncontinuing..."
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    }
 }
 
 # If variables do not exist, exit script
 if {[string match -nocase "init" ${board}]} {
-   puts "Board was not defined, please define and try again!"
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Board was not defined"
+   puts " Please define and try again!"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    return -code ok
 }
 if {[string match -nocase "init" ${project}]} {
-   puts "Project was not defined, please define and try again!"
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Project was not defined"
+   puts " Please define and try again!"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    return -code ok
 }
 
@@ -321,7 +337,9 @@ set scripts_folder [file normalize [pwd]]
 set repo_folder [file normalize [pwd]../../]
 
 if {[string match -nocase "yes" $clean]} {
-   puts "Cleaning Project..."
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Cleaning Project..."
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    file delete -force ${projects_folder}
    return -code ok
 }
@@ -329,7 +347,9 @@ if {[string match -nocase "yes" $clean]} {
 # IF tagging - check for modified files
 set GUI $rdi::mode
 if {[string match -nocase "init" $tag]} {
-   puts "Not Requesting Tag"
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Not Requesting Tag"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    if {[string match -nocase "yes" $jtag]} {
       if {[string match -nocase "tcl" $GUI]} {
          puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
@@ -344,12 +364,16 @@ if {[string match -nocase "init" $tag]} {
       }
    }
 } else {
-   puts "Requesting Tag"
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Requesting Tag"
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    cd $repo_folder
    set modified_files [exec git ls-files -m]
    cd $scripts_folder
    if {[llength $modified_files] > 0} { 
-      puts "Please commit all files before trying to TAG\nNot Tagging..."
+      puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts " Please commit all files before trying to TAG\nNot Tagging..."
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
       return -code ok
    }
    if {[string match -nocase "gui" $GUI]} {
@@ -378,26 +402,34 @@ switch -nocase $board {
    uz7ev_evcc                 -
    minized_sbc                -
    mz7010_som                 -
-   mz7020_som                 {puts "Setting Up Project ${board}_${project}..."
+   mz7020_som                 {puts " Setting Up Project ${board}_${project}..."
                                  source ./project_scripts/${board}_${project}.tcl -notrace}
-   default                    {puts "Error in Selecting Board!"
-                                 puts "Boards are defined in [file normalize [pwd]/../boards]"
+   default                    {puts " Error in Selecting Board!"
+                                 puts " Boards are defined in [file normalize [pwd]/../boards]"
                                  return -code ok}
 }
 if {[string match -nocase "no" $jtag]} {
-   puts "Generating Binary..."
+   puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+   puts " Generating Binary..."
+   puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    source ./bin_helper.tcl -notrace
 
    # if using for development, can set this to yes to just use the script
    # to build your project in Vivado
    if {[string match -nocase "no" $close_project]} {
-      puts "Not Closing Project..."
+      puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts " Not Closing Project..."
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    } else {
       set curr_proj [current_project -quiet]
       if {[string match -nocase "" $curr_proj]} {
-         puts "Not Closing Project..."
+         puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+         puts " Not Closing Project..."
+         puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
       } else {
-         puts "Closing Project..."
+         puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+         puts " Closing Project..."
+         puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
          close_project
       }
       unset curr_proj
@@ -406,7 +438,9 @@ if {[string match -nocase "no" $jtag]} {
    # attempt to build SDK portion
    if {[string match -nocase "yes" $sdk]} {
       pwd
-      puts "Attempting to Build SDK..."
+      puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts " Attempting to Build SDK..."
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
       cd ${projects_folder}
       # Change starting with 2018.2 (Ultra96v2 validation test, Nov 2018) to use xsct instead of xsdk
       # https://www.xilinx.com/html_docs/xilinx2018_2/SDK_Doc/xsct/use_cases/xsct_howtoruntclscriptfiles.html
@@ -415,7 +449,9 @@ if {[string match -nocase "no" $jtag]} {
       exec >@stdout 2>@stderr xsct ../../software/$project/$project\_sdk.tcl -notrace $board $vivado_ver
       # Build a BOOT.bin file only if a BIF file exists for the project.
       if {[file exists ../../software/$project/$project\_sd.bif]} {
-         puts "Generating BOOT.BIN..."
+         puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+         puts " Generating BOOT.BIN..."
+         puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
          exec >@stdout 2>@stderr bootgen -arch $dev_arch -image ../../software/$project/$project\_sd.bif -w -o BOOT.bin
       }
       cd ${scripts_folder}
@@ -423,10 +459,14 @@ if {[string match -nocase "no" $jtag]} {
    
    # run Tagging script
    if {[string match -nocase "yes" $tag]} {
-      puts "Running Tag"
+      puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts " Running Tag"
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
       source ./tag.tcl -notrace
    } else {
-      puts "Not Running Tag"
+      puts "\n\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"
+      puts " Not Running Tag"
+      puts "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*\n\n"
    }
 }
 set end_time [clock seconds]

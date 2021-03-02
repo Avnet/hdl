@@ -52,7 +52,7 @@ proc pause {{message "Hit Enter to continue ==> "}} {
 
 if {$argc != 0} {
 	# Build dualcam hw platform
-	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynqmp]
+	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes dev_arch=zynqmp]
 	set argc [llength $argv]
    puts "This design will not build in the Vivado 2020.2 tools."
    puts "This design uses the obsolete v_osd on screen display IP which has now been removed from the Vivado IP library."
@@ -62,7 +62,7 @@ if {$argc != 0} {
 #	source ./make.tcl -notrace
 } else {
 	# Build dualcam hw platform
-   set argv [list board=u96v2_sbc project=dualcam sdk=no close_project=no version_override=yes dev_arch=zynqmp]
+   set argv [list board=u96v2_sbc project=dualcam sdk=no close_project=no dev_arch=zynqmp]
    set argc [llength $argv]
    puts "This design will not build in the Vivado 2020.2 tools."
    puts "This design uses the obsolete v_osd on screen display IP which has now been removed from the Vivado IP library."

@@ -43,12 +43,12 @@
 
 if {$argc != 0} {
 	# Build base hw platform
-	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes version_override=yes dev_arch=zynq]
+	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes dev_arch=zynq]
 	set argc [llength $argv]
 	source ./make.tcl -notrace
 } else {
 	# Build base hw platform
-   set argv [list board=mz7010_som project=base sdk=no close_project=yes version_override=yes dev_arch=zynq]
+   set argv [list board=mz7010_som project=base sdk=no close_project=yes dev_arch=zynq]
    set argc [llength $argv]
    source ./make.tcl -notrace
 }
