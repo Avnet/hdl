@@ -11,34 +11,34 @@
 #                                     Reach Further™
 #
 # ----------------------------------------------------------------------------
-# 
+#
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
-# 
+#
 #  Please direct any questions to the UltraZed community support forum:
 #     http://www.ultrazed.org/forum
-# 
+#
 #  Product information is available at:
 #     http://www.ultrazed.org/product/ultrazed
-# 
+#
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
 #     This code is provided  "As Is". Avnet, Inc assumes no responsibility for
 #     any errors, which may appear in this code, nor does it make a commitment
 #     to update the information contained herein. Avnet, Inc specifically
 #     disclaims any implied warranties of fitness for a particular purpose.
-#                      Copyright(c) 2016 Avnet, Inc.
+#                      Copyright(c) 2021 Avnet, Inc.
 #                              All rights reserved.
-# 
+#
 # ----------------------------------------------------------------------------
-# 
+#
 #  Create Date:         Dec 21, 2016
 #  Design Name:         UltraZed-EG Base HW Platform
 #  Module Name:         uz3eg_pciec_base.tcl
-#  Project Name:        UltraZed-EG Base
+#  Project Name:        UltraZed-EG Base HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 3EG
 #  Hardware Boards:     UltraZed-EG SOM + PCIe Carrier
-# 
+#
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
@@ -335,18 +335,7 @@ proc avnet_assign_addresses {project projects_folder scriptdir} {
   delete_bd_objs [get_bd_addr_segs -excluded]
 
   # Hard-code specific address segments (used in device-tree or applications)
-  assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
-  
-  assign_bd_address
-
-}
-proc avnet_assign_addresses {project projects_folder scriptdir} {
-    # Unassign all address segments
-  delete_bd_objs [get_bd_addr_segs]
-  delete_bd_objs [get_bd_addr_segs -excluded]
-
-  # Hard-code specific address segments (used in device-tree or applications)
-  assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  assign_bd_address -offset 0x80030000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
   
   assign_bd_address
 

@@ -11,7 +11,7 @@
 #                                     Reach Further™
 #
 # ----------------------------------------------------------------------------
-# 
+#
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 # 
@@ -27,14 +27,14 @@
 #     any errors, which may appear in this code, nor does it make a commitment
 #     to update the information contained herein. Avnet, Inc specifically
 #     disclaims any implied warranties of fitness for a particular purpose.
-#                      Copyright(c) 2017 Avnet, Inc.
+#                      Copyright(c) 2021 Avnet, Inc.
 #                              All rights reserved.
-# 
+#
 # ----------------------------------------------------------------------------
 # 
 #  Create Date:         Feb 03, 2017
 #  Design Name:         MiniZed Base HW Platform
-#  Module Name:         minized_sbc_base.tcl
+#  Module Name:         make_minized_sbc_base.tcl
 #  Project Name:        MiniZed Base HW
 #  Target Devices:      Xilinx Zynq-7007
 #  Hardware Boards:     MiniZed

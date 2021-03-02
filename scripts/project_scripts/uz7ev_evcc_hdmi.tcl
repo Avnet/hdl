@@ -11,34 +11,34 @@
 #                                     Reach Further™
 #
 # ----------------------------------------------------------------------------
-# 
+#
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
-# 
+#
 #  Please direct any questions to the UltraZed community support forum:
 #     http://www.ultrazed.org/forum
-# 
+#
 #  Product information is available at:
 #     http://www.ultrazed.org/product/ultrazed
-# 
+#
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
 #     This code is provided  "As Is". Avnet, Inc assumes no responsibility for
 #     any errors, which may appear in this code, nor does it make a commitment
 #     to update the information contained herein. Avnet, Inc specifically
 #     disclaims any implied warranties of fitness for a particular purpose.
-#                      Copyright(c) 2016 Avnet, Inc.
+#                      Copyright(c) 2021 Avnet, Inc.
 #                              All rights reserved.
-# 
+#
 # ----------------------------------------------------------------------------
-# 
+#
 #  Create Date:         Nov 19, 2020
 #  Design Name:         UltraZed-EV HDMI HW Platform
 #  Module Name:         uz7ev_evcc_hdmi.tcl
-#  Project Name:        UltraZed-EV with HDMI
+#  Project Name:        UltraZed-EV HDMI HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 7EV
 #  Hardware Boards:     UltraZed-EV SOM + EV Carrier
-# 
+#
 # ----------------------------------------------------------------------------
 
 # 'private' used to allow this project to be privately tagged
@@ -69,10 +69,13 @@ if {[string match -nocase "yes" $clean]} {
    source ${boards_folder}/$board/$project/${board}_${project}.tcl -notrace
    avnet_create_project ${board}_${project} $projects_folder $scriptdir
    
-   # Remove the SOM specific XDC file since no constraints are needed for 
-   # the basic system design
-   #remove_files -fileset constrs_1 *.xdc
-   
+   # Set synthesis language for project
+   # Can be set to either VHDL or Verilog
+   set synth_lang VHDL
+   puts ""
+   puts "***** Setting synthesis language for project to ${synth_lang}..."
+   set_property target_language ${synth_lang} [current_project]
+
    # Import the constraints that are needed
    puts ""
    puts "***** Importing constraints file(s)..."
@@ -90,7 +93,8 @@ if {[string match -nocase "yes" $clean]} {
    #avnet_generate_ip PWM_w_Int
 
    # Add Avnet IP repository
-   # The IP_REPO_PATHS looks for a <component>.xml file, where <component> is the name of the IP to add to the catalog. The XML file identifies the various files that define the IP.
+   # The IP_REPO_PATHS looks for a <component>.xml file, where <component> is the name of the IP to add to the catalog. 
+   # The XML file identifies the various files that define the IP.
    # The IP_REPO_PATHS property does not have to point directly at the XML file for each IP in the repository.
    # The IP catalog searches through the sub-folders of the specified IP repositories, looking for IP to add to the catalog. 
    puts ""
@@ -120,12 +124,6 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Adding HDMI support to block design..."
    avnet_add_hdmi ${board}_${project} $projects_folder $scriptdir
 
-   # General Config
-   puts ""
-   puts "***** General configuration for design..."
-   set_property target_language VHDL [current_project]
-   #set_property target_language Verilog [current_project]
-
    # Assign peripheral addresses
    puts ""
    puts "***** Assigning peripheral addresses..."
@@ -147,12 +145,17 @@ if {[string match -nocase "yes" $clean]} {
       error "!! Detected missing license !!"
    }
 
-   # Add Project source files
+   # Create HDL wrapper for design and add to project
    puts ""
-   puts "***** Creating top level wrapper for design..."
+   puts "***** Creating top level HDL wrapper for design and adding to project..."
    make_wrapper -files [get_files ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/${board}_${project}.bd] -top
-   add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.vhd
-   #add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
+   # Fetch the synthesis language setting for the project and add the corresponding file to the project
+   # The synthesis language can be set to either VHDL (<>.vhd file) or Verilog (<>.v file)
+   if { {VHDL} == [get_property target_language [current_project]] } {
+      add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.vhd
+   } else {
+      add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
+   }
    
    # Add Vitis directives
    puts ""
