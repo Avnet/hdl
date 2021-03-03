@@ -42,7 +42,7 @@
 # ----------------------------------------------------------------------------
 proc avnet_create_project {project projects_folder scriptdir} {
 
-   create_project $project $projects_folder -part xc7z010clg400-1 -force
+   create_project $project $projects_folder -part xc7z010clg400-1-i -force
 }
 
 proc avnet_import_constraints {boards_folder board project} {
