@@ -84,7 +84,7 @@ if {[string match -nocase "yes" $clean]} {
    # Apply board specific project property settings
    puts ""
    puts "***** Assigning Vivado project board_part property to ultra96v2..."
-   set_property board_part avnet.com:ultra96v2:part0:1.1 [current_project]
+   set_property board_part avnet.com:ultra96v2:part0:1.2 [current_project]
 
    # Add project-specific settings that are needed
    puts ""
