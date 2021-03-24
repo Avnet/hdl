@@ -33,9 +33,9 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Dec 11, 2020
-#  Design Name:         UltraZed-EV QUADCAM HW Platform
-#  Module Name:         uz7ev_evcc_quadcam.tcl
-#  Project Name:        UltraZed-EV QUADCAM HW
+#  Design Name:         UltraZed-EV QUADCAM (+HDMI) HW Platform
+#  Module Name:         uz7ev_evcc_quadcam_h.tcl
+#  Project Name:        UltraZed-EV QUADCAM_H HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 7EV
 #  Hardware Boards:     UltraZed-EV SOM + EV Carrier + Quad Camera FMC
 #

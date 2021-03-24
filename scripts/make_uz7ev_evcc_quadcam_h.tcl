@@ -33,22 +33,22 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Dec 11, 2020
-#  Design Name:         UltraZed-EV QUADCAM HW Platform
-#  Module Name:         make_uz7ev_evcc_quadcam.tcl
-#  Project Name:        UltraZed-EV QUADCAM HW
+#  Design Name:         UltraZed-EV QUADCAM (+HDMI) HW Platform
+#  Module Name:         make_uz7ev_evcc_quadcam_h.tcl
+#  Project Name:        UltraZed-EV QUADCAM_H HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 7EV
 #  Hardware Boards:     UltraZed-EV SOM + EV Carrier + Quad Camera FMC
 #
 # ----------------------------------------------------------------------------
 
 if {$argc != 0} {
-	# Build quadcam hw platform
+	# Build quadcam_h hw platform
    set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
 } else {
-	# Build quadcam hw platform
-   set argv [list board=uz7ev_evcc project=quadcam sdk=no close_project=yes dev_arch=zynqmp]
+	# Build quadcam_h hw platform
+   set argv [list board=uz7ev_evcc project=quadcam_h sdk=no close_project=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
 }
