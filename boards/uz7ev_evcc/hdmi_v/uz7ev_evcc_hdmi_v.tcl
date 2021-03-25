@@ -211,9 +211,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.CLKOUT6_PHASE_ERROR {87.180} \
       CONFIG.CLKOUT6_REQUESTED_OUT_FREQ {400.000} \
       CONFIG.CLKOUT6_USED {true} \
-      CONFIG.CLKOUT7_JITTER {83.768} \
+      CONFIG.CLKOUT7_JITTER {144.572} \
       CONFIG.CLKOUT7_PHASE_ERROR {87.180} \
-      CONFIG.CLKOUT7_REQUESTED_OUT_FREQ {600.000} \
+      CONFIG.CLKOUT7_REQUESTED_OUT_FREQ {33.33} \
       CONFIG.CLKOUT7_USED {true} \
       CONFIG.MMCM_CLKOUT0_DIVIDE_F {8.000} \
       CONFIG.MMCM_CLKOUT1_DIVIDE {4} \
@@ -221,7 +221,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.MMCM_CLKOUT3_DIVIDE {12} \
       CONFIG.MMCM_CLKOUT4_DIVIDE {6} \
       CONFIG.MMCM_CLKOUT5_DIVIDE {3} \
-      CONFIG.MMCM_CLKOUT6_DIVIDE {2} \
+      CONFIG.MMCM_CLKOUT6_DIVIDE {36} \
       CONFIG.NUM_OUT_CLKS {7} \
       CONFIG.RESET_PORT {resetn} \
       CONFIG.RESET_TYPE {ACTIVE_LOW} \
@@ -269,7 +269,6 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
 }
 
-
 proc avnet_add_hdmi {project projects_folder scriptdir} {
 
   # hdmi_rx blocks
@@ -279,6 +278,12 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   # hdmi_tx blocks
   source $projects_folder/../../boards/uz7ev_evcc/hdmi/hdmi_tx.tcl
   create_hier_cell_hdmi_tx ./ hdmi_tx
+
+  # modification of hdmi_rx blocks for vcu
+  set_property -dict [list CONFIG.HAS_RGBX8 {1} CONFIG.HAS_YUVX8 {1} CONFIG.HAS_Y_UV8 {1} CONFIG.HAS_Y_UV8_420 {1} CONFIG.HAS_RGB8 {1} CONFIG.HAS_YUV8 {1} CONFIG.HAS_BGRX8 {1} CONFIG.MAX_NR_PLANES {2}] [get_bd_cells hdmi_rx/v_frmbuf_wr_0]
+
+  # modification of hdmi_tx blocks for vcu
+  set_property -dict [list CONFIG.LAYER3_VIDEO_FORMAT {19} CONFIG.LAYER4_VIDEO_FORMAT {19} CONFIG.LAYER3_ALPHA {false} CONFIG.LAYER4_ALPHA {false}] [get_bd_cells hdmi_tx/v_mix_0]
 
   set_property -dict [list CONFIG.NUM_MI {9}] [get_bd_cells ps8_0_axi_periph]
 
@@ -510,6 +515,37 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   #set_property -dict [list CONFIG.STRATEGY {2} CONFIG.S00_HAS_DATA_FIFO {2}] [get_bd_cells axi_interconnect_0]
 }
 
+proc avnet_add_vcu {project projects_folder scriptdir} {
+  # vcu blocks
+  source $projects_folder/../../boards/uz7ev_evcc/hdmi_v/vcu.tcl
+  create_hier_cell_vcu ./ vcu
+
+  connect_bd_net [get_bd_pins clk_wiz_0/clk_out7] [get_bd_pins vcu/pll_ref_clk]
+
+  #enable S_AXI_HP2_FPD S_AXI_HP3_FPD S_AXI_HPC0_FPD
+  set_property -dict [list CONFIG.PSU__USE__S_AXI_GP0 {1} CONFIG.PSU__USE__S_AXI_GP4 {1} CONFIG.PSU__USE__S_AXI_GP5 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/saxihp2_fpd_aclk] [get_bd_pins clk_wiz_0/clk_out2]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/saxihp3_fpd_aclk] [get_bd_pins clk_wiz_0/clk_out2]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/saxihpc0_fpd_aclk] [get_bd_pins clk_wiz_0/clk_out2]
+
+  create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_3
+  set_property -dict [list CONFIG.DIN_TO {3} CONFIG.DIN_FROM {3} CONFIG.DIN_WIDTH {95} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_3]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_3/Din]
+  connect_bd_net [get_bd_pins /vcu/vcu_resetn] [get_bd_pins xlslice_3/Dout]
+
+  connect_bd_net [get_bd_pins vcu/ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
+
+  connect_bd_net [get_bd_pins vcu/vcu_host_interrupt] [get_bd_pins xlconcat_0/In2]
+
+  connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP2_FPD] -boundary_type upper [get_bd_intf_pins vcu/M00_AXI1]
+  connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP3_FPD] -boundary_type upper [get_bd_intf_pins vcu/M00_AXI2]
+  connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HPC0_FPD] -boundary_type upper [get_bd_intf_pins vcu/M00_AXI3]
+
+  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD" }  [get_bd_intf_pins /vcu/S_AXI_LITE]
+
+  connect_bd_net [get_bd_pins vcu/ACLK] [get_bd_pins clk_wiz_0/clk_out2]
+}
+
 proc avnet_assign_addresses {project projects_folder scriptdir} {
     # Unassign all address segments
   delete_bd_objs [get_bd_addr_segs]
@@ -517,6 +553,7 @@ proc avnet_assign_addresses {project projects_folder scriptdir} {
 
   # Hard-code specific address segments (used in device-tree or applications)
   assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  assign_bd_address -offset 0xB0000000 -range 0x00040000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs hdmi_rx/v_proc_ss_0/s_axi_ctrl/Reg] -force
   assign_bd_address -offset 0xB0050000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs hdmi_tx/v_mix_0/s_axi_CTRL/Reg] -force
   
   assign_bd_address

@@ -124,6 +124,11 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Adding HDMI support to block design..."
    avnet_add_hdmi ${board}_${project} $projects_folder $scriptdir
 
+   # Add VCU Support
+   puts ""
+   puts "***** Adding VCU support to block design..."
+   avnet_add_vcu ${board}_${project} $projects_folder $scriptdir
+
    # Assign peripheral addresses
    puts ""
    puts "***** Assigning peripheral addresses..."
