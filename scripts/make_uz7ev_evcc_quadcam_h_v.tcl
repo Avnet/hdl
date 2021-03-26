@@ -42,13 +42,13 @@
 # ----------------------------------------------------------------------------
 
 if {$argc != 0} {
-	# Build quadcam_h hw platform
+	# Build quadcam_h_v hw platform
    set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
 } else {
-	# Build quadcam_h hw platform
-   set argv [list board=uz7ev_evcc project=quadcam_h sdk=no close_project=yes dev_arch=zynqmp]
+	# Build quadcam_h_v hw platform
+   set argv [list board=uz7ev_evcc project=quadcam_h_v sdk=no close_project=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
 }

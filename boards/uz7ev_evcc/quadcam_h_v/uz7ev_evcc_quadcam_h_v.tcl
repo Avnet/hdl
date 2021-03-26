@@ -187,9 +187,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.CLKOUT6_PHASE_ERROR {87.180} \
       CONFIG.CLKOUT6_REQUESTED_OUT_FREQ {400.000} \
       CONFIG.CLKOUT6_USED {true} \
-      CONFIG.CLKOUT7_JITTER {83.768} \
+      CONFIG.CLKOUT7_JITTER {144.572} \
       CONFIG.CLKOUT7_PHASE_ERROR {87.180} \
-      CONFIG.CLKOUT7_REQUESTED_OUT_FREQ {600.000} \
+      CONFIG.CLKOUT7_REQUESTED_OUT_FREQ {33.33} \
       CONFIG.CLKOUT7_USED {true} \
       CONFIG.MMCM_CLKOUT0_DIVIDE_F {8.000} \
       CONFIG.MMCM_CLKOUT1_DIVIDE {4} \
@@ -197,7 +197,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.MMCM_CLKOUT3_DIVIDE {12} \
       CONFIG.MMCM_CLKOUT4_DIVIDE {6} \
       CONFIG.MMCM_CLKOUT5_DIVIDE {3} \
-      CONFIG.MMCM_CLKOUT6_DIVIDE {2} \
+      CONFIG.MMCM_CLKOUT6_DIVIDE {36} \
       CONFIG.NUM_OUT_CLKS {7} \
       CONFIG.RESET_PORT {resetn} \
       CONFIG.RESET_TYPE {ACTIVE_LOW} \
@@ -255,6 +255,21 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   # hdmi_tx blocks
   source $projects_folder/../../boards/uz7ev_evcc/hdmi/hdmi_tx.tcl
   create_hier_cell_hdmi_tx ./ hdmi_tx
+
+  # modification of hdmi_rx blocks for vcu
+  set_property -dict [list CONFIG.HAS_RGBX8 {1} CONFIG.HAS_YUVX8 {1} CONFIG.HAS_Y_UV8 {1} CONFIG.HAS_Y_UV8_420 {1} CONFIG.HAS_RGB8 {1} CONFIG.HAS_YUV8 {1} CONFIG.HAS_BGRX8 {1} CONFIG.MAX_NR_PLANES {2}] [get_bd_cells hdmi_rx/v_frmbuf_wr_0]
+
+  # modification of hdmi_tx blocks for vcu
+  set_property -dict [list \
+    CONFIG.LAYER1_VIDEO_FORMAT {19} \
+    CONFIG.LAYER2_VIDEO_FORMAT {19} \
+    CONFIG.LAYER3_VIDEO_FORMAT {19} \
+    CONFIG.LAYER4_VIDEO_FORMAT {19} \
+    CONFIG.LAYER1_ALPHA {false} \
+    CONFIG.LAYER2_ALPHA {false} \
+    CONFIG.LAYER3_ALPHA {false} \
+    CONFIG.LAYER4_ALPHA {false}\
+    ] [get_bd_cells hdmi_tx/v_mix_0]
 
   #set_property -dict [list CONFIG.NUM_MI {9}] [get_bd_cells ps8_0_axi_periph]
 
@@ -446,6 +461,27 @@ proc avnet_add_fmc_quad {project projects_folder scriptdir} {
   source $projects_folder/../../boards/uz7ev_evcc/quadcam_h/fmc_quad.tcl
   create_hier_cell_fmc_quad ./ fmc_quad
 
+  # modification of fmc_quad blocks for vcu
+  set_property -dict [list CONFIG.C_COLORSPACE_SUPPORT {0}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_0/v_proc_ss_csc_0]
+  set_property -dict [list CONFIG.C_COLORSPACE_SUPPORT {0}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_0/v_proc_ss_scaler_0]
+  set_property -dict [list CONFIG.HAS_RGBX8 {1} CONFIG.HAS_YUVX8 {1} CONFIG.HAS_Y_UV8 {1} CONFIG.HAS_Y_UV8_420 {1} CONFIG.HAS_RGB8 {1} \
+   CONFIG.HAS_YUV8 {1} CONFIG.HAS_BGRX8 {1} CONFIG.MAX_NR_PLANES {2}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_0/v_frmbuf_wr_0]
+
+  set_property -dict [list CONFIG.C_COLORSPACE_SUPPORT {0}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_1/v_proc_ss_csc_1]
+  set_property -dict [list CONFIG.C_COLORSPACE_SUPPORT {0}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_1/v_proc_ss_scaler_1]
+  set_property -dict [list CONFIG.HAS_RGBX8 {1} CONFIG.HAS_YUVX8 {1} CONFIG.HAS_Y_UV8 {1} CONFIG.HAS_Y_UV8_420 {1} CONFIG.HAS_RGB8 {1} \
+   CONFIG.HAS_YUV8 {1} CONFIG.HAS_BGRX8 {1} CONFIG.MAX_NR_PLANES {2}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_1/v_frmbuf_wr_1]
+
+  set_property -dict [list CONFIG.C_COLORSPACE_SUPPORT {0}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_2/v_proc_ss_csc_2]
+  set_property -dict [list CONFIG.C_COLORSPACE_SUPPORT {0}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_2/v_proc_ss_scaler_2]
+  set_property -dict [list CONFIG.HAS_RGBX8 {1} CONFIG.HAS_YUVX8 {1} CONFIG.HAS_Y_UV8 {1} CONFIG.HAS_Y_UV8_420 {1} CONFIG.HAS_RGB8 {1} \
+   CONFIG.HAS_YUV8 {1} CONFIG.HAS_BGRX8 {1} CONFIG.MAX_NR_PLANES {2}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_2/v_frmbuf_wr_2]
+
+  set_property -dict [list CONFIG.C_COLORSPACE_SUPPORT {0}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_3/v_proc_ss_csc_3]
+  set_property -dict [list CONFIG.C_COLORSPACE_SUPPORT {0}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_3/v_proc_ss_scaler_3]
+  set_property -dict [list CONFIG.HAS_RGBX8 {1} CONFIG.HAS_YUVX8 {1} CONFIG.HAS_Y_UV8 {1} CONFIG.HAS_Y_UV8_420 {1} CONFIG.HAS_RGB8 {1} \
+   CONFIG.HAS_YUV8 {1} CONFIG.HAS_BGRX8 {1} CONFIG.MAX_NR_PLANES {2}] [get_bd_cells fmc_quad/mipi_csi2_rx/capture_pipeline_3/v_frmbuf_wr_3]
+
   # Create interface ports
   set carrier_iic [ create_bd_intf_port -mode Master -vlnv xilinx.com:interface:iic_rtl:1.0 carrier_iic ]
 
@@ -528,7 +564,38 @@ proc avnet_add_fmc_quad {project projects_folder scriptdir} {
   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD" }  [get_bd_intf_pins axi_iic_1/S_AXI]
   connect_bd_intf_net [get_bd_intf_ports carrier_iic] [get_bd_intf_pins axi_iic_1/IIC]
   connect_bd_net [get_bd_pins axi_iic_1/iic2intc_irpt] [get_bd_pins xlconcat_2/In12]
+}
 
+proc avnet_add_vcu {project projects_folder scriptdir} {
+  # vcu blocks
+  source $projects_folder/../../boards/uz7ev_evcc/hdmi_v/vcu.tcl
+  create_hier_cell_vcu ./ vcu
+
+  connect_bd_net [get_bd_pins clk_wiz_0/clk_out7] [get_bd_pins vcu/pll_ref_clk]
+
+  #enable S_AXI_HP2_FPD S_AXI_HP3_FPD S_AXI_HPC0_FPD
+  set_property -dict [list CONFIG.PSU__USE__S_AXI_GP0 {1} CONFIG.PSU__USE__S_AXI_GP4 {1} CONFIG.PSU__USE__S_AXI_GP5 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/saxihp2_fpd_aclk] [get_bd_pins clk_wiz_0/clk_out2]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/saxihp3_fpd_aclk] [get_bd_pins clk_wiz_0/clk_out2]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/saxihpc0_fpd_aclk] [get_bd_pins clk_wiz_0/clk_out2]
+
+  create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_3
+  set_property -dict [list CONFIG.DIN_TO {3} CONFIG.DIN_FROM {3} CONFIG.DIN_WIDTH {95} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_3]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_3/Din]
+  connect_bd_net [get_bd_pins /vcu/vcu_resetn] [get_bd_pins xlslice_3/Dout]
+
+  connect_bd_net [get_bd_pins vcu/ARESETN] [get_bd_pins proc_sys_reset_1/peripheral_aresetn]
+
+  set_property -dict [list CONFIG.NUM_PORTS {14}] [get_bd_cells xlconcat_2]
+  connect_bd_net [get_bd_pins vcu/vcu_host_interrupt] [get_bd_pins xlconcat_2/In13]
+
+  connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP2_FPD] -boundary_type upper [get_bd_intf_pins vcu/M00_AXI1]
+  connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP3_FPD] -boundary_type upper [get_bd_intf_pins vcu/M00_AXI2]
+  connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HPC0_FPD] -boundary_type upper [get_bd_intf_pins vcu/M00_AXI3]
+
+  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD" }  [get_bd_intf_pins /vcu/S_AXI_LITE]
+
+  connect_bd_net [get_bd_pins vcu/ACLK] [get_bd_pins clk_wiz_0/clk_out2]
 }
 
 proc avnet_add_comments {project projects_folder scriptdir} {
@@ -538,7 +605,7 @@ proc avnet_add_comments {project projects_folder scriptdir} {
   [00] - 78: Video Mixer rst
   [01] - 79: HDMI Rx VPSS Scaler rst
   [02] - 80: HDMI Rx FB WR rst
-  [03] - 81:
+  [03] - 81: VCU rst
   [04] - 82: CSI VPSS Scaler rst
   [05] - 83: CSI FB WR rst
   [06] - 84: CSI VPSS CSC rst
@@ -629,7 +696,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
   
    # Set platform project properties
-   set_property platform.description                   "UZ7EV_EVCC_QUADCAM_H development platform" [current_project]
+   set_property platform.description                   "UZ7EV_EVCC_QUADCAM_H_V development platform" [current_project]
    set_property platform.uses_pr                       false         [current_project]
 
    set_property platform.design_intent.server_managed  "false" [current_project]

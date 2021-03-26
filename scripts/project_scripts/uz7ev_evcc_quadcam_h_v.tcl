@@ -129,6 +129,11 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Adding FMC QUAD support to block design..."
    avnet_add_fmc_quad ${board}_${project} $projects_folder $scriptdir
 
+   # Add VCU Support
+   puts ""
+   puts "***** Adding VCU support to block design..."
+   avnet_add_vcu ${board}_${project} $projects_folder $scriptdir
+
    # Add user comments about the design
    puts ""
    puts "***** Adding user comments about the design..."
