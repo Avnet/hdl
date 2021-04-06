@@ -580,15 +580,11 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    # define AXI ports
    set_property PFM.AXI_PORT { \
 	M_AXI_HPM0_LPD {memport "M_AXI_GP" sptag "HPM0_LPD"} \
-	S_AXI_HPC0_FPD {memport "S_AXI_HP" sptag "HPC0" memory "zynq_ultra_ps_e_0 HPC0_DDR_LOW"} \
 	S_AXI_HPC1_FPD {memport "S_AXI_HP" sptag "HPC1" memory "zynq_ultra_ps_e_0 HPC1_DDR_LOW"} \
 	S_AXI_HP1_FPD {memport "S_AXI_HP" sptag "HP1" memory "zynq_ultra_ps_e_0 HP1_DDR_LOW"} \
-	S_AXI_HP2_FPD {memport "S_AXI_HP" sptag "HP2" memory "zynq_ultra_ps_e_0 HP2_DDR_LOW"} \
-	S_AXI_HP3_FPD {memport "S_AXI_HP" sptag "HP3" memory "zynq_ultra_ps_e_0 HP3_DDR_LOW"} \
    } [get_bd_cells /zynq_ultra_ps_e_0]
 
    set_property PFM.AXI_PORT { \
-  M09_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
   M10_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
   M11_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
   M12_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
