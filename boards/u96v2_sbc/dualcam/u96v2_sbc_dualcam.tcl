@@ -47,7 +47,6 @@ proc avnet_create_project {project projects_folder scriptdir} {
 }
 
 proc avnet_import_constraints {boards_folder board project} {
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_base.xdc
    import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
 }
 
@@ -148,40 +147,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    apply_bd_automation -rule xilinx.com:bd_rule:bram_cntlr -config {BRAM "/axi_bram_ctrl_0_bram" }  [get_bd_intf_pins axi_bram_ctrl_0/BRAM_PORTB]
    
    #
-   # Add LS Mezzanine UARTs
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uart16550:2.0 axi_uart16550_0
-
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {Auto} Clk_xbar {Auto} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/axi_uart16550_0/S_AXI} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins axi_uart16550_0/S_AXI]
-
-   make_bd_pins_external  [get_bd_pins axi_uart16550_0/sin]
-   set_property name ls_mezz_uart0_rx [get_bd_ports sin_0]
-
-   make_bd_pins_external  [get_bd_pins axi_uart16550_0/sout]
-   set_property name ls_mezz_uart0_tx [get_bd_ports sout_0]
-
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uart16550:2.0 axi_uart16550_1
-
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {Auto} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/axi_uart16550_1/S_AXI} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins axi_uart16550_1/S_AXI]
-
-   make_bd_pins_external  [get_bd_pins axi_uart16550_1/sin]
-   set_property name ls_mezz_uart1_rx [get_bd_ports sin_0]
-
-   make_bd_pins_external  [get_bd_pins axi_uart16550_1/sout]
-   set_property name ls_mezz_uart1_tx [get_bd_ports sout_0]
-
-   #
-   # Add the GPIO block for the LS mezzanine INT inputs and RST outputs
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {Auto} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/axi_gpio_0/S_AXI} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins axi_gpio_0/S_AXI]
-   set_property -dict [list CONFIG.C_GPIO_WIDTH {2} CONFIG.C_GPIO2_WIDTH {2} CONFIG.C_IS_DUAL {1} CONFIG.C_ALL_INPUTS {1} CONFIG.C_ALL_OUTPUTS_2 {1}] [get_bd_cells axi_gpio_0]
-   make_bd_pins_external  [get_bd_pins axi_gpio_0/gpio_io_i]
-   set_property name ls_mezz_int [get_bd_ports gpio_io_i_0]
-   make_bd_pins_external  [get_bd_pins axi_gpio_0/gpio2_io_o]
-   set_property name ls_mezz_rst [get_bd_ports gpio2_io_o_0]
-   
-   #
    # Add the GPIO block for the fan control
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_1
@@ -202,23 +167,8 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    set_property name bt_en_led [get_bd_intf_ports GPIO2_0]
 
    #
-   # Add the PWM IP blocks
-   #
-   
-   create_bd_cell -type ip -vlnv avnet.com:ip:PWM_w_Int:1.0 PWM_w_Int_0
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {Auto} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/PWM_w_Int_0/s00_axi} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins PWM_w_Int_0/s00_axi]
-   make_bd_pins_external  [get_bd_pins PWM_w_Int_0/PWM_out]
-   set_property name ls_mezz_pwm0 [get_bd_ports PWM_out_0]
-
-   create_bd_cell -type ip -vlnv avnet.com:ip:PWM_w_Int:1.0 PWM_w_Int_1
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {Auto} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/PWM_w_Int_1/s00_axi} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins PWM_w_Int_1/s00_axi]
-   make_bd_pins_external  [get_bd_pins PWM_w_Int_1/PWM_out]
-   set_property name ls_mezz_pwm1 [get_bd_ports PWM_out_0]
-
-   #
    # Add the System Management Wizard 
    #
-   
    create_bd_cell -type ip -vlnv xilinx.com:ip:system_management_wiz:1.3 system_management_wiz_0
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {Auto} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/system_management_wiz_0/S_AXI_LITE} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins system_management_wiz_0/S_AXI_LITE]
    set_property -dict [ list CONFIG.CHANNEL_ENABLE_VP_VN {false} CONFIG.ENABLE_VCCPSAUX_ALARM {false} CONFIG.ENABLE_VCCPSINTFP_ALARM {false} CONFIG.ENABLE_VCCPSINTLP_ALARM {false} CONFIG.OT_ALARM {false} CONFIG.USER_TEMP_ALARM {false} CONFIG.VCCAUX_ALARM {false} CONFIG.VCCINT_ALARM {false} ] [get_bd_cells system_management_wiz_0]
@@ -226,23 +176,15 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #
    # Add the Concat block for the interrupts
    #
-   
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
-   set_property -dict [list CONFIG.NUM_PORTS {5}] [get_bd_cells xlconcat_0]
-   
-   save_bd_design
-   
+   set_property -dict [list CONFIG.NUM_PORTS {1}] [get_bd_cells xlconcat_0]
    connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
-   connect_bd_net [get_bd_pins axi_uart16550_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In0]
-   connect_bd_net [get_bd_pins axi_uart16550_1/ip2intc_irpt] [get_bd_pins xlconcat_0/In1]
-   connect_bd_net [get_bd_pins PWM_w_Int_0/Interrupt_Out] [get_bd_pins xlconcat_0/In2]
-   connect_bd_net [get_bd_pins PWM_w_Int_1/Interrupt_Out] [get_bd_pins xlconcat_0/In3]
-   connect_bd_net [get_bd_ports ls_mezz_int] [get_bd_pins xlconcat_0/In4]
-   
+
+   save_bd_design
+  
    #
    # Connect the UART modem signals for PS UART0 (Bluetooth UART)
    #
-   
    make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/emio_uart0_ctsn]
    set_property name bt_ctsn [get_bd_ports emio_uart0_ctsn_0]
    
@@ -250,114 +192,15 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    set_property name bt_rtsn [get_bd_ports emio_uart0_rtsn_0]
 
    #
-   # Add XLSLICE blocks to carve the 30 bits of PS EMIO GPIO into smaller chunks
-   # Add XLSLICE 0 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_0
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {28} CONFIG.DIN_FROM {29} CONFIG.DOUT_WIDTH {2}] [get_bd_cells xlslice_0]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_0/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_0/Dout]
-   set_property name hs_mezz_csi0_c [get_bd_ports Dout_0]
-
-   #
-   # Add XLSLICE 1 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_1
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {20} CONFIG.DIN_FROM {27} CONFIG.DOUT_WIDTH {8}] [get_bd_cells xlslice_1]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_1/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_1/Dout]
-   set_property name hs_mezz_csi0_d [get_bd_ports Dout_0]
-
-   #
-   # Add XLSLICE 2 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_2
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {18} CONFIG.DIN_FROM {19} CONFIG.DOUT_WIDTH {2}] [get_bd_cells xlslice_2]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_2/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_2/Dout]
-   set_property name hs_mezz_csi1_c [get_bd_ports Dout_0]
-
-   #
-   # Add XLSLICE 3 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_3
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {14} CONFIG.DIN_FROM {17} CONFIG.DOUT_WIDTH {4}] [get_bd_cells xlslice_3]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_3/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_3/Dout]
-   set_property name hs_mezz_csi1_d [get_bd_ports Dout_0]
-
-   #
-   # Add XLSLICE 4 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_4
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {13} CONFIG.DIN_FROM {13} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_4]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_4/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_4/Dout]
-   set_property name hs_mezz_csi0_mclk [get_bd_ports Dout_0]
-
-   #
-   # Add XLSLICE 5 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_5
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {12} CONFIG.DIN_FROM {12} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_5]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_5/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_5/Dout]
-   set_property name hs_mezz_csi1_mclk [get_bd_ports Dout_0]
-
-   #
-   # Add XLSLICE 6 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_6
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {10} CONFIG.DIN_FROM {11} CONFIG.DOUT_WIDTH {2}] [get_bd_cells xlslice_6]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_6/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_6/Dout]
-   set_property name hs_mezz_dsi_clk [get_bd_ports Dout_0]
-
-   #
-   # Add XLSLICE 7 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_7
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {2} CONFIG.DIN_FROM {9} CONFIG.DOUT_WIDTH {8}] [get_bd_cells xlslice_7]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_7/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_7/Dout]
-   set_property name hs_mezz_dsi_d [get_bd_ports Dout_0]
-
-   #
-   # Add XLSLICE 8 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_8
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {1} CONFIG.DIN_FROM {1} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_8]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_8/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_8/Dout]
-   set_property name hs_mezz_hsic_str [get_bd_ports Dout_0]
-
-   #
-   # Add XLSLICE 9 to the BD, set the XLSLICE properties, connect it to the PS block, make the I/Os external and name them
-   #
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_9
-   set_property -dict [list CONFIG.DIN_WIDTH {30} CONFIG.DIN_TO {0} CONFIG.DIN_FROM {0} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_9]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/emio_gpio_o] [get_bd_pins xlslice_9/Din]
-   make_bd_pins_external  [get_bd_pins xlslice_9/Dout]
-   set_property name hs_mezz_hsic_d [get_bd_ports Dout_0]
-
-
-   #
    # VITIS ADDITIONS - START
    #  
 
-   # Disable M_AXI_HPM1_FPD (keep available to VITIS for control interface)
-   set_property -dict [list CONFIG.PSU__USE__M_AXI_GP1 {0}] [get_bd_cells zynq_ultra_ps_e_0]
+   # Enable M_AXI_HPM1_FPD
+   set_property -dict [list CONFIG.PSU__USE__M_AXI_GP1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
 
+   # enable S_AXI_HP0_FPD High-Performance port
+   set_property -dict [list CONFIG.PSU__USE__S_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  
    # Add AXI interrupt controller (for VITIS XRT interrupt support)
    set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
    set_property -dict [ list \
@@ -369,8 +212,8 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #create_hier_cell_interrupt_concat [current_bd_instance .] interrupt_concat
    #connect_bd_net -net interrupt_concat_dout [get_bd_pins axi_intc_0/intr] [get_bd_pins interrupt_concat/dout]
    #
-   set_property -dict [list CONFIG.NUM_PORTS {6}] [get_bd_cells xlconcat_0]
-   connect_bd_net [get_bd_pins xlconcat_0/In5] [get_bd_pins axi_intc_0/irq]
+   set_property -dict [list CONFIG.NUM_PORTS {3}] [get_bd_cells xlconcat_0]
+   connect_bd_net [get_bd_pins xlconcat_0/In0] [get_bd_pins axi_intc_0/irq]
    #
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/axi_intc_0/s_axi} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins axi_intc_0/s_axi]
 
@@ -397,9 +240,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.CLKOUT2_PHASE_ERROR {87.180} \
       CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {300} \
       CONFIG.CLKOUT2_USED {true} \
-      CONFIG.CLKOUT3_JITTER {122.158} \
+      CONFIG.CLKOUT3_JITTER {133.812} \
       CONFIG.CLKOUT3_PHASE_ERROR {87.180} \
-      CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {75} \
+      CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {48} \
       CONFIG.CLKOUT3_USED {true} \
       CONFIG.CLKOUT4_JITTER {115.831} \
       CONFIG.CLKOUT4_PHASE_ERROR {87.180} \
@@ -419,7 +262,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.CLKOUT7_USED {true} \
       CONFIG.MMCM_CLKOUT0_DIVIDE_F {8.000} \
       CONFIG.MMCM_CLKOUT1_DIVIDE {4} \
-      CONFIG.MMCM_CLKOUT2_DIVIDE {16} \
+      CONFIG.MMCM_CLKOUT2_DIVIDE {25} \
       CONFIG.MMCM_CLKOUT3_DIVIDE {12} \
       CONFIG.MMCM_CLKOUT4_DIVIDE {6} \
       CONFIG.MMCM_CLKOUT5_DIVIDE {3} \
@@ -609,7 +452,6 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
   # Create interface pins
   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI
 
-
   # Create pins
   create_bd_pin -dir O -from 0 -to 0 ICP3_I2C_ID_SELECT
   create_bd_pin -dir O -from 0 -to 0 SP3
@@ -694,17 +536,19 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
   connect_bd_net -net xlslice_4_Dout [get_bd_pins frame_buffer_rd_resetn] [get_bd_pins xlslice_4/Dout]
   connect_bd_net -net xlslice_5_Dout [get_bd_pins VPSS_RESETn] [get_bd_pins xlslice_5/Dout]
 
+   save_bd_design
+
   # Restore current instance
   current_bd_instance $oldCurInst
 }
   
-# Hierarchical cell: CAPTURE_PIPLINE
-proc create_hier_cell_CAPTURE_PIPLINE { parentCell nameHier } {
+# Hierarchical cell: CAPTURE_PIPELINE
+proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
 
   variable script_folder
 
   if { $parentCell eq "" || $nameHier eq "" } {
-     catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_CAPTURE_PIPLINE() - Empty argument(s)!"}
+     catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_CAPTURE_PIPELINE() - Empty argument(s)!"}
      return
   }
 
@@ -891,54 +735,9 @@ proc create_hier_cell_CAPTURE_PIPLINE { parentCell nameHier } {
   connect_bd_net -net rst_clk_wiz_100M_peripheral_aresetn [get_bd_pins video_aresetn] [get_bd_pins mipi_csi2_rx_subsyst_0/lite_aresetn] [get_bd_pins mipi_csi2_rx_subsyst_0/video_aresetn]
 
   # Perform GUI Layout
-  regenerate_bd_layout -hierarchy [get_bd_cells /CAPTURE_PIPLINE] -layout_string {
-   "ActiveEmotionalView":"Default View",
-   "Default View_ScaleFactor":"0.449104",
-   "Default View_TopLeft":"-2020,-196",
-   "ExpandedHierarchyInLayout":"",
-   "guistr":"# # String gsaved with Nlview 7.0r4  2019-12-20 bk=1.5203 VDI=41 GEI=36 GUI=JA:9.0 TLS
-#  -string -flagsOSRD
-preplace port mipi_phy_if_0 -pg 1 -lvl 0 -x -940 -y 70 -defaultsOSRD
-preplace port csirxss_s_axi -pg 1 -lvl 0 -x -940 -y 90 -defaultsOSRD
-preplace port s_axi_ctrl -pg 1 -lvl 0 -x -940 -y 250 -defaultsOSRD
-preplace port s_axi_CTRL1 -pg 1 -lvl 0 -x -940 -y 610 -defaultsOSRD
-preplace port m_axi_mm_video -pg 1 -lvl 4 -x 270 -y 410 -defaultsOSRD
-preplace port dphy_clk_200M -pg 1 -lvl 0 -x -940 -y 170 -defaultsOSRD
-preplace port video_aresetn -pg 1 -lvl 0 -x -940 -y 270 -defaultsOSRD
-preplace port csirxss_csi_irq -pg 1 -lvl 4 -x 270 -y 180 -defaultsOSRD
-preplace port interrupt -pg 1 -lvl 4 -x 270 -y 430 -defaultsOSRD
-preplace port ext_reset_in -pg 1 -lvl 0 -x -940 -y 310 -defaultsOSRD
-preplace port aux_reset_in -pg 1 -lvl 0 -x -940 -y 330 -defaultsOSRD
-preplace port dcm_locked -pg 1 -lvl 0 -x -940 -y 370 -defaultsOSRD
-preplace port aux_reset_in_0 -pg 1 -lvl 0 -x -940 -y 510 -defaultsOSRD
-preplace inst axis_subset_converter_1 -pg 1 -lvl 1 -x -710 -y 170 -defaultsOSRD
-preplace inst mipi_csi2_rx_subsyst_0 -pg 1 -lvl 3 -x 60 -y 130 -defaultsOSRD
-preplace inst v_frmbuf_wr_0 -pg 1 -lvl 3 -x 60 -y 420 -defaultsOSRD
-preplace inst v_proc_ss_0 -pg 1 -lvl 2 -x -330 -y 290 -defaultsOSRD
-preplace inst proc_sys_reset_1 -pg 1 -lvl 1 -x -710 -y 330 -defaultsOSRD
-preplace inst proc_sys_reset_2 -pg 1 -lvl 1 -x -710 -y 510 -defaultsOSRD -resize 320 156
-preplace netloc clk_wiz_clk_out1 1 0 3 -900 50 -520 110 -140
-preplace netloc rst_clk_wiz_100M_peripheral_aresetn 1 0 3 -920J 40 N 40 -130
-preplace netloc mipi_csi2_rx_subsyst_0_csirxss_csi_irq 1 3 1 NJ 180
-preplace netloc GPIO_frame_buffer_resetn 1 0 3 -890 620 -530J 450 NJ
-preplace netloc In1_1 1 3 1 NJ 430
-preplace netloc ext_reset_in_1 1 0 1 -910 310n
-preplace netloc aux_reset_in_1 1 0 1 NJ 330
-preplace netloc dcm_locked_1 1 0 1 -920J 370n
-preplace netloc proc_sys_reset_2_peripheral_aresetn 1 1 1 -520 330n
-preplace netloc aux_reset_in_0_1 1 0 1 N 510
-preplace netloc ZYNQ_M10_AXI 1 0 2 -910J 60 -510J
-preplace netloc ZYNQ_M01_AXI 1 0 3 NJ 610 -510J 390 NJ
-preplace netloc mipi_phy_if_0_1 1 0 3 NJ 70 NJ 70 NJ
-preplace netloc axis_subset_converter_1_M_AXIS 1 1 1 -530 170n
-preplace netloc v_proc_ss_0_m_axis 1 2 1 -150 280n
-preplace netloc ZYNQ_M09_AXI 1 0 3 NJ 90 NJ 90 NJ
-preplace netloc mipi_csi2_rx_subsyst_0_video_out 1 0 4 -890 10 NJ 10 NJ 10 240
-preplace netloc S00_AXI_1 1 3 1 NJ 410
-levelinfo -pg 1 -940 -710 -330 60 270
-pagesize -pg 1 -db -bbox -sgen -1090 0 430 1360
-"
-}
+  regenerate_bd_layout -hierarchy [get_bd_cells /CAPTURE_PIPELINE]
+
+  save_bd_design
 
   # Restore current instance
   current_bd_instance $oldCurInst
@@ -946,51 +745,12 @@ pagesize -pg 1 -db -bbox -sgen -1090 0 430 1360
 
 
 proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
-
-  #
-  # Before starting, need to make some changes to the base design
-  # 
-
-  # reconfigure clk_wiz_0's clk_out3 output from 75MHz to 48MHz
-  set_property -dict [list CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {48} CONFIG.MMCM_CLKOUT2_DIVIDE {25} CONFIG.CLKOUT3_JITTER {133.812}] [get_bd_cells clk_wiz_0]
-
-  # remove all HS I/O
-  delete_bd_objs [get_bd_nets xlslice_8_Dout] [get_bd_ports hs_mezz_hsic_str]
-  delete_bd_objs [get_bd_nets xlslice_9_Dout] [get_bd_ports hs_mezz_hsic_d]
-  delete_bd_objs [get_bd_nets xlslice_7_Dout] [get_bd_ports hs_mezz_dsi_d]
-  delete_bd_objs [get_bd_nets xlslice_6_Dout] [get_bd_ports hs_mezz_dsi_clk]
-  delete_bd_objs [get_bd_nets xlslice_5_Dout] [get_bd_ports hs_mezz_csi1_mclk]
-  delete_bd_objs [get_bd_nets xlslice_4_Dout] [get_bd_ports hs_mezz_csi0_mclk]
-  delete_bd_objs [get_bd_nets xlslice_3_Dout] [get_bd_ports hs_mezz_csi1_d]
-  delete_bd_objs [get_bd_nets xlslice_2_Dout] [get_bd_ports hs_mezz_csi1_c]
-  delete_bd_objs [get_bd_nets xlslice_1_Dout] [get_bd_ports hs_mezz_csi0_d]
-  delete_bd_objs [get_bd_nets xlslice_0_Dout] [get_bd_ports hs_mezz_csi0_c]
-
-  # remove all LS I/O
-  delete_bd_objs [get_bd_nets PWM_w_Int_0_PWM_out] [get_bd_ports ls_mezz_pwm0]
-  delete_bd_objs [get_bd_nets PWM_w_Int_1_PWM_out] [get_bd_ports ls_mezz_pwm1]
-  delete_bd_objs [get_bd_nets axi_uart16550_0_sout] [get_bd_ports ls_mezz_uart0_tx]
-  delete_bd_objs [get_bd_nets axi_gpio_0_gpio2_io_o] [get_bd_ports ls_mezz_rst]
-  delete_bd_objs [get_bd_nets axi_uart16550_1_sout] [get_bd_ports ls_mezz_uart1_tx]
-  delete_bd_objs [get_bd_nets sin_0_1] [get_bd_ports ls_mezz_uart0_rx]
-  delete_bd_objs [get_bd_nets sin_0_2] [get_bd_ports ls_mezz_uart1_rx]
-  delete_bd_objs [get_bd_ports ls_mezz_int]
-
-  # add 2 additional ports to the PS interrupt concat block
-  set_property -dict [list CONFIG.NUM_PORTS {8}] [get_bd_cells xlconcat_0]
-
-  # enable M_AXI_HPM1_FPD control port
-  set_property -dict [list CONFIG.PSU__USE__M_AXI_GP1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
-
-  # enable S_AXI_HP0_FPD High-Performance port
-  set_property -dict [list CONFIG.PSU__USE__S_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
-
   #
   # Dual Camera Mezzanine specific logic
   # 
 
-  # Create instance: CAPTURE_PIPLINE
-  create_hier_cell_CAPTURE_PIPLINE [current_bd_instance .] CAPTURE_PIPLINE
+  # Create instance: CAPTURE_PIPELINE
+  create_hier_cell_CAPTURE_PIPELINE [current_bd_instance .] CAPTURE_PIPELINE
    
   # Create instance: GPIO
   create_hier_cell_GPIO [current_bd_instance .] GPIO
@@ -999,7 +759,7 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
   set mipi_phy_if_0 [ create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 mipi_phy_if_0 ]
 
   # MIPI - Create interface connections
-  connect_bd_intf_net -intf_net mipi_phy_if_0_1 [get_bd_intf_ports mipi_phy_if_0] [get_bd_intf_pins CAPTURE_PIPLINE/mipi_phy_if_0]
+  connect_bd_intf_net -intf_net mipi_phy_if_0_1 [get_bd_intf_ports mipi_phy_if_0] [get_bd_intf_pins CAPTURE_PIPELINE/mipi_phy_if_0]
 
   # GPIO - Create ports
   set CLK48M [ create_bd_port -dir O -type clk CLK48M ]
@@ -1017,14 +777,14 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
   connect_bd_net -net GPIO_TRG_INPUT [get_bd_ports TRG_INPUT] [get_bd_pins GPIO/TRG_INPUT]
 
   # resets/dcm_locked - Create port connections
-  connect_bd_net -net GPIO_VPSS_RESETn [get_bd_pins CAPTURE_PIPLINE/aux_reset_in_0] [get_bd_pins GPIO/VPSS_RESETn]
-  connect_bd_net -net GPIO_frame_buffer_wr_resetn [get_bd_pins CAPTURE_PIPLINE/aux_reset_in] [get_bd_pins GPIO/frame_buffer_wr_resetn]
-  connect_bd_net [get_bd_pins CAPTURE_PIPLINE/dcm_locked] [get_bd_pins clk_wiz_0/locked]
-  connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_pins CAPTURE_PIPLINE/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
+  connect_bd_net -net GPIO_VPSS_RESETn [get_bd_pins CAPTURE_PIPELINE/aux_reset_in_0] [get_bd_pins GPIO/VPSS_RESETn]
+  connect_bd_net -net GPIO_frame_buffer_wr_resetn [get_bd_pins CAPTURE_PIPELINE/aux_reset_in] [get_bd_pins GPIO/frame_buffer_wr_resetn]
+  connect_bd_net [get_bd_pins CAPTURE_PIPELINE/dcm_locked] [get_bd_pins clk_wiz_0/locked]
+  connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_pins CAPTURE_PIPELINE/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
 
   # Interrupts - Create port connections
-  connect_bd_net -net CAPTURE_PIPLINE_interrupt [get_bd_pins CAPTURE_PIPLINE/interrupt] [get_bd_pins xlconcat_0/in6]
-  connect_bd_net -net CAPTURE_PIPLINE_csirxss_csi_irq [get_bd_pins CAPTURE_PIPLINE/csirxss_csi_irq] [get_bd_pins xlconcat_0/in7]
+  connect_bd_net -net CAPTURE_PIPELINE_interrupt [get_bd_pins CAPTURE_PIPELINE/interrupt] [get_bd_pins xlconcat_0/In1]
+  connect_bd_net -net CAPTURE_PIPELINE_csirxss_csi_irq [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_0/In2]
 
   # Connection Automation for GPIO cores (AXI_GPIO)
   set_property name clk100 [get_bd_pins GPIO/clk200]
@@ -1033,21 +793,21 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
 
   # Connection Automation for CAPTURE_PIPELINE control interfaces (MIPI_CSI2_RX, VPSS, FRAMEBUF_WRITE)
   #INFO: [PSU-1]  DP_AUDIO clock source: RPLL is also being used by other peripheral clocks. Their outputs may get impacted if any driver changes DP_AUDIO PLL source to support runtime audio change 
-  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {Auto} Clk_slave {Auto} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPLINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi} ddr_seg {Auto} intc_ip {New AXI Interconnect} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPLINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi]
-  #Slave segment '/CAPTURE_PIPLINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB000_0000 [ 8K ]>.
-  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPLINE/v_proc_ss_0/s_axi_ctrl} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph_1} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPLINE/v_proc_ss_0/s_axi_ctrl]
-  #Slave segment '/CAPTURE_PIPLINE/v_proc_ss_0/s_axi_ctrl/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB004_0000 [ 256K ]>.
-  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPLINE/v_frmbuf_wr_0/s_axi_CTRL} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph_1} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPLINE/v_frmbuf_wr_0/s_axi_CTRL]
-  #Slave segment '/CAPTURE_PIPLINE/v_frmbuf_wr_0/s_axi_CTRL/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB001_0000 [ 64K ]>.
+  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {Auto} Clk_slave {Auto} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi} ddr_seg {Auto} intc_ip {New AXI Interconnect} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi]
+  #Slave segment '/CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB000_0000 [ 8K ]>.
+  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPELINE/v_proc_ss_0/s_axi_ctrl} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph_1} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_proc_ss_0/s_axi_ctrl]
+  #Slave segment '/CAPTURE_PIPELINE/v_proc_ss_0/s_axi_ctrl/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB004_0000 [ 256K ]>.
+  apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph_1} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL]
+  #Slave segment '/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB001_0000 [ 64K ]>.
 
   # Connection Automation for CAPTURE PIPELINE data interface (FRAMEBUF_WRITE)
   #INFO: [PSU-1]  DP_AUDIO clock source: RPLL is also being used by other peripheral clocks. Their outputs may get impacted if any driver changes DP_AUDIO PLL source to support runtime audio change 
 
   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/saxihp0_fpd_aclk] [get_bd_pins clk_wiz_0/clk_out5]
-  connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD] -boundary_type upper [get_bd_intf_pins CAPTURE_PIPLINE/m_axi_mm_video]
-  assign_bd_address -target_address_space /CAPTURE_PIPLINE/v_frmbuf_wr_0/Data_m_axi_mm_video [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_DDR_LOW] -force
-  #Slave segment '/zynq_ultra_ps_e_0/SAXIGP2/HP0_DDR_LOW' is being assigned into address space '/CAPTURE_PIPLINE/v_frmbuf_wr_0/Data_m_axi_mm_video' at <0x0000_0000 [ 2G ]>.
-  assign_bd_address -target_address_space /CAPTURE_PIPLINE/v_frmbuf_wr_0/Data_m_axi_mm_video [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_LPS_OCM] -force
-  #Slave segment '/zynq_ultra_ps_e_0/SAXIGP2/HP0_LPS_OCM' is being assigned into address space '/CAPTURE_PIPLINE/v_frmbuf_wr_0/Data_m_axi_mm_video' at <0xFF00_0000 [ 16M ]>.
+  connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD] -boundary_type upper [get_bd_intf_pins CAPTURE_PIPELINE/m_axi_mm_video]
+  assign_bd_address -target_address_space /CAPTURE_PIPELINE/v_frmbuf_wr_0/Data_m_axi_mm_video [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_DDR_LOW] -force
+  #Slave segment '/zynq_ultra_ps_e_0/SAXIGP2/HP0_DDR_LOW' is being assigned into address space '/CAPTURE_PIPELINE/v_frmbuf_wr_0/Data_m_axi_mm_video' at <0x0000_0000 [ 2G ]>.
+  assign_bd_address -target_address_space /CAPTURE_PIPELINE/v_frmbuf_wr_0/Data_m_axi_mm_video [get_bd_addr_segs zynq_ultra_ps_e_0/SAXIGP2/HP0_LPS_OCM] -force
+  #Slave segment '/zynq_ultra_ps_e_0/SAXIGP2/HP0_LPS_OCM' is being assigned into address space '/CAPTURE_PIPELINE/v_frmbuf_wr_0/Data_m_axi_mm_video' at <0xFF00_0000 [ 16M ]>.
 }
 
