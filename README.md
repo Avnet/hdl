@@ -1,8 +1,8 @@
 ![alt text][logo]
 
-WARNING! Large Changes here!
+Large Changes are here!
 This 2020.2 Branch is mostly stable.  Please use the 2020.2 tags!.
-Unsstable projects do not have tags at this time.  BASE projects are stable!
+Unstable projects do not have tags at this time.  BASE projects are stable!
 05MAY2021
 
 Avnet HDL Reference Designs
