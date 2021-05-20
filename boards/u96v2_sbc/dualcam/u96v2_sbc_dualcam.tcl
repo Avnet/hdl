@@ -327,8 +327,8 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    set_property -dict [list CONFIG.PSU__GPIO_EMIO__PERIPHERAL__ENABLE {1} CONFIG.PSU__GPIO_EMIO__PERIPHERAL__IO {30}] [get_bd_cells zynq_ultra_ps_e_0]
       
    # Enable the SS1 and SS2 slave select signals for the PS SPI0 peripehral
-   set_property -dict [list CONFIG.PSU__SPI0__GRP_SS1__ENABLE {1} CONFIG.PSU__SPI0__GRP_SS2__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   
+   set_property -dict [list CONFIG.PSU__SPI0__GRP_SS1__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
+
 }
 
 
