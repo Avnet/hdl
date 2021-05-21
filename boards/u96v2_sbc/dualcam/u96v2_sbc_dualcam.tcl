@@ -372,6 +372,11 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    } [get_bd_cells /zynq_ultra_ps_e_0]
 
    set_property PFM.AXI_PORT { \
+	M06_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+	M07_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+	M08_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+	M09_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+	M10_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
 	M11_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
  	M12_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
 	M13_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
