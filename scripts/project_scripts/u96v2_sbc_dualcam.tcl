@@ -87,9 +87,9 @@ if {[string match -nocase "yes" $clean]} {
    set_property board_part avnet.com:ultra96v2:part0:1.2 [current_project]
 
    # Add project-specific settings that are needed
-   puts ""
-   puts "***** Adding project-specific settings..."
-   avnet_add_project_settings ${boards_folder} ${board} ${project}
+   #puts ""
+   #puts "***** Adding project-specific settings..."
+   #avnet_add_project_settings ${boards_folder} ${board} ${project}
 
    # Generate Avnet IP
    puts ""
@@ -117,17 +117,17 @@ if {[string match -nocase "yes" $clean]} {
    # Add processing system presets from board definitions.
    puts ""
    puts "***** Adding processing system presets from board definition..."
-   #avnet_add_ps_preset ${board}_${project} $projects_folder $scriptdir
+   avnet_add_ps_preset ${board}_${project} $projects_folder $scriptdir
 
    # Add User IO presets from board definitions.
    puts ""
    puts "***** Adding defined IP blocks to block design..."
-   #avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
+   avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
 
-   # Add PS and PL IP to hierarchical block design.
+   # Add PL logic for Dual Camera Mezzanine
    puts ""
-   puts "***** Adding PS and PL IP to hierarchical block design..."
-   avnet_add_ps_and_pl ${board}_${project} $projects_folder $scriptdir
+   puts "***** Adding PL logic for Dual Camera Mezzanine..."
+   avnet_add_pl_dualcam ${board}_${project} $projects_folder $scriptdir
 
    # Assign peripheral addresses
    puts ""
