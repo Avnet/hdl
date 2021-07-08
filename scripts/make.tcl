@@ -37,7 +37,7 @@
 
 # must be format [4 digit major][period][1 digit minor]
 # i.e. 2020.2
-set required_version 2020.2
+set required_version 2021.1
 # properly set vivado version for secondary check and folder creation
 set vivado_ver [string replace $required_version 4 4 _ ]
 
