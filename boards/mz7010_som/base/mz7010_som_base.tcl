@@ -154,7 +154,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    ] [get_bd_cells xlconcat_0]
    
    set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
-
+   # Set interrupt output to 'single' instead of 'bus'
+   set_property -dict [list CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_0]
+   
    # Add constant set to '0'.  We will connect this to the PS SDIO_0 WP input
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
    set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells xlconstant_0]
