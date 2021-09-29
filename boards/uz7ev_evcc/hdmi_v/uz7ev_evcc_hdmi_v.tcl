@@ -502,7 +502,7 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   connect_bd_net [get_bd_pins xlconcat_2/In3] [get_bd_pins hdmi_rx/interrupt]
   connect_bd_net [get_bd_pins hdmi_rx/irq] [get_bd_pins xlconcat_2/In4]
 
-  create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0
+  create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_0
   connect_bd_intf_net [get_bd_intf_ports fmch_iic] [get_bd_intf_pins axi_iic_0/IIC]
   connect_bd_net [get_bd_pins xlconcat_2/In5] [get_bd_pins axi_iic_0/iic2intc_irpt]
   connect_bd_net [get_bd_pins ps8_0_axi_periph/M08_ACLK] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]

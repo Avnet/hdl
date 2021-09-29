@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2020.2
+set scripts_vivado_version 2021.1
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -44,8 +44,8 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-xilinx.com:ip:v_hdmi_tx_ss:3.1\
-xilinx.com:ip:v_mix:5.1\
+xilinx.com:ip:v_hdmi_tx_ss:3.2\
+xilinx.com:ip:v_mix:5.2\
 xilinx.com:ip:xlconstant:1.1\
 "
 
@@ -158,7 +158,7 @@ proc create_hier_cell_hdmi_tx { parentCell nameHier } {
   create_bd_pin -dir I -type clk video_clk
 
   # Create instance: v_hdmi_tx_ss_0, and set properties
-  set v_hdmi_tx_ss_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_hdmi_tx_ss:3.1 v_hdmi_tx_ss_0 ]
+  set v_hdmi_tx_ss_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_hdmi_tx_ss:3.2 v_hdmi_tx_ss_0 ]
   set_property -dict [ list \
    CONFIG.C_INCLUDE_LOW_RESO_VID {true} \
    CONFIG.C_INCLUDE_YUV420_SUP {true} \
@@ -166,7 +166,7 @@ proc create_hier_cell_hdmi_tx { parentCell nameHier } {
  ] $v_hdmi_tx_ss_0
 
   # Create instance: v_mix_0, and set properties
-  set v_mix_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_mix:5.1 v_mix_0 ]
+  set v_mix_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_mix:5.2 v_mix_0 ]
   set_property -dict [ list \
    CONFIG.AXIMM_ADDR_WIDTH {64} \
    CONFIG.AXIMM_DATA_WIDTH {128} \

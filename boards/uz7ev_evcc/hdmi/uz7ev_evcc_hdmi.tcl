@@ -168,7 +168,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #connect_bd_net -net interrupt_concat_dout [get_bd_pins axi_intc_0/intr] [get_bd_pins interrupt_concat/dout]
    #
    set_property -dict [list CONFIG.NUM_PORTS {6}] [get_bd_cells xlconcat_0]
-   connect_bd_net [get_bd_pins xlconcat_0/In5] [get_bd_pins axi_intc_0/irq]
+   connect_bd_net [get_bd_pins axi_intc_0/irq] [get_bd_pins xlconcat_0/In5] 
    #
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/axi_intc_0/s_axi} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins axi_intc_0/s_axi]
 
@@ -245,9 +245,26 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net -net clk_wiz_0_clk_out6 [get_bd_pins clk_wiz_0/clk_out6] [get_bd_pins proc_sys_reset_5/slowest_sync_clk]
    connect_bd_net -net clk_wiz_0_clk_out7 [get_bd_pins clk_wiz_0/clk_out7] [get_bd_pins proc_sys_reset_6/slowest_sync_clk]
    #
-   connect_bd_net -net clk_wiz_0_locked [get_bd_pins clk_wiz_0/locked] [get_bd_pins proc_sys_reset_0/dcm_locked] [get_bd_pins proc_sys_reset_1/dcm_locked] [get_bd_pins proc_sys_reset_2/dcm_locked] [get_bd_pins proc_sys_reset_3/dcm_locked] [get_bd_pins proc_sys_reset_4/dcm_locked] [get_bd_pins proc_sys_reset_5/dcm_locked] [get_bd_pins proc_sys_reset_6/dcm_locked]
+   connect_bd_net -net clk_wiz_0_locked \
+   [get_bd_pins clk_wiz_0/locked] \
+   [get_bd_pins proc_sys_reset_0/dcm_locked] \
+   [get_bd_pins proc_sys_reset_1/dcm_locked] \
+   [get_bd_pins proc_sys_reset_2/dcm_locked] \
+   [get_bd_pins proc_sys_reset_3/dcm_locked] \
+   [get_bd_pins proc_sys_reset_4/dcm_locked] \
+   [get_bd_pins proc_sys_reset_5/dcm_locked] \
+   [get_bd_pins proc_sys_reset_6/dcm_locked]
    #
-   connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_pins clk_wiz_0/resetn] [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins proc_sys_reset_1/ext_reset_in] [get_bd_pins proc_sys_reset_2/ext_reset_in] [get_bd_pins proc_sys_reset_3/ext_reset_in] [get_bd_pins proc_sys_reset_4/ext_reset_in] [get_bd_pins proc_sys_reset_5/ext_reset_in] [get_bd_pins proc_sys_reset_6/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
+   connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 \
+   [get_bd_pins clk_wiz_0/resetn] \
+   [get_bd_pins proc_sys_reset_0/ext_reset_in] \
+   [get_bd_pins proc_sys_reset_1/ext_reset_in] \
+   [get_bd_pins proc_sys_reset_2/ext_reset_in] \
+   [get_bd_pins proc_sys_reset_3/ext_reset_in] \
+   [get_bd_pins proc_sys_reset_4/ext_reset_in] \
+   [get_bd_pins proc_sys_reset_5/ext_reset_in] \
+   [get_bd_pins proc_sys_reset_6/ext_reset_in] \
+   [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
 
 
    #
@@ -315,7 +332,28 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
 
   create_bd_cell -type ip -vlnv xilinx.com:ip:vid_phy_controller:2.2 vid_phy_controller_0
 
-  set_property -dict [list CONFIG.CHANNEL_ENABLE {X0Y16 X0Y17 X0Y18} CONFIG.Tx_GT_Line_Rate {5.94} CONFIG.Tx_Max_GT_Line_Rate {5.94} CONFIG.Tx_GT_Ref_Clock_Freq {297} CONFIG.Rx_GT_Line_Rate {5.94} CONFIG.Rx_Max_GT_Line_Rate {5.94} CONFIG.C_Tx_No_Of_Channels {3} CONFIG.C_Tx_Protocol {HDMI} CONFIG.C_Rx_No_Of_Channels {3} CONFIG.C_Rx_Protocol {HDMI} CONFIG.C_TX_REFCLK_SEL {0} CONFIG.C_RX_REFCLK_SEL {1} CONFIG.C_vid_phy_tx_axi4s_ch_TDATA_WIDTH {20} CONFIG.C_vid_phy_tx_axi4s_ch_INT_TDATA_WIDTH {20} CONFIG.C_vid_phy_rx_axi4s_ch_TDATA_WIDTH {20} CONFIG.C_vid_phy_rx_axi4s_ch_INT_TDATA_WIDTH {20} CONFIG.C_INPUT_PIXELS_PER_CLOCK {2} CONFIG.C_Use_Oddr_for_Tmds_Clkout {true} CONFIG.C_Txrefclk_Rdy_Invert {true}  CONFIG.C_NIDRU {false}] [get_bd_cells vid_phy_controller_0]
+  set_property -dict [list \
+    CONFIG.CHANNEL_ENABLE {X0Y16 X0Y17 X0Y18} \
+    CONFIG.Tx_GT_Line_Rate {5.94} \
+    CONFIG.Tx_Max_GT_Line_Rate {5.94} \
+    CONFIG.Tx_GT_Ref_Clock_Freq {297} \
+    CONFIG.Rx_GT_Line_Rate {5.94} \
+    CONFIG.Rx_Max_GT_Line_Rate {5.94} \
+    CONFIG.C_Tx_No_Of_Channels {3} \
+    CONFIG.C_Tx_Protocol {HDMI} \
+    CONFIG.C_Rx_No_Of_Channels {3} \
+    CONFIG.C_Rx_Protocol {HDMI} \
+    CONFIG.C_TX_REFCLK_SEL {0} \
+    CONFIG.C_RX_REFCLK_SEL {1} \
+    CONFIG.C_vid_phy_tx_axi4s_ch_TDATA_WIDTH {20} \
+    CONFIG.C_vid_phy_tx_axi4s_ch_INT_TDATA_WIDTH {20} \
+    CONFIG.C_vid_phy_rx_axi4s_ch_TDATA_WIDTH {20} \
+    CONFIG.C_vid_phy_rx_axi4s_ch_INT_TDATA_WIDTH {20} \
+    CONFIG.C_INPUT_PIXELS_PER_CLOCK {2} \
+    CONFIG.C_Use_Oddr_for_Tmds_Clkout {true} \
+    CONFIG.C_Txrefclk_Rdy_Invert {true}  \
+    CONFIG.C_NIDRU {false}] \
+    [get_bd_cells vid_phy_controller_0]
 
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins hdmi_rx/LINK_DATA0_IN] [get_bd_intf_pins vid_phy_controller_0/vid_phy_rx_axi4s_ch0]
   connect_bd_intf_net [get_bd_intf_pins vid_phy_controller_0/vid_phy_rx_axi4s_ch1] -boundary_type upper [get_bd_intf_pins hdmi_rx/LINK_DATA1_IN]
@@ -370,12 +408,13 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
 
   set_property -dict [list CONFIG.PSU__USE__IRQ1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
 
-  create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
-  set_property -dict [list CONFIG.NUM_PORTS {1}] [get_bd_cells xlconcat_1]
-  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1] [get_bd_pins xlconcat_1/dout]
+  set_property -dict [list CONFIG.NUM_PORTS {7}] [get_bd_cells xlconcat_0]
+  #~ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
+  #~ set_property -dict [list CONFIG.NUM_PORTS {1}] [get_bd_cells xlconcat_1]
+  #~ connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1] [get_bd_pins xlconcat_1/dout]
   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_1
   set_property -dict [list CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_1]
-  connect_bd_net [get_bd_pins axi_intc_1/irq] [get_bd_pins xlconcat_1/In0]
+  connect_bd_net [get_bd_pins axi_intc_1/irq] [get_bd_pins xlconcat_0/In6]
   connect_bd_net [get_bd_pins ps8_0_axi_periph/M05_ACLK] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
   connect_bd_net [get_bd_pins ps8_0_axi_periph/M05_ARESETN] [get_bd_pins rst_ps8_0_100M/peripheral_aresetn]
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ps8_0_axi_periph/M05_AXI] [get_bd_intf_pins axi_intc_1/s_axi]
@@ -476,7 +515,6 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   connect_bd_net [get_bd_pins axi_interconnect_1/S09_ACLK] [get_bd_pins clk_wiz_0/clk_out2]
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD]
 
-
   connect_bd_net [get_bd_ports LED1] [get_bd_pins hdmi_tx/LED1]
   connect_bd_net [get_bd_pins hdmi_tx/interrupt] [get_bd_pins xlconcat_2/In1]
   connect_bd_net [get_bd_pins hdmi_tx/irq] [get_bd_pins xlconcat_2/In2]
@@ -497,7 +535,7 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   connect_bd_net [get_bd_pins xlconcat_2/In3] [get_bd_pins hdmi_rx/interrupt]
   connect_bd_net [get_bd_pins hdmi_rx/irq] [get_bd_pins xlconcat_2/In4]
 
-  create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0
+  create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_0
   connect_bd_intf_net [get_bd_intf_ports fmch_iic] [get_bd_intf_pins axi_iic_0/IIC]
   connect_bd_net [get_bd_pins xlconcat_2/In5] [get_bd_pins axi_iic_0/iic2intc_irpt]
   connect_bd_net [get_bd_pins ps8_0_axi_periph/M08_ACLK] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
@@ -505,13 +543,10 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ps8_0_axi_periph/M08_AXI] [get_bd_intf_pins axi_iic_0/S_AXI]
   connect_bd_net [get_bd_pins axi_iic_0/s_axi_aclk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
   connect_bd_net [get_bd_pins axi_iic_0/s_axi_aresetn] [get_bd_pins rst_ps8_0_100M/peripheral_aresetn]
-
-  # modify axi interconnect strategy, seems to fix 'Bus Interface property DATA_WIDTH does not match ...' error
-  #set_property -dict [list CONFIG.STRATEGY {2} CONFIG.S00_HAS_DATA_FIFO {2}] [get_bd_cells axi_interconnect_0]
 }
 
 proc avnet_assign_addresses {project projects_folder scriptdir} {
-    # Unassign all address segments
+  # Unassign all address segments
   delete_bd_objs [get_bd_addr_segs]
   delete_bd_objs [get_bd_addr_segs -excluded]
 
