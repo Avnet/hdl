@@ -122,7 +122,7 @@ if {[string match -nocase "yes" $clean]} {
    # Add PCIe (NVME) Support
    puts ""
    puts "***** Adding PCIe (NVME) support to block design..."
-   avnet_add_nvme ${board}_${project} $projects_folder $scriptdir
+   avnet_add_pcie ${board}_${project} $projects_folder $scriptdir
 
    # Assign peripheral addresses
    puts ""

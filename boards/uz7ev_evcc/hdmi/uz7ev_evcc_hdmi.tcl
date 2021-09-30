@@ -409,9 +409,6 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   set_property -dict [list CONFIG.PSU__USE__IRQ1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
 
   set_property -dict [list CONFIG.NUM_PORTS {7}] [get_bd_cells xlconcat_0]
-  #~ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
-  #~ set_property -dict [list CONFIG.NUM_PORTS {1}] [get_bd_cells xlconcat_1]
-  #~ connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1] [get_bd_pins xlconcat_1/dout]
   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_1
   set_property -dict [list CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_1]
   connect_bd_net [get_bd_pins axi_intc_1/irq] [get_bd_pins xlconcat_0/In6]

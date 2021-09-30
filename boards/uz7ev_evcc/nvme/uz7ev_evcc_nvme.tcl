@@ -265,10 +265,10 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
 }
 
-# This will add AXI interconnect and xdma blocks, etc. to support using NVME SSDs
-# The xdma block is configured for 2 PCIe lanes
+# This will add AXI interconnect and xdma block, etc. to support using NVME SSDs
+# The xdma blocks are configured for 2 PCIe lanes
 # This will support M.2 NVME SSDs that are "B" keyed (2 PCIe lanes) or "M" keyed (4 PCIe lanes)
-proc avnet_add_nvme {project projects_folder scriptdir} {
+proc avnet_add_pcie {project projects_folder scriptdir} {
   create_bd_cell -type ip -vlnv xilinx.com:ip:xdma:4.1 xdma_0
   set_property -dict [list \
     CONFIG.functional_mode {AXI_Bridge} \
@@ -413,14 +413,14 @@ proc avnet_add_nvme {project projects_folder scriptdir} {
   make_bd_intf_pins_external  [get_bd_intf_pins xdma_1/pcie_mgt]
   set_property name pci_exp_1 [get_bd_intf_ports pcie_mgt_0]
 
-  create_bd_cell -type ip -vlnv xilinx.com:ip:util_ds_buf:2.1 ref_clk_0_buf
+  create_bd_cell -type ip -vlnv xilinx.com:ip:util_ds_buf:2.2 ref_clk_0_buf
   make_bd_intf_pins_external  [get_bd_intf_pins ref_clk_0_buf/CLK_IN_D]
   set_property name ref_clk_0 [get_bd_intf_ports CLK_IN_D_0]
   set_property -dict [list CONFIG.C_BUF_TYPE {IBUFDSGTE}] [get_bd_cells ref_clk_0_buf]
   connect_bd_net [get_bd_pins ref_clk_0_buf/IBUF_DS_ODIV2] [get_bd_pins xdma_0/sys_clk]
   connect_bd_net [get_bd_pins ref_clk_0_buf/IBUF_OUT] [get_bd_pins xdma_0/sys_clk_gt]
 
-  create_bd_cell -type ip -vlnv xilinx.com:ip:util_ds_buf:2.1 ref_clk_1_buf
+  create_bd_cell -type ip -vlnv xilinx.com:ip:util_ds_buf:2.2 ref_clk_1_buf
   make_bd_intf_pins_external  [get_bd_intf_pins ref_clk_1_buf/CLK_IN_D]
   set_property name ref_clk_1 [get_bd_intf_ports CLK_IN_D_0]
   set_property -dict [list CONFIG.C_BUF_TYPE {IBUFDSGTE}] [get_bd_cells ref_clk_1_buf]
@@ -601,19 +601,11 @@ proc avnet_assign_addresses {project projects_folder scriptdir} {
   # Hard-code specific address segments (used in device-tree or applications)
   assign_bd_address -offset 0xa0030000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
 
-  assign_bd_address -target_address_space /zynq_ultra_ps_e_0/Data [get_bd_addr_segs xdma_0/S_AXI_B/BAR0] -force
-  assign_bd_address -target_address_space /zynq_ultra_ps_e_0/Data [get_bd_addr_segs xdma_0/S_AXI_LITE/CTL0] -force
-  set_property offset 0x00A1000000 [get_bd_addr_segs {zynq_ultra_ps_e_0/Data/SEG_xdma_0_BAR0}]
-  set_property range 16M [get_bd_addr_segs {zynq_ultra_ps_e_0/Data/SEG_xdma_0_BAR0}]
-  set_property offset 0x0400000000 [get_bd_addr_segs {zynq_ultra_ps_e_0/Data/SEG_xdma_0_CTL0}]
-  set_property range 512M [get_bd_addr_segs {zynq_ultra_ps_e_0/Data/SEG_xdma_0_CTL0}]
-  
-  assign_bd_address -target_address_space /zynq_ultra_ps_e_0/Data [get_bd_addr_segs xdma_1/S_AXI_B/BAR0] -force
-  assign_bd_address -target_address_space /zynq_ultra_ps_e_0/Data [get_bd_addr_segs xdma_1/S_AXI_LITE/CTL0] -force
-  set_property offset 0x00B1000000 [get_bd_addr_segs {zynq_ultra_ps_e_0/Data/SEG_xdma_1_BAR0}]
-  set_property range 16M [get_bd_addr_segs {zynq_ultra_ps_e_0/Data/SEG_xdma_1_BAR0}]
-  set_property offset 0x0500000000 [get_bd_addr_segs {zynq_ultra_ps_e_0/Data/SEG_xdma_1_CTL0}]
-  set_property range 512M [get_bd_addr_segs {zynq_ultra_ps_e_0/Data/SEG_xdma_1_CTL0}]
+  assign_bd_address -offset 0xA1000000 -range 0x01000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_0/S_AXI_B/BAR0] -force
+  assign_bd_address -offset 0x0400000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_0/S_AXI_LITE/CTL0] -force
+
+  assign_bd_address -offset 0xB1000000 -range 0x01000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_1/S_AXI_B/BAR0] -force
+  assign_bd_address -offset 0x0500000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_1/S_AXI_LITE/CTL0] -force
 
   
   assign_bd_address
