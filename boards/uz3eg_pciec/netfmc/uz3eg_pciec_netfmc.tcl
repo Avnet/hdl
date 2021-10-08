@@ -271,6 +271,7 @@ proc avnet_add_netfmc {project projects_folder scriptdir} {
    
    create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.1 gmii_to_rgmii_0
    set_property -dict [list CONFIG.C_USE_IDELAY_CTRL {false}] [get_bd_cells gmii_to_rgmii_0]
+   set_property -dict [list CONFIG.C_PHYADDR {1}] [get_bd_cells gmii_to_rgmii_0]
    make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/MDIO_PHY]
    make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/RGMII]
    set_property name mdio_port_0 [get_bd_intf_ports MDIO_PHY_0]
@@ -278,6 +279,7 @@ proc avnet_add_netfmc {project projects_folder scriptdir} {
    
    create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.1 gmii_to_rgmii_1
    set_property -dict [list CONFIG.SupportLevel {Include_Shared_Logic_in_Core}] [get_bd_cells gmii_to_rgmii_1]
+   set_property -dict [list CONFIG.C_PHYADDR {1}] [get_bd_cells gmii_to_rgmii_1]
    make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_1/MDIO_PHY]
    make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_1/RGMII]
    set_property name mdio_port_1 [get_bd_intf_ports MDIO_PHY_0]
