@@ -172,7 +172,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    apply_board_connection -board_interface "pl_pbs_5bits" -ip_intf "axi_gpio_1/GPIO" -diagram $project
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/ps7/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
 
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_0
    apply_bd_automation -rule xilinx.com:bd_rule:board  [get_bd_intf_pins axi_iic_0/IIC]
    set_property name hdmi_i2c [get_bd_intf_ports iic_rtl]
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
