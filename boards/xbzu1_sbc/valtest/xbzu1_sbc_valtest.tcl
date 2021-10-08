@@ -146,9 +146,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.C_ALL_INPUTS {0} \
       CONFIG.C_ALL_OUTPUTS {1} \
       CONFIG.C_IS_DUAL {1} \
-      CONFIG.C_GPIO2_WIDTH {2} \
+      CONFIG.C_GPIO2_WIDTH {1} \
       CONFIG.C_ALL_OUTPUTS_2 {1} \
-      CONFIG.C_DOUT_DEFAULT_2 {0x00000001}] [get_bd_cells axi_gpio_0]
+      CONFIG.C_DOUT_DEFAULT_2 {0x00000000}] [get_bd_cells axi_gpio_0]
 
    #
    # Click PWM
@@ -264,9 +264,8 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    create_bd_cell -type ip -vlnv xilinx.com:ip:c_counter_binary:12.0 c_counter_binary_0
    set_property -dict [list \
    CONFIG.Output_Width {26} \
-   CONFIG.SCLR {true} \
-   CONFIG.CE {true}] [get_bd_cells c_counter_binary_0]
-   
+   CONFIG.SCLR {true}] [get_bd_cells c_counter_binary_0]
+
    #
    # Slice off upper bits of binary counter
    #
@@ -279,34 +278,51 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    #
    # RGB LED output either counter bits OR GPIO (axi_gpio_0)
+   # Start mux2_1 hier block
    #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
-   set_property -dict [list \
-      CONFIG.C_SIZE {3} \
-      CONFIG.C_OPERATION {or} \
-      CONFIG.LOGO_FILE {data/sym_orgate.png}] [get_bd_cells util_vector_logic_0]
+   create_bd_cell -type hier mux2_1
 
+   create_bd_pin -dir I -from 2 -to 0 mux2_1/In1
+   create_bd_pin -dir I -from 2 -to 0 mux2_1/In2
+   create_bd_pin -dir I mux2_1/Sel
+   create_bd_pin -dir O -from 2 -to 0 mux2_1/Mux_out
+   
+   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 mux2_1/util_vector_logic_0
+   set_property -dict [list CONFIG.C_OPERATION {and} CONFIG.LOGO_FILE {data/sym_andgate.png}] [get_bd_cells mux2_1/util_vector_logic_0]
+   set_property -dict [list CONFIG.C_SIZE {3}] [get_bd_cells mux2_1/util_vector_logic_0]
+   
+   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 mux2_1/util_vector_logic_1
+   set_property -dict [list CONFIG.C_OPERATION {and} CONFIG.LOGO_FILE {data/sym_andgate.png}] [get_bd_cells mux2_1/util_vector_logic_1]
+   set_property -dict [list CONFIG.C_SIZE {3}] [get_bd_cells mux2_1/util_vector_logic_1]
+   
+   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 mux2_1/util_vector_logic_2
+   set_property -dict [list CONFIG.C_OPERATION {or} CONFIG.LOGO_FILE {data/sym_orgate.png}] [get_bd_cells mux2_1/util_vector_logic_2]
+   set_property -dict [list CONFIG.C_SIZE {3}] [get_bd_cells mux2_1/util_vector_logic_2]
+   
+   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 mux2_1/util_vector_logic_3
+   set_property -dict [list CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells mux2_1/util_vector_logic_3]
+   set_property -dict [list CONFIG.C_SIZE {3}] [get_bd_cells mux2_1/util_vector_logic_3]
+   
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 mux2_1/xlconcat_0
+   set_property -dict [list CONFIG.NUM_PORTS {3}] [get_bd_cells mux2_1/xlconcat_0]
+   
+   connect_bd_net [get_bd_pins mux2_1/Sel] [get_bd_pins mux2_1/xlconcat_0/In0]
+   connect_bd_net [get_bd_pins mux2_1/Sel] [get_bd_pins mux2_1/xlconcat_0/In1]
+   connect_bd_net [get_bd_pins mux2_1/Sel] [get_bd_pins mux2_1/xlconcat_0/In2]
+   
+   connect_bd_net [get_bd_pins mux2_1/xlconcat_0/dout] [get_bd_pins mux2_1/util_vector_logic_3/Op1]
+   connect_bd_net [get_bd_pins mux2_1/xlconcat_0/dout] [get_bd_pins mux2_1/util_vector_logic_1/Op2]
+   
+   connect_bd_net [get_bd_pins mux2_1/util_vector_logic_0/Res] [get_bd_pins mux2_1/util_vector_logic_2/Op1]
+   connect_bd_net [get_bd_pins mux2_1/util_vector_logic_1/Res] [get_bd_pins mux2_1/util_vector_logic_2/Op2]
+   connect_bd_net [get_bd_pins mux2_1/util_vector_logic_3/Res] [get_bd_pins mux2_1/util_vector_logic_0/Op2]
+   
+   connect_bd_net [get_bd_pins mux2_1/In1] [get_bd_pins mux2_1/util_vector_logic_0/Op1]
+   connect_bd_net [get_bd_pins mux2_1/In2] [get_bd_pins mux2_1/util_vector_logic_1/Op1]
+   connect_bd_net [get_bd_pins mux2_1/util_vector_logic_2/Res] [get_bd_pins mux2_1/Mux_out]
    #
-   # Slice off bit 0 of axi_gpio_0 GPIO2 to use as binary counter enable
+   # End mux2_1 hier block
    #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_1
-   set_property -dict [list \
-      CONFIG.DIN_TO {0} \
-      CONFIG.DIN_FROM {0} \
-      CONFIG.DIN_WIDTH {2} \
-      CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_1]
-
-   #
-   # Slice off bit 1 of axi_gpio_0 GPIO2 to use as binary counter clear
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_2
-   set_property -dict [list \
-      CONFIG.DIN_TO {1} \
-      CONFIG.DIN_FROM {1} \
-      CONFIG.DIN_WIDTH {2} \
-      CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_2]
-
-   save_bd_design
 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins proc_sys_reset_0/ext_reset_in]
@@ -391,6 +407,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/tx_reset]
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/rx_reset]
+   connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_reset] [get_bd_pins c_counter_binary_0/SCLR]
    
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins gmii_to_rgmii_0/clkin]
 
@@ -405,16 +422,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    connect_bd_net [get_bd_pins c_counter_binary_0/Q] [get_bd_pins xlslice_0/Din]
 
-   connect_bd_net [get_bd_pins xlslice_0/Dout] [get_bd_pins util_vector_logic_0/Op1]
-   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins util_vector_logic_0/Op2]
    create_bd_port -dir O -from 2 -to 0 -type data rgb_led
-   connect_bd_net [get_bd_ports rgb_led] [get_bd_pins util_vector_logic_0/Res]
 
-   connect_bd_net [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins xlslice_1/Din]
-   connect_bd_net [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins xlslice_2/Din]
-
-   connect_bd_net [get_bd_pins xlslice_1/Dout] [get_bd_pins c_counter_binary_0/CE]
-   connect_bd_net [get_bd_pins xlslice_2/Dout] [get_bd_pins c_counter_binary_0/SCLR]
+   connect_bd_net [get_bd_pins xlslice_0/Dout] [get_bd_pins mux2_1/In1]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins mux2_1/In2]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins mux2_1/Sel]
+   connect_bd_net [get_bd_pins mux2_1/Mux_out] [get_bd_ports rgb_led]
 
    regenerate_bd_layout
    save_bd_design
