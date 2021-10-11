@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2020.2
+set scripts_vivado_version 2021.1
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -45,7 +45,7 @@ set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:v_frmbuf_wr:2.2\
-xilinx.com:ip:v_hdmi_rx_ss:3.1\
+xilinx.com:ip:v_hdmi_rx_ss:3.2\
 xilinx.com:ip:v_proc_ss:2.3\
 "
 
@@ -164,7 +164,7 @@ proc create_hier_cell_hdmi_rx { parentCell nameHier } {
  ] $v_frmbuf_wr_0
 
   # Create instance: v_hdmi_rx_ss_0, and set properties
-  set v_hdmi_rx_ss_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_hdmi_rx_ss:3.1 v_hdmi_rx_ss_0 ]
+  set v_hdmi_rx_ss_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_hdmi_rx_ss:3.2 v_hdmi_rx_ss_0 ]
   set_property -dict [ list \
    CONFIG.C_CD_INVERT {true} \
    CONFIG.C_EXDES_NIDRU {false} \

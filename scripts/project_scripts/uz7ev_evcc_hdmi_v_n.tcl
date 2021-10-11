@@ -32,12 +32,12 @@
 #
 # ----------------------------------------------------------------------------
 #
-#  Create Date:         Nov 19, 2020
-#  Design Name:         UltraZed-EV HDMI HW Platform
-#  Module Name:         uz7ev_evcc_hdmi.tcl
-#  Project Name:        UltraZed-EV HDMI HW
+#  Create Date:         Sep 24, 2021
+#  Design Name:         UltraZed-EV HDMI (+VCU) (+NVME) HW Platform
+#  Module Name:         uz7ev_evcc_hdmi_v_n.tcl
+#  Project Name:        UltraZed-EV HDMI_V_N HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 7EV
-#  Hardware Boards:     UltraZed-EV SOM + EV Carrier
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier + FPGADrive FMC
 #
 # ----------------------------------------------------------------------------
 
@@ -124,6 +124,25 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Adding HDMI support to block design..."
    avnet_add_hdmi ${board}_${project} $projects_folder $scriptdir
 
+   # Incrementally validate the design before the next build step.
+   # This seems to avoid "Bus Interface property DATA_WIDTH does not match ..." error
+   # Redraw the BD and validate the design
+   puts ""
+   puts "***** Incremental validating the block design..."
+   regenerate_bd_layout
+   save_bd_design
+   validate_bd_design
+
+   # Add VCU Support
+   puts ""
+   puts "***** Adding VCU support to block design..."
+   avnet_add_vcu ${board}_${project} $projects_folder $scriptdir
+
+   # Add PCIe (NVME) Support
+   puts ""
+   puts "***** Adding PCIe support to block design..."
+   avnet_add_pcie ${board}_${project} $projects_folder $scriptdir
+
    # Assign peripheral addresses
    puts ""
    puts "***** Assigning peripheral addresses..."
@@ -131,7 +150,7 @@ if {[string match -nocase "yes" $clean]} {
 
    # Redraw the BD and validate the design
    puts ""
-   puts "***** Validating the block design..."
+   puts "***** Final validating the block design..."
    regenerate_bd_layout
    save_bd_design
    validate_bd_design
@@ -163,7 +182,7 @@ if {[string match -nocase "yes" $clean]} {
    avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
    update_compile_order -fileset sources_1
    import_files
-   
+
    # Build the binary
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
@@ -175,7 +194,6 @@ if {[string match -nocase "yes" $clean]} {
    update_compile_order -fileset sources_1
    update_compile_order -fileset sim_1
    save_bd_design
-   puts "***** This Vivado implementation will use ${numberOfCores} CPUs"
    launch_runs impl_1 -to_step write_bitstream -jobs $numberOfCores
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    #*- KEEP OUT, do not touch this section unless you know what you are doing! -*

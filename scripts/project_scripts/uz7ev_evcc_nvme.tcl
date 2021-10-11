@@ -32,12 +32,12 @@
 #
 # ----------------------------------------------------------------------------
 #
-#  Create Date:         Nov 19, 2020
-#  Design Name:         UltraZed-EV HDMI HW Platform
-#  Module Name:         uz7ev_evcc_hdmi.tcl
-#  Project Name:        UltraZed-EV HDMI HW
+#  Create Date:         Nov 10, 2017
+#  Design Name:         UltraZed-EV NVME HW Platform
+#  Module Name:         uz7ev_evcc_nvme.tcl
+#  Project Name:        UltraZed-EV NVME HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 7EV
-#  Hardware Boards:     UltraZed-EV SOM + EV Carrier
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier + NVME FMC
 #
 # ----------------------------------------------------------------------------
 
@@ -119,10 +119,10 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Adding defined IP blocks to block design..."
    avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
 
-   # Add HDMI Support
+   # Add PCIe (NVME) Support
    puts ""
-   puts "***** Adding HDMI support to block design..."
-   avnet_add_hdmi ${board}_${project} $projects_folder $scriptdir
+   puts "***** Adding PCIe (NVME) support to block design..."
+   avnet_add_pcie ${board}_${project} $projects_folder $scriptdir
 
    # Assign peripheral addresses
    puts ""
