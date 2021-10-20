@@ -429,7 +429,7 @@ proc avnet_add_hdmi {project projects_folder scriptdir} {
   connect_bd_net [get_bd_pins xlconcat_2/In3] [get_bd_pins hdmi_rx/interrupt]
   connect_bd_net [get_bd_pins hdmi_rx/irq] [get_bd_pins xlconcat_2/In4]
 
-  create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0
+  create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_0
   connect_bd_intf_net [get_bd_intf_ports fmch_iic] [get_bd_intf_pins axi_iic_0/IIC]
   connect_bd_net [get_bd_pins xlconcat_2/In5] [get_bd_pins axi_iic_0/iic2intc_irpt]
 
@@ -523,7 +523,7 @@ proc avnet_add_fmc_quad {project projects_folder scriptdir} {
   connect_bd_net [get_bd_ports fmc_multicam_poc2_en] [get_bd_pins fmc_quad/fmc_multicam_poc2_en]
 
   # Create instance: axi_iic_1, and set properties
-  set axi_iic_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_1 ]
+  set axi_iic_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_1 ]
 
   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD" }  [get_bd_intf_pins axi_iic_1/S_AXI]
   connect_bd_intf_net [get_bd_intf_ports carrier_iic] [get_bd_intf_pins axi_iic_1/IIC]

@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2020.2
+set scripts_vivado_version 2021.1
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -45,7 +45,7 @@ set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:xlconcat:2.1\
-xilinx.com:ip:axi_iic:2.0\
+xilinx.com:ip:axi_iic:2.1\
 xilinx.com:ip:xlslice:1.0\
 xilinx.com:ip:axis_subset_converter:1.1\
 xilinx.com:ip:axis_switch:1.1\
@@ -1072,7 +1072,7 @@ proc create_hier_cell_fmc_multicam_control { parentCell nameHier } {
   set fmc_multicam_gpi [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 fmc_multicam_gpi ]
 
   # Create instance: fmc_multicam_iic, and set properties
-  set fmc_multicam_iic [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 fmc_multicam_iic ]
+  set fmc_multicam_iic [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 fmc_multicam_iic ]
   set_property -dict [ list \
    CONFIG.IIC_FREQ_KHZ {400} \
  ] $fmc_multicam_iic
