@@ -112,31 +112,42 @@ proc create_hier_cell_interrupt_concat { parentCell nameHier } {
 proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0
-   set_property -dict [list CONFIG.NUM_MI {11}] [get_bd_cells axi_interconnect_0]
+   set_property -dict [list CONFIG.NUM_MI {12}] [get_bd_cells axi_interconnect_0]
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
    set_property -dict [list CONFIG.NUM_PORTS {5}] [get_bd_cells xlconcat_0]
    
-   create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0
-   set_property -dict [list \
-      CONFIG.PRIM_IN_FREQ.VALUE_SRC USER \
-      CONFIG.PRIM_IN_FREQ {125} \
-      CONFIG.PRIM_SOURCE {Differential_clock_capable_pin} \
-      CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {375} \
-      CONFIG.USE_LOCKED {false} \
-      CONFIG.USE_RESET {false} \
-      CONFIG.CLKIN1_JITTER_PS {80.0} \
-      CONFIG.MMCM_DIVCLK_DIVIDE {1} \
-      CONFIG.MMCM_CLKFBOUT_MULT_F {9.750} \
-      CONFIG.MMCM_CLKIN1_PERIOD {8.000} \
-      CONFIG.MMCM_CLKOUT0_DIVIDE_F {3.250} \
-      CONFIG.CLKOUT1_JITTER {86.562} \
-      CONFIG.CLKOUT1_PHASE_ERROR {84.521}] [get_bd_cells clk_wiz_0]
-   make_bd_intf_pins_external  [get_bd_intf_pins clk_wiz_0/CLK_IN1_D]
-   set_property name ref_clk [get_bd_intf_ports CLK_IN1_D_0]
-   
+   #~ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0
+   #~ set_property -dict [list \
+      #~ CONFIG.PRIM_IN_FREQ.VALUE_SRC USER \
+      #~ CONFIG.PRIM_IN_FREQ {125} \
+      #~ CONFIG.PRIM_SOURCE {Differential_clock_capable_pin} \
+      #~ CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {375} \
+      #~ CONFIG.USE_LOCKED {false} \
+      #~ CONFIG.USE_RESET {false} \
+      #~ CONFIG.CLKIN1_JITTER_PS {80.0} \
+      #~ CONFIG.MMCM_DIVCLK_DIVIDE {1} \
+      #~ CONFIG.MMCM_CLKFBOUT_MULT_F {9.750} \
+      #~ CONFIG.MMCM_CLKIN1_PERIOD {8.000} \
+      #~ CONFIG.MMCM_CLKOUT0_DIVIDE_F {3.250} \
+      #~ CONFIG.CLKOUT1_JITTER {86.562} \
+      #~ CONFIG.CLKOUT1_PHASE_ERROR {84.521}] [get_bd_cells clk_wiz_0]
+   #~ make_bd_intf_pins_external  [get_bd_intf_pins clk_wiz_0/CLK_IN1_D]
+   #~ set_property name ref_clk [get_bd_intf_ports CLK_IN1_D_0]
+
+   create_bd_cell -type ip -vlnv xilinx.com:ip:system_management_wiz:1.3 system_management_wiz_0
+   set_property -dict [ list \
+      CONFIG.CHANNEL_ENABLE_VP_VN {false} \
+      CONFIG.ENABLE_VCCPSAUX_ALARM {false} \
+      CONFIG.ENABLE_VCCPSINTFP_ALARM {false} \
+      CONFIG.ENABLE_VCCPSINTLP_ALARM {false} \
+      CONFIG.OT_ALARM {false} \
+      CONFIG.USER_TEMP_ALARM {false} \
+      CONFIG.VCCAUX_ALARM {false} \
+      CONFIG.VCCINT_ALARM {false} ] [get_bd_cells system_management_wiz_0]
+
    #
    # RGB LED
    #
@@ -224,16 +235,16 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    make_bd_intf_pins_external  [get_bd_intf_pins axi_iic_2/IIC]
    set_property name temp_sensor [get_bd_intf_ports IIC_0]
 
-   #
-   # Ethernet
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.1 gmii_to_rgmii_0
-   set_property -dict [list \
-      CONFIG.C_EXTERNAL_CLOCK {false} \
-      CONFIG.SupportLevel {Include_Shared_Logic_in_Core} \
-      CONFIG.C_PHYADDR {7}] [get_bd_cells gmii_to_rgmii_0]
-   make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/MDIO_PHY]
-   make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/RGMII]
+   #~ #
+   #~ # Ethernet
+   #~ #
+   #~ create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.1 gmii_to_rgmii_0
+   #~ set_property -dict [list \
+      #~ CONFIG.C_EXTERNAL_CLOCK {false} \
+      #~ CONFIG.SupportLevel {Include_Shared_Logic_in_Core} \
+      #~ CONFIG.C_PHYADDR {7}] [get_bd_cells gmii_to_rgmii_0]
+   #~ make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/MDIO_PHY]
+   #~ make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/RGMII]
 
    #
    # Click SPI
@@ -286,7 +297,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    create_bd_pin -dir I -from 2 -to 0 mux2_1/In2
    create_bd_pin -dir I mux2_1/Sel
    create_bd_pin -dir O -from 2 -to 0 mux2_1/Mux_out
-   
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 mux2_1/util_vector_logic_0
    set_property -dict [list CONFIG.C_OPERATION {and} CONFIG.LOGO_FILE {data/sym_andgate.png}] [get_bd_cells mux2_1/util_vector_logic_0]
    set_property -dict [list CONFIG.C_SIZE {3}] [get_bd_cells mux2_1/util_vector_logic_0]
@@ -330,8 +341,8 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
 
-   connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/MDIO_ENET3] [get_bd_intf_pins gmii_to_rgmii_0/MDIO_GEM]
-   connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/GMII_ENET3] [get_bd_intf_pins gmii_to_rgmii_0/GMII]
+   #~ connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/MDIO_ENET3] [get_bd_intf_pins gmii_to_rgmii_0/MDIO_GEM]
+   #~ connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/GMII_ENET3] [get_bd_intf_pins gmii_to_rgmii_0/GMII]
 
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M00_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M01_AXI] [get_bd_intf_pins axi_gpio_1/S_AXI]
@@ -344,6 +355,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M08_AXI] [get_bd_intf_pins axi_quad_spi_0/AXI_LITE]
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M09_AXI] [get_bd_intf_pins axi_uartlite_0/S_AXI]
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M10_AXI] [get_bd_intf_pins axi_intc_0/s_axi]
+   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M11_AXI] [get_bd_intf_pins system_management_wiz_0/S_AXI_LITE]
 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_interconnect_0/ACLK]
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_interconnect_0/S00_ACLK]
@@ -358,6 +370,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_interconnect_0/M08_ACLK]
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_interconnect_0/M09_ACLK]
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_interconnect_0/M10_ACLK]
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_interconnect_0/M11_ACLK]
    
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/ARESETN]
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/S00_ARESETN]
@@ -372,6 +385,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M08_ARESETN]
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M09_ARESETN]
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M10_ARESETN]
+   connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M11_ARESETN]
 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_gpio_0/s_axi_aclk]
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_gpio_1/s_axi_aclk]
@@ -386,6 +400,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_uartlite_0/s_axi_aclk]
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_intc_0/s_axi_aclk]
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins c_counter_binary_0/CLK]
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins system_management_wiz_0/s_axi_aclk]
 
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_gpio_0/s_axi_aresetn]
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_gpio_1/s_axi_aresetn]
@@ -398,6 +413,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_quad_spi_0/s_axi_aresetn]
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_uartlite_0/s_axi_aresetn]
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_intc_0/s_axi_aresetn]
+   connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins system_management_wiz_0/s_axi_aresetn]
 
    connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In0]
    connect_bd_net [get_bd_pins axi_iic_1/iic2intc_irpt] [get_bd_pins xlconcat_0/In1]
@@ -405,11 +421,11 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins axi_quad_spi_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In3]
    connect_bd_net [get_bd_pins axi_uartlite_0/interrupt] [get_bd_pins xlconcat_0/In4]
 
-   connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/tx_reset]
-   connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/rx_reset]
+   #~ connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/tx_reset]
+   #~ connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/rx_reset]
    connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_reset] [get_bd_pins c_counter_binary_0/SCLR]
    
-   connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins gmii_to_rgmii_0/clkin]
+   #~ connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins gmii_to_rgmii_0/clkin]
 
    connect_bd_net [get_bd_pins xlconcat_1/dout] [get_bd_pins axi_intc_0/intr]
 
@@ -439,13 +455,15 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.3 zynq_ultra_ps_e_0
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" } [get_bd_cells zynq_ultra_ps_e_0]
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
-   
    set_property -dict [list \
       CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} \
-      CONFIG.PSU__ENET3__PERIPHERAL__ENABLE {1} \
-      CONFIG.PSU__ENET3__PERIPHERAL__IO {EMIO} \
-      CONFIG.PSU__ENET3__GRP_MDIO__ENABLE {1} \
-      CONFIG.PSU__ENET3__GRP_MDIO__IO {EMIO} \
+      CONFIG.PSU__ENET0__PERIPHERAL__ENABLE {0} \
+      CONFIG.PSU__ENET1__PERIPHERAL__ENABLE {0} \
+      CONFIG.PSU__ENET2__PERIPHERAL__ENABLE {1} \
+      CONFIG.PSU__ENET2__PERIPHERAL__IO {MIO 52 .. 63} \
+      CONFIG.PSU__ENET2__GRP_MDIO__ENABLE {1} \
+      CONFIG.PSU__ENET2__GRP_MDIO__IO {MIO 76 .. 77} \
+      CONFIG.PSU__ENET3__PERIPHERAL__ENABLE {0} \
       CONFIG.PSU__GPIO_EMIO__PERIPHERAL__ENABLE {1} \
       CONFIG.PSU__GPIO0_MIO__PERIPHERAL__ENABLE {1} \
       CONFIG.PSU__GPIO1_MIO__PERIPHERAL__ENABLE {1} \
@@ -495,8 +513,6 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
       CONFIG.PSU__DDRC__MEMORY_TYPE {LPDDR 4} \
       CONFIG.PSU__DDRC__ROW_ADDR_COUNT {16} \
       CONFIG.PSU__OVERRIDE__BASIC_CLOCK {1}] [get_bd_cells zynq_ultra_ps_e_0]
-
-   save_bd_design
 
    set_property -dict [list \
       CONFIG.PSU__USE__M_AXI_GP0 {1} \

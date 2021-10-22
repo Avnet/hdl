@@ -82,9 +82,9 @@ if {[string match -nocase "yes" $clean]} {
    avnet_import_constraints ${boards_folder} ${board} ${project}
 
    # Apply board specific project property settings
-   #~ puts ""
-   #~ puts "***** Assigning Vivado project board_part property to ultra96v2..."
-   #~ set_property board_part avnet.com:ultra96v2:part0:1.2 [current_project]
+   puts ""
+   puts "***** Assigning Vivado project board_part property to xboard-zu1..."
+   set_property board_part avnet.com:xboard-zu1:part0:1.0 [current_project]
 
    # Generate Avnet IP
    puts ""
@@ -152,7 +152,7 @@ if {[string match -nocase "yes" $clean]} {
       add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
    }
    
-   # Add Vitis directives
+   #~ # Add Vitis directives
    #~ puts ""
    #~ puts "***** Adding Vitis directves to design..."
    #~ avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
@@ -174,9 +174,9 @@ if {[string match -nocase "yes" $clean]} {
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   puts ""
-   puts "***** Wait for bitstream to be written..."
-   wait_on_run impl_1
+   #~ puts ""
+   #~ puts "***** Wait for bitstream to be written..."
+   #~ wait_on_run impl_1
    #~ puts ""
    #~ puts "***** Open the implemented design..."
    #~ open_run impl_1
