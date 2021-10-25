@@ -54,57 +54,57 @@ proc avnet_import_constraints {boards_folder board project} {
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {
 
    variable script_folder
-   
+
    if { $parentCell eq "" || $nameHier eq "" } {
       catch {common::send_msg_id "BD_TCL-102" "ERROR" "create_hier_cell_interrupt_concat() - Empty argument(s)!"}
       return
-      }
-   
+   }
+
    # Get object for parentCell
    set parentObj [get_bd_cells $parentCell]
    if { $parentObj == "" } {
       catch {common::send_msg_id "BD_TCL-100" "ERROR" "Unable to find parent cell <$parentCell>!"}
       return
-      }
-   
+   }
+
    # Make sure parentObj is hier blk
    set parentType [get_property TYPE $parentObj]
    if { $parentType ne "hier" } {
       catch {common::send_msg_id "BD_TCL-101" "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
       return
-      }
-   
+   }
+
    # Save current instance; Restore later
    set oldCurInst [current_bd_instance .]
-   
+
    # Set parent object as current
    current_bd_instance $parentObj
-   
+
    # Create cell and set as current instance
    set hier_obj [create_bd_cell -type hier $nameHier]
    current_bd_instance $hier_obj
-   
+
    # Create interface pins
-   
+
    # Create pins
    create_bd_pin -dir O -from 31 -to 0 dout
-   
+
    # Create instance: xlconcat_interrupt_0, and set properties
    set xlconcat_interrupt_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_interrupt_0 ]
       set_property -dict [ list \
       CONFIG.NUM_PORTS {32} \
    ] $xlconcat_interrupt_0
-   
+
    # Create instance: xlconstant_gnd, and set properties
    set xlconstant_gnd [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_gnd ]
       set_property -dict [ list \
       CONFIG.CONST_VAL {0} \
    ] $xlconstant_gnd
-   
+
    # Create port connections
    connect_bd_net -net xlconcat_interrupt_0_dout [get_bd_pins dout] [get_bd_pins xlconcat_interrupt_0/dout]
    connect_bd_net -net xlconstant_gnd_dout [get_bd_pins xlconcat_interrupt_0/In0] [get_bd_pins xlconcat_interrupt_0/In1] [get_bd_pins xlconcat_interrupt_0/In2] [get_bd_pins xlconcat_interrupt_0/In3] [get_bd_pins xlconcat_interrupt_0/In4] [get_bd_pins xlconcat_interrupt_0/In5] [get_bd_pins xlconcat_interrupt_0/In6] [get_bd_pins xlconcat_interrupt_0/In7] [get_bd_pins xlconcat_interrupt_0/In8] [get_bd_pins xlconcat_interrupt_0/In9] [get_bd_pins xlconcat_interrupt_0/In10] [get_bd_pins xlconcat_interrupt_0/In11] [get_bd_pins xlconcat_interrupt_0/In12] [get_bd_pins xlconcat_interrupt_0/In13] [get_bd_pins xlconcat_interrupt_0/In14] [get_bd_pins xlconcat_interrupt_0/In15] [get_bd_pins xlconcat_interrupt_0/In16] [get_bd_pins xlconcat_interrupt_0/In17] [get_bd_pins xlconcat_interrupt_0/In18] [get_bd_pins xlconcat_interrupt_0/In19] [get_bd_pins xlconcat_interrupt_0/In20] [get_bd_pins xlconcat_interrupt_0/In21] [get_bd_pins xlconcat_interrupt_0/In22] [get_bd_pins xlconcat_interrupt_0/In23] [get_bd_pins xlconcat_interrupt_0/In24] [get_bd_pins xlconcat_interrupt_0/In25] [get_bd_pins xlconcat_interrupt_0/In26] [get_bd_pins xlconcat_interrupt_0/In27] [get_bd_pins xlconcat_interrupt_0/In28] [get_bd_pins xlconcat_interrupt_0/In29] [get_bd_pins xlconcat_interrupt_0/In30] [get_bd_pins xlconcat_interrupt_0/In31] [get_bd_pins xlconstant_gnd/dout]
-   
+
    # Restore current instance
    current_bd_instance $oldCurInst
 }
@@ -122,24 +122,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_4
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_5
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_6
-
-   #~ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0
-   #~ set_property -dict [list \
-      #~ CONFIG.PRIM_IN_FREQ.VALUE_SRC USER \
-      #~ CONFIG.PRIM_IN_FREQ {125} \
-      #~ CONFIG.PRIM_SOURCE {Differential_clock_capable_pin} \
-      #~ CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {375} \
-      #~ CONFIG.USE_LOCKED {false} \
-      #~ CONFIG.USE_RESET {false} \
-      #~ CONFIG.CLKIN1_JITTER_PS {80.0} \
-      #~ CONFIG.MMCM_DIVCLK_DIVIDE {1} \
-      #~ CONFIG.MMCM_CLKFBOUT_MULT_F {9.750} \
-      #~ CONFIG.MMCM_CLKIN1_PERIOD {8.000} \
-      #~ CONFIG.MMCM_CLKOUT0_DIVIDE_F {3.250} \
-      #~ CONFIG.CLKOUT1_JITTER {86.562} \
-      #~ CONFIG.CLKOUT1_PHASE_ERROR {84.521}] [get_bd_cells clk_wiz_0]
-   #~ make_bd_intf_pins_external  [get_bd_intf_pins clk_wiz_0/CLK_IN1_D]
-   #~ set_property name ref_clk [get_bd_intf_ports CLK_IN1_D_0]
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0
    set_property -dict [ list \
@@ -237,17 +219,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    make_bd_intf_pins_external  [get_bd_intf_pins axi_iic_2/IIC]
    set_property name temp_sensor [get_bd_intf_ports IIC_0]
 
-   #~ #
-   #~ # Ethernet
-   #~ #
-   #~ create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.1 gmii_to_rgmii_0
-   #~ set_property -dict [list \
-      #~ CONFIG.C_EXTERNAL_CLOCK {false} \
-      #~ CONFIG.SupportLevel {Include_Shared_Logic_in_Core} \
-      #~ CONFIG.C_PHYADDR {7}] [get_bd_cells gmii_to_rgmii_0]
-   #~ make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/MDIO_PHY]
-   #~ make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/RGMII]
-
    #
    # Click SPI
    #
@@ -303,37 +274,37 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    create_bd_pin -dir I -from 2 -to 0 mux2_1/In2
    create_bd_pin -dir I mux2_1/Sel
    create_bd_pin -dir O -from 2 -to 0 mux2_1/Mux_out
-   
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 mux2_1/util_vector_logic_0
    set_property -dict [list CONFIG.C_OPERATION {and} CONFIG.LOGO_FILE {data/sym_andgate.png}] [get_bd_cells mux2_1/util_vector_logic_0]
    set_property -dict [list CONFIG.C_SIZE {3}] [get_bd_cells mux2_1/util_vector_logic_0]
-   
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 mux2_1/util_vector_logic_1
    set_property -dict [list CONFIG.C_OPERATION {and} CONFIG.LOGO_FILE {data/sym_andgate.png}] [get_bd_cells mux2_1/util_vector_logic_1]
    set_property -dict [list CONFIG.C_SIZE {3}] [get_bd_cells mux2_1/util_vector_logic_1]
-   
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 mux2_1/util_vector_logic_2
    set_property -dict [list CONFIG.C_OPERATION {or} CONFIG.LOGO_FILE {data/sym_orgate.png}] [get_bd_cells mux2_1/util_vector_logic_2]
    set_property -dict [list CONFIG.C_SIZE {3}] [get_bd_cells mux2_1/util_vector_logic_2]
-   
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 mux2_1/util_vector_logic_3
    set_property -dict [list CONFIG.C_OPERATION {not} CONFIG.LOGO_FILE {data/sym_notgate.png}] [get_bd_cells mux2_1/util_vector_logic_3]
    set_property -dict [list CONFIG.C_SIZE {3}] [get_bd_cells mux2_1/util_vector_logic_3]
-   
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 mux2_1/xlconcat_0
    set_property -dict [list CONFIG.NUM_PORTS {3}] [get_bd_cells mux2_1/xlconcat_0]
-   
+
    connect_bd_net [get_bd_pins mux2_1/Sel] [get_bd_pins mux2_1/xlconcat_0/In0]
    connect_bd_net [get_bd_pins mux2_1/Sel] [get_bd_pins mux2_1/xlconcat_0/In1]
    connect_bd_net [get_bd_pins mux2_1/Sel] [get_bd_pins mux2_1/xlconcat_0/In2]
-   
+
    connect_bd_net [get_bd_pins mux2_1/xlconcat_0/dout] [get_bd_pins mux2_1/util_vector_logic_3/Op1]
    connect_bd_net [get_bd_pins mux2_1/xlconcat_0/dout] [get_bd_pins mux2_1/util_vector_logic_1/Op2]
-   
+
    connect_bd_net [get_bd_pins mux2_1/util_vector_logic_0/Res] [get_bd_pins mux2_1/util_vector_logic_2/Op1]
    connect_bd_net [get_bd_pins mux2_1/util_vector_logic_1/Res] [get_bd_pins mux2_1/util_vector_logic_2/Op2]
    connect_bd_net [get_bd_pins mux2_1/util_vector_logic_3/Res] [get_bd_pins mux2_1/util_vector_logic_0/Op2]
-   
+
    connect_bd_net [get_bd_pins mux2_1/In1] [get_bd_pins mux2_1/util_vector_logic_0/Op1]
    connect_bd_net [get_bd_pins mux2_1/In2] [get_bd_pins mux2_1/util_vector_logic_1/Op1]
    connect_bd_net [get_bd_pins mux2_1/util_vector_logic_2/Res] [get_bd_pins mux2_1/Mux_out]
@@ -344,9 +315,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
 
    connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
-
-   #~ connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/MDIO_ENET3] [get_bd_intf_pins gmii_to_rgmii_0/MDIO_GEM]
-   #~ connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/GMII_ENET3] [get_bd_intf_pins gmii_to_rgmii_0/GMII]
 
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M00_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M01_AXI] [get_bd_intf_pins axi_gpio_1/S_AXI]
@@ -395,8 +363,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins axi_intc_0/s_axi_aresetn]
    connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins system_management_wiz_0/s_axi_aresetn]
 
-   #~ connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/tx_reset]
-   #~ connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/rx_reset]
    connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_reset] [get_bd_pins c_counter_binary_0/SCLR]
    create_bd_port -dir O -type rst click_rst
    connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_reset] [get_bd_ports click_rst] 
@@ -421,8 +387,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    create_bd_port -dir I -type intr click_int
    connect_bd_net [get_bd_ports click_int] [get_bd_pins xlconcat_0/In5]
    connect_bd_net [get_bd_pins axi_intc_0/irq] [get_bd_pins xlconcat_0/In6]
-
-   #~ connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins gmii_to_rgmii_0/clkin]
 
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out2] [get_bd_pins proc_sys_reset_1/slowest_sync_clk]
@@ -469,7 +433,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.3 zynq_ultra_ps_e_0
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" } [get_bd_cells zynq_ultra_ps_e_0]
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
-   
+
    set_property -dict [list \
       CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} \
       CONFIG.PSU__ENET0__PERIPHERAL__ENABLE {0} \
@@ -547,7 +511,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
 proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
    set design_name ${project}
-   
+
    #set_property PFM_NAME "em.avnet.com:av:${design_name}:1.0" [get_files ./${design_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd]
    set_property PFM_NAME "avnet.com:av:${project}:1.0" [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
 
@@ -556,7 +520,7 @@ proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
    set_property PFM.CLOCK { \
       pl_clk0 {id "0" is_default "true" proc_sys_reset "rst_ps8_0_100M"} \
    } [get_bd_cells /zynq_ultra_ps_e_0]
-   
+
 
    # define AXI ports
    # HPM0
@@ -577,7 +541,7 @@ proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
       S_AXI_HP2_FPD {memport "S_AXI_HP"} \
       S_AXI_HP3_FPD {memport "S_AXI_HP"} \
    } [get_bd_cells /zynq_ultra_ps_e_0]
-   
+
    # define interrupt ports
    # interrupts0
    set parVal []
@@ -607,7 +571,7 @@ proc avnet_assign_addresses {project projects_folder scriptdir} {
 
 proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set design_name ${project}
-   
+
    set_property PFM_NAME "avnet.com:av:${project}:1.0" [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
 
    # define clock and reset ports
@@ -620,7 +584,6 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 	clk_out6 {id "5" is_default "false" proc_sys_reset "/proc_sys_reset_5" status "fixed"} \
 	clk_out7 {id "6" is_default "false" proc_sys_reset "/proc_sys_reset_6" status "fixed"} \
    } [get_bd_cells /clk_wiz_0]
-
 
    # define AXI ports
    set_property PFM.AXI_PORT { \
@@ -674,7 +637,7 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
 
    if { $parentCell eq "" || $nameHier eq "" } {
       catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_GPIO() - Empty argument(s)!"}
-   return
+      return
    }
 
    # Get object for parentCell
@@ -693,17 +656,17 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
 
    # Save current instance; Restore later
    set oldCurInst [current_bd_instance .]
-   
+
    # Set parent object as current
    current_bd_instance $parentObj
-   
+
    # Create cell and set as current instance
    set hier_obj [create_bd_cell -type hier $nameHier]
    current_bd_instance $hier_obj
-   
+
    # Create interface pins
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI
-   
+
    # Create pins
    create_bd_pin -dir O -from 0 -to 0 ICP3_I2C_ID_SELECT
    create_bd_pin -dir O -from 0 -to 0 SP3
@@ -713,7 +676,7 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
    create_bd_pin -dir O -from 0 -to 0 frame_buffer_rd_resetn
    create_bd_pin -dir O -from 0 -to 0 frame_buffer_wr_resetn
    create_bd_pin -dir I -type rst s_axi_aresetn
-   
+
    # Create instance: axi_gpio_0, and set properties
    set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
    set_property -dict [ list \
@@ -728,7 +691,7 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
       CONFIG.DIN_TO {0} \
       CONFIG.DIN_WIDTH {8} \
    ] $xlslice_0
-   
+
    # Create instance: xlslice_1, and set properties
    set xlslice_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_1 ]
    set_property -dict [ list \
@@ -737,7 +700,7 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
       CONFIG.DIN_WIDTH {8} \
       CONFIG.DOUT_WIDTH {1} \
    ] $xlslice_1
-   
+
    # Create instance: xlslice_2, and set properties
    set xlslice_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_2 ]
    set_property -dict [ list \
@@ -746,7 +709,7 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
       CONFIG.DIN_WIDTH {8} \
       CONFIG.DOUT_WIDTH {1} \
    ] $xlslice_2
-   
+
    # Create instance: xlslice_3, and set properties
    set xlslice_3 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_3 ]
    set_property -dict [ list \
@@ -755,7 +718,7 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
       CONFIG.DIN_WIDTH {8} \
       CONFIG.DOUT_WIDTH {1} \
    ] $xlslice_3
-   
+
    # Create instance: xlslice_4, and set properties
    set xlslice_4 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_4 ]
    set_property -dict [ list \
@@ -764,7 +727,7 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
       CONFIG.DIN_WIDTH {8} \
       CONFIG.DOUT_WIDTH {1} \
    ] $xlslice_4
-   
+
    # Create instance: xlslice_5, and set properties
    set xlslice_5 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_5 ]
    set_property -dict [ list \
@@ -773,10 +736,10 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
       CONFIG.DIN_WIDTH {8} \
       CONFIG.DOUT_WIDTH {1} \
    ] $xlslice_5
-   
+
    # Create interface connections
    connect_bd_intf_net -intf_net ps8_0_axi_periph_M03_AXI [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
-   
+
    # Create port connections
    connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_0/Din] [get_bd_pins xlslice_1/Din] [get_bd_pins xlslice_2/Din] [get_bd_pins xlslice_3/Din] [get_bd_pins xlslice_4/Din] [get_bd_pins xlslice_5/Din]
    connect_bd_net -net clk_wiz_clk_out1 [get_bd_pins clk200] [get_bd_pins axi_gpio_0/s_axi_aclk]
@@ -787,9 +750,9 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
    connect_bd_net -net xlslice_3_Dout [get_bd_pins frame_buffer_wr_resetn] [get_bd_pins xlslice_3/Dout]
    connect_bd_net -net xlslice_4_Dout [get_bd_pins frame_buffer_rd_resetn] [get_bd_pins xlslice_4/Dout]
    connect_bd_net -net xlslice_5_Dout [get_bd_pins VPSS_RESETn] [get_bd_pins xlslice_5/Dout]
-   
+
    save_bd_design
-   
+
    # Restore current instance
    current_bd_instance $oldCurInst
 }
@@ -798,48 +761,47 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
 proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
 
    variable script_folder
-   
+
    if { $parentCell eq "" || $nameHier eq "" } {
       catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_CAPTURE_PIPELINE() - Empty argument(s)!"}
       return
    }
-   
+
    # Get object for parentCell
    set parentObj [get_bd_cells $parentCell]
    if { $parentObj == "" } {
       catch {common::send_gid_msg -ssname BD::TCL -id 2090 -severity "ERROR" "Unable to find parent cell <$parentCell>!"}
       return
    }
-   
+
    # Make sure parentObj is hier blk
    set parentType [get_property TYPE $parentObj]
    if { $parentType ne "hier" } {
       catch {common::send_gid_msg -ssname BD::TCL -id 2091 -severity "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
       return
    }
-   
+
    # Save current instance; Restore later
    set oldCurInst [current_bd_instance .]
-   
+
    # Set parent object as current
    current_bd_instance $parentObj
-   
+
    # Create cell and set as current instance
    set hier_obj [create_bd_cell -type hier $nameHier]
    current_bd_instance $hier_obj
-   
+
    # Create interface pins
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 csirxss_s_axi
-   
+
    create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 m_axi_mm_video
-   
+
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 mipi_phy_if_0
-   
+
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 s_axi_CTRL1
-   
+
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 s_axi_ctrl
-   
-   
+
    # Create pins
    create_bd_pin -dir I -type rst aux_reset_in
    create_bd_pin -dir I -type rst aux_reset_in_0
@@ -849,7 +811,7 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
    create_bd_pin -dir I -type rst ext_reset_in
    create_bd_pin -dir O -type intr interrupt
    create_bd_pin -dir I -type rst video_aresetn
-   
+
    # Create instance: axis_subset_converter_1, and set properties
    set axis_subset_converter_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_subset_converter:1.1 axis_subset_converter_1 ]
    set_property -dict [ list \
@@ -876,9 +838,8 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
       CONFIG.TSTRB_REMAP {1'b0} \
       CONFIG.TUSER_REMAP {tuser[0:0]} \
    ] $axis_subset_converter_1
-   
+
    # Create instance: mipi_csi2_rx_subsyst_0, and set properties
-   #TC   set mipi_csi2_rx_subsyst_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:mipi_csi2_rx_subsystem:5.0 mipi_csi2_rx_subsyst_0 ]
    set mipi_csi2_rx_subsyst_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:mipi_csi2_rx_subsystem:5.1 mipi_csi2_rx_subsyst_0 ]
    set_property -dict [ list \
       CONFIG.AXIS_TDEST_WIDTH {4} \
@@ -919,15 +880,14 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
       CONFIG.DPY_LINE_RATE {896} \
       CONFIG.SupportLevel {1} \
    ] $mipi_csi2_rx_subsyst_0
-   
+
    # Create instance: proc_sys_reset_1, and set properties
    set proc_sys_reset_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_1 ]
-   
+
    # Create instance: proc_sys_reset_2, and set properties
    set proc_sys_reset_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_2 ]
-   
+
    # Create instance: v_frmbuf_wr_0, and set properties
-   #TC  set v_frmbuf_wr_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.1 v_frmbuf_wr_0 ]
    set v_frmbuf_wr_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.2 v_frmbuf_wr_0 ]
    set_property -dict [ list \
       CONFIG.AXIMM_DATA_WIDTH {128} \
@@ -947,9 +907,8 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
       CONFIG.MAX_NR_PLANES {1} \
       CONFIG.SAMPLES_PER_CLOCK {2} \
    ] $v_frmbuf_wr_0
-   
+
    # Create instance: v_proc_ss_0, and set properties
-   #TC  set v_proc_ss_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_proc_ss:2.2 v_proc_ss_0 ]
    set v_proc_ss_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_proc_ss:2.3 v_proc_ss_0 ]
    set_property -dict [ list \
       CONFIG.C_COLORSPACE_SUPPORT {0} \
@@ -963,7 +922,7 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
       CONFIG.C_TOPOLOGY {0} \
       CONFIG.C_V_SCALER_TAPS {8} \
    ] $v_proc_ss_0
-   
+
    # Create interface connections
    connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins m_axi_mm_video] [get_bd_intf_pins v_frmbuf_wr_0/m_axi_mm_video]
    connect_bd_intf_net -intf_net ZYNQ_M01_AXI [get_bd_intf_pins s_axi_CTRL1] [get_bd_intf_pins v_frmbuf_wr_0/s_axi_CTRL]
@@ -973,7 +932,7 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
    connect_bd_intf_net -intf_net mipi_csi2_rx_subsyst_0_video_out [get_bd_intf_pins axis_subset_converter_1/S_AXIS] [get_bd_intf_pins mipi_csi2_rx_subsyst_0/video_out]
    connect_bd_intf_net -intf_net mipi_phy_if_0_1 [get_bd_intf_pins mipi_phy_if_0] [get_bd_intf_pins mipi_csi2_rx_subsyst_0/mipi_phy_if]
    connect_bd_intf_net -intf_net v_proc_ss_0_m_axis [get_bd_intf_pins v_frmbuf_wr_0/s_axis_video] [get_bd_intf_pins v_proc_ss_0/m_axis]
-   
+
    # Create port connections
    connect_bd_net -net GPIO_frame_buffer_resetn [get_bd_pins axis_subset_converter_1/aresetn] [get_bd_pins proc_sys_reset_1/peripheral_aresetn] [get_bd_pins v_frmbuf_wr_0/ap_rst_n]
    connect_bd_net -net In1_1 [get_bd_pins interrupt] [get_bd_pins v_frmbuf_wr_0/interrupt]
@@ -985,77 +944,55 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
    connect_bd_net -net mipi_csi2_rx_subsyst_0_csirxss_csi_irq [get_bd_pins csirxss_csi_irq] [get_bd_pins mipi_csi2_rx_subsyst_0/csirxss_csi_irq]
    connect_bd_net -net proc_sys_reset_2_peripheral_aresetn [get_bd_pins proc_sys_reset_2/peripheral_aresetn] [get_bd_pins v_proc_ss_0/aresetn_ctrl]
    connect_bd_net -net rst_clk_wiz_100M_peripheral_aresetn [get_bd_pins video_aresetn] [get_bd_pins mipi_csi2_rx_subsyst_0/lite_aresetn] [get_bd_pins mipi_csi2_rx_subsyst_0/video_aresetn]
-   
+
    # Perform GUI Layout
    regenerate_bd_layout -hierarchy [get_bd_cells /CAPTURE_PIPELINE]
-   
+
    save_bd_design
-   
+
    # Restore current instance
    current_bd_instance $oldCurInst
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # Hierarchical cell: DISPLAY_PIPELINE
 proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
 
    variable script_folder
-   
+
    if { $parentCell eq "" || $nameHier eq "" } {
       catch {common::send_gid_msg -ssname BD::TCL -id 2092 -severity "ERROR" "create_hier_cell_DISPLAY_PIPELINE() - Empty argument(s)!"}
       return
    }
-   
+
    # Get object for parentCell
    set parentObj [get_bd_cells $parentCell]
    if { $parentObj == "" } {
       catch {common::send_gid_msg -ssname BD::TCL -id 2090 -severity "ERROR" "Unable to find parent cell <$parentCell>!"}
       return
    }
-   
+
    # Make sure parentObj is hier blk
    set parentType [get_property TYPE $parentObj]
    if { $parentType ne "hier" } {
       catch {common::send_gid_msg -ssname BD::TCL -id 2091 -severity "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
       return
    }
-   
+
    # Save current instance; Restore later
    set oldCurInst [current_bd_instance .]
-   
+
    # Set parent object as current
    current_bd_instance $parentObj
-   
+
    # Create cell and set as current instance
    set hier_obj [create_bd_cell -type hier $nameHier]
    current_bd_instance $hier_obj
-   
+
    # Create interface pins
    create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 m_axi_mm_video
    create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 dsi_mipi_phy_if
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 v_frmbuf_rd_s_axi_CTRL
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 dsi_tx_s_axi
-
-   save_bd_design
 
    # Create pins
    create_bd_pin -dir I -type clk dphy_clk_200M
@@ -1066,13 +1003,9 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
    create_bd_pin -dir O -type intr frame_buf_rd_int
    create_bd_pin -dir O -type intr dsi_tx_int
 
-   save_bd_design
-
    # Create instance: proc_sys_reset, and set properties
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
 
-   save_bd_design
-   
    # Create instance: v_frmbuf_wr_0, and set properties
    create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_rd:2.2 v_frmbuf_rd_0
    set_property -dict [list \
@@ -1080,8 +1013,6 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
       CONFIG.HAS_RGBX8 {0} \
       CONFIG.HAS_YUYV8 {1} \
       CONFIG.HAS_UYVY8 {1}] [get_bd_cells v_frmbuf_rd_0]
-   
-   save_bd_design
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:mipi_dsi_tx_subsystem:2.2 mipi_dsi_tx_subsystem_0
    set_property -dict [list \
@@ -1101,16 +1032,12 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
       CONFIG.C_DATA_LANE0_IO_POSITION {39} \
       CONFIG.C_DATA_LANE1_IO_POSITION {41}] [get_bd_cells mipi_dsi_tx_subsystem_0]
 
-   save_bd_design
-   
    # Create interface connections
    connect_bd_intf_net [get_bd_intf_pins v_frmbuf_rd_s_axi_CTRL] [get_bd_intf_pins v_frmbuf_rd_0/s_axi_CTRL]
    connect_bd_intf_net [get_bd_intf_pins dsi_tx_s_axi] [get_bd_intf_pins mipi_dsi_tx_subsystem_0/s_axi]
    connect_bd_intf_net [get_bd_intf_pins m_axi_mm_video] [get_bd_intf_pins v_frmbuf_rd_0/m_axi_mm_video]
    connect_bd_intf_net [get_bd_intf_pins dsi_mipi_phy_if] [get_bd_intf_pins mipi_dsi_tx_subsystem_0/mipi_phy_if]
    connect_bd_intf_net [get_bd_intf_pins v_frmbuf_rd_0/m_axis_video] [get_bd_intf_pins mipi_dsi_tx_subsystem_0/s_axis]
-
-   save_bd_design
 
    # Create port connections
    connect_bd_net [get_bd_pins ext_reset_in] [get_bd_pins proc_sys_reset_0/ext_reset_in]
@@ -1127,9 +1054,7 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
 
    # Perform GUI Layout
    regenerate_bd_layout -hierarchy [get_bd_cells /DISPLAY_PIPELINE]
-   
-   save_bd_design
-   
+
    # Restore current instance
    current_bd_instance $oldCurInst
 }
@@ -1141,12 +1066,12 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    set_property -dict [list \
    CONFIG.PSU__USE__M_AXI_GP1 {1} \
    CONFIG.PSU__USE__S_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   
+
    set_property -dict [list CONFIG.NUM_MI {10}] [get_bd_cells axi_interconnect_0]
-   
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_1
    set_property -dict [list CONFIG.NUM_MI {5}] [get_bd_cells axi_interconnect_1]
-   
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_2
    set_property -dict [list CONFIG.NUM_SI {2} CONFIG.NUM_MI {1}] [get_bd_cells axi_interconnect_2]
 
@@ -1155,28 +1080,20 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
 
    # Create instance: CAPTURE_PIPELINE
    create_hier_cell_CAPTURE_PIPELINE [current_bd_instance .] CAPTURE_PIPELINE
-   
-   save_bd_design
 
    # Create instance: DISPLAY_PIPELINE
    create_hier_cell_DISPLAY_PIPELINE [current_bd_instance .] DISPLAY_PIPELINE
 
-   save_bd_design
-   
    # Create instance: GPIO
    create_hier_cell_GPIO [current_bd_instance .] GPIO
 
    # MIPI - Create interface ports
    create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 mipi_phy_if_0
    create_bd_intf_port -mode Master -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 dsi_mipi_phy_if
-   
-   save_bd_design
 
    # MIPI - Create interface connections
    connect_bd_intf_net [get_bd_intf_ports mipi_phy_if_0] [get_bd_intf_pins CAPTURE_PIPELINE/mipi_phy_if_0]
    connect_bd_intf_net [get_bd_intf_pins DISPLAY_PIPELINE/dsi_mipi_phy_if] [get_bd_intf_ports dsi_mipi_phy_if] 
-   
-   save_bd_design
 
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_2/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD]
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins CAPTURE_PIPELINE/m_axi_mm_video] [get_bd_intf_pins axi_interconnect_2/S00_AXI]
@@ -1192,8 +1109,6 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
 
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M09_AXI] [get_bd_intf_pins GPIO/S_AXI]
 
-   save_bd_design
-
    # GPIO - Create ports
    set CLK48M [ create_bd_port -dir O -type clk CLK48M ]
    set_property -dict [ list \
@@ -1202,14 +1117,12 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    set ICP3_I2C_ID_SELECT [ create_bd_port -dir O -from 0 -to 0 ICP3_I2C_ID_SELECT ]
    set SP3 [ create_bd_port -dir O -from 0 -to 0 SP3 ]
    set TRG_INPUT [ create_bd_port -dir O -from 0 -to 0 TRG_INPUT ]
-   
+
    # GPIO - Create port connections
    connect_bd_net -net clk_wiz_0_clk_out3 [get_bd_pins clk_wiz_0/clk_out3] [get_bd_ports CLK48M] 
    connect_bd_net -net GPIO_SP2 [get_bd_pins GPIO/ICP3_I2C_ID_SELECT] [get_bd_ports ICP3_I2C_ID_SELECT] 
    connect_bd_net -net GPIO_SP3 [get_bd_pins GPIO/SP3] [get_bd_ports SP3] 
    connect_bd_net -net GPIO_TRG_INPUT [get_bd_pins GPIO/TRG_INPUT] [get_bd_ports TRG_INPUT] 
-   
-   save_bd_design
 
    # resets/dcm_locked - Create port connections
    connect_bd_net [get_bd_pins GPIO/VPSS_RESETn] [get_bd_pins CAPTURE_PIPELINE/aux_reset_in_0] 
@@ -1219,8 +1132,6 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins clk_wiz_0/locked] [get_bd_pins DISPLAY_PIPELINE/dcm_locked] 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins CAPTURE_PIPELINE/ext_reset_in] 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins DISPLAY_PIPELINE/ext_reset_in] 
-   
-   save_bd_design
 
    # Interrupts - Create port connections
    connect_bd_net [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_1/In0]
@@ -1228,8 +1139,6 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins DISPLAY_PIPELINE/frame_buf_rd_int] [get_bd_pins xlconcat_1/In2]
    connect_bd_net [get_bd_pins DISPLAY_PIPELINE/dsi_tx_int] [get_bd_pins xlconcat_1/In3]
    connect_bd_net [get_bd_pins xlconcat_1/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1]
-
-   save_bd_design
 
    # Connection Automation for GPIO cores (AXI_GPIO)
    set_property name clk100 [get_bd_pins GPIO/clk200]
@@ -1250,7 +1159,7 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    #Slave segment '/CAPTURE_PIPELINE/v_proc_ss_0/s_axi_ctrl/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB004_0000 [ 256K ]>.
    #apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph_1} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL]
    #Slave segment '/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB001_0000 [ 64K ]>.
-   
+
    # Connection Automation for CAPTURE PIPELINE data interface (FRAMEBUF_WRITE)
    #INFO: [PSU-1]  DP_AUDIO clock source: RPLL is also being used by other peripheral clocks. Their outputs may get impacted if any driver changes DP_AUDIO PLL source to support runtime audio change 
 
@@ -1269,8 +1178,6 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins axi_interconnect_2/S00_ACLK]
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins axi_interconnect_2/M00_ACLK]
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins axi_interconnect_2/S01_ACLK]
-
-   save_bd_design
 
    connect_bd_net [get_bd_pins proc_sys_reset_4/peripheral_aresetn] [get_bd_pins axi_interconnect_1/ARESETN]
    connect_bd_net [get_bd_pins proc_sys_reset_4/peripheral_aresetn] [get_bd_pins axi_interconnect_1/S00_ARESETN]
