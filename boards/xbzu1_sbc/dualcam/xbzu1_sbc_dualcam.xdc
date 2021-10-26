@@ -45,15 +45,15 @@ set_property PACKAGE_PIN B7 [get_ports temp_sensor_sda_io]; # HD_SENSOR_I2C_SDA
 #######################################################################
 # XBoard-ZU1 Dual Camera SYZYGY Pod
 #######################################################################
-set_property PACKAGE_PIN J2 [get_ports {TRG_INPUT[0]}]; # HP_DP_13_GC_N
-set_property PACKAGE_PIN J3 [get_ports {ICP3_I2C_ID_SELECT[0]}]; # HP_DP_13_GC_P
-set_property PACKAGE_PIN N3 [get_ports {SP3[0]}]; # HP_SE_01
-set_property PACKAGE_PIN L3 [get_ports CLK48M]; # HP_DP_12_GC_N
+set_property PACKAGE_PIN J2 [get_ports {trigger[0]}]; # HP_DP_13_GC_N
+set_property PACKAGE_PIN J3 [get_ports {icp3_i2c_id_select[0]}]; # HP_DP_13_GC_P
+set_property PACKAGE_PIN N3 [get_ports {sp3[0]}]; # HP_SE_01
+set_property PACKAGE_PIN L3 [get_ports clk48m]; # HP_DP_12_GC_N
 
-set_property IOSTANDARD LVCMOS12 [get_ports {ICP3_I2C_ID_SELECT[0]}]
-set_property IOSTANDARD LVCMOS12 [get_ports {SP3[0]}]
-set_property IOSTANDARD LVCMOS12 [get_ports {TRG_INPUT[0]}]
-set_property IOSTANDARD LVCMOS12 [get_ports CLK48M]
+set_property IOSTANDARD LVCMOS12 [get_ports {icp3_i2c_id_select[0]}]
+set_property IOSTANDARD LVCMOS12 [get_ports {sp3[0]}]
+set_property IOSTANDARD LVCMOS12 [get_ports {trigger[0]}]
+set_property IOSTANDARD LVCMOS12 [get_ports clk48m]
 
 #set_false_path -from [get_clocks -of_objects [get_pins xbzu1_sbc_dualcam_i/clk_wiz_0/inst/mmcme4_adv_inst/CLKOUT0]] -to [get_clocks -of_objects [get_pins {xbzu1_sbc_dualcam_i/mipi_csi2_rx_subsyst_0/inst/phy/inst/inst/bd_d10d_phy_0_rx_support_i/slave_rx.bd_d10d_phy_0_rx_hssio_i/inst/top_inst/bs_top_inst/u_rx_bs/RX_BS[13].rx_bitslice_if_bs/FIFO_WRCLK_OUT}]]
 #set_false_path -from [get_clocks -of_objects [get_pins xbzu1_sbc_dualcam_i/clk_wiz_0/inst/mmcme4_adv_inst/CLKOUT0]] -to [get_clocks -of_objects [get_pins xbzu1_sbc_dualcam_i/clk_wiz_0/inst/mmcme4_adv_inst/CLKOUT3]]

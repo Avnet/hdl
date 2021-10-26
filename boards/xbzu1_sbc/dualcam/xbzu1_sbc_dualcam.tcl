@@ -667,89 +667,104 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
    # Create interface pins
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S_AXI
 
+   save_bd_design
+
    # Create pins
-   create_bd_pin -dir O -from 0 -to 0 ICP3_I2C_ID_SELECT
-   create_bd_pin -dir O -from 0 -to 0 SP3
-   create_bd_pin -dir O -from 0 -to 0 TRG_INPUT
-   create_bd_pin -dir O -from 0 -to 0 VPSS_RESETn
-   create_bd_pin -dir I -type clk clk200
+   create_bd_pin -dir O -from 0 -to 0 icp3_i2c_id_select
+   create_bd_pin -dir O -from 0 -to 0 sp3
+   create_bd_pin -dir O -from 0 -to 0 trigger
+   create_bd_pin -dir O -from 0 -to 0 vpss_csc_resetn
+   create_bd_pin -dir O -from 0 -to 0 vpss_scaler_resetn
+   create_bd_pin -dir I -type clk clk100
    create_bd_pin -dir O -from 0 -to 0 frame_buffer_rd_resetn
    create_bd_pin -dir O -from 0 -to 0 frame_buffer_wr_resetn
    create_bd_pin -dir I -type rst s_axi_aresetn
 
+   save_bd_design
+
    # Create instance: axi_gpio_0, and set properties
-   set axi_gpio_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0
    set_property -dict [ list \
       CONFIG.C_ALL_OUTPUTS {1} \
-      CONFIG.C_GPIO_WIDTH {8} \
-   ] $axi_gpio_0
+      CONFIG.C_GPIO_WIDTH {8}] [get_bd_cells axi_gpio_0]
+
+   save_bd_design
 
    # Create instance: xlslice_0, and set properties
-   set xlslice_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_0 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_0
    set_property -dict [ list \
       CONFIG.DIN_FROM {0} \
       CONFIG.DIN_TO {0} \
-      CONFIG.DIN_WIDTH {8} \
-   ] $xlslice_0
+      CONFIG.DIN_WIDTH {8}] [get_bd_cells xlslice_0]
+
+   save_bd_design
 
    # Create instance: xlslice_1, and set properties
-   set xlslice_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_1 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_1
    set_property -dict [ list \
       CONFIG.DIN_FROM {1} \
       CONFIG.DIN_TO {1} \
       CONFIG.DIN_WIDTH {8} \
-      CONFIG.DOUT_WIDTH {1} \
-   ] $xlslice_1
+      CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_1]
+
+   save_bd_design
 
    # Create instance: xlslice_2, and set properties
-   set xlslice_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_2 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_2
    set_property -dict [ list \
       CONFIG.DIN_FROM {2} \
       CONFIG.DIN_TO {2} \
       CONFIG.DIN_WIDTH {8} \
-      CONFIG.DOUT_WIDTH {1} \
-   ] $xlslice_2
+      CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_2]
+
+   save_bd_design
 
    # Create instance: xlslice_3, and set properties
-   set xlslice_3 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_3 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_3
    set_property -dict [ list \
       CONFIG.DIN_FROM {3} \
       CONFIG.DIN_TO {3} \
       CONFIG.DIN_WIDTH {8} \
-      CONFIG.DOUT_WIDTH {1} \
-   ] $xlslice_3
+      CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_3]
+
+   save_bd_design
 
    # Create instance: xlslice_4, and set properties
-   set xlslice_4 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_4 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_4
    set_property -dict [ list \
       CONFIG.DIN_FROM {4} \
       CONFIG.DIN_TO {4} \
       CONFIG.DIN_WIDTH {8} \
-      CONFIG.DOUT_WIDTH {1} \
-   ] $xlslice_4
+      CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_4]
+
+   save_bd_design
 
    # Create instance: xlslice_5, and set properties
-   set xlslice_5 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_5 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_5
    set_property -dict [ list \
       CONFIG.DIN_FROM {5} \
       CONFIG.DIN_TO {5} \
       CONFIG.DIN_WIDTH {8} \
-      CONFIG.DOUT_WIDTH {1} \
-   ] $xlslice_5
+      CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_5]
+
+   save_bd_design
 
    # Create interface connections
-   connect_bd_intf_net -intf_net ps8_0_axi_periph_M03_AXI [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
+   connect_bd_intf_net [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
+
+   save_bd_design
 
    # Create port connections
-   connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_0/Din] [get_bd_pins xlslice_1/Din] [get_bd_pins xlslice_2/Din] [get_bd_pins xlslice_3/Din] [get_bd_pins xlslice_4/Din] [get_bd_pins xlslice_5/Din]
-   connect_bd_net -net clk_wiz_clk_out1 [get_bd_pins clk200] [get_bd_pins axi_gpio_0/s_axi_aclk]
-   connect_bd_net -net rst_clk_wiz_100M_peripheral_aresetn [get_bd_pins s_axi_aresetn] [get_bd_pins axi_gpio_0/s_axi_aresetn]
-   connect_bd_net -net xlslice_0_Dout [get_bd_pins TRG_INPUT] [get_bd_pins xlslice_0/Dout]
-   connect_bd_net -net xlslice_1_Dout [get_bd_pins ICP3_I2C_ID_SELECT] [get_bd_pins xlslice_1/Dout]
-   connect_bd_net -net xlslice_2_Dout [get_bd_pins SP3] [get_bd_pins xlslice_2/Dout]
-   connect_bd_net -net xlslice_3_Dout [get_bd_pins frame_buffer_wr_resetn] [get_bd_pins xlslice_3/Dout]
-   connect_bd_net -net xlslice_4_Dout [get_bd_pins frame_buffer_rd_resetn] [get_bd_pins xlslice_4/Dout]
-   connect_bd_net -net xlslice_5_Dout [get_bd_pins VPSS_RESETn] [get_bd_pins xlslice_5/Dout]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_0/Din] [get_bd_pins xlslice_1/Din] [get_bd_pins xlslice_2/Din] [get_bd_pins xlslice_3/Din] [get_bd_pins xlslice_4/Din] [get_bd_pins xlslice_5/Din]
+   connect_bd_net [get_bd_pins clk100] [get_bd_pins axi_gpio_0/s_axi_aclk]
+   connect_bd_net [get_bd_pins s_axi_aresetn] [get_bd_pins axi_gpio_0/s_axi_aresetn]
+   connect_bd_net [get_bd_pins trigger] [get_bd_pins xlslice_0/Dout]
+   connect_bd_net [get_bd_pins icp3_i2c_id_select] [get_bd_pins xlslice_1/Dout]
+   connect_bd_net [get_bd_pins sp3] [get_bd_pins xlslice_2/Dout]
+   connect_bd_net [get_bd_pins frame_buffer_wr_resetn] [get_bd_pins xlslice_3/Dout]
+   connect_bd_net [get_bd_pins frame_buffer_rd_resetn] [get_bd_pins xlslice_4/Dout]
+   connect_bd_net [get_bd_pins vpss_scaler_resetn] [get_bd_pins xlslice_5/Dout]
+   connect_bd_net [get_bd_pins vpss_csc_resetn] [get_bd_pins xlslice_4/Dout]
 
    save_bd_design
 
@@ -791,29 +806,33 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
    set hier_obj [create_bd_cell -type hier $nameHier]
    current_bd_instance $hier_obj
 
+   save_bd_design
+
    # Create interface pins
+   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 csc_ctrl
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 csirxss_s_axi
-
+   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 frmbuf_ctrl
    create_bd_intf_pin -mode Master -vlnv xilinx.com:interface:aximm_rtl:1.0 m_axi_mm_video
-
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 mipi_phy_if_0
+   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 scaler_ctrl
 
-   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 s_axi_CTRL1
-
-   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 s_axi_ctrl
+   save_bd_design
 
    # Create pins
-   create_bd_pin -dir I -type rst aux_reset_in
-   create_bd_pin -dir I -type rst aux_reset_in_0
    create_bd_pin -dir O -type intr csirxss_csi_irq
    create_bd_pin -dir I dcm_locked
    create_bd_pin -dir I -type clk dphy_clk_200M
    create_bd_pin -dir I -type rst ext_reset_in
+   create_bd_pin -dir I -type rst frmbuf_resetn
    create_bd_pin -dir O -type intr interrupt
    create_bd_pin -dir I -type rst video_aresetn
+   create_bd_pin -dir I -type rst vpss_csc_resetn
+   create_bd_pin -dir I -type rst vpss_scaler_resetn
+
+   save_bd_design
 
    # Create instance: axis_subset_converter_1, and set properties
-   set axis_subset_converter_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axis_subset_converter:1.1 axis_subset_converter_1 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axis_subset_converter:1.1 axis_subset_converter_1
    set_property -dict [ list \
       CONFIG.M_HAS_TKEEP {0} \
       CONFIG.M_HAS_TLAST {1} \
@@ -836,11 +855,12 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
       CONFIG.TKEEP_REMAP {1'b0} \
       CONFIG.TLAST_REMAP {tlast[0]} \
       CONFIG.TSTRB_REMAP {1'b0} \
-      CONFIG.TUSER_REMAP {tuser[0:0]} \
-   ] $axis_subset_converter_1
+      CONFIG.TUSER_REMAP {tuser[0:0]}] [get_bd_cells axis_subset_converter_1]
+
+   save_bd_design
 
    # Create instance: mipi_csi2_rx_subsyst_0, and set properties
-   set mipi_csi2_rx_subsyst_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:mipi_csi2_rx_subsystem:5.1 mipi_csi2_rx_subsyst_0 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:mipi_csi2_rx_subsystem:5.1 mipi_csi2_rx_subsyst_0
    set_property -dict [ list \
       CONFIG.AXIS_TDEST_WIDTH {4} \
       CONFIG.CLK_LANE_IO_LOC {N2} \
@@ -878,40 +898,51 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
       CONFIG.DATA_LANE3_IO_LOC_NAME {IO_L11P_T1U_N8_GC_65} \
       CONFIG.DPY_EN_REG_IF {true} \
       CONFIG.DPY_LINE_RATE {896} \
-      CONFIG.SupportLevel {1} \
-   ] $mipi_csi2_rx_subsyst_0
+      CONFIG.SupportLevel {1}] [get_bd_cells mipi_csi2_rx_subsyst_0]
+
+   save_bd_design
 
    # Create instance: proc_sys_reset_1, and set properties
-   set proc_sys_reset_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_1 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_1
+
+   save_bd_design
 
    # Create instance: proc_sys_reset_2, and set properties
-   set proc_sys_reset_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_2 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_2
+
+   save_bd_design
+
+   # Create instance: proc_sys_reset_3, and set properties
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_3
+
+   save_bd_design
 
    # Create instance: v_frmbuf_wr_0, and set properties
-   set v_frmbuf_wr_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.2 v_frmbuf_wr_0 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.2 v_frmbuf_wr_0
    set_property -dict [ list \
       CONFIG.AXIMM_DATA_WIDTH {128} \
       CONFIG.C_M_AXI_MM_VIDEO_DATA_WIDTH {128} \
-      CONFIG.HAS_BGR8 {0} \
+      CONFIG.HAS_BGR8 {1} \
       CONFIG.HAS_BGRX8 {0} \
       CONFIG.HAS_INTERLACED {0} \
       CONFIG.HAS_RGB8 {0} \
       CONFIG.HAS_RGBX8 {0} \
       CONFIG.HAS_UYVY8 {1} \
-      CONFIG.HAS_Y8 {0} \
+      CONFIG.HAS_Y8 {1} \
       CONFIG.HAS_YUV8 {0} \
       CONFIG.HAS_YUVX8 {0} \
       CONFIG.HAS_YUYV8 {1} \
       CONFIG.HAS_Y_UV8 {0} \
       CONFIG.HAS_Y_UV8_420 {0} \
       CONFIG.MAX_NR_PLANES {1} \
-      CONFIG.SAMPLES_PER_CLOCK {2} \
-   ] $v_frmbuf_wr_0
+      CONFIG.SAMPLES_PER_CLOCK {2}] [get_bd_cells v_frmbuf_wr_0]
 
-   # Create instance: v_proc_ss_0, and set properties
-   set v_proc_ss_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_proc_ss:2.3 v_proc_ss_0 ]
+   save_bd_design
+
+   # Create instance: v_proc_ss_csc_0, and set properties
+   create_bd_cell -type ip -vlnv xilinx.com:ip:v_proc_ss:2.3 v_proc_ss_csc_0
    set_property -dict [ list \
-      CONFIG.C_COLORSPACE_SUPPORT {0} \
+      CONFIG.C_COLORSPACE_SUPPORT {1} \
       CONFIG.C_ENABLE_CSC {false} \
       CONFIG.C_ENABLE_DMA {false} \
       CONFIG.C_ENABLE_INTERLACED {false} \
@@ -919,31 +950,57 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
       CONFIG.C_MAX_DATA_WIDTH {8} \
       CONFIG.C_SAMPLES_PER_CLK {2} \
       CONFIG.C_SCALER_ALGORITHM {2} \
+      CONFIG.C_TOPOLOGY {3} \
+      CONFIG.C_V_SCALER_TAPS {8}] [get_bd_cells v_proc_ss_csc_0]
+
+   save_bd_design
+
+   # Create instance: v_proc_ss_scaler_0, and set properties
+   create_bd_cell -type ip -vlnv xilinx.com:ip:v_proc_ss:2.3 v_proc_ss_scaler_0
+   set_property -dict [ list \
+      CONFIG.C_COLORSPACE_SUPPORT {1} \
+      CONFIG.C_ENABLE_CSC {true} \
+      CONFIG.C_ENABLE_DMA {false} \
+      CONFIG.C_ENABLE_INTERLACED {false} \
+      CONFIG.C_H_SCALER_TAPS {8} \
+      CONFIG.C_MAX_DATA_WIDTH {8} \
+      CONFIG.C_SAMPLES_PER_CLK {2} \
+      CONFIG.C_SCALER_ALGORITHM {2} \
       CONFIG.C_TOPOLOGY {0} \
-      CONFIG.C_V_SCALER_TAPS {8} \
-   ] $v_proc_ss_0
+      CONFIG.C_V_SCALER_TAPS {8}] [get_bd_cells v_proc_ss_scaler_0]
+
+   save_bd_design
 
    # Create interface connections
-   connect_bd_intf_net -intf_net S00_AXI_1 [get_bd_intf_pins m_axi_mm_video] [get_bd_intf_pins v_frmbuf_wr_0/m_axi_mm_video]
-   connect_bd_intf_net -intf_net ZYNQ_M01_AXI [get_bd_intf_pins s_axi_CTRL1] [get_bd_intf_pins v_frmbuf_wr_0/s_axi_CTRL]
-   connect_bd_intf_net -intf_net ZYNQ_M09_AXI [get_bd_intf_pins csirxss_s_axi] [get_bd_intf_pins mipi_csi2_rx_subsyst_0/csirxss_s_axi]
-   connect_bd_intf_net -intf_net ZYNQ_M10_AXI [get_bd_intf_pins s_axi_ctrl] [get_bd_intf_pins v_proc_ss_0/s_axi_ctrl]
-   connect_bd_intf_net -intf_net axis_subset_converter_1_M_AXIS [get_bd_intf_pins axis_subset_converter_1/M_AXIS] [get_bd_intf_pins v_proc_ss_0/s_axis]
-   connect_bd_intf_net -intf_net mipi_csi2_rx_subsyst_0_video_out [get_bd_intf_pins axis_subset_converter_1/S_AXIS] [get_bd_intf_pins mipi_csi2_rx_subsyst_0/video_out]
-   connect_bd_intf_net -intf_net mipi_phy_if_0_1 [get_bd_intf_pins mipi_phy_if_0] [get_bd_intf_pins mipi_csi2_rx_subsyst_0/mipi_phy_if]
-   connect_bd_intf_net -intf_net v_proc_ss_0_m_axis [get_bd_intf_pins v_frmbuf_wr_0/s_axis_video] [get_bd_intf_pins v_proc_ss_0/m_axis]
+   connect_bd_intf_net [get_bd_intf_pins csc_ctrl] [get_bd_intf_pins v_proc_ss_csc_0/s_axi_ctrl]
+   connect_bd_intf_net [get_bd_intf_pins m_axi_mm_video] [get_bd_intf_pins v_frmbuf_wr_0/m_axi_mm_video]
+   connect_bd_intf_net [get_bd_intf_pins frmbuf_ctrl] [get_bd_intf_pins v_frmbuf_wr_0/s_axi_CTRL]
+   connect_bd_intf_net [get_bd_intf_pins csirxss_s_axi] [get_bd_intf_pins mipi_csi2_rx_subsyst_0/csirxss_s_axi]
+   connect_bd_intf_net [get_bd_intf_pins scaler_ctrl] [get_bd_intf_pins v_proc_ss_scaler_0/s_axi_ctrl]
+   connect_bd_intf_net [get_bd_intf_pins axis_subset_converter_1/M_AXIS] [get_bd_intf_pins v_proc_ss_csc_0/s_axis]
+   connect_bd_intf_net [get_bd_intf_pins axis_subset_converter_1/S_AXIS] [get_bd_intf_pins mipi_csi2_rx_subsyst_0/video_out]
+   connect_bd_intf_net [get_bd_intf_pins mipi_phy_if_0] [get_bd_intf_pins mipi_csi2_rx_subsyst_0/mipi_phy_if]
+   connect_bd_intf_net [get_bd_intf_pins v_frmbuf_wr_0/s_axis_video] [get_bd_intf_pins v_proc_ss_scaler_0/m_axis]
+   connect_bd_intf_net [get_bd_intf_pins v_proc_ss_csc_0/m_axis] [get_bd_intf_pins v_proc_ss_scaler_0/s_axis]
+
+   save_bd_design
 
    # Create port connections
-   connect_bd_net -net GPIO_frame_buffer_resetn [get_bd_pins axis_subset_converter_1/aresetn] [get_bd_pins proc_sys_reset_1/peripheral_aresetn] [get_bd_pins v_frmbuf_wr_0/ap_rst_n]
-   connect_bd_net -net In1_1 [get_bd_pins interrupt] [get_bd_pins v_frmbuf_wr_0/interrupt]
-   connect_bd_net -net aux_reset_in_0_1 [get_bd_pins aux_reset_in_0] [get_bd_pins proc_sys_reset_2/aux_reset_in]
-   connect_bd_net -net aux_reset_in_1 [get_bd_pins aux_reset_in] [get_bd_pins proc_sys_reset_1/aux_reset_in]
-   connect_bd_net -net clk_wiz_clk_out1 [get_bd_pins dphy_clk_200M] [get_bd_pins axis_subset_converter_1/aclk] [get_bd_pins mipi_csi2_rx_subsyst_0/dphy_clk_200M] [get_bd_pins mipi_csi2_rx_subsyst_0/lite_aclk] [get_bd_pins mipi_csi2_rx_subsyst_0/video_aclk] [get_bd_pins proc_sys_reset_1/slowest_sync_clk] [get_bd_pins proc_sys_reset_2/slowest_sync_clk] [get_bd_pins v_frmbuf_wr_0/ap_clk] [get_bd_pins v_proc_ss_0/aclk_axis] [get_bd_pins v_proc_ss_0/aclk_ctrl]
-   connect_bd_net -net dcm_locked_1 [get_bd_pins dcm_locked] [get_bd_pins proc_sys_reset_1/dcm_locked] [get_bd_pins proc_sys_reset_2/dcm_locked]
-   connect_bd_net -net ext_reset_in_1 [get_bd_pins ext_reset_in] [get_bd_pins proc_sys_reset_1/ext_reset_in] [get_bd_pins proc_sys_reset_2/ext_reset_in]
-   connect_bd_net -net mipi_csi2_rx_subsyst_0_csirxss_csi_irq [get_bd_pins csirxss_csi_irq] [get_bd_pins mipi_csi2_rx_subsyst_0/csirxss_csi_irq]
-   connect_bd_net -net proc_sys_reset_2_peripheral_aresetn [get_bd_pins proc_sys_reset_2/peripheral_aresetn] [get_bd_pins v_proc_ss_0/aresetn_ctrl]
-   connect_bd_net -net rst_clk_wiz_100M_peripheral_aresetn [get_bd_pins video_aresetn] [get_bd_pins mipi_csi2_rx_subsyst_0/lite_aresetn] [get_bd_pins mipi_csi2_rx_subsyst_0/video_aresetn]
+   connect_bd_net [get_bd_pins axis_subset_converter_1/aresetn] [get_bd_pins proc_sys_reset_1/peripheral_aresetn] [get_bd_pins v_frmbuf_wr_0/ap_rst_n]
+   connect_bd_net [get_bd_pins interrupt] [get_bd_pins v_frmbuf_wr_0/interrupt]
+   connect_bd_net [get_bd_pins frmbuf_resetn] [get_bd_pins proc_sys_reset_1/aux_reset_in]
+   connect_bd_net [get_bd_pins dphy_clk_200M] [get_bd_pins axis_subset_converter_1/aclk] [get_bd_pins mipi_csi2_rx_subsyst_0/dphy_clk_200M] [get_bd_pins mipi_csi2_rx_subsyst_0/lite_aclk] [get_bd_pins mipi_csi2_rx_subsyst_0/video_aclk] [get_bd_pins proc_sys_reset_1/slowest_sync_clk] [get_bd_pins proc_sys_reset_2/slowest_sync_clk] [get_bd_pins proc_sys_reset_3/slowest_sync_clk] [get_bd_pins v_frmbuf_wr_0/ap_clk] [get_bd_pins v_proc_ss_csc_0/aclk] [get_bd_pins v_proc_ss_scaler_0/aclk_axis] [get_bd_pins v_proc_ss_scaler_0/aclk_ctrl]
+   connect_bd_net [get_bd_pins dcm_locked] [get_bd_pins proc_sys_reset_1/dcm_locked] [get_bd_pins proc_sys_reset_2/dcm_locked] [get_bd_pins proc_sys_reset_3/dcm_locked]
+   connect_bd_net [get_bd_pins ext_reset_in] [get_bd_pins proc_sys_reset_1/ext_reset_in] [get_bd_pins proc_sys_reset_2/ext_reset_in] [get_bd_pins proc_sys_reset_3/ext_reset_in]
+   connect_bd_net [get_bd_pins csirxss_csi_irq] [get_bd_pins mipi_csi2_rx_subsyst_0/csirxss_csi_irq]
+
+   save_bd_design
+
+   connect_bd_net [get_bd_pins proc_sys_reset_2/peripheral_aresetn] [get_bd_pins v_proc_ss_scaler_0/aresetn_ctrl]
+   connect_bd_net [get_bd_pins proc_sys_reset_3/peripheral_aresetn] [get_bd_pins v_proc_ss_csc_0/aresetn]
+   connect_bd_net [get_bd_pins video_aresetn] [get_bd_pins mipi_csi2_rx_subsyst_0/lite_aresetn] [get_bd_pins mipi_csi2_rx_subsyst_0/video_aresetn]
+   connect_bd_net [get_bd_pins vpss_csc_resetn] [get_bd_pins proc_sys_reset_3/aux_reset_in]
+   connect_bd_net [get_bd_pins vpss_scaler_resetn] [get_bd_pins proc_sys_reset_2/aux_reset_in]
 
    # Perform GUI Layout
    regenerate_bd_layout -hierarchy [get_bd_cells /CAPTURE_PIPELINE]
@@ -994,6 +1051,8 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 v_frmbuf_rd_s_axi_CTRL
    create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 dsi_tx_s_axi
 
+   save_bd_design
+
    # Create pins
    create_bd_pin -dir I -type clk dphy_clk_200M
    create_bd_pin -dir I -type rst aux_reset_in
@@ -1003,8 +1062,12 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
    create_bd_pin -dir O -type intr frame_buf_rd_int
    create_bd_pin -dir O -type intr dsi_tx_int
 
+   save_bd_design
+
    # Create instance: proc_sys_reset, and set properties
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
+
+   save_bd_design
 
    # Create instance: v_frmbuf_wr_0, and set properties
    create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_rd:2.2 v_frmbuf_rd_0
@@ -1013,6 +1076,8 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
       CONFIG.HAS_RGBX8 {0} \
       CONFIG.HAS_YUYV8 {1} \
       CONFIG.HAS_UYVY8 {1}] [get_bd_cells v_frmbuf_rd_0]
+
+   save_bd_design
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:mipi_dsi_tx_subsystem:2.2 mipi_dsi_tx_subsystem_0
    set_property -dict [list \
@@ -1032,12 +1097,16 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
       CONFIG.C_DATA_LANE0_IO_POSITION {39} \
       CONFIG.C_DATA_LANE1_IO_POSITION {41}] [get_bd_cells mipi_dsi_tx_subsystem_0]
 
+   save_bd_design
+
    # Create interface connections
    connect_bd_intf_net [get_bd_intf_pins v_frmbuf_rd_s_axi_CTRL] [get_bd_intf_pins v_frmbuf_rd_0/s_axi_CTRL]
    connect_bd_intf_net [get_bd_intf_pins dsi_tx_s_axi] [get_bd_intf_pins mipi_dsi_tx_subsystem_0/s_axi]
    connect_bd_intf_net [get_bd_intf_pins m_axi_mm_video] [get_bd_intf_pins v_frmbuf_rd_0/m_axi_mm_video]
    connect_bd_intf_net [get_bd_intf_pins dsi_mipi_phy_if] [get_bd_intf_pins mipi_dsi_tx_subsystem_0/mipi_phy_if]
    connect_bd_intf_net [get_bd_intf_pins v_frmbuf_rd_0/m_axis_video] [get_bd_intf_pins mipi_dsi_tx_subsystem_0/s_axis]
+
+   save_bd_design
 
    # Create port connections
    connect_bd_net [get_bd_pins ext_reset_in] [get_bd_pins proc_sys_reset_0/ext_reset_in]
@@ -1052,6 +1121,8 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
    connect_bd_net [get_bd_pins frame_buf_rd_int] [get_bd_pins v_frmbuf_rd_0/interrupt]
    connect_bd_net [get_bd_pins dsi_tx_int] [get_bd_pins mipi_dsi_tx_subsystem_0/interrupt]
 
+   save_bd_design
+
    # Perform GUI Layout
    regenerate_bd_layout -hierarchy [get_bd_cells /DISPLAY_PIPELINE]
 
@@ -1064,8 +1135,10 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    # Dual Camera Mezzanine specific logic
    # 
    set_property -dict [list \
-   CONFIG.PSU__USE__M_AXI_GP1 {1} \
-   CONFIG.PSU__USE__S_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+      CONFIG.PSU__USE__M_AXI_GP1 {1} \
+      CONFIG.PSU__USE__S_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+
+   save_bd_design
 
    set_property -dict [list CONFIG.NUM_MI {10}] [get_bd_cells axi_interconnect_0]
 
@@ -1078,60 +1151,92 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
    set_property -dict [list CONFIG.NUM_PORTS {4}] [get_bd_cells xlconcat_1]
 
+   # Create instance: xlconstant_0, and set properties
+   #~ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
+   #~ set_property -dict [list CONFIG.CONST_VAL {0}] [get_bd_cells xlconstant_0]
+
+   save_bd_design
+
    # Create instance: CAPTURE_PIPELINE
    create_hier_cell_CAPTURE_PIPELINE [current_bd_instance .] CAPTURE_PIPELINE
+
+   save_bd_design
 
    # Create instance: DISPLAY_PIPELINE
    create_hier_cell_DISPLAY_PIPELINE [current_bd_instance .] DISPLAY_PIPELINE
 
+   save_bd_design
+
    # Create instance: GPIO
    create_hier_cell_GPIO [current_bd_instance .] GPIO
+
+   save_bd_design
 
    # MIPI - Create interface ports
    create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 mipi_phy_if_0
    create_bd_intf_port -mode Master -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 dsi_mipi_phy_if
 
+   save_bd_design
+
    # MIPI - Create interface connections
    connect_bd_intf_net [get_bd_intf_ports mipi_phy_if_0] [get_bd_intf_pins CAPTURE_PIPELINE/mipi_phy_if_0]
    connect_bd_intf_net [get_bd_intf_pins DISPLAY_PIPELINE/dsi_mipi_phy_if] [get_bd_intf_ports dsi_mipi_phy_if] 
+
+   save_bd_design
 
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_2/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD]
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins CAPTURE_PIPELINE/m_axi_mm_video] [get_bd_intf_pins axi_interconnect_2/S00_AXI]
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins DISPLAY_PIPELINE/m_axi_mm_video] [get_bd_intf_pins axi_interconnect_2/S01_AXI]
 
+   save_bd_design
+
    connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM1_FPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_1/S00_AXI]
 
+   save_bd_design
+
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M00_AXI] [get_bd_intf_pins CAPTURE_PIPELINE/csirxss_s_axi]
-   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M01_AXI] [get_bd_intf_pins CAPTURE_PIPELINE/s_axi_ctrl]
-   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M02_AXI] [get_bd_intf_pins CAPTURE_PIPELINE/s_axi_CTRL1]
-   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M03_AXI] [get_bd_intf_pins DISPLAY_PIPELINE/v_frmbuf_rd_s_axi_CTRL]
+   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M01_AXI] [get_bd_intf_pins CAPTURE_PIPELINE/scaler_ctrl]
+   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M02_AXI] [get_bd_intf_pins CAPTURE_PIPELINE/frmbuf_ctrl]
+   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M03_AXI] [get_bd_intf_pins CAPTURE_PIPELINE/csc_ctrl]
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_1/M04_AXI] [get_bd_intf_pins DISPLAY_PIPELINE/dsi_tx_s_axi]
+
+   save_bd_design
 
    connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_interconnect_0/M09_AXI] [get_bd_intf_pins GPIO/S_AXI]
 
+   save_bd_design
+
+   create_bd_port -dir O -type clk clk48m
+   set_property -dict [ list CONFIG.FREQ_HZ {48000000}] [get_bd_ports clk48m]
+   
+   save_bd_design
+
    # GPIO - Create ports
-   set CLK48M [ create_bd_port -dir O -type clk CLK48M ]
-   set_property -dict [ list \
-   CONFIG.FREQ_HZ {48000000} \
-   ] $CLK48M
-   set ICP3_I2C_ID_SELECT [ create_bd_port -dir O -from 0 -to 0 ICP3_I2C_ID_SELECT ]
-   set SP3 [ create_bd_port -dir O -from 0 -to 0 SP3 ]
-   set TRG_INPUT [ create_bd_port -dir O -from 0 -to 0 TRG_INPUT ]
+   create_bd_port -dir O -from 0 -to 0 icp3_i2c_id_select
+   create_bd_port -dir O -from 0 -to 0 sp3
+   create_bd_port -dir O -from 0 -to 0 trigger
+
+   save_bd_design
 
    # GPIO - Create port connections
-   connect_bd_net -net clk_wiz_0_clk_out3 [get_bd_pins clk_wiz_0/clk_out3] [get_bd_ports CLK48M] 
-   connect_bd_net -net GPIO_SP2 [get_bd_pins GPIO/ICP3_I2C_ID_SELECT] [get_bd_ports ICP3_I2C_ID_SELECT] 
-   connect_bd_net -net GPIO_SP3 [get_bd_pins GPIO/SP3] [get_bd_ports SP3] 
-   connect_bd_net -net GPIO_TRG_INPUT [get_bd_pins GPIO/TRG_INPUT] [get_bd_ports TRG_INPUT] 
+   connect_bd_net [get_bd_pins clk_wiz_0/clk_out3] [get_bd_ports clk48m] 
+   connect_bd_net [get_bd_pins GPIO/icp3_i2c_id_select] [get_bd_ports icp3_i2c_id_select] 
+   connect_bd_net [get_bd_pins GPIO/sp3] [get_bd_ports sp3] 
+   connect_bd_net [get_bd_pins GPIO/trigger] [get_bd_ports trigger] 
+
+   save_bd_design
 
    # resets/dcm_locked - Create port connections
-   connect_bd_net [get_bd_pins GPIO/VPSS_RESETn] [get_bd_pins CAPTURE_PIPELINE/aux_reset_in_0] 
-   connect_bd_net [get_bd_pins GPIO/frame_buffer_wr_resetn] [get_bd_pins CAPTURE_PIPELINE/aux_reset_in] 
+   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/frmbuf_resetn] [get_bd_pins GPIO/frame_buffer_wr_resetn]
+   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/vpss_csc_resetn] [get_bd_pins GPIO/vpss_csc_resetn]
+   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/vpss_scaler_resetn] [get_bd_pins GPIO/vpss_scaler_resetn]
    connect_bd_net [get_bd_pins GPIO/frame_buffer_rd_resetn] [get_bd_pins DISPLAY_PIPELINE/aux_reset_in] 
    connect_bd_net [get_bd_pins clk_wiz_0/locked] [get_bd_pins CAPTURE_PIPELINE/dcm_locked] 
    connect_bd_net [get_bd_pins clk_wiz_0/locked] [get_bd_pins DISPLAY_PIPELINE/dcm_locked] 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins CAPTURE_PIPELINE/ext_reset_in] 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins DISPLAY_PIPELINE/ext_reset_in] 
+
+   save_bd_design
 
    # Interrupts - Create port connections
    connect_bd_net [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_1/In0]
@@ -1141,27 +1246,42 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins xlconcat_1/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1]
 
    # Connection Automation for GPIO cores (AXI_GPIO)
-   set_property name clk100 [get_bd_pins GPIO/clk200]
    #apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {Auto} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/GPIO/axi_gpio_0/S_AXI} ddr_seg {Auto} intc_ip {/axi_interconnect_0} master_apm {0}}  [get_bd_intf_pins GPIO/axi_gpio_0/S_AXI]
    # Slave segment '/GPIO/axi_gpio_0/S_AXI/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xA00A_0000 [ 64K ]>.
 
+   save_bd_design
+
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins GPIO/clk100]
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_interconnect_0/M09_ACLK]
+
+   save_bd_design
 
    connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins GPIO/s_axi_aresetn]
    connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins axi_interconnect_0/M09_ARESETN]
 
    # Connection Automation for CAPTURE_PIPELINE control interfaces (MIPI_CSI2_RX, VPSS, FRAMEBUF_WRITE)
-   #INFO: [PSU-1]  DP_AUDIO clock source: RPLL is also being used by other peripheral clocks. Their outputs may get impacted if any driver changes DP_AUDIO PLL source to support runtime audio change 
-   #apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {Auto} Clk_slave {Auto} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi} ddr_seg {Auto} intc_ip {New AXI Interconnect} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi]
+   #~ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
+      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \
+      #~ Slave {/CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi} \
+      #~ ddr_seg {Auto} intc_ip {New AXI Interconnect} \
+      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi]
    #Slave segment '/CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB000_0000 [ 8K ]>.
-   #apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPELINE/v_proc_ss_0/s_axi_ctrl} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph_1} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_proc_ss_0/s_axi_ctrl]
+   #~ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
+      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \      #~ Slave {/CAPTURE_PIPELINE/v_proc_ss_scaler_0/s_axi_ctrl} \      #~ ddr_seg {Auto} \      #~ intc_ip {/ps8_0_axi_periph_1} \      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_proc_ss_scaler_0/s_axi_ctrl]
    #Slave segment '/CAPTURE_PIPELINE/v_proc_ss_0/s_axi_ctrl/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB004_0000 [ 256K ]>.
-   #apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} Slave {/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph_1} master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL]
+   #~ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
+      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \      #~ Slave {/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_ctrl} \      #~ ddr_seg {Auto} \      #~ intc_ip {/ps8_0_axi_periph_1} \      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_ctrl]
    #Slave segment '/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB001_0000 [ 64K ]>.
+   #~ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
+      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \      #~ Slave {/CAPTURE_PIPELINE/v_proc_ss_csc_0/s_axi_ctrl} \      #~ ddr_seg {Auto} \      #~ intc_ip {/ps8_0_axi_periph_1} \      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_proc_ss_csc_0/s_axi_ctrl]
 
    # Connection Automation for CAPTURE PIPELINE data interface (FRAMEBUF_WRITE)
    #INFO: [PSU-1]  DP_AUDIO clock source: RPLL is also being used by other peripheral clocks. Their outputs may get impacted if any driver changes DP_AUDIO PLL source to support runtime audio change 
+
+   save_bd_design
 
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins axi_interconnect_1/ACLK]
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins axi_interconnect_1/S00_ACLK]
@@ -1178,6 +1298,8 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins axi_interconnect_2/S00_ACLK]
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins axi_interconnect_2/M00_ACLK]
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins axi_interconnect_2/S01_ACLK]
+
+   save_bd_design
 
    connect_bd_net [get_bd_pins proc_sys_reset_4/peripheral_aresetn] [get_bd_pins axi_interconnect_1/ARESETN]
    connect_bd_net [get_bd_pins proc_sys_reset_4/peripheral_aresetn] [get_bd_pins axi_interconnect_1/S00_ARESETN]

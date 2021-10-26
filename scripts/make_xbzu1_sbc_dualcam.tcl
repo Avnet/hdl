@@ -42,12 +42,12 @@
 # ----------------------------------------------------------------------------
 
 if {$argc != 0} {
-	# Build valtest hw platform
+	# Build dualcam hw platform
 	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes dev_arch=zynqmp]
 	set argc [llength $argv]
 	source ./make.tcl -notrace
 } else {
-	# Build valtest hw platform
+	# Build dualcam hw platform
    set argv [list board=xbzu1_sbc project=dualcam sdk=no close_project=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
