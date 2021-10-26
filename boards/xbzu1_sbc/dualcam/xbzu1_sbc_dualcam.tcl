@@ -509,49 +509,6 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    save_bd_design
 }
 
-proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
-   set design_name ${project}
-
-   #set_property PFM_NAME "em.avnet.com:av:${design_name}:1.0" [get_files ./${design_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd]
-   set_property PFM_NAME "avnet.com:av:${project}:1.0" [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
-
-
-   # define clock and reset ports
-   set_property PFM.CLOCK { \
-      pl_clk0 {id "0" is_default "true" proc_sys_reset "rst_ps8_0_100M"} \
-   } [get_bd_cells /zynq_ultra_ps_e_0]
-
-
-   # define AXI ports
-   # HPM0
-   set parVal []
-   set cnt [get_property CONFIG.NUM_MI [get_bd_cells /ps8_0_axi_periph]]
-   for {set i $cnt} {$i < 64} {incr i} {
-      lappend parVal M[format %02d $i]_AXI {memport "M_AXI_GP"}
-   }
-   set_property PFM.AXI_PORT $parVal [get_bd_cells /ps8_0_axi_periph]
-   # HPM1
-   set_property PFM.AXI_PORT { \
-      M_AXI_HPM1_FPD {memport "M_AXI_GP"} \
-      M_AXI_HPM0_LPD {memport "M_AXI_GP"} \
-   } [get_bd_cells /zynq_ultra_ps_e_0]
-   # HP1-HP3
-   set_property PFM.AXI_PORT { \
-      S_AXI_HP1_FPD {memport "S_AXI_HP"} \
-      S_AXI_HP2_FPD {memport "S_AXI_HP"} \
-      S_AXI_HP3_FPD {memport "S_AXI_HP"} \
-   } [get_bd_cells /zynq_ultra_ps_e_0]
-
-   # define interrupt ports
-   # interrupts0
-   set parVal []
-   set cnt [get_property CONFIG.NUM_PORTS [get_bd_cell /xlconcat_0]]
-   for {set i $cnt} {$i < 8} {incr i} {
-      lappend parVal In$i {}
-   }
-   set_property PFM.IRQ $parVal [get_bd_cells /xlconcat_0]
-}
-
 proc avnet_assign_addresses {project projects_folder scriptdir} {
    # Unassign all address segments
    delete_bd_objs [get_bd_addr_segs]
