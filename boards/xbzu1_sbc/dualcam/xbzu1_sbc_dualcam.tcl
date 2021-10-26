@@ -51,64 +51,6 @@ proc avnet_import_constraints {boards_folder board project} {
    import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
 }
 
-proc create_hier_cell_interrupt_concat { parentCell nameHier } {
-
-   variable script_folder
-
-   if { $parentCell eq "" || $nameHier eq "" } {
-      catch {common::send_msg_id "BD_TCL-102" "ERROR" "create_hier_cell_interrupt_concat() - Empty argument(s)!"}
-      return
-   }
-
-   # Get object for parentCell
-   set parentObj [get_bd_cells $parentCell]
-   if { $parentObj == "" } {
-      catch {common::send_msg_id "BD_TCL-100" "ERROR" "Unable to find parent cell <$parentCell>!"}
-      return
-   }
-
-   # Make sure parentObj is hier blk
-   set parentType [get_property TYPE $parentObj]
-   if { $parentType ne "hier" } {
-      catch {common::send_msg_id "BD_TCL-101" "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
-      return
-   }
-
-   # Save current instance; Restore later
-   set oldCurInst [current_bd_instance .]
-
-   # Set parent object as current
-   current_bd_instance $parentObj
-
-   # Create cell and set as current instance
-   set hier_obj [create_bd_cell -type hier $nameHier]
-   current_bd_instance $hier_obj
-
-   # Create interface pins
-
-   # Create pins
-   create_bd_pin -dir O -from 31 -to 0 dout
-
-   # Create instance: xlconcat_interrupt_0, and set properties
-   set xlconcat_interrupt_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_interrupt_0 ]
-      set_property -dict [ list \
-      CONFIG.NUM_PORTS {32} \
-   ] $xlconcat_interrupt_0
-
-   # Create instance: xlconstant_gnd, and set properties
-   set xlconstant_gnd [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_gnd ]
-      set_property -dict [ list \
-      CONFIG.CONST_VAL {0} \
-   ] $xlconstant_gnd
-
-   # Create port connections
-   connect_bd_net -net xlconcat_interrupt_0_dout [get_bd_pins dout] [get_bd_pins xlconcat_interrupt_0/dout]
-   connect_bd_net -net xlconstant_gnd_dout [get_bd_pins xlconcat_interrupt_0/In0] [get_bd_pins xlconcat_interrupt_0/In1] [get_bd_pins xlconcat_interrupt_0/In2] [get_bd_pins xlconcat_interrupt_0/In3] [get_bd_pins xlconcat_interrupt_0/In4] [get_bd_pins xlconcat_interrupt_0/In5] [get_bd_pins xlconcat_interrupt_0/In6] [get_bd_pins xlconcat_interrupt_0/In7] [get_bd_pins xlconcat_interrupt_0/In8] [get_bd_pins xlconcat_interrupt_0/In9] [get_bd_pins xlconcat_interrupt_0/In10] [get_bd_pins xlconcat_interrupt_0/In11] [get_bd_pins xlconcat_interrupt_0/In12] [get_bd_pins xlconcat_interrupt_0/In13] [get_bd_pins xlconcat_interrupt_0/In14] [get_bd_pins xlconcat_interrupt_0/In15] [get_bd_pins xlconcat_interrupt_0/In16] [get_bd_pins xlconcat_interrupt_0/In17] [get_bd_pins xlconcat_interrupt_0/In18] [get_bd_pins xlconcat_interrupt_0/In19] [get_bd_pins xlconcat_interrupt_0/In20] [get_bd_pins xlconcat_interrupt_0/In21] [get_bd_pins xlconcat_interrupt_0/In22] [get_bd_pins xlconcat_interrupt_0/In23] [get_bd_pins xlconcat_interrupt_0/In24] [get_bd_pins xlconcat_interrupt_0/In25] [get_bd_pins xlconcat_interrupt_0/In26] [get_bd_pins xlconcat_interrupt_0/In27] [get_bd_pins xlconcat_interrupt_0/In28] [get_bd_pins xlconcat_interrupt_0/In29] [get_bd_pins xlconcat_interrupt_0/In30] [get_bd_pins xlconcat_interrupt_0/In31] [get_bd_pins xlconstant_gnd/dout]
-
-   # Restore current instance
-   current_bd_instance $oldCurInst
-}
-
 proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0
