@@ -970,7 +970,7 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
    # Perform GUI Layout
    regenerate_bd_layout -hierarchy [get_bd_cells /DISPLAY_PIPELINE]
 
-   save_bd_desgin
+   save_bd_design
 
    # Restore current instance
    current_bd_instance $oldCurInst

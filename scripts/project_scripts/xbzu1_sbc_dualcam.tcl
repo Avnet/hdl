@@ -164,10 +164,10 @@ if {[string match -nocase "yes" $clean]} {
    update_compile_order -fileset sources_1
    import_files
    
-   #~ # Build the binary
-   #~ #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   #~ #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
-   #~ #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   # Build the binary
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    puts ""
    puts "***** Building binary..."
    # add this to allow up+enter rebuild capability 
@@ -176,21 +176,20 @@ if {[string match -nocase "yes" $clean]} {
    update_compile_order -fileset sim_1
    save_bd_design
    launch_runs impl_1 -to_step write_bitstream -jobs $numberOfCores
-#   launch_runs impl_1 -to_step opt_design -jobs $numberOfCores
-   #~ #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   #~ #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
-   #~ #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   #~ puts ""
-   #~ puts "***** Wait for bitstream to be written..."
-   #~ wait_on_run impl_1
-   #~ puts ""
-   #~ puts "***** Open the implemented design..."
-   #~ open_run impl_1
-   #~ puts ""
-   #~ puts "***** Write and validate the design archive..."
-   #~ write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
-   #~ validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
-   #~ puts ""
-   #~ puts "***** Close the implemented design..."
-   #~ close_design
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   puts ""
+   puts "***** Wait for bitstream to be written..."
+   wait_on_run impl_1
+   puts ""
+   puts "***** Open the implemented design..."
+   open_run impl_1
+   puts ""
+   puts "***** Write and validate the design archive..."
+   write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
+   validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
+   puts ""
+   puts "***** Close the implemented design..."
+   close_design
 }
