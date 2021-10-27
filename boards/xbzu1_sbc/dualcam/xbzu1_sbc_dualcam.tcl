@@ -645,6 +645,9 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
    connect_bd_net [get_bd_pins vpss_scaler_resetn] [get_bd_pins xlslice_5/Dout]
    connect_bd_net [get_bd_pins vpss_csc_resetn] [get_bd_pins xlslice_4/Dout]
 
+   # Perform GUI Layout
+   regenerate_bd_layout -hierarchy [get_bd_cells /GPIO]
+
    save_bd_design
 
    # Restore current instance
@@ -966,6 +969,8 @@ proc create_hier_cell_DISPLAY_PIPELINE { parentCell nameHier } {
 
    # Perform GUI Layout
    regenerate_bd_layout -hierarchy [get_bd_cells /DISPLAY_PIPELINE]
+
+   save_bd_desgin
 
    # Restore current instance
    current_bd_instance $oldCurInst
