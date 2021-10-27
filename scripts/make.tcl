@@ -396,7 +396,8 @@ switch -nocase $board {
    pz7020_fmc2                -
    pz7015_fmc2                -
    pz7030_fmc2                -
-   u96v2_sbc              -
+   xbzu1_sbc                  -
+   u96v2_sbc                  -
    uz3eg_iocc                 -
    uz3eg_pciec                -
    uz7ev_evcc                 -
