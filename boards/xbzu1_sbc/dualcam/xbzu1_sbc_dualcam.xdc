@@ -45,9 +45,9 @@ set_property PACKAGE_PIN B7 [get_ports temp_sensor_sda_io]; # HD_SENSOR_I2C_SDA
 #######################################################################
 # XBoard-ZU1 Dual Camera SYZYGY Pod
 #######################################################################
-set_property PACKAGE_PIN J2 [get_ports {trigger[0]}]; # HP_DP_13_GC_N
 set_property PACKAGE_PIN J3 [get_ports {icp3_i2c_id_select[0]}]; # HP_DP_13_GC_P
 set_property PACKAGE_PIN N3 [get_ports {sp3[0]}]; # HP_SE_01
+set_property PACKAGE_PIN J2 [get_ports {trigger[0]}]; # HP_DP_13_GC_N
 set_property PACKAGE_PIN L3 [get_ports clk48m]; # HP_DP_12_GC_N
 
 set_property IOSTANDARD LVCMOS12 [get_ports {icp3_i2c_id_select[0]}]

@@ -157,7 +157,7 @@ if {[string match -nocase "yes" $clean]} {
       add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
    }
    
-   #~ # Add Vitis directives
+   # Add Vitis directives
    puts ""
    puts "***** Adding Vitis directves to design..."
    avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
