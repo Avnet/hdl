@@ -150,10 +150,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    set_property -dict [list CONFIG.PSU__USE__M_AXI_GP1 {0}] [get_bd_cells zynq_ultra_ps_e_0]
 
    # Add AXI interrupt controller (for VITIS XRT interrupt support)
-   set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 
+   # Set IRQ type to 'LEVEL' and connection to 'SINGLE'
    set_property -dict [ list \
       CONFIG.C_IRQ_IS_LEVEL {1} \
-   ] $axi_intc_0
+      CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_0]
+
    #
    # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
    # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
@@ -259,43 +261,31 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.3 zynq_ultra_ps_e_0
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" } [get_bd_cells zynq_ultra_ps_e_0]
 
-   set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
-   
-   # Turn off the DisplayPort for the basic PetaLinux platform since having 
-   # it enabled is causing 2017.2 PetaLinux to complain about PLL sharing 
-   # when turning the DisplayPort audio on.
-   #set_property -dict [list CONFIG.PSU__VIDEO_REF_CLK__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-   #set_property -dict [list CONFIG.PSU__PSS_ALT_REF_CLK__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-   #set_property -dict [list CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-
    # Connect the SD card WP pin to MIO44 and pull it down to enable software (PetaLinux) 
    # to mount and write the SD card
-   set_property -dict [list CONFIG.PSU__SD1__GRP_WP__ENABLE {1} CONFIG.PSU_MIO_44_PULLUPDOWN {pulldown}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU__SD1__GRP_WP__ENABLE {1} \
+      CONFIG.PSU_MIO_44_PULLUPDOWN {pulldown}] [get_bd_cells zynq_ultra_ps_e_0]
 
    # Set the DP_VIDEO, DP_AUDIO, and DP_STC to their correct PLL sources
-   startgroup
-   set_property -dict [list CONFIG.PSU__CRF_APB__DP_VIDEO_REF_CTRL__SRCSEL {VPLL} CONFIG.PSU__CRF_APB__DP_AUDIO_REF_CTRL__SRCSEL {RPLL} CONFIG.PSU__CRF_APB__DP_STC_REF_CTRL__SRCSEL {RPLL}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
+   set_property -dict [list CONFIG.PSU__CRF_APB__DP_VIDEO_REF_CTRL__SRCSEL {VPLL} \
+      CONFIG.PSU__CRF_APB__DP_AUDIO_REF_CTRL__SRCSEL {RPLL} \
+      CONFIG.PSU__CRF_APB__DP_STC_REF_CTRL__SRCSEL {RPLL}] [get_bd_cells zynq_ultra_ps_e_0]
    
    # Enable DisplayPort and set it to use 2 GTR lanes
-   startgroup
-   set_property -dict [list CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} CONFIG.PSU__DP__LANE_SEL {Dual Higher} CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
+   set_property -dict [list CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} \
+      CONFIG.PSU__DP__LANE_SEL {Dual Higher} \
+      CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
 
-   # Set the USB and DisplayPort to their correct reference clocks
-   startgroup
-   set_property -dict [list CONFIG.PSU__USB0__REF_CLK_SEL {Ref Clk0} CONFIG.PSU__DP__REF_CLK_SEL {Ref Clk3}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
+   # Set the USB, SATA, and DisplayPort to their correct reference clocks
+   set_property -dict [list CONFIG.PSU__USB0__REF_CLK_SEL {Ref Clk0} \
+      CONFIG.PSU__SATA__REF_CLK_SEL {Ref Clk1} \
+      CONFIG.PSU__DP__REF_CLK_SEL {Ref Clk3}] [get_bd_cells zynq_ultra_ps_e_0]
 
    # Set the TOPSW_MAIN to its correct PLL source
-   startgroup
    set_property -dict [list CONFIG.PSU__CRF_APB__TOPSW_MAIN_CTRL__SRCSEL {DPLL}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
    
    # Set the PCAP_CTRL to its correct PLL source
-   startgroup
    set_property -dict [list CONFIG.PSU__CRL_APB__PCAP_CTRL__SRCSEL {IOPLL}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
 
 }
 

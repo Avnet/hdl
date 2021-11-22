@@ -202,10 +202,11 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    set_property -dict [list CONFIG.PSU__USE__S_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
   
    # Add AXI interrupt controller (for VITIS XRT interrupt support)
-   set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 
+   # Set IRQ type to 'LEVEL' and connection to 'SINGLE'
    set_property -dict [ list \
       CONFIG.C_IRQ_IS_LEVEL {1} \
-   ] $axi_intc_0
+      CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_0]
    #
    # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
    # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
