@@ -186,7 +186,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.NUM_PORTS {2} \
    ] [get_bd_cells xlconcat_0]
    
+   # Add AXI interrupt controller (for VITIS XRT interrupt support)
    set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
+   # Set IRQ type to 'EDGE' and connection to 'SINGLE'
+   set_property -dict [ list \
+      CONFIG.C_IRQ_IS_LEVEL {0} \
+      CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_0]
 
    # Add another master port to the AXI interconnect clock so we can connect the axi_intc to it
    set_property -dict [list CONFIG.NUM_MI {4}] [get_bd_cells ps7_axi_periph]
