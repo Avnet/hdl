@@ -341,24 +341,16 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
 }
 
-proc avnet_add_ps {project projects_folder scriptdir} {
-
-   # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7
-   apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config \
-      {make_external "FIXED_IO, DDR" }  [get_bd_cells ps7]
-   create_bd_port -dir I -type clk M_AXI_GP0_ACLK
-   connect_bd_net [get_bd_pins /ps7/M_AXI_GP0_ACLK] [get_bd_ports M_AXI_GP0_ACLK]
-
-   save_bd_design
-}
-
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
-   set ps7 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7
+
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config { \
-      make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells ps7]
+      make_external "FIXED_IO, DDR" \
+      apply_board_preset "1" \
+      Master "Disable" \
+      Slave "Disable" }  [get_bd_cells ps7]
 
    # Enable the M_AXI_GP0 port on the PS
    set_property -dict [list CONFIG.PCW_USE_M_AXI_GP0 {1}] [get_bd_cells ps7]
@@ -366,10 +358,16 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    # Enable the PL-to-PS interrupts on the PS
    set_property -dict [list CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_IRQ_F2P_INTR {1}] [get_bd_cells ps7]
 
-   set_property -dict [list CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} CONFIG.PCW_GPIO_EMIO_GPIO_ENABLE {0}] [get_bd_cells ps7]
+   set_property -dict [list CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1}] [get_bd_cells ps7]
+
+   # Disable the PS GPIO on EMIO
+   set_property -dict [list CONFIG.PCW_GPIO_EMIO_GPIO_ENABLE {0}] [get_bd_cells ps7]
 
    # Bring the SDIO WP pin out to EMIO
    set_property -dict [list CONFIG.PCW_SD0_GRP_WP_ENABLE {1} CONFIG.PCW_SD0_GRP_WP_IO {EMIO}] [get_bd_cells ps7]
+
+   # Set the SDIO to 50MHz instead of default 25 MHz
+   set_property -dict [list CONFIG.PCW_SDIO_PERIPHERAL_FREQMHZ {50}] [get_bd_cells ps7]
 
    save_bd_design
 }
