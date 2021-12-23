@@ -469,13 +469,9 @@ proc avnet_add_pcie {project projects_folder scriptdir} {
 
   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 periph_intercon_1
   set_property -dict [list CONFIG.NUM_SI {1} \
-    CONFIG.NUM_MI {2}] [get_bd_cells periph_intercon_1]
+    CONFIG.NUM_MI {4}] [get_bd_cells periph_intercon_1]
 
   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM1_FPD] [get_bd_intf_pins periph_intercon_1/S00_AXI] 
-
-  set_property -dict [list CONFIG.NUM_MI {6}] [get_bd_cells ps8_0_axi_periph]
-
-  save_bd_design
 
   set_property -dict [list CONFIG.PSU__USE__IRQ1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
@@ -502,22 +498,22 @@ proc avnet_add_pcie {project projects_folder scriptdir} {
   save_bd_design
 
   # Connect PCIE channel 0 [from] [to]
-  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ps8_0_axi_periph/M04_AXI] [get_bd_intf_pins xdma_0/S_AXI_B]
-  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ps8_0_axi_periph/M05_AXI] [get_bd_intf_pins xdma_0/S_AXI_LITE]
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins periph_intercon_1/M00_AXI] [get_bd_intf_pins xdma_0/S_AXI_B]
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins periph_intercon_1/M01_AXI] [get_bd_intf_pins xdma_0/S_AXI_LITE]
   connect_bd_intf_net [get_bd_intf_pins xdma_0/M_AXI_B] -boundary_type upper [get_bd_intf_pins axi_mem_intercon_0/S00_AXI]
 
   connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins rst_pcie_0_axi_aclk/slowest_sync_clk]
   connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins axi_mem_intercon_0/ACLK]
   connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins axi_mem_intercon_0/S00_ACLK]
-  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins ps8_0_axi_periph/M04_ACLK]
-  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins ps8_0_axi_periph/M05_ACLK]
+  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins periph_intercon_1/M00_ACLK]
+  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins periph_intercon_1/M01_ACLK]
 
-  connect_bd_net [get_bd_pins xdma_0/axi_ctl_aresetn] [get_bd_pins ps8_0_axi_periph/M05_ARESETN]
+  connect_bd_net [get_bd_pins xdma_0/axi_ctl_aresetn] [get_bd_pins periph_intercon_1/M01_ARESETN]
   connect_bd_net [get_bd_pins xdma_0/axi_ctl_aresetn] [get_bd_pins rst_pcie_0_axi_aclk/ext_reset_in]
 
   connect_bd_net [get_bd_pins xdma_0/axi_aresetn] [get_bd_pins axi_mem_intercon_0/ARESETN]
   connect_bd_net [get_bd_pins xdma_0/axi_aresetn] [get_bd_pins axi_mem_intercon_0/S00_ARESETN]
-  connect_bd_net [get_bd_pins xdma_0/axi_aresetn] [get_bd_pins ps8_0_axi_periph/M04_ARESETN]
+  connect_bd_net [get_bd_pins xdma_0/axi_aresetn] [get_bd_pins periph_intercon_1/M00_ARESETN]
 
   connect_bd_net [get_bd_pins xdma_0/interrupt_out] [get_bd_pins xlconcat_1/In0]
   connect_bd_net [get_bd_pins xdma_0/interrupt_out_msi_vec0to31] [get_bd_pins xlconcat_1/In1]
@@ -526,22 +522,22 @@ proc avnet_add_pcie {project projects_folder scriptdir} {
   save_bd_design
 
 # Connect PCIE channel 1 [from] [to]
-  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins periph_intercon_1/M00_AXI] [get_bd_intf_pins xdma_1/S_AXI_B]
-  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins periph_intercon_1/M01_AXI] [get_bd_intf_pins xdma_1/S_AXI_LITE]
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins periph_intercon_1/M02_AXI] [get_bd_intf_pins xdma_1/S_AXI_B]
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins periph_intercon_1/M03_AXI] [get_bd_intf_pins xdma_1/S_AXI_LITE]
   connect_bd_intf_net [get_bd_intf_pins xdma_1/M_AXI_B] -boundary_type upper [get_bd_intf_pins axi_mem_intercon_1/S00_AXI]
 
   connect_bd_net [get_bd_pins xdma_1/axi_aclk] [get_bd_pins rst_pcie_1_axi_aclk/slowest_sync_clk]
   connect_bd_net [get_bd_pins xdma_1/axi_aclk] [get_bd_pins axi_mem_intercon_1/ACLK]
   connect_bd_net [get_bd_pins xdma_1/axi_aclk] [get_bd_pins axi_mem_intercon_1/S00_ACLK]
-  connect_bd_net [get_bd_pins xdma_1/axi_aclk] [get_bd_pins periph_intercon_1/M00_ACLK]
-  connect_bd_net [get_bd_pins xdma_1/axi_aclk] [get_bd_pins periph_intercon_1/M01_ACLK]
+  connect_bd_net [get_bd_pins xdma_1/axi_aclk] [get_bd_pins periph_intercon_1/M02_ACLK]
+  connect_bd_net [get_bd_pins xdma_1/axi_aclk] [get_bd_pins periph_intercon_1/M03_ACLK]
 
-  connect_bd_net [get_bd_pins xdma_1/axi_ctl_aresetn] [get_bd_pins periph_intercon_1/M01_ARESETN]
+  connect_bd_net [get_bd_pins xdma_1/axi_ctl_aresetn] [get_bd_pins periph_intercon_1/M03_ARESETN]
   connect_bd_net [get_bd_pins xdma_1/axi_ctl_aresetn] [get_bd_pins rst_pcie_1_axi_aclk/ext_reset_in]
 
   connect_bd_net [get_bd_pins xdma_1/axi_aresetn] [get_bd_pins axi_mem_intercon_1/ARESETN]
   connect_bd_net [get_bd_pins xdma_1/axi_aresetn] [get_bd_pins axi_mem_intercon_1/S00_ARESETN]
-  connect_bd_net [get_bd_pins xdma_1/axi_aresetn] [get_bd_pins periph_intercon_1/M00_ARESETN]
+  connect_bd_net [get_bd_pins xdma_1/axi_aresetn] [get_bd_pins periph_intercon_1/M02_ARESETN]
 
   connect_bd_net [get_bd_pins xdma_1/interrupt_out] [get_bd_pins xlconcat_1/In3]
   connect_bd_net [get_bd_pins xdma_1/interrupt_out_msi_vec0to31] [get_bd_pins xlconcat_1/In4]
@@ -602,11 +598,11 @@ proc avnet_assign_addresses {project projects_folder scriptdir} {
   # Hard-code specific address segments (used in device-tree or applications)
   assign_bd_address -offset 0xa0030000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
 
-  assign_bd_address -offset 0xA1000000 -range 0x01000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_0/S_AXI_B/BAR0] -force
-  assign_bd_address -offset 0x0400000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_0/S_AXI_LITE/CTL0] -force
+  assign_bd_address -offset 0xB0000000 -range 0x01000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_0/S_AXI_B/BAR0] -force
+  assign_bd_address -offset 0x0500000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_0/S_AXI_LITE/CTL0] -force
 
   assign_bd_address -offset 0xB1000000 -range 0x01000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_1/S_AXI_B/BAR0] -force
-  assign_bd_address -offset 0x0500000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_1/S_AXI_LITE/CTL0] -force
+  assign_bd_address -offset 0x0520000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_1/S_AXI_LITE/CTL0] -force
 
   
   assign_bd_address

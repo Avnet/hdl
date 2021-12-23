@@ -172,25 +172,31 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Building binary..."
    # add this to allow up+enter rebuild capability 
    cd $scripts_folder
+   save_bd_design
    update_compile_order -fileset sources_1
    update_compile_order -fileset sim_1
-   save_bd_design
    puts "***** This Vivado implementation will use ${numberOfCores} CPUs"
-   launch_runs impl_1 -to_step write_bitstream -jobs $numberOfCores
-   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
-   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   puts ""
-   puts "***** Wait for bitstream to be written..."
-   wait_on_run impl_1
-   puts ""
-   puts "***** Open the implemented design..."
-   open_run impl_1
-   puts ""
-   puts "***** Write and validate the design archive..."
-   write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
-   validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
-   puts ""
-   puts "***** Close the implemented design..."
-   close_design
+   launch_runs synth_1 -jobs ${numberOfCores}
+   puts "***** Synthesis completed..."
+
+   #~ launch_runs impl_1 -to_step write_bitstream -jobs $numberOfCores
+   #~ reset_run synth_1
+   #~ launch_runs synth_1 -jobs $numberOfCores
+   #~ launch_runs impl_1 -to_step write_bitstream -jobs $numberOfCores
+   #~ #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   #~ #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
+   #~ #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   #~ puts ""
+   #~ puts "***** Wait for bitstream to be written..."
+   #~ wait_on_run impl_1
+   #~ puts ""
+   #~ puts "***** Open the implemented design..."
+   #~ open_run impl_1
+   #~ puts ""
+   #~ puts "***** Write and validate the design archive..."
+   #~ write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
+   #~ validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
+   #~ puts ""
+   #~ puts "***** Close the implemented design..."
+   #~ close_design
 }
