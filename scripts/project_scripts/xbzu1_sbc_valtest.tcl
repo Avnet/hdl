@@ -174,17 +174,18 @@ if {[string match -nocase "yes" $clean]} {
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   #~ puts ""
-   #~ puts "***** Wait for bitstream to be written..."
-   #~ wait_on_run impl_1
-   #~ puts ""
-   #~ puts "***** Open the implemented design..."
-   #~ open_run impl_1
-   #~ puts ""
-   #~ puts "***** Write and validate the design archive..."
+   puts ""
+   puts "***** Wait for bitstream to be written..."
+   wait_on_run impl_1
+   puts ""
+   puts "***** Open the implemented design..."
+   open_run impl_1
+   puts ""
+   puts "***** Write and validate the design archive..."
    #~ write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
-   #~ validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
-   #~ puts ""
-   #~ puts "***** Close the implemented design..."
-   #~ close_design
+   write_hw_platform -fixed -include_bit -force -file ${projects_folder}/${board}_${project}.xsa
+   validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
+   puts ""
+   puts "***** Close the implemented design..."
+   close_design
 }
