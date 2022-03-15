@@ -86,26 +86,6 @@ proc create_hier_cell_mux2to1 { parentCell nameHier } {
    
    # Create interface pins
    
-   #~ # Create pins
-   #~ create_bd_pin -dir O -from 31 -to 0 dout
-   
-   #~ # Create instance: xlconcat_interrupt_0, and set properties
-   #~ set xlconcat_interrupt_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_interrupt_0 ]
-   #~ set_property -dict [ list \
-      #~ CONFIG.NUM_PORTS {32} \
-   #~ ] $xlconcat_interrupt_0
-   
-   #~ # Create instance: xlconstant_gnd, and set properties
-   #~ set xlconstant_gnd [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_gnd ]
-   #~ set_property -dict [ list \
-      #~ CONFIG.CONST_VAL {0} \
-   #~ ] $xlconstant_gnd
-   
-   #~ # Create port connections
-   #~ connect_bd_net -net xlconcat_interrupt_0_dout [get_bd_pins dout] [get_bd_pins xlconcat_interrupt_0/dout]
-   #~ connect_bd_net -net xlconstant_gnd_dout [get_bd_pins xlconcat_interrupt_0/In0] [get_bd_pins xlconcat_interrupt_0/In1] [get_bd_pins xlconcat_interrupt_0/In2] [get_bd_pins xlconcat_interrupt_0/In3] [get_bd_pins xlconcat_interrupt_0/In4] [get_bd_pins xlconcat_interrupt_0/In5] [get_bd_pins xlconcat_interrupt_0/In6] [get_bd_pins xlconcat_interrupt_0/In7] [get_bd_pins xlconcat_interrupt_0/In8] [get_bd_pins xlconcat_interrupt_0/In9] [get_bd_pins xlconcat_interrupt_0/In10] [get_bd_pins xlconcat_interrupt_0/In11] [get_bd_pins xlconcat_interrupt_0/In12] [get_bd_pins xlconcat_interrupt_0/In13] [get_bd_pins xlconcat_interrupt_0/In14] [get_bd_pins xlconcat_interrupt_0/In15] [get_bd_pins xlconcat_interrupt_0/In16] [get_bd_pins xlconcat_interrupt_0/In17] [get_bd_pins xlconcat_interrupt_0/In18] [get_bd_pins xlconcat_interrupt_0/In19] [get_bd_pins xlconcat_interrupt_0/In20] [get_bd_pins xlconcat_interrupt_0/In21] [get_bd_pins xlconcat_interrupt_0/In22] [get_bd_pins xlconcat_interrupt_0/In23] [get_bd_pins xlconcat_interrupt_0/In24] [get_bd_pins xlconcat_interrupt_0/In25] [get_bd_pins xlconcat_interrupt_0/In26] [get_bd_pins xlconcat_interrupt_0/In27] [get_bd_pins xlconcat_interrupt_0/In28] [get_bd_pins xlconcat_interrupt_0/In29] [get_bd_pins xlconcat_interrupt_0/In30] [get_bd_pins xlconcat_interrupt_0/In31] [get_bd_pins xlconstant_gnd/dout]
-   
-
    create_bd_pin -dir I -from 2 -to 0 In1
    create_bd_pin -dir I -from 2 -to 0 In2
    create_bd_pin -dir I Sel
@@ -162,6 +142,71 @@ proc create_hier_cell_mux2to1 { parentCell nameHier } {
    current_bd_instance $oldCurInst
 }
 
+proc create_hier_cell_or2b1 { parentCell nameHier } {
+
+   variable script_folder
+   
+   if { $parentCell eq "" || $nameHier eq "" } {
+      catch {common::send_msg_id "BD_TCL-102" "ERROR" "create_hier_cell_mux2to1() - Empty argument(s)!"}
+      return
+   }
+   
+   # Get object for parentCell
+   set parentObj [get_bd_cells $parentCell]
+   if { $parentObj == "" } {
+      catch {common::send_msg_id "BD_TCL-100" "ERROR" "Unable to find parent cell <$parentCell>!"}
+      return
+   }
+   
+   # Make sure parentObj is hier blk
+   set parentType [get_property TYPE $parentObj]
+   if { $parentType ne "hier" } {
+      catch {common::send_msg_id "BD_TCL-101" "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
+      return
+   }
+   
+   # Save current instance; Restore later
+   set oldCurInst [current_bd_instance .]
+   
+   # Set parent object as current
+   current_bd_instance $parentObj
+   
+   # Create cell and set as current instance
+   set hier_obj [create_bd_cell -type hier $nameHier]
+   current_bd_instance $hier_obj
+   
+   # Create interface pins
+   
+   create_bd_pin -dir I -from 0 -to 0 In1
+   create_bd_pin -dir I -from 0 -to 0 In2_B
+   create_bd_pin -dir O -from 0 -to 0 Or_out
+   
+   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
+   set_property -dict [list \
+      CONFIG.C_SIZE {1} \
+      CONFIG.C_OPERATION {or} \
+      CONFIG.LOGO_FILE {data/sym_orgate.png}
+   ] [get_bd_cells util_vector_logic_0]
+   
+   
+   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_1
+   set_property -dict [list \
+      CONFIG.C_OPERATION {not} \
+      CONFIG.LOGO_FILE {data/sym_notgate.png} \
+      CONFIG.C_SIZE {1} \
+   ] [get_bd_cells util_vector_logic_1]
+   
+
+   connect_bd_net [get_bd_pins In1] [get_bd_pins util_vector_logic_0/Op1]
+   connect_bd_net [get_bd_pins In2_B] [get_bd_pins util_vector_logic_1/Op1]
+   connect_bd_net [get_bd_pins util_vector_logic_1/Res] [get_bd_pins util_vector_logic_0/Op2]
+   
+   connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins Or_out]
+   
+   # Restore current instance
+   current_bd_instance $oldCurInst
+}
+
 proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_interconnect_0
@@ -172,7 +217,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #~ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
    #~ set_property -dict [list CONFIG.NUM_PORTS {5}] [get_bd_cells xlconcat_0]
    
-
    create_bd_cell -type ip -vlnv xilinx.com:ip:system_management_wiz:1.3 system_management_wiz_0
    set_property -dict [ list \
       CONFIG.CHANNEL_ENABLE_VP_VN {false} \
@@ -321,7 +365,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:c_counter_binary:12.0 c_counter_binary_0
    set_property -dict [list \
-   CONFIG.Output_Width {26} \
+   CONFIG.Output_Width {30} \
    CONFIG.SCLR {true}] [get_bd_cells c_counter_binary_0]
    save_bd_design
 
@@ -330,9 +374,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_0
    set_property -dict [list \
-      CONFIG.DIN_TO {23} \
-      CONFIG.DIN_FROM {25} \
-      CONFIG.DIN_WIDTH {26} \
+      CONFIG.DIN_TO {27} \
+      CONFIG.DIN_FROM {29} \
+      CONFIG.DIN_WIDTH {30} \
       CONFIG.DOUT_WIDTH {3}] [get_bd_cells xlslice_0]
    save_bd_design
 
@@ -348,6 +392,18 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    create_hier_cell_mux2to1 [current_bd_instance .] mux2to1_1
    save_bd_design
 
+   #
+   # Mux Sel either GPIO OR inverted PB input (mux2to1_0)
+   #
+   create_hier_cell_or2b1 [current_bd_instance .] or2b1_0
+   save_bd_design
+
+   #
+   # Mux Sel either GPIO OR inverted PB input (mux2to1_1)
+   #
+   create_hier_cell_or2b1 [current_bd_instance .] or2b1_1
+   save_bd_design
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_2
    set_property -dict [list \
       CONFIG.C_GPIO_WIDTH {1} \
@@ -355,22 +411,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    ] [get_bd_cells axi_gpio_2]
    
    save_bd_design
-
-   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
-   set_property -dict [list \
-      CONFIG.C_SIZE {1} \
-      CONFIG.C_OPERATION {or} \
-      CONFIG.LOGO_FILE {data/sym_orgate.png}
-   ] [get_bd_cells util_vector_logic_0]
-   
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_1
-   set_property -dict [list \
-      CONFIG.C_SIZE {1} \
-      CONFIG.C_OPERATION {or} \
-      CONFIG.LOGO_FILE {data/sym_orgate.png}
-   ] [get_bd_cells util_vector_logic_1]
-   
 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins proc_sys_reset_0/ext_reset_in]
@@ -481,27 +521,18 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins mux2to1_0/In2]
    connect_bd_net [get_bd_pins axi_gpio_1/gpio_io_o] [get_bd_pins mux2to1_1/In2]
 
-   #~ connect_bd_net [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins mux2to1_0/Sel]
-   #~ connect_bd_net [get_bd_pins axi_gpio_1/gpio2_io_o] [get_bd_pins mux2to1_1/Sel]
-
-   connect_bd_net [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins util_vector_logic_0/Op1]
-   connect_bd_net [get_bd_pins axi_gpio_1/gpio2_io_o] [get_bd_pins util_vector_logic_1/Op1]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins or2b1_0/In1]
+   connect_bd_net [get_bd_pins axi_gpio_1/gpio2_io_o] [get_bd_pins or2b1_1/In1]
    
-   connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins mux2to1_0/Sel]
-   connect_bd_net [get_bd_pins util_vector_logic_1/Res] [get_bd_pins mux2to1_1/Sel]
+   connect_bd_net [get_bd_pins or2b1_0/Or_out] [get_bd_pins mux2to1_0/Sel]
+   connect_bd_net [get_bd_pins or2b1_1/Or_out] [get_bd_pins mux2to1_1/Sel]
 
    create_bd_port -dir I -type data push_button_1bit
-
    connect_bd_net [get_bd_ports push_button_1bit] [get_bd_pins axi_gpio_2/gpio_io_i]
-   connect_bd_net [get_bd_ports push_button_1bit] [get_bd_pins util_vector_logic_0/Op2]
-   connect_bd_net [get_bd_ports push_button_1bit] [get_bd_pins util_vector_logic_1/Op2]
 
-
-
-
-
-
-
+   connect_bd_net [get_bd_ports push_button_1bit] [get_bd_pins or2b1_0/In2_B]
+   connect_bd_net [get_bd_ports push_button_1bit] [get_bd_pins or2b1_1/In2_B]
+   
    connect_bd_net [get_bd_pins mux2to1_0/Mux_out] [get_bd_ports rgb_led_0]
    connect_bd_net [get_bd_pins mux2to1_1/Mux_out] [get_bd_ports rgb_led_1]
 
