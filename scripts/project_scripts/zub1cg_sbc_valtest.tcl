@@ -33,11 +33,11 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Oct 05, 2021
-#  Design Name:         XBoard-ZU1 Dual Camera SYZYGY HW Platform
-#  Module Name:         xbzu1_sbc_dualcam.tcl
-#  Project Name:        XBoard-ZU1 Dual Camera SYZYGY HW
+#  Design Name:         ZUBoard-1CG Validation Test HW Platform
+#  Module Name:         zub1cg_sbc_valtest.tcl
+#  Project Name:        ZUBoard-1CG Validation Test HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
-#  Hardware Boards:     Xboard-ZU1 Board + SYZYGY DualCam Pod
+#  Hardware Boards:     Xboard-ZU1 Board
 #
 # ----------------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ if {[string match -nocase "yes" $clean]} {
    # Apply board specific project property settings
    puts ""
    puts "***** Assigning Vivado project board_part property to xboard-zu1..."
-   set_property board_part avnet.com:xboard-zu1:part0:1.0 [current_project]
+   set_property board_part avnet.com:zuboard_1cg:part0:1.0 [current_project]
 
    # Generate Avnet IP
    puts ""
@@ -119,11 +119,6 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Adding defined IP blocks to block design..."
    avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
    
-   # Add PL logic for Dual Camera Mezzanine
-   puts ""
-   puts "***** Adding PL logic for Dual Camera Mezzanine..."
-   avnet_add_pl_dualcam ${board}_${project} $projects_folder $scriptdir
-
    # Assign peripheral addresses
    puts ""
    puts "***** Assigning peripheral addresses..."
@@ -158,11 +153,11 @@ if {[string match -nocase "yes" $clean]} {
    }
    
    #~ # Add Vitis directives
-   puts ""
-   puts "***** Adding Vitis directves to design..."
-   avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
-   update_compile_order -fileset sources_1
-   import_files
+   #~ puts ""
+   #~ puts "***** Adding Vitis directves to design..."
+   #~ avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
+   #~ update_compile_order -fileset sources_1
+   #~ import_files
    
    # Build the binary
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -187,7 +182,8 @@ if {[string match -nocase "yes" $clean]} {
    open_run impl_1
    puts ""
    puts "***** Write and validate the design archive..."
-   write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
+   #~ write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
+   write_hw_platform -fixed -include_bit -force -file ${projects_folder}/${board}_${project}.xsa
    validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
    puts ""
    puts "***** Close the implemented design..."

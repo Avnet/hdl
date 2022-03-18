@@ -501,7 +501,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
   
    # Set platform project properties
-   set_property platform.description                   "Base XBoard-ZU1 development platform" [current_project]
+   set_property platform.description                   "Base ZUBoard-1CG development platform" [current_project]
    set_property platform.uses_pr                       false         [current_project]
 
    set_property platform.design_intent.server_managed  "false" [current_project]

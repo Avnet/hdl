@@ -33,9 +33,9 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Oct 05, 2021
-#  Design Name:         XBoard-ZU1 Validation Test HW Platform
-#  Module Name:         make_xbzu1_sbc_valtest.tcl
-#  Project Name:        XBoard-ZU1 Validation Test HW
+#  Design Name:         ZUBoard-1CG Validation Test HW Platform
+#  Module Name:         make_zub1cg_sbc_valtest.tcl
+#  Project Name:        ZUBoard-1CG Validation Test HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
 #  Hardware Boards:     Xboard-ZU1 Board
 #
@@ -48,7 +48,7 @@ if {$argc != 0} {
 	source ./make.tcl -notrace
 } else {
 	# Build valtest hw platform
-   set argv [list board=xbzu1_sbc project=valtest sdk=no close_project=yes dev_arch=zynqmp]
+   set argv [list board=zub1cg_sbc project=valtest sdk=no close_project=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
 }

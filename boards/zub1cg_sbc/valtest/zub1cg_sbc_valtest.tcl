@@ -147,7 +147,7 @@ proc create_hier_cell_or2b1 { parentCell nameHier } {
    variable script_folder
    
    if { $parentCell eq "" || $nameHier eq "" } {
-      catch {common::send_msg_id "BD_TCL-102" "ERROR" "create_hier_cell_mux2to1() - Empty argument(s)!"}
+      catch {common::send_msg_id "BD_TCL-102" "ERROR" "create_hier_cell_or2b1() - Empty argument(s)!"}
       return
    }
    
@@ -200,6 +200,73 @@ proc create_hier_cell_or2b1 { parentCell nameHier } {
    connect_bd_net [get_bd_pins In1] [get_bd_pins util_vector_logic_0/Op1]
    connect_bd_net [get_bd_pins In2_B] [get_bd_pins util_vector_logic_1/Op1]
    connect_bd_net [get_bd_pins util_vector_logic_1/Res] [get_bd_pins util_vector_logic_0/Op2]
+   
+   connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins Or_out]
+   
+   # Restore current instance
+   current_bd_instance $oldCurInst
+}
+
+proc create_hier_cell_or2 { parentCell nameHier } {
+
+   variable script_folder
+   
+   if { $parentCell eq "" || $nameHier eq "" } {
+      catch {common::send_msg_id "BD_TCL-102" "ERROR" "create_hier_cell_or2() - Empty argument(s)!"}
+      return
+   }
+   
+   # Get object for parentCell
+   set parentObj [get_bd_cells $parentCell]
+   if { $parentObj == "" } {
+      catch {common::send_msg_id "BD_TCL-100" "ERROR" "Unable to find parent cell <$parentCell>!"}
+      return
+   }
+   
+   # Make sure parentObj is hier blk
+   set parentType [get_property TYPE $parentObj]
+   if { $parentType ne "hier" } {
+      catch {common::send_msg_id "BD_TCL-101" "ERROR" "Parent <$parentObj> has TYPE = <$parentType>. Expected to be <hier>."}
+      return
+   }
+   
+   # Save current instance; Restore later
+   set oldCurInst [current_bd_instance .]
+   
+   # Set parent object as current
+   current_bd_instance $parentObj
+   
+   # Create cell and set as current instance
+   set hier_obj [create_bd_cell -type hier $nameHier]
+   current_bd_instance $hier_obj
+   
+   # Create interface pins
+   
+   create_bd_pin -dir I -from 0 -to 0 In1
+   #create_bd_pin -dir I -from 0 -to 0 In2_B
+   create_bd_pin -dir I -from 0 -to 0 In2
+   create_bd_pin -dir O -from 0 -to 0 Or_out
+   
+   create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
+   set_property -dict [list \
+      CONFIG.C_SIZE {1} \
+      CONFIG.C_OPERATION {or} \
+      CONFIG.LOGO_FILE {data/sym_orgate.png}
+   ] [get_bd_cells util_vector_logic_0]
+   
+   
+   #~ create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_1
+   #~ set_property -dict [list \
+      #~ CONFIG.C_OPERATION {not} \
+      #~ CONFIG.LOGO_FILE {data/sym_notgate.png} \
+      #~ CONFIG.C_SIZE {1} \
+   #~ ] [get_bd_cells util_vector_logic_1]
+   
+
+   connect_bd_net [get_bd_pins In1] [get_bd_pins util_vector_logic_0/Op1]
+   connect_bd_net [get_bd_pins In2] [get_bd_pins util_vector_logic_0/Op2]
+   #~ connect_bd_net [get_bd_pins In2_B] [get_bd_pins util_vector_logic_1/Op1]
+   #~ connect_bd_net [get_bd_pins util_vector_logic_1/Res] [get_bd_pins util_vector_logic_0/Op2]
    
    connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins Or_out]
    
@@ -396,12 +463,14 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    # Mux Sel either GPIO OR inverted PB input (mux2to1_0)
    #
    create_hier_cell_or2b1 [current_bd_instance .] or2b1_0
+   #~ create_hier_cell_or2 [current_bd_instance .] or2_0
    save_bd_design
 
    #
    # Mux Sel either GPIO OR inverted PB input (mux2to1_1)
    #
    create_hier_cell_or2b1 [current_bd_instance .] or2b1_1
+   #~ create_hier_cell_or2 [current_bd_instance .] or2_1
    save_bd_design
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_2
@@ -515,24 +584,31 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    create_bd_port -dir O -from 2 -to 0 -type data rgb_led_0
    create_bd_port -dir O -from 2 -to 0 -type data rgb_led_1
 
+   # Counter bits input to the muxes
    connect_bd_net [get_bd_pins xlslice_0/Dout] [get_bd_pins mux2to1_0/In1]
    connect_bd_net [get_bd_pins xlslice_0/Dout] [get_bd_pins mux2to1_1/In1]
    
+   # GPIO LED bits input to the muxes
    connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins mux2to1_0/In2]
    connect_bd_net [get_bd_pins axi_gpio_1/gpio_io_o] [get_bd_pins mux2to1_1/In2]
 
+   # Mux selector signal from GPIO peripheral into 'or' gate
    connect_bd_net [get_bd_pins axi_gpio_0/gpio2_io_o] [get_bd_pins or2b1_0/In1]
    connect_bd_net [get_bd_pins axi_gpio_1/gpio2_io_o] [get_bd_pins or2b1_1/In1]
    
+   # Mux selector signal from 'or' gate into the mux
    connect_bd_net [get_bd_pins or2b1_0/Or_out] [get_bd_pins mux2to1_0/Sel]
    connect_bd_net [get_bd_pins or2b1_1/Or_out] [get_bd_pins mux2to1_1/Sel]
 
+   # Pushbutton input into GPIO peripheral
    create_bd_port -dir I -type data push_button_1bit
    connect_bd_net [get_bd_ports push_button_1bit] [get_bd_pins axi_gpio_2/gpio_io_i]
 
+   # Mux selector signal from pushbutton input into 'or' gate
    connect_bd_net [get_bd_ports push_button_1bit] [get_bd_pins or2b1_0/In2_B]
    connect_bd_net [get_bd_ports push_button_1bit] [get_bd_pins or2b1_1/In2_B]
    
+   # RGB LEDs output from muxes
    connect_bd_net [get_bd_pins mux2to1_0/Mux_out] [get_bd_ports rgb_led_0]
    connect_bd_net [get_bd_pins mux2to1_1/Mux_out] [get_bd_ports rgb_led_1]
 
