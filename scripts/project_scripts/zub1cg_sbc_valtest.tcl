@@ -83,7 +83,7 @@ if {[string match -nocase "yes" $clean]} {
 
    # Apply board specific project property settings
    puts ""
-   puts "***** Assigning Vivado project board_part property to xboard-zu1..."
+   puts "***** Assigning Vivado project board_part property to zuboard_1cg..."
    set_property board_part avnet.com:zuboard_1cg:part0:1.0 [current_project]
 
    # Generate Avnet IP
@@ -118,7 +118,7 @@ if {[string match -nocase "yes" $clean]} {
    puts ""
    puts "***** Adding defined IP blocks to block design..."
    avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
-   
+
    # Assign peripheral addresses
    puts ""
    puts "***** Assigning peripheral addresses..."
