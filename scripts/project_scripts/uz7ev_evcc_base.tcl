@@ -180,7 +180,7 @@ if {[string match -nocase "yes" $clean]} {
    wait_on_run synth_1
    if {[get_property PROGRESS [get_runs synth_1]] != "100%"} {
       puts ""
-      error"##### ERROR: Synthesis synth_1 failed!"
+      error "##### ERROR: Synthesis synth_1 failed!"
    }
    puts ""
    puts "***** This Vivado implementation will use ${numberOfCores} CPUs"
@@ -190,7 +190,7 @@ if {[string match -nocase "yes" $clean]} {
    wait_on_run impl_1
    if {[get_property PROGRESS [get_runs impl_1]] != "100%"} {
       puts ""
-      error"##### ERROR: Implementation impl_1 failed!"
+      error "##### ERROR: Implementation impl_1 failed!"
    }
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
