@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2021.1
+set scripts_vivado_version 2021.2
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -44,7 +44,7 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-xilinx.com:ip:v_frmbuf_wr:2.2\
+xilinx.com:ip:v_frmbuf_wr:2.3\
 xilinx.com:ip:v_hdmi_rx_ss:3.2\
 xilinx.com:ip:v_proc_ss:2.3\
 "
@@ -145,7 +145,7 @@ proc create_hier_cell_hdmi_rx { parentCell nameHier } {
   create_bd_pin -dir I -type clk video_clk
 
   # Create instance: v_frmbuf_wr_0, and set properties
-  set v_frmbuf_wr_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.2 v_frmbuf_wr_0 ]
+  set v_frmbuf_wr_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.3 v_frmbuf_wr_0 ]
   set_property -dict [ list \
    CONFIG.AXIMM_ADDR_WIDTH {64} \
    CONFIG.HAS_BGR8 {0} \
