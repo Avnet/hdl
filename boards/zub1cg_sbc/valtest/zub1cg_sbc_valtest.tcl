@@ -613,7 +613,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    set_property -dict [list CONFIG.PSU__USE__IRQ0 {1}] [get_bd_cells zynq_ultra_ps_e_0]
    
    # Pull up the MIO12_ETH_RST_N (default is pulldown in the BDF, but this is not working)
-   #set_property -dict [list CONFIG.PSU_MIO_12_PULLUPDOWN {pullup}] [get_bd_cells zynq_ultra_ps_e_0]
+   set_property -dict [list CONFIG.PSU_MIO_12_PULLUPDOWN {pullup}] [get_bd_cells zynq_ultra_ps_e_0]
       
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk]
 
