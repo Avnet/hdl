@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2020.2
+set scripts_vivado_version 2021.2
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -45,13 +45,13 @@ set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:xlconcat:2.1\
-xilinx.com:ip:axi_iic:2.0\
+xilinx.com:ip:axi_iic:2.1\
 xilinx.com:ip:xlslice:1.0\
 xilinx.com:ip:axis_subset_converter:1.1\
 xilinx.com:ip:axis_switch:1.1\
 xilinx.com:ip:mipi_csi2_rx_subsystem:5.1\
 xilinx.com:ip:v_demosaic:1.1\
-xilinx.com:ip:v_frmbuf_wr:2.2\
+xilinx.com:ip:v_frmbuf_wr:2.3\
 xilinx.com:ip:v_proc_ss:2.3\
 "
 
@@ -164,7 +164,7 @@ proc create_hier_cell_capture_pipeline_3 { parentCell nameHier } {
  ] $v_demosaic_3
 
   # Create instance: v_frmbuf_wr_3, and set properties
-  set v_frmbuf_wr_3 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.2 v_frmbuf_wr_3 ]
+  set v_frmbuf_wr_3 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.3 v_frmbuf_wr_3 ]
   set_property -dict [ list \
    CONFIG.AXIMM_DATA_WIDTH {64} \
    CONFIG.C_M_AXI_MM_VIDEO_DATA_WIDTH {64} \
@@ -338,7 +338,7 @@ proc create_hier_cell_capture_pipeline_2 { parentCell nameHier } {
  ] $v_demosaic_2
 
   # Create instance: v_frmbuf_wr_2, and set properties
-  set v_frmbuf_wr_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.2 v_frmbuf_wr_2 ]
+  set v_frmbuf_wr_2 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.3 v_frmbuf_wr_2 ]
   set_property -dict [ list \
    CONFIG.AXIMM_DATA_WIDTH {64} \
    CONFIG.C_M_AXI_MM_VIDEO_DATA_WIDTH {64} \
@@ -512,7 +512,7 @@ proc create_hier_cell_capture_pipeline_1 { parentCell nameHier } {
  ] $v_demosaic_1
 
   # Create instance: v_frmbuf_wr_1, and set properties
-  set v_frmbuf_wr_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.2 v_frmbuf_wr_1 ]
+  set v_frmbuf_wr_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.3 v_frmbuf_wr_1 ]
   set_property -dict [ list \
    CONFIG.AXIMM_DATA_WIDTH {64} \
    CONFIG.C_M_AXI_MM_VIDEO_DATA_WIDTH {64} \
@@ -686,7 +686,7 @@ proc create_hier_cell_capture_pipeline_0 { parentCell nameHier } {
  ] $v_demosaic_0
 
   # Create instance: v_frmbuf_wr_0, and set properties
-  set v_frmbuf_wr_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.2 v_frmbuf_wr_0 ]
+  set v_frmbuf_wr_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:v_frmbuf_wr:2.3 v_frmbuf_wr_0 ]
   set_property -dict [ list \
    CONFIG.AXIMM_DATA_WIDTH {64} \
    CONFIG.C_M_AXI_MM_VIDEO_DATA_WIDTH {64} \
@@ -1072,7 +1072,7 @@ proc create_hier_cell_fmc_multicam_control { parentCell nameHier } {
   set fmc_multicam_gpi [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 fmc_multicam_gpi ]
 
   # Create instance: fmc_multicam_iic, and set properties
-  set fmc_multicam_iic [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 fmc_multicam_iic ]
+  set fmc_multicam_iic [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 fmc_multicam_iic ]
   set_property -dict [ list \
    CONFIG.IIC_FREQ_KHZ {400} \
  ] $fmc_multicam_iic
