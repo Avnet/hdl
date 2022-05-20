@@ -34,7 +34,7 @@
 #
 #  Create Date:         Apr 11, 2022
 #  Design Name:         ZUBoard 1CG Factory Test HW Platform
-#  Module Name:         u96v2_sbc_base.tcl
+#  Module Name:         zub1cg_sbc_factest.tcl
 #  Project Name:        ZUBoard 1CG Factory Test
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
 #  Hardware Boards:     ZUBoard 1CG Board

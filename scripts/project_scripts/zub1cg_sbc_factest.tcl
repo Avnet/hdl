@@ -37,7 +37,7 @@
 #  Module Name:         zub1cg_sbc_factest.tcl
 #  Project Name:        ZUBoard-1CG Factory Test HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
-#  Hardware Boards:     Xboard-ZU1 Board
+#  Hardware Boards:     ZUBoard-1CG Board
 #
 # ----------------------------------------------------------------------------
 
@@ -152,7 +152,7 @@ if {[string match -nocase "yes" $clean]} {
       add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
    }
    
-   #~ # Add Vitis directives
+   # Add Vitis directives
    #~ puts ""
    #~ puts "***** Adding Vitis directves to design..."
    #~ avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir

@@ -15,11 +15,11 @@
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 #
-#  Please direct any questions to the Ultra96 community support forum:
-#     http://avnet.me/Ultra96_Forum
+#  Please direct any questions to the community support forum:
+#     http://avnet.me/TBD
 #
 #  Product information is available at:
-#     http://avnet.me/ultra96-v2
+#     http://avnet.me/TBD
 #
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -32,12 +32,12 @@
 #
 # ----------------------------------------------------------------------------
 #
-#  Create Date:         Apr 04, 2019
-#  Design Name:         Ultra96v2 Base HW Platform
-#  Module Name:         u96v2_sbc_base.tcl
-#  Project Name:        Ultra96v2 Base HW
-#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
-#  Hardware Boards:     Ultra96v2 Board
+#  Create Date:         Apr 11, 2022
+#  Design Name:         ZUBoard 1CG Dualcam SYZYGY HW Platform
+#  Module Name:         zub1cg_sbc_dualcam.tcl
+#  Project Name:        ZUBoard 1CG Dualcam
+#  Target Devices:      Xilinx Zynq UltraScale+ 1CG
+#  Hardware Boards:     ZUBoard 1CG Board
 #
 # ----------------------------------------------------------------------------
 
@@ -1089,13 +1089,34 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
       #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi]
    #Slave segment '/CAPTURE_PIPELINE/mipi_csi2_rx_subsyst_0/csirxss_s_axi/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB000_0000 [ 8K ]>.
    #~ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \      #~ Slave {/CAPTURE_PIPELINE/v_proc_ss_scaler_0/s_axi_ctrl} \      #~ ddr_seg {Auto} \      #~ intc_ip {/ps8_0_axi_periph_1} \      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_proc_ss_scaler_0/s_axi_ctrl]
+      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \
+      #~ Slave {/CAPTURE_PIPELINE/v_proc_ss_scaler_0/s_axi_ctrl} \
+      #~ ddr_seg {Auto} \
+      #~ intc_ip {/ps8_0_axi_periph_1} \
+      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_proc_ss_scaler_0/s_axi_ctrl]
    #Slave segment '/CAPTURE_PIPELINE/v_proc_ss_0/s_axi_ctrl/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB004_0000 [ 256K ]>.
    #~ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \      #~ Slave {/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_ctrl} \      #~ ddr_seg {Auto} \      #~ intc_ip {/ps8_0_axi_periph_1} \      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_ctrl]
+      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \
+      #~ Slave {/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_ctrl} \
+      #~ ddr_seg {Auto} \
+      #~ intc_ip {/ps8_0_axi_periph_1} \
+      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_ctrl]
    #Slave segment '/CAPTURE_PIPELINE/v_frmbuf_wr_0/s_axi_CTRL/Reg' is being assigned into address space '/zynq_ultra_ps_e_0/Data' at <0xB001_0000 [ 64K ]>.
    #~ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \      #~ Slave {/CAPTURE_PIPELINE/v_proc_ss_csc_0/s_axi_ctrl} \      #~ ddr_seg {Auto} \      #~ intc_ip {/ps8_0_axi_periph_1} \      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_proc_ss_csc_0/s_axi_ctrl]
+      #~ Clk_master {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Clk_slave {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Clk_xbar {/clk_wiz_0/clk_out5 (200 MHz)} \
+      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM1_FPD} \
+      #~ Slave {/CAPTURE_PIPELINE/v_proc_ss_csc_0/s_axi_ctrl} \
+      #~ ddr_seg {Auto} \
+      #~ intc_ip {/ps8_0_axi_periph_1} \
+      #~ master_apm {0}}  [get_bd_intf_pins CAPTURE_PIPELINE/v_proc_ss_csc_0/s_axi_ctrl]
 
    # Connection Automation for CAPTURE PIPELINE data interface (FRAMEBUF_WRITE)
    #INFO: [PSU-1]  DP_AUDIO clock source: RPLL is also being used by other peripheral clocks. Their outputs may get impacted if any driver changes DP_AUDIO PLL source to support runtime audio change 
