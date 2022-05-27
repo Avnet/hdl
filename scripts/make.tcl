@@ -396,7 +396,7 @@ switch -nocase $board {
    pz7020_fmc2                -
    pz7015_fmc2                -
    pz7030_fmc2                -
-   xbzu1_sbc                  -
+   zub1cg_sbc                 -
    u96v2_sbc                  -
    uz3eg_iocc                 -
    uz3eg_pciec                -
@@ -404,7 +404,8 @@ switch -nocase $board {
    minized_sbc                -
    mz7010_som                 -
    mz7020_som                 {puts " Setting Up Project ${board}_${project}..."
-                                 source ./project_scripts/${board}_${project}.tcl -notrace}
+                                 source ./project_scripts/${board}_${project}.tcl -notrace }
+                                 
    default                    {puts " Error in Selecting Board!"
                                  puts " Boards are defined in [file normalize [pwd]/../boards]"
                                  return -code ok}

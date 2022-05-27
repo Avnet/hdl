@@ -33,11 +33,11 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Oct 05, 2021
-#  Design Name:         XBoard-ZU1 Validation Test HW Platform
-#  Module Name:         xbzu1_sbc_valtest.tcl
-#  Project Name:        XBoard-ZU1 Validation Test HW
+#  Design Name:         ZUBoard-1CG Validation Test HW Platform
+#  Module Name:         zub1cg_sbc_valtest.tcl
+#  Project Name:        ZUBoard-1CG Validation Test HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
-#  Hardware Boards:     Xboard-ZU1 Board
+#  Hardware Boards:     ZUBoard-1CG Board
 #
 # ----------------------------------------------------------------------------
 
@@ -83,8 +83,8 @@ if {[string match -nocase "yes" $clean]} {
 
    # Apply board specific project property settings
    puts ""
-   puts "***** Assigning Vivado project board_part property to xboard-zu1..."
-   set_property board_part avnet.com:xboard-zu1:part0:1.0 [current_project]
+   puts "***** Assigning Vivado project board_part property to zuboard_1cg..."
+   set_property board_part avnet.com:zuboard_1cg:part0:1.0 [current_project]
 
    # Generate Avnet IP
    puts ""
@@ -118,7 +118,7 @@ if {[string match -nocase "yes" $clean]} {
    puts ""
    puts "***** Adding defined IP blocks to block design..."
    avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
-   
+
    # Assign peripheral addresses
    puts ""
    puts "***** Assigning peripheral addresses..."
@@ -152,7 +152,7 @@ if {[string match -nocase "yes" $clean]} {
       add_files -norecurse ${projects_folder}/${board}_${project}.srcs/sources_1/bd/${board}_${project}/hdl/${board}_${project}_wrapper.v
    }
    
-   #~ # Add Vitis directives
+   # Add Vitis directives
    #~ puts ""
    #~ puts "***** Adding Vitis directves to design..."
    #~ avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
@@ -165,26 +165,44 @@ if {[string match -nocase "yes" $clean]} {
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    puts ""
    puts "***** Building binary..."
-   # add this to allow up+enter rebuild capability 
+   # change to scripts folder to allow for easier use of command history 
+   puts ""
+   puts "***** Changing directories to ${scripts_folder}"
    cd $scripts_folder
    update_compile_order -fileset sources_1
    update_compile_order -fileset sim_1
    save_bd_design
+   puts ""
+   puts "***** Launch Vivado synthesis using ${numberOfCores} CPUs"
+   launch_runs synth_1 -jobs $numberOfCores
+   puts ""
+   puts "***** Wait for synthesis to complete..."
+   wait_on_run synth_1
+   if {[get_property PROGRESS [get_runs synth_1]] != "100%"} {
+      puts ""
+      error "##### ERROR: Synthesis synth_1 failed!"
+   }
+   puts ""
+   puts "***** This Vivado implementation will use ${numberOfCores} CPUs"
    launch_runs impl_1 -to_step write_bitstream -jobs $numberOfCores
+   puts ""
+   puts "***** Wait for bitstream to be written..."
+   wait_on_run impl_1
+   if {[get_property PROGRESS [get_runs impl_1]] != "100%"} {
+      puts ""
+      error "##### ERROR: Implementation impl_1 failed!"
+   }
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   #~ puts ""
-   #~ puts "***** Wait for bitstream to be written..."
-   #~ wait_on_run impl_1
-   #~ puts ""
-   #~ puts "***** Open the implemented design..."
-   #~ open_run impl_1
-   #~ puts ""
-   #~ puts "***** Write and validate the design archive..."
-   #~ write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
-   #~ validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
-   #~ puts ""
-   #~ puts "***** Close the implemented design..."
-   #~ close_design
+   puts ""
+   puts "***** Open the implemented design..."
+   open_run impl_1
+   puts ""
+   puts "***** Write and validate the design archive..."
+   write_hw_platform -fixed -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
+   validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
+   puts ""
+   puts "***** Close the implemented design..."
+   close_design
 }
