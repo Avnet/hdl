@@ -32,12 +32,12 @@
 #
 # ----------------------------------------------------------------------------
 #
-#  Create Date:         Nov 19, 2020
-#  Design Name:         UltraZed-EV HDMI HW Platform
-#  Module Name:         uz7ev_evcc_hdmi.tcl
-#  Project Name:        UltraZed-EV HDMI HW
+#  Create Date:         Nov 10, 2017
+#  Design Name:         UltraZed-EV NVME HW Platform
+#  Module Name:         uz7ev_evcc_nvme.tcl
+#  Project Name:        UltraZed-EV NVME HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 7EV
-#  Hardware Boards:     UltraZed-EV SOM + EV Carrier
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier + NVME FMC
 #
 # ----------------------------------------------------------------------------
 
@@ -119,10 +119,10 @@ if {[string match -nocase "yes" $clean]} {
    puts "***** Adding defined IP blocks to block design..."
    avnet_add_user_io_preset ${board}_${project} $projects_folder $scriptdir
 
-   # Add HDMI Support
+   # Add PCIe (NVME) Support
    puts ""
-   puts "***** Adding HDMI support to block design..."
-   avnet_add_hdmi ${board}_${project} $projects_folder $scriptdir
+   puts "***** Adding PCIe (NVME) support to block design..."
+   avnet_add_pcie ${board}_${project} $projects_folder $scriptdir
 
    # Assign peripheral addresses
    puts ""
@@ -170,19 +170,36 @@ if {[string match -nocase "yes" $clean]} {
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    puts ""
    puts "***** Building binary..."
-   # add this to allow up+enter rebuild capability 
+   # change to scripts folder to allow for easier use of command history 
+   puts ""
+   puts "***** Changing directories to ${scripts_folder}"
    cd $scripts_folder
    update_compile_order -fileset sources_1
    update_compile_order -fileset sim_1
    save_bd_design
+   puts ""
+   puts "***** Launch Vivado synthesis using ${numberOfCores} CPUs"
+   launch_runs synth_1 -jobs $numberOfCores
+   puts ""
+   puts "***** Wait for synthesis to complete..."
+   wait_on_run synth_1
+   if {[get_property PROGRESS [get_runs synth_1]] != "100%"} {
+      puts ""
+      error"##### ERROR: Synthesis synth_1 failed!"
+   }
+   puts ""
    puts "***** This Vivado implementation will use ${numberOfCores} CPUs"
    launch_runs impl_1 -to_step write_bitstream -jobs $numberOfCores
-   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
-   #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
-   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    puts ""
    puts "***** Wait for bitstream to be written..."
    wait_on_run impl_1
+   if {[get_property PROGRESS [get_runs impl_1]] != "100%"} {
+      puts ""
+      error"##### ERROR: Implementation impl_1 failed!"
+   }
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+   #*- KEEP OUT, do not touch this section unless you know what you are doing! -*
+   #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
    puts ""
    puts "***** Open the implemented design..."
    open_run impl_1

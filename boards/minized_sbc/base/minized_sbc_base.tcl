@@ -195,7 +195,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    set_property -dict [list CONFIG.C_GPIO_WIDTH {8}] [get_bd_cells axi_gpio_2]
    
    # Create instance: axi_iic_0, and set properties
-   set axi_iic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0 ]
+   set axi_iic_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_0 ]
    
    # Create AXI UART 16550 instance and set properties
    set bluetooth_uart [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uart16550:2.0 axi_uart16550_0 ]
@@ -454,9 +454,13 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
-   set ps7 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7
+
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config { \
-      make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells ps7]
+      make_external "FIXED_IO, DDR" \
+      apply_board_preset "1" \
+      Master "Disable" \
+      Slave "Disable" }  [get_bd_cells ps7]
 
    # Add selection for customized PS settings
 	set_property -dict [ list \
@@ -483,14 +487,15 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
       CONFIG.PCW_FPGA3_PERIPHERAL_FREQMHZ {50} \
       CONFIG.PCW_EN_CLK1_PORT {1} \
       CONFIG.PCW_EN_CLK2_PORT {1} \
-      CONFIG.PCW_EN_RST2_PORT {1} \
-	] [get_bd_cells ps7]
+      CONFIG.PCW_EN_RST2_PORT {1} ] [get_bd_cells ps7]
 
-   set ps7_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_axi_periph ]
+   # Set the SDIO to 50MHz instead of default 25 MHz
+   set_property -dict [list CONFIG.PCW_SDIO_PERIPHERAL_FREQMHZ {50}] [get_bd_cells ps7]
+
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_axi_periph
    
    set_property -dict [ list \
-   CONFIG.NUM_MI {07} \
-   ] [get_bd_cells ps7_axi_periph]
+   CONFIG.NUM_MI {07} ] [get_bd_cells ps7_axi_periph]
 
    save_bd_design
 }

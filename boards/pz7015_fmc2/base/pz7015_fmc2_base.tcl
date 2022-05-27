@@ -172,7 +172,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    apply_board_connection -board_interface "pl_pbs_5bits" -ip_intf "axi_gpio_1/GPIO" -diagram $project
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/ps7/M_AXI_GP0" Clk "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
 
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.0 axi_iic_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_0
    apply_bd_automation -rule xilinx.com:bd_rule:board  [get_bd_intf_pins axi_iic_0/IIC]
    set_property name hdmi_i2c [get_bd_intf_ports iic_rtl]
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
@@ -193,7 +193,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.NUM_PORTS {2} \
    ] [get_bd_cells xlconcat_0]
    
+   # Add AXI interrupt controller (for VITIS XRT interrupt support)
    set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
+   # Set IRQ type to 'EDGE' and connection to 'SINGLE'
+   set_property -dict [ list \
+      CONFIG.C_IRQ_IS_LEVEL {0} \
+      CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_0]
 
    # Add another master port to the AXI interconnect clock so we can connect the axi_intc to it
    set_property -dict [list CONFIG.NUM_MI {4}] [get_bd_cells ps7_axi_periph]
@@ -334,24 +339,16 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
 }
 
-proc avnet_add_ps {project projects_folder scriptdir} {
-
-   # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7
-   apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config \
-      {make_external "FIXED_IO, DDR" }  [get_bd_cells ps7]
-   create_bd_port -dir I -type clk M_AXI_GP0_ACLK
-   connect_bd_net [get_bd_pins /ps7/M_AXI_GP0_ACLK] [get_bd_ports M_AXI_GP0_ACLK]
-
-   save_bd_design
-}
-
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
-   set ps7 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7
+
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config { \
-      make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells ps7]
+      make_external "FIXED_IO, DDR" \
+      apply_board_preset "1" \
+      Master "Disable" \
+      Slave "Disable" }  [get_bd_cells ps7]
 
    # Enable the M_AXI_GP0 port on the PS
    set_property -dict [list CONFIG.PCW_USE_M_AXI_GP0 {1}] [get_bd_cells ps7]
@@ -359,10 +356,16 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    # Enable the PL-to-PS interrupts on the PS
    set_property -dict [list CONFIG.PCW_USE_FABRIC_INTERRUPT {1} CONFIG.PCW_IRQ_F2P_INTR {1}] [get_bd_cells ps7]
 
-   set_property -dict [list CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} CONFIG.PCW_GPIO_EMIO_GPIO_ENABLE {0}] [get_bd_cells ps7]
+   set_property -dict [list CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1}] [get_bd_cells ps7]
+
+   # Disable the PS GPIO on EMIO
+   set_property -dict [list CONFIG.PCW_GPIO_EMIO_GPIO_ENABLE {0}] [get_bd_cells ps7]
 
    # Bring the SDIO WP pin out to EMIO
    set_property -dict [list CONFIG.PCW_SD0_GRP_WP_ENABLE {1} CONFIG.PCW_SD0_GRP_WP_IO {EMIO}] [get_bd_cells ps7]
+
+   # Set the SDIO to 50MHz instead of default 25 MHz
+   set_property -dict [list CONFIG.PCW_SDIO_PERIPHERAL_FREQMHZ {50}] [get_bd_cells ps7]
 
    save_bd_design
 }

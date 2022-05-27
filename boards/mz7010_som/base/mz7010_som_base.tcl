@@ -153,9 +153,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    CONFIG.NUM_PORTS {1} \
    ] [get_bd_cells xlconcat_0]
    
+   # Add AXI interrupt controller (for VITIS XRT interrupt support)
    set axi_intc_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 ]
-   # Set interrupt output to 'single' instead of 'bus'
-   set_property -dict [list CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_0]
+   # Set IRQ type to 'EDGE' and connection to 'SINGLE'
+   set_property -dict [ list \
+      CONFIG.C_IRQ_IS_LEVEL {0} \
+      CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_0]
    
    # Add constant set to '0'.  We will connect this to the PS SDIO_0 WP input
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
@@ -281,22 +284,16 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
 }
 
-proc avnet_add_ps {project projects_folder scriptdir} {
-
-   # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7
-   apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config \
-      {make_external "FIXED_IO, DDR" }  [get_bd_cells ps7]
-
-   save_bd_design
-}
-
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
-   set ps7 [ create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7 ]
+   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 ps7
+
    apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config { \
-      make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells ps7]
+      make_external "FIXED_IO, DDR" \
+      apply_board_preset "1" \
+      Master "Disable" \
+      Slave "Disable" }  [get_bd_cells ps7]
 
    # Enable the M_AXI_GP0 port on the PS
    set_property -dict [list CONFIG.PCW_USE_M_AXI_GP0 {1}] [get_bd_cells ps7]
@@ -307,11 +304,13 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    # Bring the SDIO WP pin out to EMIO
    set_property -dict [list CONFIG.PCW_SD0_GRP_WP_ENABLE {1} CONFIG.PCW_SD0_GRP_WP_IO {EMIO}] [get_bd_cells ps7]
 
-   set ps7_axi_periph [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_axi_periph ]
+   # Set the SDIO to 50MHz instead of default 25 MHz
+   set_property -dict [list CONFIG.PCW_SDIO_PERIPHERAL_FREQMHZ {50}] [get_bd_cells ps7]
+
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 ps7_axi_periph 
    
    set_property -dict [ list \
-      CONFIG.NUM_MI {01} \
-   ] [get_bd_cells ps7_axi_periph]
+      CONFIG.NUM_MI {01} ] [get_bd_cells ps7_axi_periph]
 
    save_bd_design
 }

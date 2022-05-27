@@ -16,10 +16,10 @@
 #  design is not authorized without written consent from Avnet.
 #
 #  Please direct any questions to the UltraZed community support forum:
-#     http://avnet.me/uzegforum
+#     http://avnet.me/uzevforum
 #
 #  Product information is available at:
-#     http://avnet.me/ultrazed-eg
+#     http://avnet.me/ultrazed-ev
 #
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -32,25 +32,25 @@
 #
 # ----------------------------------------------------------------------------
 #
-#  Create Date:         Dec 21, 2016
-#  Design Name:         UltraZed-EG Base HW Platform
-#  Module Name:         uz3eg_pciec_base.tcl
-#  Project Name:        UltraZed-EG Base HW
-#  Target Devices:      Xilinx Zynq UltraScale+ 3EG
-#  Hardware Boards:     UltraZed-EG SOM + PCIe Carrier
+#  Create Date:         Nov 10, 2017
+#  Design Name:         UltraZed-EV NVME HW Platform
+#  Module Name:         uz7ev_evcc_nvme.tcl
+#  Project Name:        UltraZed-EV NVME HW
+#  Target Devices:      Xilinx Zynq UltraScale+ 7EV
+#  Hardware Boards:     UltraZed-EV SOM + EV Carrier + NVME FMC
 #
 # ----------------------------------------------------------------------------
 
 proc avnet_create_project {project projects_folder scriptdir} {
 
-   create_project $project $projects_folder -part xczu3eg-sfva625-1-i -force
+   create_project $project $projects_folder -part xczu7ev-fbvb900-1-i -force
 }
 
 proc avnet_import_constraints {boards_folder board project} {
 
    #import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${project}.xdc
-   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/rgmii_input_delay.xdc
+   import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/pcie_nvme.xdc
+
 }
 
 proc create_hier_cell_interrupt_concat { parentCell nameHier } {
@@ -121,9 +121,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    apply_board_connection -board_interface "led_8bits" -ip_intf "axi_gpio_1/GPIO" -diagram $project 
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_2
    apply_board_connection -board_interface "push_buttons_3bits" -ip_intf "axi_gpio_2/GPIO" -diagram $project
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_LPD" Clk "Auto" }  [get_bd_intf_pins axi_gpio_0/S_AXI]
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_LPD" Clk "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_LPD" Clk "Auto" }  [get_bd_intf_pins axi_gpio_2/S_AXI]
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD" intc_ip "Auto" Clk_xbar "Auto" Clk_master "Auto" Clk_slave "Auto" }  [get_bd_intf_pins axi_gpio_0/S_AXI]
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD" intc_ip "Auto" Clk_xbar "Auto" Clk_master "Auto" Clk_slave "Auto" }  [get_bd_intf_pins axi_gpio_1/S_AXI]
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config {Master "/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD" intc_ip "Auto" Clk_xbar "Auto" Clk_master "Auto" Clk_slave "Auto" }  [get_bd_intf_pins axi_gpio_2/S_AXI]
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins zynq_ultra_ps_e_0/maxihpm1_fpd_aclk]
    
    startgroup
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
@@ -166,7 +167,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    set_property -dict [list CONFIG.NUM_PORTS {6}] [get_bd_cells xlconcat_0]
    connect_bd_net [get_bd_pins xlconcat_0/In5] [get_bd_pins axi_intc_0/irq]
    #
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_LPD} Slave {/axi_intc_0/s_axi} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins axi_intc_0/s_axi]
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_slave {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} Slave {/axi_intc_0/s_axi} ddr_seg {Auto} intc_ip {/ps8_0_axi_periph} master_apm {0}}  [get_bd_intf_pins axi_intc_0/s_axi]
 
    #delete_bd_objs [get_bd_nets proc_sys_reset_0_peripheral_aresetn1]
    #connect_bd_net [get_bd_pins axi_intc_0/s_axi_aresetn] [get_bd_pins rst_ps8_0_100M/peripheral_aresetn]
@@ -249,167 +250,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #
    # VITIS ADDITIONS - END
    #  
-
-}
-
-proc avnet_add_netfmc {project projects_folder scriptdir} {
-   #Enable PS GEM0 and GEM1 and set to EMIO
-   set_property -dict [list \
-     CONFIG.PSU__ENET0__GRP_MDIO__ENABLE {1} \
-     CONFIG.PSU__ENET0__GRP_MDIO__IO {EMIO} \
-     CONFIG.PSU__ENET0__PERIPHERAL__ENABLE {1} \
-     CONFIG.PSU__ENET0__PERIPHERAL__IO {EMIO} \
-     CONFIG.PSU__ENET1__PERIPHERAL__ENABLE {1} \
-     CONFIG.PSU__ENET1__PERIPHERAL__IO {EMIO} \
-     CONFIG.PSU__ENET1__GRP_MDIO__ENABLE {1} \
-     CONFIG.PSU__ENET1__GRP_MDIO__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
-   
-   set_property -dict [list CONFIG.NUM_MI {8}] [get_bd_cells ps8_0_axi_periph]
-   
-   set_property -dict [list CONFIG.NUM_PORTS {6}] [get_bd_cells xlconcat_0]
-   
-   save_bd_design
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.1 gmii_to_rgmii_0
-   set_property -dict [list CONFIG.C_USE_IDELAY_CTRL {false}] [get_bd_cells gmii_to_rgmii_0]
-   make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/MDIO_PHY]
-   make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_0/RGMII]
-   set_property name mdio_port_0 [get_bd_intf_ports MDIO_PHY_0]
-   set_property name rgmii_port_0 [get_bd_intf_ports RGMII_0]
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.1 gmii_to_rgmii_1
-   set_property -dict [list CONFIG.SupportLevel {Include_Shared_Logic_in_Core}] [get_bd_cells gmii_to_rgmii_1]
-   make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_1/MDIO_PHY]
-   make_bd_intf_pins_external  [get_bd_intf_pins gmii_to_rgmii_1/RGMII]
-   set_property name mdio_port_1 [get_bd_intf_ports MDIO_PHY_0]
-   set_property name rgmii_port_1 [get_bd_intf_ports RGMII_0]
-   
-   save_bd_design
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_3
-   set_property -dict [list \
-     CONFIG.C_GPIO_WIDTH {10} \
-     CONFIG.C_ALL_OUTPUTS {1}] [get_bd_cells axi_gpio_3]
-   make_bd_intf_pins_external  [get_bd_intf_pins axi_gpio_3/GPIO]
-   set_property name leds_fmcnet_10bits [get_bd_intf_ports GPIO_0]
-   
-   save_bd_design
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_1
-   set_property -dict [list \
-     CONFIG.PRIM_IN_FREQ.VALUE_SRC {USER} \
-     CONFIG.PRIM_SOURCE {Differential_clock_capable_pin} \
-     CONFIG.PRIM_IN_FREQ {125} \
-     CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {375} \
-     CONFIG.USE_LOCKED {false} \
-     CONFIG.USE_RESET {false} \
-     CONFIG.CLKIN1_JITTER_PS {80.0} \
-     CONFIG.MMCM_DIVCLK_DIVIDE {1} \
-     CONFIG.MMCM_CLKFBOUT_MULT_F {9.750} \
-     CONFIG.MMCM_CLKIN1_PERIOD {8.000} \
-     CONFIG.MMCM_CLKOUT0_DIVIDE_F {3.250} \
-     CONFIG.CLKOUT1_JITTER {86.562} \
-     CONFIG.CLKOUT1_PHASE_ERROR {84.521}] [get_bd_cells clk_wiz_1]
-   make_bd_intf_pins_external  [get_bd_intf_pins clk_wiz_1/CLK_IN1_D]
-   set_property name ref_clk [get_bd_intf_ports CLK_IN1_D_0]
-   
-   save_bd_design
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0
-   make_bd_pins_external  [get_bd_pins xlconstant_0/dout]
-   set_property name ref_clk_fsel [get_bd_ports dout_0]
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_1
-   make_bd_pins_external  [get_bd_pins xlconstant_1/dout]
-   set_property name ref_clk_oe [get_bd_ports dout_0]
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_0
-   make_bd_intf_pins_external  [get_bd_intf_pins axi_iic_0/IIC]
-   set_property name iic_rtl_0 [get_bd_intf_ports IIC_0]
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_1
-   make_bd_intf_pins_external  [get_bd_intf_pins axi_iic_1/IIC]
-   set_property name iic_rtl_1 [get_bd_intf_ports IIC_0]
-   
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_2
-   make_bd_intf_pins_external  [get_bd_intf_pins axi_iic_2/IIC]
-   set_property name iic_rtl_2 [get_bd_intf_ports IIC_0]
-   
-   save_bd_design
-   
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins ps8_0_axi_periph/M04_ACLK]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins ps8_0_axi_periph/M05_ACLK]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins ps8_0_axi_periph/M06_ACLK]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins ps8_0_axi_periph/M07_ACLK]
-   
-   save_bd_design
-   
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins ps8_0_axi_periph/M04_ARESETN]
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins ps8_0_axi_periph/M05_ARESETN]
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins ps8_0_axi_periph/M06_ARESETN]
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins ps8_0_axi_periph/M07_ARESETN]
-   
-   save_bd_design
-   
-   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ps8_0_axi_periph/M04_AXI] [get_bd_intf_pins axi_gpio_3/S_AXI]
-   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ps8_0_axi_periph/M05_AXI] [get_bd_intf_pins axi_iic_0/S_AXI]
-   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ps8_0_axi_periph/M06_AXI] [get_bd_intf_pins axi_iic_1/S_AXI]
-   connect_bd_intf_net -boundary_type upper [get_bd_intf_pins ps8_0_axi_periph/M07_AXI] [get_bd_intf_pins axi_iic_2/S_AXI]
-   
-   save_bd_design
-   
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_gpio_3/s_axi_aclk]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_iic_0/s_axi_aclk]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_iic_1/s_axi_aclk]
-   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_iic_2/s_axi_aclk]
-   
-   save_bd_design
-   
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins axi_gpio_3/s_axi_aresetn]
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins axi_iic_0/s_axi_aresetn]
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins axi_iic_1/s_axi_aresetn]
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins axi_iic_2/s_axi_aresetn]
-   
-   
-   save_bd_design
-   
-   connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/GMII_ENET0] [get_bd_intf_pins gmii_to_rgmii_0/GMII]
-   connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/MDIO_ENET0] [get_bd_intf_pins gmii_to_rgmii_0/MDIO_GEM]
-   connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/GMII_ENET1] [get_bd_intf_pins gmii_to_rgmii_1/GMII]
-   connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/MDIO_ENET1] [get_bd_intf_pins gmii_to_rgmii_1/MDIO_GEM]
-   
-   save_bd_design
-   
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/tx_reset]
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_reset] [get_bd_pins gmii_to_rgmii_0/rx_reset]
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_reset] [get_bd_pins gmii_to_rgmii_1/tx_reset]
-   connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_reset] [get_bd_pins gmii_to_rgmii_1/rx_reset]
-   
-   save_bd_design
-   
-   connect_bd_net [get_bd_pins gmii_to_rgmii_1/ref_clk_out] [get_bd_pins gmii_to_rgmii_0/ref_clk_in]
-   connect_bd_net [get_bd_pins gmii_to_rgmii_1/mmcm_locked_out] [get_bd_pins gmii_to_rgmii_0/mmcm_locked_in]
-   connect_bd_net [get_bd_pins gmii_to_rgmii_1/gmii_clk_125m_out] [get_bd_pins gmii_to_rgmii_0/gmii_clk_125m_in]
-   connect_bd_net [get_bd_pins gmii_to_rgmii_1/gmii_clk_25m_out] [get_bd_pins gmii_to_rgmii_0/gmii_clk_25m_in]
-   connect_bd_net [get_bd_pins gmii_to_rgmii_1/gmii_clk_2_5m_out] [get_bd_pins gmii_to_rgmii_0/gmii_clk_2_5m_in]
-   
-   save_bd_design
-   
-   connect_bd_net [get_bd_pins clk_wiz_1/clk_out1] [get_bd_pins gmii_to_rgmii_1/clkin]
-   
-   connect_bd_net [get_bd_pins xlconcat_0/In2] [get_bd_pins axi_iic_0/iic2intc_irpt]
-   connect_bd_net [get_bd_pins xlconcat_0/In3] [get_bd_pins axi_iic_1/iic2intc_irpt]
-   connect_bd_net [get_bd_pins xlconcat_0/In4] [get_bd_pins axi_iic_2/iic2intc_irpt]
-   
-   save_bd_design
-   
-   create_bd_port -dir O reset_port_0
-   create_bd_port -dir O reset_port_1
-   connect_bd_net [get_bd_ports reset_port_0] [get_bd_pins rst_ps8_0_100M/peripheral_aresetn]
-   connect_bd_net [get_bd_ports reset_port_1] [get_bd_pins rst_ps8_0_100M/peripheral_aresetn]
-   
-   save_bd_design
-
 }
 
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
@@ -420,73 +260,177 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
    
-   # Turn off the DisplayPort for the basic PetaLinux platform since having 
-   # it enabled is causing 2017.2 PetaLinux to complain about PLL sharing 
-   # when turning the DisplayPort audio on.
-   #set_property -dict [list CONFIG.PSU__VIDEO_REF_CLK__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-   #set_property -dict [list CONFIG.PSU__PSS_ALT_REF_CLK__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-   #set_property -dict [list CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-
-   # Disable PCIe controller as well.
-   set_property -dict [list CONFIG.PSU__PCIE__PERIPHERAL__ENABLE {0}] [get_bd_cells zynq_ultra_ps_e_0]
-   
    # Connect the SD card WP pin to MIO44 and pull it down to enable software (PetaLinux) 
    # to mount and write the SD card
    set_property -dict [list CONFIG.PSU__SD1__GRP_WP__ENABLE {1} CONFIG.PSU_MIO_44_PULLUPDOWN {pulldown}] [get_bd_cells zynq_ultra_ps_e_0]
-   
-   startgroup
-   #set_property -dict [list CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} CONFIG.PSU__DP__LANE_SEL {Single Higher} CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-   set_property -dict [list CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} CONFIG.PSU__USB0__REF_CLK_SEL {Ref Clk0} CONFIG.PSU__DP__LANE_SEL {Single Higher} CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1} CONFIG.PSU__CRF_APB__DP_VIDEO_REF_CTRL__SRCSEL {VPLL} CONFIG.PSU__CRF_APB__DP_AUDIO_REF_CTRL__SRCSEL {RPLL} CONFIG.PSU__CRF_APB__DP_STC_REF_CTRL__SRCSEL {RPLL}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
-
-   startgroup
-   set_property -dict [list CONFIG.PSU__CRF_APB__TOPSW_MAIN_CTRL__SRCSEL {DPLL}] [get_bd_cells zynq_ultra_ps_e_0]
-   endgroup
 
 }
 
-proc avnet_add_sdsoc_directives {project projects_folder scriptdir} {
-   set design_name ${project}
-   
-   #set_property PFM_NAME "em.avnet.com:av:${design_name}:1.0" [get_files ./${design_name}.srcs/sources_1/bd/${design_name}/${design_name}.bd]
-   set_property PFM_NAME "em.avnet.com:av:${project}:1.0" [get_files ${projects_folder}/${project}.srcs/sources_1/bd/${project}/${project}.bd]
+# This will add AXI interconnect and xdma block, etc. to support using NVME SSDs
+# The xdma blocks are configured for 2 PCIe lanes
+# This will support M.2 NVME SSDs that are "B" keyed (2 PCIe lanes) or "M" keyed (4 PCIe lanes)
+proc avnet_add_pcie {project projects_folder scriptdir} {
+  create_bd_cell -type ip -vlnv xilinx.com:ip:xdma:4.1 xdma_0
+  set_property -dict [list \
+    CONFIG.functional_mode {AXI_Bridge} \
+    CONFIG.mode_selection {Advanced} \
+    CONFIG.device_port_type {Root_Port_of_PCI_Express_Root_Complex} \
+    CONFIG.pcie_blk_locn {X0Y1} \
+    CONFIG.select_quad {GTH_Quad_225} \
+    CONFIG.pl_link_cap_max_link_width {X2} \
+    CONFIG.pl_link_cap_max_link_speed {8.0_GT/s} \
+    CONFIG.axi_addr_width {49} \
+    CONFIG.axi_data_width {64_bit} \
+    CONFIG.axisten_freq {250} \
+    CONFIG.dedicate_perst {false} \
+    CONFIG.sys_reset_polarity {ACTIVE_LOW} \
+    CONFIG.pf0_device_id {9132} \
+    CONFIG.pf0_base_class_menu {Bridge_device} \
+    CONFIG.pf0_class_code_base {06} \
+    CONFIG.pf0_sub_class_interface_menu {PCI_to_PCI_bridge} \
+    CONFIG.pf0_class_code_sub {04} \
+    CONFIG.pf0_class_code_interface {00} \
+    CONFIG.pf0_class_code {060400} \
+    CONFIG.xdma_axilite_slave {true} \
+    CONFIG.en_gt_selection {true} \
+    CONFIG.INS_LOSS_NYQ {5} \
+    CONFIG.plltype {QPLL1} \
+    CONFIG.ins_loss_profile {Chip-to-Chip} \
+    CONFIG.type1_membase_memlimit_enable {Enabled} \
+    CONFIG.type1_prefetchable_membase_memlimit {64bit_Enabled} \
+    CONFIG.axibar_num {1} \
+    CONFIG.axibar2pciebar_0 {0x00000000A0000000} \
+    CONFIG.BASEADDR {0x00000000} \
+    CONFIG.HIGHADDR {0x001FFFFF} \
+    CONFIG.pf0_bar0_enabled {false} \
+    CONFIG.pf1_class_code {060700} \
+    CONFIG.pf1_base_class_menu {Bridge_device} \
+    CONFIG.pf1_class_code_base {06} \
+    CONFIG.pf1_class_code_sub {07} \
+    CONFIG.pf1_sub_class_interface_menu {CardBus_bridge} \
+    CONFIG.pf1_class_code_interface {00} \
+    CONFIG.pf1_bar2_enabled {false} \
+    CONFIG.pf1_bar2_64bit {false} \
+    CONFIG.pf1_bar4_enabled {false} \
+    CONFIG.pf1_bar4_64bit {false} \
+    CONFIG.dma_reset_source_sel {Phy_Ready} \
+    CONFIG.pf0_bar0_type_mqdma {Memory} \
+    CONFIG.pf1_bar0_type_mqdma {Memory} \
+    CONFIG.pf2_bar0_type_mqdma {Memory} \
+    CONFIG.pf3_bar0_type_mqdma {Memory} \
+    CONFIG.pf0_sriov_bar0_type {Memory} \
+    CONFIG.pf1_sriov_bar0_type {Memory} \
+    CONFIG.pf2_sriov_bar0_type {Memory} \
+    CONFIG.pf3_sriov_bar0_type {Memory} \
+    CONFIG.PF0_DEVICE_ID_mqdma {9132} \
+    CONFIG.PF2_DEVICE_ID_mqdma {9132} \
+    CONFIG.PF3_DEVICE_ID_mqdma {9132} \
+    CONFIG.pf0_base_class_menu_mqdma {Bridge_device} \
+    CONFIG.pf0_class_code_base_mqdma {06} \
+    CONFIG.pf0_class_code_mqdma {068000} \
+    CONFIG.pf1_base_class_menu_mqdma {Bridge_device} \
+    CONFIG.pf1_class_code_base_mqdma {06} \
+    CONFIG.pf1_class_code_mqdma {068000} \
+    CONFIG.pf2_base_class_menu_mqdma {Bridge_device} \
+    CONFIG.pf2_class_code_base_mqdma {06} \
+    CONFIG.pf2_class_code_mqdma {068000} \
+    CONFIG.pf3_base_class_menu_mqdma {Bridge_device} \
+    CONFIG.pf3_class_code_base_mqdma {06} \
+    CONFIG.pf3_class_code_mqdma {068000} \
+    CONFIG.msi_rx_pin_en {TRUE}] [get_bd_cells xdma_0]
+
+  make_bd_intf_pins_external  [get_bd_intf_pins xdma_0/pcie_mgt]
+  set_property name pci_exp_0 [get_bd_intf_ports pcie_mgt_0]
 
 
-   # define clock and reset ports
-   set_property PFM.CLOCK { \
-      pl_clk0 {id "0" is_default "true" proc_sys_reset "rst_ps8_0_100M"} \
-   } [get_bd_cells /zynq_ultra_ps_e_0]
-   
+  create_bd_cell -type ip -vlnv xilinx.com:ip:util_ds_buf:2.2 ref_clk_0_buf
+  make_bd_intf_pins_external  [get_bd_intf_pins ref_clk_0_buf/CLK_IN_D]
+  set_property name ref_clk_0 [get_bd_intf_ports CLK_IN_D_0]
+  set_property -dict [list CONFIG.C_BUF_TYPE {IBUFDSGTE}] [get_bd_cells ref_clk_0_buf]
+  connect_bd_net [get_bd_pins ref_clk_0_buf/IBUF_DS_ODIV2] [get_bd_pins xdma_0/sys_clk]
+  connect_bd_net [get_bd_pins ref_clk_0_buf/IBUF_OUT] [get_bd_pins xdma_0/sys_clk_gt]
 
-   # define AXI ports
-   # HPM0
-   set parVal []
-   set cnt [get_property CONFIG.NUM_MI [get_bd_cells /ps8_0_axi_periph]]
-   for {set i $cnt} {$i < 64} {incr i} {
-      lappend parVal M[format %02d $i]_AXI {memport "M_AXI_GP"}
-   }
-   set_property PFM.AXI_PORT $parVal [get_bd_cells /ps8_0_axi_periph]
-   # HPM1
-   set_property PFM.AXI_PORT { \
-      M_AXI_HPM1_FPD {memport "M_AXI_GP"} \
-      M_AXI_HPM0_LPD {memport "M_AXI_GP"} \
-   } [get_bd_cells /zynq_ultra_ps_e_0]
-   # HP1-HP3
-   set_property PFM.AXI_PORT { \
-      S_AXI_HP1_FPD {memport "S_AXI_HP"} \
-      S_AXI_HP2_FPD {memport "S_AXI_HP"} \
-      S_AXI_HP3_FPD {memport "S_AXI_HP"} \
-   } [get_bd_cells /zynq_ultra_ps_e_0]
-   
-   # define interrupt ports
-   # interrupts0
-   set parVal []
-   set cnt [get_property CONFIG.NUM_PORTS [get_bd_cell /xlconcat_0]]
-   for {set i $cnt} {$i < 8} {incr i} {
-      lappend parVal In$i {}
-   }
-   set_property PFM.IRQ $parVal [get_bd_cells /xlconcat_0]
+  create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 rst_pcie_0_axi_aclk
+  make_bd_pins_external  [get_bd_pins rst_pcie_0_axi_aclk/peripheral_reset]
+  set_property name perst_0 [get_bd_ports peripheral_reset_0]
+
+  create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 constant_dis_ssd2_pwr
+  make_bd_pins_external  [get_bd_pins constant_dis_ssd2_pwr/dout]
+  set_property name disable_ssd2_pwr [get_bd_ports dout_0]
+  # Set to 1 to DISABLE SSD2
+  set_property -dict [list CONFIG.CONST_VAL {1}] [get_bd_cells constant_dis_ssd2_pwr]
+  
+  save_bd_design
+
+  set_property -dict [list CONFIG.PSU__USE__M_AXI_GP1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  set_property -dict [list CONFIG.PSU__USE__S_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  
+  save_bd_design
+
+  create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 axi_mem_intercon_0
+  set_property -dict [list CONFIG.NUM_SI {1} \
+    CONFIG.NUM_MI {1}] [get_bd_cells axi_mem_intercon_0]
+
+  save_bd_design
+
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins axi_mem_intercon_0/M00_AXI] [get_bd_intf_pins zynq_ultra_ps_e_0/S_AXI_HP0_FPD]
+
+  save_bd_design
+
+  create_bd_cell -type ip -vlnv xilinx.com:ip:axi_interconnect:2.1 periph_intercon_0
+  set_property -dict [list CONFIG.NUM_SI {1} \
+    CONFIG.NUM_MI {2}] [get_bd_cells periph_intercon_0]
+
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM1_FPD] [get_bd_intf_pins periph_intercon_0/S00_AXI] 
+
+  set_property -dict [list CONFIG.PSU__USE__IRQ1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+  create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
+  set_property -dict [list CONFIG.NUM_PORTS {3}] [get_bd_cells xlconcat_1]
+
+  save_bd_design
+
+  # Connect clocks, resets, and PS int input [from] [to]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins zynq_ultra_ps_e_0/saxihp0_fpd_aclk]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins zynq_ultra_ps_e_0/maxihpm1_fpd_aclk]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_mem_intercon_0/M00_ACLK]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins periph_intercon_0/S00_ACLK]
+  connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins xdma_0/sys_rst_n] 
+  connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins axi_mem_intercon_0/M00_ARESETN]
+  connect_bd_net [get_bd_pins rst_ps8_0_100M/peripheral_aresetn] [get_bd_pins periph_intercon_0/S00_ARESETN]
+  connect_bd_net [get_bd_pins xlconcat_1/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1]
+
+  save_bd_design
+
+  # Connect PCIE channel 0 [from] [to]
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins periph_intercon_0/M00_AXI] [get_bd_intf_pins xdma_0/S_AXI_B]
+  connect_bd_intf_net -boundary_type upper [get_bd_intf_pins periph_intercon_0/M01_AXI] [get_bd_intf_pins xdma_0/S_AXI_LITE]
+  connect_bd_intf_net [get_bd_intf_pins xdma_0/M_AXI_B] -boundary_type upper [get_bd_intf_pins axi_mem_intercon_0/S00_AXI]
+
+  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins rst_pcie_0_axi_aclk/slowest_sync_clk]
+  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins axi_mem_intercon_0/ACLK]
+  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins axi_mem_intercon_0/S00_ACLK]
+  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins periph_intercon_0/ACLK]
+  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins periph_intercon_0/M00_ACLK]
+  connect_bd_net [get_bd_pins xdma_0/axi_aclk] [get_bd_pins periph_intercon_0/M01_ACLK]
+
+  connect_bd_net [get_bd_pins xdma_0/axi_ctl_aresetn] [get_bd_pins periph_intercon_0/M01_ARESETN]
+  connect_bd_net [get_bd_pins xdma_0/axi_ctl_aresetn] [get_bd_pins rst_pcie_0_axi_aclk/ext_reset_in]
+
+  connect_bd_net [get_bd_pins xdma_0/axi_aresetn] [get_bd_pins axi_mem_intercon_0/ARESETN]
+  connect_bd_net [get_bd_pins xdma_0/axi_aresetn] [get_bd_pins axi_mem_intercon_0/S00_ARESETN]
+  connect_bd_net [get_bd_pins xdma_0/axi_aresetn] [get_bd_pins periph_intercon_0/ARESETN]
+  connect_bd_net [get_bd_pins xdma_0/axi_aresetn] [get_bd_pins periph_intercon_0/M00_ARESETN]
+
+  connect_bd_net [get_bd_pins xdma_0/interrupt_out] [get_bd_pins xlconcat_1/In0]
+  connect_bd_net [get_bd_pins xdma_0/interrupt_out_msi_vec0to31] [get_bd_pins xlconcat_1/In1]
+  connect_bd_net [get_bd_pins xdma_0/interrupt_out_msi_vec32to63] [get_bd_pins xlconcat_1/In2]
+
+  save_bd_design
+
+  regenerate_bd_layout
+  save_bd_design
 }
+
 
 proc avnet_assign_addresses {project projects_folder scriptdir} {
     # Unassign all address segments
@@ -494,7 +438,14 @@ proc avnet_assign_addresses {project projects_folder scriptdir} {
   delete_bd_objs [get_bd_addr_segs -excluded]
 
   # Hard-code specific address segments (used in device-tree or applications)
-  assign_bd_address -offset 0x80030000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+  assign_bd_address -offset 0xa0030000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+
+  assign_bd_address -offset 0xB0000000 -range 0x01000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_0/S_AXI_B/BAR0] -force
+  assign_bd_address -offset 0x0500000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_0/S_AXI_LITE/CTL0] -force
+
+  #~ assign_bd_address -offset 0xB1000000 -range 0x01000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_1/S_AXI_B/BAR0] -force
+  #~ assign_bd_address -offset 0x0520000000 -range 0x20000000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs xdma_1/S_AXI_LITE/CTL0] -force
+
   
   assign_bd_address
 
@@ -519,7 +470,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 
    # define AXI ports
    set_property PFM.AXI_PORT { \
-	M_AXI_HPM1_FPD {memport "M_AXI_GP"} \
+	M_AXI_HPM0_LPD {memport "M_AXI_GP"} \
 	S_AXI_HPC0_FPD {memport "S_AXI_HPC" sptag "HPC0" memory "zynq_ultra_ps_e_0 HPC0_DDR_LOW"} \
 	S_AXI_HPC1_FPD {memport "S_AXI_HPC" sptag "HPC1" memory "zynq_ultra_ps_e_0 HPC1_DDR_LOW"} \
 	S_AXI_HP0_FPD {memport "S_AXI_HP" sptag "HP0" memory "zynq_ultra_ps_e_0 HP0_DDR_LOW"} \
@@ -534,7 +485,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
   
    # Set platform project properties
-   set_property platform.description                   "Base UZ3EG_PCIEC development platform" [current_project]
+   set_property platform.description                   "Base UZ7EV_EVCC development platform" [current_project]
    set_property platform.uses_pr                       false         [current_project]
 
    set_property platform.design_intent.server_managed  "false" [current_project]
@@ -543,7 +494,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property platform.design_intent.datacenter      "false" [current_proj]
 
    # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
-   #set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/uz3eg_pciec/uz3eg_pciec_dynamic_postlink.tcl [current_project]
+   #set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/uz7ev_evcc/uz7ev_evcc_dynamic_postlink.tcl [current_project]
 
    set_property platform.vendor                        "em.avnet.com" [current_project]
    set_property platform.board_id                      ${project} [current_project]
