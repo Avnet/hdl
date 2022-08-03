@@ -102,21 +102,21 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    save_bd_design
    
-   #
-   # Vitis interrupt
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0
-   save_bd_design
+   #~ #
+   #~ # Vitis interrupt
+   #~ #
+   #~ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0
+   #~ save_bd_design
 
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      Clk_master {Auto} \
-      Clk_slave {Auto} \
-      Clk_xbar {Auto} \
-      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
-      Slave {/axi_intc_0/s_axi} \
-      ddr_seg {Auto} intc_ip {/axi_interconnect_0} \
-      master_apm {0}}  [get_bd_intf_pins axi_intc_0/s_axi]
-   save_bd_design
+   #~ apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
+      #~ Clk_master {Auto} \
+      #~ Clk_slave {Auto} \
+      #~ Clk_xbar {Auto} \
+      #~ Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
+      #~ Slave {/axi_intc_0/s_axi} \
+      #~ ddr_seg {Auto} intc_ip {/axi_interconnect_0} \
+      #~ master_apm {0}}  [get_bd_intf_pins axi_intc_0/s_axi]
+   #~ save_bd_design
 
    #
    # System peripherals interrupts
@@ -179,7 +179,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins clk_wiz_0/clk_in1] 
    connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
    connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In5]
-   connect_bd_net [get_bd_pins axi_intc_0/irq] [get_bd_pins xlconcat_0/In6]
+   #~ connect_bd_net [get_bd_pins axi_intc_0/irq] [get_bd_pins xlconcat_0/In6]
    save_bd_design
 
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
@@ -289,8 +289,9 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    # required for Vitis 2020.1
    # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
    # define interrupt ports
-   set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
-  
+   #~ set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
+   set_property PFM.IRQ {pl_ps_irq1 {id 0 range 7}} [get_bd_cells /zynq_ultra_ps_e_0]
+
    # Set platform project properties
    set_property platform.description                   "Base ZUBoard-1CG development platform" [current_project]
    set_property platform.uses_pr                       false         [current_project]
@@ -363,6 +364,9 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
    create_bd_pin -dir O -from 0 -to 0 trigger
    create_bd_pin -dir O -from 0 -to 0 vpss_csc_resetn
    create_bd_pin -dir O -from 0 -to 0 vpss_scaler_resetn
+   create_bd_pin -dir O -from 0 -to 0 rst
+   create_bd_pin -dir O -from 0 -to 0 stby
+
    create_bd_pin -dir I -type clk clk100
    create_bd_pin -dir O -from 0 -to 0 frame_buffer_rd_resetn
    create_bd_pin -dir O -from 0 -to 0 frame_buffer_wr_resetn
@@ -421,20 +425,47 @@ proc create_hier_cell_GPIO { parentCell nameHier } {
       CONFIG.DIN_WIDTH {8} \
       CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_5]
 
+   # Create instance: xlslice_6, and set properties
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_6
+   set_property -dict [ list \
+      CONFIG.DIN_FROM {6} \
+      CONFIG.DIN_TO {6} \
+      CONFIG.DIN_WIDTH {8} \
+      CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_6]
+
+   # Create instance: xlslice_7, and set properties
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_7
+   set_property -dict [ list \
+      CONFIG.DIN_FROM {7} \
+      CONFIG.DIN_TO {7} \
+      CONFIG.DIN_WIDTH {8} \
+      CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_7]
+
+
+
    # Create interface connections
    connect_bd_intf_net [get_bd_intf_pins S_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
 
    # Create port connections
-   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_0/Din] [get_bd_pins xlslice_1/Din] [get_bd_pins xlslice_2/Din] [get_bd_pins xlslice_3/Din] [get_bd_pins xlslice_4/Din] [get_bd_pins xlslice_5/Din]
    connect_bd_net [get_bd_pins clk100] [get_bd_pins axi_gpio_0/s_axi_aclk]
    connect_bd_net [get_bd_pins s_axi_aresetn] [get_bd_pins axi_gpio_0/s_axi_aresetn]
-   connect_bd_net [get_bd_pins trigger] [get_bd_pins xlslice_0/Dout]
-   connect_bd_net [get_bd_pins icp3_i2c_id_select] [get_bd_pins xlslice_1/Dout]
-   connect_bd_net [get_bd_pins sp3] [get_bd_pins xlslice_2/Dout]
-   connect_bd_net [get_bd_pins frame_buffer_wr_resetn] [get_bd_pins xlslice_3/Dout]
-   connect_bd_net [get_bd_pins frame_buffer_rd_resetn] [get_bd_pins xlslice_4/Dout]
-   connect_bd_net [get_bd_pins vpss_scaler_resetn] [get_bd_pins xlslice_5/Dout]
-   connect_bd_net [get_bd_pins vpss_csc_resetn] [get_bd_pins xlslice_4/Dout]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_0/Din]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_1/Din]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_2/Din]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_3/Din]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_4/Din]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_5/Din]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_6/Din]
+   connect_bd_net [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_7/Din]
+   connect_bd_net [get_bd_pins xlslice_0/Dout] [get_bd_pins trigger] 
+   connect_bd_net [get_bd_pins xlslice_1/Dout] [get_bd_pins icp3_i2c_id_select] 
+   connect_bd_net [get_bd_pins xlslice_2/Dout] [get_bd_pins sp3] 
+   connect_bd_net [get_bd_pins xlslice_3/Dout] [get_bd_pins frame_buffer_wr_resetn] 
+   connect_bd_net [get_bd_pins xlslice_4/Dout] [get_bd_pins frame_buffer_rd_resetn]
+   connect_bd_net [get_bd_pins xlslice_4/Dout] [get_bd_pins vpss_csc_resetn]
+   connect_bd_net [get_bd_pins xlslice_5/Dout] [get_bd_pins vpss_scaler_resetn] 
+   connect_bd_net [get_bd_pins xlslice_6/Dout] [get_bd_pins rst] 
+   connect_bd_net [get_bd_pins xlslice_7/Dout] [get_bd_pins stby] 
 
    # Perform GUI Layout
    regenerate_bd_layout -hierarchy [get_bd_cells /GPIO]
@@ -782,10 +813,10 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
 
    save_bd_design
 
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
-   set_property -dict [list CONFIG.NUM_PORTS {2}] [get_bd_cells xlconcat_1]
+   #~ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
+   #~ set_property -dict [list CONFIG.NUM_PORTS {2}] [get_bd_cells xlconcat_1]
 
-   save_bd_design
+   #~ save_bd_design
 
    # Create instance: CAPTURE_PIPELINE
    create_hier_cell_CAPTURE_PIPELINE [current_bd_instance .] CAPTURE_PIPELINE
@@ -819,12 +850,16 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    create_bd_port -dir O -from 0 -to 0 icp3_i2c_id_select
    create_bd_port -dir O -from 0 -to 0 sp3
    create_bd_port -dir O -from 0 -to 0 trigger
+   create_bd_port -dir O -from 0 -to 0 rst
+   create_bd_port -dir O -from 0 -to 0 stby
 
    # GPIO - Create port connections
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out3] [get_bd_ports clk48m] 
    connect_bd_net [get_bd_pins GPIO/icp3_i2c_id_select] [get_bd_ports icp3_i2c_id_select] 
    connect_bd_net [get_bd_pins GPIO/sp3] [get_bd_ports sp3] 
    connect_bd_net [get_bd_pins GPIO/trigger] [get_bd_ports trigger] 
+   connect_bd_net [get_bd_pins GPIO/rst] [get_bd_ports rst] 
+   connect_bd_net [get_bd_pins GPIO/stby] [get_bd_ports stby] 
 
    save_bd_design
 
@@ -838,9 +873,12 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    save_bd_design
 
    # Interrupts - Create port connections
-   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_1/In0]
-   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/interrupt] [get_bd_pins xlconcat_1/In1]
-   connect_bd_net [get_bd_pins xlconcat_1/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1]
+   #~ connect_bd_net [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_1/In0]
+   #~ connect_bd_net [get_bd_pins CAPTURE_PIPELINE/interrupt] [get_bd_pins xlconcat_1/In1]
+   #~ connect_bd_net [get_bd_pins xlconcat_1/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1]
+
+   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_0/In3]
+   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/interrupt] [get_bd_pins xlconcat_0/In4]
 
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins zynq_ultra_ps_e_0/saxihp0_fpd_aclk]
 
