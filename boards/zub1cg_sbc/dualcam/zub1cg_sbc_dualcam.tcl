@@ -277,7 +277,6 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 
    # define AXI ports
    set_property PFM.AXI_PORT { \
-	M_AXI_HPM1_FPD {memport "M_AXI_GP"} \
 	S_AXI_HPC0_FPD {memport "S_AXI_HPC" sptag "HPC0" memory "zynq_ultra_ps_e_0 HPC0_DDR_LOW"} \
 	S_AXI_HPC1_FPD {memport "S_AXI_HPC" sptag "HPC1" memory "zynq_ultra_ps_e_0 HPC1_DDR_LOW"} \
 	S_AXI_HP0_FPD {memport "S_AXI_HP" sptag "HP0" memory "zynq_ultra_ps_e_0 HP0_DDR_LOW"} \
@@ -285,7 +284,23 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 	S_AXI_HP2_FPD {memport "S_AXI_HP" sptag "HP2" memory "zynq_ultra_ps_e_0 HP2_DDR_LOW"} \
 	S_AXI_HP3_FPD {memport "S_AXI_HP" sptag "HP3" memory "zynq_ultra_ps_e_0 HP3_DDR_LOW"} \
    } [get_bd_cells /zynq_ultra_ps_e_0]
-
+  set_property PFM.AXI_PORT { \
+       M03_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M04_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M05_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M06_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M07_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M08_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M09_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M10_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M11_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M12_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M13_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M14_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M15_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M16_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+   } [get_bd_cells /axi_interconnect_0]
+   
    # required for Vitis 2020.1
    # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
    # define interrupt ports
