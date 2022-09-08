@@ -401,7 +401,6 @@ switch -nocase $board {
    uz3eg_iocc                 -
    uz3eg_pciec                -
    uz7ev_evcc                 -
-   minized_sbc                -
    mz7010_som                 -
    mz7020_som                 {puts " Setting Up Project ${board}_${project}..."
                                  source ./project_scripts/${board}_${project}.tcl -notrace }
