@@ -260,6 +260,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
 
+   connect_bd_net [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
+   connect_bd_net [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
+   connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/ARESETN]
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
    set_property -dict [list CONFIG.NUM_PORTS {5}] [get_bd_cells xlconcat_0]
    
@@ -660,9 +664,6 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property platform.design_intent.embedded        "true" [current_project]
    set_property platform.design_intent.datacenter      "false" [current_proj]
 
-   # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
-   #set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/ultra96v2/ultra96v2_oob_dynamic_postlink.tcl [current_project]
-
    set_property platform.vendor                        "avnet.com" [current_project]
    set_property platform.board_id                      ${project} [current_project]
    set_property platform.name                          ${design_name} [current_project]
@@ -670,7 +671,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property platform.platform_state                "pre_synth" [current_project]
    set_property platform.ip_cache_dir                  [get_property ip_output_repo [current_project]] [current_project]
 
-   # recommnded to use "sd_card" for Vitis 2020.1
+   # recommnded to use "sd_card" for Vitis 2020.1 onwards
    # reference : https://github.com/Xilinx/Vitis_Embedded_Platform_Source/blob/2020.1/Xilinx_Official_Platforms/zcu104_base/vivado/xilinx_zcu104_base_202010_1_xsa.tcl
    #set_property platform.default_output_type           "xclbin" [current_project]
    set_property platform.default_output_type           "sd_card" [current_project]
