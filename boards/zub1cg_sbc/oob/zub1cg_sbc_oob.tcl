@@ -15,6 +15,9 @@
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 #
+#  Please direct any questions to the ZUBoard community support forum:
+#     http://avnet.me/zuboard-1cg-forum
+#
 #  Product information is available at:
 #     http://avnet.me/zuboard-1cg
 #
@@ -30,11 +33,11 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Apr 11, 2022
-#  Design Name:         ZUBoard 1CG Out-Of-Box (OOB) HW Platform
+#  Design Name:         ZUBoard-1CG Out-Of-Box (OOB) HW Platform
 #  Module Name:         zub1cg_sbc_oob.tcl
-#  Project Name:        ZUBoard 1CG Out-Of-Box (OOB)
+#  Project Name:        ZUBoard-1CG Out-Of-Box (OOB)
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
-#  Hardware Boards:     ZUBoard 1CG Board
+#  Hardware Boards:     ZUBoard-1CG Board
 #
 # ----------------------------------------------------------------------------
 

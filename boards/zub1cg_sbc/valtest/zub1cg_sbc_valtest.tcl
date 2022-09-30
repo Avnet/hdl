@@ -15,11 +15,11 @@
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 #
-#  Please direct any questions to the community support forum:
-#     http://avnet.me/TBD
+#  Please direct any questions to the ZUBoard community support forum:
+#     http://avnet.me/zuboard-1cg-forum
 #
 #  Product information is available at:
-#     http://avnet.me/TBD
+#     http://avnet.me/zuboard-1cg
 #
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
@@ -33,11 +33,11 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Apr 11, 2022
-#  Design Name:         ZUBoard 1CG Validation Test HW Platform
+#  Design Name:         ZUBoard-1CG Validation Test HW Platform
 #  Module Name:         zub1cg_sbc_valtest.tcl
-#  Project Name:        ZUBoard 1CG Validation Test
+#  Project Name:        ZUBoard-1CG Validation Test
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
-#  Hardware Boards:     ZUBoard 1CG Board
+#  Hardware Boards:     ZUBoard-1CG Board
 #
 # ----------------------------------------------------------------------------
 
