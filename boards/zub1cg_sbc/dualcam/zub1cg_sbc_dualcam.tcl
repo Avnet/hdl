@@ -123,7 +123,15 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
    set_property -dict [list CONFIG.NUM_PORTS {7}] [get_bd_cells xlconcat_0]
+
+   # Create instance: xlconstant_gnd, and set properties
+   set xlconstant_gnd [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_gnd ]
+   set_property -dict [ list \
+      CONFIG.CONST_VAL {0} \
+   ] $xlconstant_gnd
+
    save_bd_design
+
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_1
@@ -178,6 +186,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins clk_wiz_0/clk_in1] 
    connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
+   connect_bd_net -net xlconstant_gnd_dout [get_bd_pins xlconcat_interrupt_0/In0] [get_bd_pins xlconcat_interrupt_0/In3] [get_bd_pins xlconcat_interrupt_0/In4] [get_bd_pins xlconstant_gnd/dout]
    connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In5]
    connect_bd_net [get_bd_pins axi_intc_0/irq] [get_bd_pins xlconcat_0/In6]
    save_bd_design
@@ -225,7 +234,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
       CONFIG.PSU__USE__M_AXI_GP0 {1} \
       CONFIG.PSU__USE__M_AXI_GP2 {0} \
       CONFIG.PSU__USE__IRQ0 {1} \
-      CONFIG.PSU__USE__IRQ1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+      CONFIG.PSU__USE__IRQ1 {0}] [get_bd_cells zynq_ultra_ps_e_0]
 
    # Enable the PS SPI1 (SYZYGY MCU) and I2C0 (AP1302 ISP on DualCam SYZYGY)
    set_property -dict [list \
@@ -285,7 +294,6 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    S_AXI_HP3_FPD {memport "S_AXI_HP" sptag "HP3" memory "zynq_ultra_ps_e_0 HP3_DDR_LOW"} \
    } [get_bd_cells /zynq_ultra_ps_e_0]
   set_property PFM.AXI_PORT { \
-       M03_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
        M04_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
        M05_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
        M06_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
@@ -304,8 +312,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    # required for Vitis 2020.1
    # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
    # define interrupt ports
-   #~ set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
-   set_property PFM.IRQ {pl_ps_irq1 {id 0 range 7}} [get_bd_cells /zynq_ultra_ps_e_0]
+  set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
 
    # Set platform project properties
    set_property platform.description                   "Base ZUBoard-1CG development platform" [current_project]
@@ -828,11 +835,6 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
 
    save_bd_design
 
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
-   set_property -dict [list CONFIG.NUM_PORTS {2}] [get_bd_cells xlconcat_1]
-
-   save_bd_design
-
    # Create instance: CAPTURE_PIPELINE
    create_hier_cell_CAPTURE_PIPELINE [current_bd_instance .] CAPTURE_PIPELINE
 
@@ -888,12 +890,8 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    save_bd_design
 
    # Interrupts - Create port connections
-   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_1/In0]
-   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/interrupt] [get_bd_pins xlconcat_1/In1]
-   connect_bd_net [get_bd_pins xlconcat_1/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq1]
-
-   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_0/In3]
-   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/interrupt] [get_bd_pins xlconcat_0/In4]
+   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_0/In2]
+   connect_bd_net [get_bd_pins CAPTURE_PIPELINE/interrupt] [get_bd_pins xlconcat_0/In1]
 
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins zynq_ultra_ps_e_0/saxihp0_fpd_aclk]
 
