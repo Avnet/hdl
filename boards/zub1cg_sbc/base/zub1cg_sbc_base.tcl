@@ -584,7 +584,6 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
       CONFIG.PSU__USE__M_AXI_GP1 {0} \
       CONFIG.PSU__USE__IRQ0 {0} \
       CONFIG.PSU__USE__IRQ1 {0}] [get_bd_cells zynq_ultra_ps_e_0]
-      
 
    # Set PMU GPO2 (connected to on/off controller KILL_N signal) initial state to '1'
    set_property -dict [list CONFIG.PSU__PMU__GPO2__POLARITY {high}] [get_bd_cells zynq_ultra_ps_e_0]
@@ -594,8 +593,26 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    
    # Pull up the MIO12_ETH_RST_N (default is pulldown in the BDF, but this is not working)
    set_property -dict [list CONFIG.PSU_MIO_12_PULLUPDOWN {pullup}] [get_bd_cells zynq_ultra_ps_e_0]
-      
+
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk]
+
+   # Enable DisplayPort using PS GTR0 and GTR1
+   set_property -dict [list \
+      CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} \
+      CONFIG.PSU__DP__LANE_SEL {Dual Lower} \
+      CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
+
+   # Set the DisplayPort reference clock to 135 MHz
+   set_property -dict [list \
+      CONFIG.PSU__DP__REF_CLK_SEL {Ref Clk0} \
+      CONFIG.PSU__DP__REF_CLK_FREQ {135}] [get_bd_cells zynq_ultra_ps_e_0]
+
+   # Enable the SD0 and set it to eMMC 8-bit mode
+   set_property -dict [list \
+      CONFIG.PSU__SD0__PERIPHERAL__ENABLE {1} \
+      CONFIG.PSU__SD0__PERIPHERAL__IO {MIO 13 .. 22} \
+      CONFIG.PSU__SD0__SLOT_TYPE {eMMC} \
+      CONFIG.PSU__SD0__DATA_TRANSFER_MODE {8Bit}] [get_bd_cells zynq_ultra_ps_e_0]
 
    save_bd_design
 }
