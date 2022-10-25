@@ -32,23 +32,23 @@
 #
 # ----------------------------------------------------------------------------
 #
-#  Create Date:         Oct 05, 2021
-#  Design Name:         ZUBoard-1CG Validation Test HW Platform
-#  Module Name:         make_zub1cg_sbc_valtest.tcl
-#  Project Name:        ZUBoard-1CG Validation Test HW
+#  Create Date:         Aug 25, 2022
+#  Design Name:         ZUBoard-1CG Out-Of-Box (OOB) HW Platform
+#  Module Name:         make_zub1cg_sbc_oob.tcl
+#  Project Name:        ZUBoard-1CG Out-Of-Box (OOB) HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
-#  Hardware Boards:     Xboard-ZU1 Board
+#  Hardware Boards:     ZUBoard-1CG Board
 #
 # ----------------------------------------------------------------------------
 
 if {$argc != 0} {
-	# Build valtest hw platform
+	# Build oob hw platform
 	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes dev_arch=zynqmp]
 	set argc [llength $argv]
 	source ./make.tcl -notrace
 } else {
-	# Build valtest hw platform
-   set argv [list board=zub1cg_sbc project=valtest sdk=no close_project=yes dev_arch=zynqmp]
+	# Build oob hw platform
+   set argv [list board=zub1cg_sbc project=oob sdk=no close_project=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
 }

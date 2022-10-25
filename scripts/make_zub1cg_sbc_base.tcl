@@ -27,28 +27,28 @@
 #     any errors, which may appear in this code, nor does it make a commitment
 #     to update the information contained herein. Avnet, Inc specifically
 #     disclaims any implied warranties of fitness for a particular purpose.
-#                      Copyright(c) 2021 Avnet, Inc.
+#                      Copyright(c) 2022 Avnet, Inc.
 #                              All rights reserved.
 #
 # ----------------------------------------------------------------------------
 #
-#  Create Date:         Oct 05, 2021
-#  Design Name:         ZUBoard-1CG Validation Test HW Platform
-#  Module Name:         make_zub1cg_sbc_valtest.tcl
-#  Project Name:        ZUBoard-1CG Validation Test HW
+#  Create Date:         Aug 25, 2022
+#  Design Name:         ZUBoard-1CG Base HW Platform
+#  Module Name:         make_zub1cg_sbc_base.tcl
+#  Project Name:        ZUBoard-1CG Base HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
-#  Hardware Boards:     Xboard-ZU1 Board
+#  Hardware Boards:     ZUBoard-1CG Board
 #
 # ----------------------------------------------------------------------------
 
 if {$argc != 0} {
-	# Build valtest hw platform
+	# Build base hw platform
 	set argv [list board=[lindex $argv 0] project=[lindex $argv 1] sdk=no close_project=yes dev_arch=zynqmp]
 	set argc [llength $argv]
 	source ./make.tcl -notrace
 } else {
-	# Build valtest hw platform
-   set argv [list board=zub1cg_sbc project=valtest sdk=no close_project=yes dev_arch=zynqmp]
+	# Build base hw platform
+   set argv [list board=zub1cg_sbc project=base sdk=no close_project=yes dev_arch=zynqmp]
    set argc [llength $argv]
    source ./make.tcl -notrace
 }

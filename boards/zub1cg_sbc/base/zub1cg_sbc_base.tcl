@@ -33,9 +33,9 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Apr 11, 2022
-#  Design Name:         ZUBoard-1CG Factory Test HW Platform
-#  Module Name:         zub1cg_sbc_factest.tcl
-#  Project Name:        ZUBoard-1CG Factory Test
+#  Design Name:         ZUBoard-1CG Base HW Platform
+#  Module Name:         zub1cg_sbc_base.tcl
+#  Project Name:        ZUBoard-1CG Base
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
 #  Hardware Boards:     ZUBoard-1CG Board
 #
@@ -48,7 +48,9 @@ proc avnet_create_project {project projects_folder scriptdir} {
 
 proc avnet_import_constraints {boards_folder board project} {
 
+   set bdf_path [file normalize [pwd]/../../bdf]
    import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
+   import_files -fileset constrs_1 -norecurse ${bdf_path}/zub1cg/1.0/ZUBoard_temp.xdc
 }
 
 proc create_hier_cell_mux2to1 { parentCell nameHier } {
@@ -258,8 +260,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
 
+   connect_bd_net [get_bd_pins proc_sys_reset_0/slowest_sync_clk] [get_bd_pins zynq_ultra_ps_e_0/pl_clk0]
+   connect_bd_net [get_bd_pins proc_sys_reset_0/ext_reset_in] [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0]
+   connect_bd_net [get_bd_pins proc_sys_reset_0/peripheral_aresetn] [get_bd_pins axi_interconnect_0/ARESETN]
+
    create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
-   set_property -dict [list CONFIG.NUM_PORTS {2}] [get_bd_cells xlconcat_0]
+   set_property -dict [list CONFIG.NUM_PORTS {5}] [get_bd_cells xlconcat_0]
    
    #
    # System monitor
@@ -334,21 +340,17 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       intc_ip {/axi_interconnect_0} \
       master_apm {0}}  [get_bd_intf_pins axi_gpio_1/S_AXI]
    save_bd_design
-      
+
    #
-   # Syzygy TRX2 (MIO) loopback
+   # PL PB switch input
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_2
    set_property -dict [list \
-      CONFIG.C_GPIO_WIDTH {2} \
-      CONFIG.C_ALL_OUTPUTS {1} \
-      CONFIG.C_IS_DUAL {1} \
-      CONFIG.C_GPIO2_WIDTH {2} \
-      CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_2]
+      CONFIG.C_GPIO_WIDTH {1} \
+      CONFIG.C_ALL_INPUTS {1} \
+      CONFIG.C_IS_DUAL {0}] [get_bd_cells axi_gpio_2]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_2/GPIO]
-   set_property name szg_trx2_mio_lb_out [get_bd_intf_ports GPIO_0]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_2/GPIO2]
-   set_property name szg_trx2_mio_lb_in [get_bd_intf_ports GPIO2_0]
+   set_property name pl_pb [get_bd_intf_ports GPIO_0]
    save_bd_design
 
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
@@ -360,168 +362,12 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       ddr_seg {Auto} \
       intc_ip {/axi_interconnect_0} \
       master_apm {0}}  [get_bd_intf_pins axi_gpio_2/S_AXI]
-   save_bd_design
-      
-   #
-   # Syzygy TRX2 (PL) loopback
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_3
-   set_property -dict [list \
-      CONFIG.C_GPIO_WIDTH {9} \
-      CONFIG.C_ALL_OUTPUTS {1} \
-      CONFIG.C_IS_DUAL {1} \
-      CONFIG.C_GPIO2_WIDTH {9} \
-      CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_3]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_3/GPIO]
-   set_property name szg_trx2_pl_lb_out [get_bd_intf_ports GPIO_0]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_3/GPIO2]
-   set_property name szg_trx2_pl_lb_in [get_bd_intf_ports GPIO2_0]
-   save_bd_design
 
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Clk_slave {Auto} \
-      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
-      Slave {/axi_gpio_3/S_AXI} \
-      ddr_seg {Auto} \
-      intc_ip {/axi_interconnect_0} \
-      master_apm {0}}  [get_bd_intf_pins axi_gpio_3/S_AXI]
-   save_bd_design
-      
-   #
-   # Syzygy STD (PL) loopback
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_4
-   set_property -dict [list \
-      CONFIG.C_GPIO_WIDTH {14} \
-      CONFIG.C_ALL_OUTPUTS {1} \
-      CONFIG.C_IS_DUAL {1} \
-      CONFIG.C_GPIO2_WIDTH {14} \
-      CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_4]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_4/GPIO]
-   set_property name szg_std_lb_out [get_bd_intf_ports GPIO_0]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_4/GPIO2]
-   set_property name szg_std_lb_in [get_bd_intf_ports GPIO2_0]
-   save_bd_design
-
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Clk_slave {Auto} \
-      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
-      Slave {/axi_gpio_4/S_AXI} \
-      ddr_seg {Auto} \
-      intc_ip {/axi_interconnect_0} \
-      master_apm {0}}  [get_bd_intf_pins axi_gpio_4/S_AXI]
-   save_bd_design
-      
-   #
-   # Syzygy TRX2 (PL) power
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_5
-   set_property -dict [list \
-      CONFIG.C_GPIO_WIDTH {1} \
-      CONFIG.C_ALL_OUTPUTS {1} \
-      CONFIG.C_IS_DUAL {1} \
-      CONFIG.C_GPIO2_WIDTH {3} \
-      CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_5]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_5/GPIO]
-   set_property name szg_trx2_pl_pwr_out [get_bd_intf_ports GPIO_0]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_5/GPIO2]
-   set_property name szg_trx2_pl_pwr_in [get_bd_intf_ports GPIO2_0]
-   save_bd_design
-
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Clk_slave {Auto} \
-      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
-      Slave {/axi_gpio_5/S_AXI} \
-      ddr_seg {Auto} \
-      intc_ip {/axi_interconnect_0} \
-      master_apm {0}}  [get_bd_intf_pins axi_gpio_5/S_AXI]
-   save_bd_design
-
-   #
-   # Syzygy STD (PL) power
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_6
-   set_property -dict [list \
-      CONFIG.C_GPIO_WIDTH {1} \
-      CONFIG.C_ALL_OUTPUTS {1} \
-      CONFIG.C_IS_DUAL {1} \
-      CONFIG.C_GPIO2_WIDTH {3} \
-      CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_6]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_6/GPIO]
-   set_property name szg_std_pwr_out [get_bd_intf_ports GPIO_0]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_6/GPIO2]
-   set_property name szg_std_pwr_in [get_bd_intf_ports GPIO2_0]
-   save_bd_design
-
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Clk_slave {Auto} \
-      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
-      Slave {/axi_gpio_6/S_AXI} \
-      ddr_seg {Auto} \
-      intc_ip {/axi_interconnect_0} \
-      master_apm {0}}  [get_bd_intf_pins axi_gpio_6/S_AXI]
-   save_bd_design
-
-   #
-   # PL PB switch input
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_7
-   set_property -dict [list \
-      CONFIG.C_GPIO_WIDTH {1} \
-      CONFIG.C_ALL_INPUTS {1} \
-      CONFIG.C_IS_DUAL {0}] [get_bd_cells axi_gpio_7]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_7/GPIO]
-   set_property name pl_pb [get_bd_intf_ports GPIO_0]
-   save_bd_design
-
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Clk_slave {Auto} \
-      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
-      Slave {/axi_gpio_7/S_AXI} \
-      ddr_seg {Auto} \
-      intc_ip {/axi_interconnect_0} \
-      master_apm {0}}  [get_bd_intf_pins axi_gpio_7/S_AXI]
-      
-
-   #
-   # Click test with LED tester board
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_8
-   set_property -dict [list \
-      CONFIG.C_GPIO_WIDTH {11} \
-      CONFIG.C_ALL_OUTPUTS {1} \
-      CONFIG.C_DOUT_DEFAULT {0x00000000} \
-      CONFIG.C_IS_DUAL {0}] [get_bd_cells axi_gpio_8]
-   make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_8/GPIO]
-   set_property name click_test_leds [get_bd_intf_ports GPIO_0]
-   save_bd_design
-
-   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
-      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Clk_slave {Auto} \
-      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
-      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
-      Slave {/axi_gpio_8/S_AXI} \
-      ddr_seg {Auto} \
-      intc_ip {/axi_interconnect_0} \
-      master_apm {0}}  [get_bd_intf_pins axi_gpio_8/S_AXI]
-   save_bd_design
-      
    #
    # Temperature sensor IIC from BDF
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_0
-   apply_board_connection -board_interface "tempsensor_i2c_pl" -ip_intf "axi_iic_0/IIC" -diagram "zub1cg_sbc_factest"
+   apply_board_connection -board_interface "tempsensor_i2c_pl" -ip_intf "axi_iic_0/IIC" -diagram "${project}"
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
       Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
       Clk_slave {Auto} \
@@ -537,7 +383,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    # SYZYGY DNA IIC from BDF
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_1
-   apply_board_connection -board_interface "syzygydna_i2c_pl" -ip_intf "axi_iic_1/IIC" -diagram "zub1cg_sbc_factest"
+   apply_board_connection -board_interface "syzygydna_i2c_pl" -ip_intf "axi_iic_1/IIC" -diagram "${project}"
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
       Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
       Clk_slave {Auto} \
@@ -550,13 +396,181 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
 
    #
+   # Click IIC from BDF
+   #
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_2
+   apply_board_connection -board_interface "click_i2c_pl" -ip_intf "axi_iic_2/IIC" -diagram "${project}"
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
+      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
+      Clk_slave {Auto} \
+      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
+      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
+      Slave {/axi_iic_2/S_AXI} \
+      ddr_seg {Auto} \
+      intc_ip {/axi_interconnect_0} \
+      master_apm {0}} [get_bd_intf_pins axi_iic_2/S_AXI]
+   save_bd_design
+
+   #
+   # Click SPI from BDF
+   #
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_quad_spi:3.2 axi_quad_spi_0
+   apply_board_connection -board_interface "click_spi_pl" -ip_intf "axi_quad_spi_0/SPI_0" -diagram "${project}"
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
+      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
+      Clk_slave {Auto} \
+      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
+      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
+      Slave {/axi_quad_spi_0/AXI_LITE} \
+      ddr_seg {Auto} \
+      intc_ip {/axi_interconnect_0} \
+      master_apm {0}} [get_bd_intf_pins axi_quad_spi_0/AXI_LITE]
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins axi_quad_spi_0/ext_spi_clk]
+   save_bd_design
+
+   #
+   # Click UART from BDF
+   #
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uartlite:2.0 axi_uartlite_0
+   apply_board_connection -board_interface "click_uart_pl" -ip_intf "axi_uartlite_0/UART" -diagram "${project}"
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
+      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
+      Clk_slave {Auto} \
+      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
+      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
+      Slave {/axi_uartlite_0/S_AXI} \
+      ddr_seg {Auto} \
+      intc_ip {/axi_interconnect_0} \
+      master_apm {0}} [get_bd_intf_pins axi_uartlite_0/S_AXI]
+   set_property -dict [list CONFIG.C_BAUDRATE {115200}] [get_bd_cells axi_uartlite_0]
+   save_bd_design
+
+   #
    # Connect the remaining nets and ports
    #
    connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
-
+   
    connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
    connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In0]
    connect_bd_net [get_bd_pins axi_iic_1/iic2intc_irpt] [get_bd_pins xlconcat_0/In1]
+   connect_bd_net [get_bd_pins axi_iic_2/iic2intc_irpt] [get_bd_pins xlconcat_0/In2]
+   connect_bd_net [get_bd_pins axi_uartlite_0/interrupt] [get_bd_pins xlconcat_0/In3]
+   connect_bd_net [get_bd_pins axi_quad_spi_0/ip2intc_irpt] [get_bd_pins xlconcat_0/In4]
+
+   #
+   # VITIS ADDITIONS - START
+   #  
+
+   # Disable M_AXI_HPM1_FPD (keep available to VITIS for control interface)
+   set_property -dict [list CONFIG.PSU__USE__M_AXI_GP1 {0}] [get_bd_cells zynq_ultra_ps_e_0]
+
+   # Add AXI interrupt controller (for VITIS XRT interrupt support)
+   create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0 
+   apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
+      Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
+      Clk_slave {Auto} \
+      Clk_xbar {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
+      Master {/zynq_ultra_ps_e_0/M_AXI_HPM0_FPD} \
+      Slave {/axi_intc_0/s_axi} \
+      ddr_seg {Auto} \
+      intc_ip {/axi_interconnect_0} \
+      master_apm {0}}  [get_bd_intf_pins axi_intc_0/s_axi]
+
+   # Set IRQ type to 'EDGE' and connection to 'SINGLE'
+   set_property -dict [ list \
+      CONFIG.C_IRQ_IS_LEVEL {0} \
+      CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_0]
+
+   set_property -dict [list CONFIG.NUM_PORTS {6}] [get_bd_cells xlconcat_0]
+   connect_bd_net [get_bd_pins xlconcat_0/In5] [get_bd_pins axi_intc_0/irq]
+
+   # Create clock wizard (with same clock frequencies as in zcu102_base/zcu104_base VITIS platforms)
+   #   [0] 150 MHz
+   #   [1] 300 MHz
+   #   [2]  75 MHz
+   #   [3] 100 MHz
+   #   [4] 200 MHz
+   #   [5] 400 MHz
+   #   [6] 600 MHz
+   create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0
+   set_property -dict [ list \
+      CONFIG.CLKOUT1_JITTER {107.567} \
+      CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {150} \
+      CONFIG.CLKOUT2_JITTER {94.862} \
+      CONFIG.CLKOUT2_PHASE_ERROR {87.180} \
+      CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {300} \
+      CONFIG.CLKOUT2_USED {true} \
+      CONFIG.CLKOUT3_JITTER {122.158} \
+      CONFIG.CLKOUT3_PHASE_ERROR {87.180} \
+      CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {75} \
+      CONFIG.CLKOUT3_USED {true} \
+      CONFIG.CLKOUT4_JITTER {115.831} \
+      CONFIG.CLKOUT4_PHASE_ERROR {87.180} \
+      CONFIG.CLKOUT4_REQUESTED_OUT_FREQ {100.000} \
+      CONFIG.CLKOUT4_USED {true} \
+      CONFIG.CLKOUT5_JITTER {102.086} \
+      CONFIG.CLKOUT5_PHASE_ERROR {87.180} \
+      CONFIG.CLKOUT5_REQUESTED_OUT_FREQ {200.000} \
+      CONFIG.CLKOUT5_USED {true} \
+      CONFIG.CLKOUT6_JITTER {90.074} \
+      CONFIG.CLKOUT6_PHASE_ERROR {87.180} \
+      CONFIG.CLKOUT6_REQUESTED_OUT_FREQ {400.000} \
+      CONFIG.CLKOUT6_USED {true} \
+      CONFIG.CLKOUT7_JITTER {83.768} \
+      CONFIG.CLKOUT7_PHASE_ERROR {87.180} \
+      CONFIG.CLKOUT7_REQUESTED_OUT_FREQ {600.000} \
+      CONFIG.CLKOUT7_USED {true} \
+      CONFIG.MMCM_CLKOUT0_DIVIDE_F {8.000} \
+      CONFIG.MMCM_CLKOUT1_DIVIDE {4} \
+      CONFIG.MMCM_CLKOUT2_DIVIDE {16} \
+      CONFIG.MMCM_CLKOUT3_DIVIDE {12} \
+      CONFIG.MMCM_CLKOUT4_DIVIDE {6} \
+      CONFIG.MMCM_CLKOUT5_DIVIDE {3} \
+      CONFIG.MMCM_CLKOUT6_DIVIDE {2} \
+      CONFIG.NUM_OUT_CLKS {7} \
+      CONFIG.RESET_PORT {resetn} \
+      CONFIG.RESET_TYPE {ACTIVE_LOW}] [get_bd_cells clk_wiz_0]
+
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_1
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_2
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_3
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_4
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_5
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_6
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_7
+
+   connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins clk_wiz_0/clk_in1]
+
+   connect_bd_net -net clk_wiz_0_clk_out1 [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins proc_sys_reset_1/slowest_sync_clk]
+   connect_bd_net -net clk_wiz_0_clk_out2 [get_bd_pins clk_wiz_0/clk_out2] [get_bd_pins proc_sys_reset_2/slowest_sync_clk]
+   connect_bd_net -net clk_wiz_0_clk_out3 [get_bd_pins clk_wiz_0/clk_out3] [get_bd_pins proc_sys_reset_3/slowest_sync_clk]
+   connect_bd_net -net clk_wiz_0_clk_out4 [get_bd_pins clk_wiz_0/clk_out4] [get_bd_pins proc_sys_reset_4/slowest_sync_clk]
+   connect_bd_net -net clk_wiz_0_clk_out5 [get_bd_pins clk_wiz_0/clk_out5] [get_bd_pins proc_sys_reset_5/slowest_sync_clk]
+   connect_bd_net -net clk_wiz_0_clk_out6 [get_bd_pins clk_wiz_0/clk_out6] [get_bd_pins proc_sys_reset_6/slowest_sync_clk]
+   connect_bd_net -net clk_wiz_0_clk_out7 [get_bd_pins clk_wiz_0/clk_out7] [get_bd_pins proc_sys_reset_7/slowest_sync_clk]
+
+   connect_bd_net -net clk_wiz_0_locked [get_bd_pins clk_wiz_0/locked] \
+      [get_bd_pins proc_sys_reset_1/dcm_locked] \
+      [get_bd_pins proc_sys_reset_2/dcm_locked] \
+      [get_bd_pins proc_sys_reset_3/dcm_locked] \
+      [get_bd_pins proc_sys_reset_4/dcm_locked] \
+      [get_bd_pins proc_sys_reset_5/dcm_locked] \
+      [get_bd_pins proc_sys_reset_6/dcm_locked] \
+      [get_bd_pins proc_sys_reset_7/dcm_locked]
+
+   connect_bd_net -net zynq_ultra_ps_e_0_pl_resetn0 [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] \
+      [get_bd_pins clk_wiz_0/resetn] \
+      [get_bd_pins proc_sys_reset_1/ext_reset_in] \
+      [get_bd_pins proc_sys_reset_2/ext_reset_in] \
+      [get_bd_pins proc_sys_reset_3/ext_reset_in] \
+      [get_bd_pins proc_sys_reset_4/ext_reset_in] \
+      [get_bd_pins proc_sys_reset_5/ext_reset_in] \
+      [get_bd_pins proc_sys_reset_6/ext_reset_in] \
+      [get_bd_pins proc_sys_reset_7/ext_reset_in]
+
+   #
+   # VITIS ADDITIONS - END
+   #
 
    regenerate_bd_layout
    save_bd_design
@@ -581,10 +595,10 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    
    # Enable the PL-to-PS IRQ port
    set_property -dict [list CONFIG.PSU__USE__IRQ0 {1}] [get_bd_cells zynq_ultra_ps_e_0]
-      
+   
    # Pull up the MIO12_ETH_RST_N (default is pulldown in the BDF, but this is not working)
    set_property -dict [list CONFIG.PSU_MIO_12_PULLUPDOWN {pullup}] [get_bd_cells zynq_ultra_ps_e_0]
-
+      
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk]
 
    save_bd_design
@@ -605,24 +619,6 @@ proc avnet_assign_addresses {project projects_folder scriptdir} {
    # axi_gpio_2
    assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_gpio_2/S_AXI/Reg] -force
   
-   # axi_gpio_3
-   assign_bd_address -offset 0xA0030000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_gpio_3/S_AXI/Reg] -force
-  
-   # axi_gpio_4
-   assign_bd_address -offset 0xA0040000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_gpio_4/S_AXI/Reg] -force
-  
-   # axi_gpio_5
-   assign_bd_address -offset 0xA0050000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_gpio_5/S_AXI/Reg] -force
-  
-   # axi_gpio_6
-   assign_bd_address -offset 0xA0060000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_gpio_6/S_AXI/Reg] -force
-  
-   # axi_gpio_7
-   assign_bd_address -offset 0xA0070000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_gpio_7/S_AXI/Reg] -force
-  
-   # axi_gpio_8
-   assign_bd_address -offset 0xA0080000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_gpio_8/S_AXI/Reg] -force
-  
    assign_bd_address
 }
 
@@ -633,13 +629,13 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 
    # define clock and reset ports
    set_property PFM.CLOCK { \
-	clk_out1 {id "0" is_default "true" proc_sys_reset "proc_sys_reset_0" status "fixed"} \
-	clk_out2 {id "1" is_default "false" proc_sys_reset "proc_sys_reset_1" status "fixed"} \
-	clk_out3 {id "2" is_default "false" proc_sys_reset "/proc_sys_reset_2" status "fixed"} \
-	clk_out4 {id "3" is_default "false" proc_sys_reset "/proc_sys_reset_3" status "fixed"} \
-	clk_out5 {id "4" is_default "false" proc_sys_reset "/proc_sys_reset_4" status "fixed"} \
-	clk_out6 {id "5" is_default "false" proc_sys_reset "/proc_sys_reset_5" status "fixed"} \
-	clk_out7 {id "6" is_default "false" proc_sys_reset "/proc_sys_reset_6" status "fixed"} \
+	clk_out1 {id "0" is_default "true" proc_sys_reset "proc_sys_reset_1" status "fixed"} \
+	clk_out2 {id "1" is_default "false" proc_sys_reset "proc_sys_reset_2" status "fixed"} \
+	clk_out3 {id "2" is_default "false" proc_sys_reset "/proc_sys_reset_3" status "fixed"} \
+	clk_out4 {id "3" is_default "false" proc_sys_reset "/proc_sys_reset_4" status "fixed"} \
+	clk_out5 {id "4" is_default "false" proc_sys_reset "/proc_sys_reset_5" status "fixed"} \
+	clk_out6 {id "5" is_default "false" proc_sys_reset "/proc_sys_reset_6" status "fixed"} \
+	clk_out7 {id "6" is_default "false" proc_sys_reset "/proc_sys_reset_7" status "fixed"} \
    } [get_bd_cells /clk_wiz_0]
 
 
@@ -660,16 +656,13 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
   
    # Set platform project properties
-   set_property platform.description                   "Base Ultra96-V2 development platform" [current_project]
+   set_property platform.description                   "Base ZUB1CG development platform" [current_project]
    set_property platform.uses_pr                       false         [current_project]
 
    set_property platform.design_intent.server_managed  "false" [current_project]
    set_property platform.design_intent.external_host   "false" [current_project]
    set_property platform.design_intent.embedded        "true" [current_project]
    set_property platform.design_intent.datacenter      "false" [current_proj]
-
-   # specific to Vitis 2019.2, no longer applicable for Vitis 2020.1
-   #set_property platform.post_sys_link_tcl_hook        ${projects_folder}/../../../boards/ultra96v2/ultra96v2_oob_dynamic_postlink.tcl [current_project]
 
    set_property platform.vendor                        "avnet.com" [current_project]
    set_property platform.board_id                      ${project} [current_project]
@@ -678,7 +671,7 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
    set_property platform.platform_state                "pre_synth" [current_project]
    set_property platform.ip_cache_dir                  [get_property ip_output_repo [current_project]] [current_project]
 
-   # recommnded to use "sd_card" for Vitis 2020.1
+   # recommnded to use "sd_card" for Vitis 2020.1 onwards
    # reference : https://github.com/Xilinx/Vitis_Embedded_Platform_Source/blob/2020.1/Xilinx_Official_Platforms/zcu104_base/vivado/xilinx_zcu104_base_202010_1_xsa.tcl
    #set_property platform.default_output_type           "xclbin" [current_project]
    set_property platform.default_output_type           "sd_card" [current_project]

@@ -32,10 +32,10 @@
 #
 # ----------------------------------------------------------------------------
 #
-#  Create Date:         Apr 08, 2022
-#  Design Name:         ZUBoard-1CG Factory Test HW Platform
-#  Module Name:         zub1cg_sbc_factest.tcl
-#  Project Name:        ZUBoard-1CG Factory Test HW
+#  Create Date:         Aug 25, 2022
+#  Design Name:         ZUBoard-1CG Base HW Platform
+#  Module Name:         zub1cg_sbc_base.tcl
+#  Project Name:        ZUBoard-1CG Base HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
 #  Hardware Boards:     ZUBoard-1CG Board
 #
@@ -153,11 +153,11 @@ if {[string match -nocase "yes" $clean]} {
    }
    
    # Add Vitis directives
-   #~ puts ""
-   #~ puts "***** Adding Vitis directves to design..."
-   #~ avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
-   #~ update_compile_order -fileset sources_1
-   #~ import_files
+   puts ""
+   puts "***** Adding Vitis directves to design..."
+   avnet_add_vitis_directives ${board}_${project} $projects_folder $scriptdir
+   update_compile_order -fileset sources_1
+   import_files
    
    # Build the binary
    #*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
@@ -200,7 +200,7 @@ if {[string match -nocase "yes" $clean]} {
    open_run impl_1
    puts ""
    puts "***** Write and validate the design archive..."
-   write_hw_platform -fixed -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
+   write_hw_platform -file ${projects_folder}/${board}_${project}.xsa -include_bit -force
    validate_hw_platform ${projects_folder}/${board}_${project}.xsa -verbose
    puts ""
    puts "***** Close the implemented design..."

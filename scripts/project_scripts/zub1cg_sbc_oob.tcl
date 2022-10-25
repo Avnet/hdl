@@ -32,10 +32,10 @@
 #
 # ----------------------------------------------------------------------------
 #
-#  Create Date:         Apr 08, 2022
-#  Design Name:         ZUBoard-1CG Factory Test HW Platform
-#  Module Name:         zub1cg_sbc_factest.tcl
-#  Project Name:        ZUBoard-1CG Factory Test HW
+#  Create Date:         Aug 25, 2022
+#  Design Name:         ZUBoard-1CG Out-of-Box (OOB) HW Platform
+#  Module Name:         zub1cg_sbc_oob.tcl
+#  Project Name:        ZUBoard-1CG Out-of-Box (OOB) HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
 #  Hardware Boards:     ZUBoard-1CG Board
 #
