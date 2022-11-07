@@ -101,12 +101,43 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       master_apm {0}}  [get_bd_intf_pins axi_iic_0/S_AXI]
 
    save_bd_design
-   
+
+   #
+   # Add the Concat block for the interrupts
+   #
+   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
+   set_property -dict [list CONFIG.NUM_PORTS {1}] [get_bd_cells xlconcat_0]
+   connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
+
+   save_bd_design
+
+   #
+   # VITIS ADDITIONS - START
+   #
+
+   # Enable M_AXI_HPM1_FPD
+   set_property -dict [list CONFIG.PSU__USE__M_AXI_GP1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+
+   # enable S_AXI_HP0_FPD High-Performance port
+   set_property -dict [list CONFIG.PSU__USE__S_AXI_GP2 {1}] [get_bd_cells zynq_ultra_ps_e_0]
+
    #
    # Vitis interrupt
    #
+   # Add AXI interrupt controller (for VITIS XRT interrupt support)
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_intc:4.1 axi_intc_0
-   save_bd_design
+
+   # Set IRQ type to 'EDGE' and connection to 'SINGLE'
+   set_property -dict [ list \
+      CONFIG.C_IRQ_IS_LEVEL {0} \
+      CONFIG.C_IRQ_CONNECTION {1}] [get_bd_cells axi_intc_0]
+   #
+
+   #
+   # System peripherals interrupts
+   #
+   set_property -dict [list CONFIG.NUM_PORTS {7}] [get_bd_cells xlconcat_0]
+   connect_bd_net [get_bd_pins xlconcat_0/In6] [get_bd_pins axi_intc_0/irq]
 
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
       Clk_master {Auto} \
@@ -116,31 +147,17 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       Slave {/axi_intc_0/s_axi} \
       ddr_seg {Auto} intc_ip {/axi_interconnect_0} \
       master_apm {0}}  [get_bd_intf_pins axi_intc_0/s_axi]
+   
    save_bd_design
 
-   #
-   # System peripherals interrupts
-   #
-   create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
-   set_property -dict [list CONFIG.NUM_PORTS {7}] [get_bd_cells xlconcat_0]
-
-   # Create instance: xlconstant_gnd, and set properties
-   set xlconstant_gnd [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_gnd ]
-   set_property -dict [ list \
-      CONFIG.CONST_VAL {0} \
-   ] $xlconstant_gnd
-
-   save_bd_design
-
-
-   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
-   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_1
-   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_2
-   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_3
-   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_4
-   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_5
-   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_6
-
+   # Create clock wizard (with same clock frequencies as in zcu102_base/zcu104_base VITIS platforms)
+   #   [0] 150 MHz
+   #   [1] 300 MHz
+   #   [2]  75 MHz
+   #   [3] 100 MHz
+   #   [4] 200 MHz
+   #   [5] 400 MHz
+   #   [6] 600 MHz
    create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0
    set_property -dict [ list \
       CONFIG.CLKOUT1_JITTER {107.567} \
@@ -180,15 +197,20 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.RESET_PORT {resetn} \
       CONFIG.RESET_TYPE {ACTIVE_LOW}] [get_bd_cells clk_wiz_0]
 
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_1
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_2
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_3
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_4
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_5
+   create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_6
+
    save_bd_design
 
    connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins clk_wiz_0/clk_in1] 
-   connect_bd_net [get_bd_pins xlconcat_0/dout] [get_bd_pins zynq_ultra_ps_e_0/pl_ps_irq0]
-   connect_bd_net -net xlconstant_gnd_dout [get_bd_pins xlconcat_interrupt_0/In0] [get_bd_pins xlconcat_interrupt_0/In3] [get_bd_pins xlconcat_interrupt_0/In4] [get_bd_pins xlconstant_gnd/dout]
    connect_bd_net [get_bd_pins axi_iic_0/iic2intc_irpt] [get_bd_pins xlconcat_0/In5]
-   connect_bd_net [get_bd_pins axi_intc_0/irq] [get_bd_pins xlconcat_0/In6]
    save_bd_design
 
    connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins proc_sys_reset_0/slowest_sync_clk]
@@ -221,6 +243,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    regenerate_bd_layout
    save_bd_design
+
+   #
+   # VITIS ADDITIONS - END
+   #  
 }
 
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
@@ -286,36 +312,37 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 
    # define AXI ports
    set_property PFM.AXI_PORT { \
-   S_AXI_HPC0_FPD {memport "S_AXI_HPC" sptag "HPC0" memory "zynq_ultra_ps_e_0 HPC0_DDR_LOW"} \
-   S_AXI_HPC1_FPD {memport "S_AXI_HPC" sptag "HPC1" memory "zynq_ultra_ps_e_0 HPC1_DDR_LOW"} \
-   S_AXI_HP0_FPD {memport "S_AXI_HP" sptag "HP0" memory "zynq_ultra_ps_e_0 HP0_DDR_LOW"} \
+   M_AXI_HPM0_LPD {memport "M_AXI_GP" sptag "HPM0_LPD"} \
+   S_AXI_HPC0_FPD {memport "S_AXI_HP" sptag "HPC0" memory "zynq_ultra_ps_e_0 HPC0_DDR_LOW"} \
+   S_AXI_HPC1_FPD {memport "S_AXI_HP" sptag "HPC1" memory "zynq_ultra_ps_e_0 HPC1_DDR_LOW"} \
    S_AXI_HP1_FPD {memport "S_AXI_HP" sptag "HP1" memory "zynq_ultra_ps_e_0 HP1_DDR_LOW"} \
    S_AXI_HP2_FPD {memport "S_AXI_HP" sptag "HP2" memory "zynq_ultra_ps_e_0 HP2_DDR_LOW"} \
    S_AXI_HP3_FPD {memport "S_AXI_HP" sptag "HP3" memory "zynq_ultra_ps_e_0 HP3_DDR_LOW"} \
    } [get_bd_cells /zynq_ultra_ps_e_0]
+
   set_property PFM.AXI_PORT { \
-       M04_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M05_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M06_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M07_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M08_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M09_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M10_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M11_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M12_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M13_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M14_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M15_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
-       M16_AXI {memport "M_AXI_GP" sptag "" memory "" is_range "false"} \
+       M04_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M05_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M06_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M07_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M08_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M09_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M10_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M11_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M12_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M13_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M14_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M15_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+       M16_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
    } [get_bd_cells /axi_interconnect_0]
    
    # required for Vitis 2020.1
    # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
    # define interrupt ports
-  set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
+   set_property PFM.IRQ {intr {id 0 range 32}} [get_bd_cells /axi_intc_0]
 
    # Set platform project properties
-   set_property platform.description                   "Base ZUBoard-1CG development platform" [current_project]
+   set_property platform.description                   "ZUBoard-1CG Dual Camera HW Platform" [current_project]
    set_property platform.uses_pr                       false         [current_project]
 
    set_property platform.design_intent.server_managed  "false" [current_project]
@@ -841,6 +868,12 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    # Create instance: GPIO
    create_hier_cell_GPIO [current_bd_instance .] GPIO
 
+   # Create instance: xlconstant_0, and set properties
+   set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0 ]
+   set_property -dict [ list \
+    CONFIG.CONST_VAL {0} \
+   ] $xlconstant_0
+
    # MIPI - Create interface ports
    create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:mipi_phy_rtl:1.0 mipi_phy_if_0
 
@@ -890,6 +923,7 @@ proc avnet_add_pl_dualcam {project projects_folder scriptdir} {
    save_bd_design
 
    # Interrupts - Create port connections
+   connect_bd_net [get_bd_pins xlconstant_0/dout] [get_bd_pins xlconcat_0/In0] [get_bd_pins xlconcat_0/In3] [get_bd_pins xlconcat_0/In4]
    connect_bd_net [get_bd_pins CAPTURE_PIPELINE/csirxss_csi_irq] [get_bd_pins xlconcat_0/In2]
    connect_bd_net [get_bd_pins CAPTURE_PIPELINE/interrupt] [get_bd_pins xlconcat_0/In1]
 
