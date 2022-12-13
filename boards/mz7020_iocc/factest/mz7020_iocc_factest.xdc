@@ -110,8 +110,8 @@ set_property PACKAGE_PIN R16 [get_ports {pmod_jd_out_tri_o[0]}]
 # ----------------------------------------------------------------------------
 # JE Pmod - Bank 35
 # ----------------------------------------------------------------------------
-set_property PACKAGE_PIN F16 [get_ports {pmod_je_in_tri_i[3]}]
-set_property PACKAGE_PIN F17 [get_ports {pmod_je_in_tri_i[2]}]
+set_property PACKAGE_PIN F17 [get_ports {pmod_je_in_tri_i[3]}]
+set_property PACKAGE_PIN F16 [get_ports {pmod_je_in_tri_i[2]}]
 set_property PACKAGE_PIN E19 [get_ports {pmod_je_in_tri_i[1]}]
 set_property PACKAGE_PIN E18 [get_ports {pmod_je_in_tri_i[0]}]
 set_property PACKAGE_PIN D20 [get_ports {pmod_je_out_tri_o[3]}]
@@ -122,8 +122,8 @@ set_property PACKAGE_PIN E17 [get_ports {pmod_je_out_tri_o[0]}]
 # ----------------------------------------------------------------------------
 # JF Pmod - Bank 35
 # ----------------------------------------------------------------------------
-set_property PACKAGE_PIN K19 [get_ports {pmod_jf_in_tri_i[3]}]
-set_property PACKAGE_PIN J19 [get_ports {pmod_jf_in_tri_i[2]}]
+set_property PACKAGE_PIN J19 [get_ports {pmod_jf_in_tri_i[3]}]
+set_property PACKAGE_PIN K19 [get_ports {pmod_jf_in_tri_i[2]}]
 set_property PACKAGE_PIN M18 [get_ports {pmod_jf_in_tri_i[1]}]
 set_property PACKAGE_PIN M17 [get_ports {pmod_jf_in_tri_i[0]}]
 set_property PACKAGE_PIN M20 [get_ports {pmod_jf_out_tri_o[3]}]
@@ -170,8 +170,8 @@ set_property PACKAGE_PIN Y18 [get_ports {pmod_jk_out_tri_o[0]}]
 # ----------------------------------------------------------------------------
 # JY Pmod - Bank 13 (Available on Z7020 device only)
 # ----------------------------------------------------------------------------
-set_property PACKAGE_PIN T5 [get_ports {pmod_jy_in_tri_i[3]}]
-set_property PACKAGE_PIN U5 [get_ports {pmod_jy_in_tri_i[2]}]
+set_property PACKAGE_PIN U5 [get_ports {pmod_jy_in_tri_i[3]}]
+set_property PACKAGE_PIN T5 [get_ports {pmod_jy_in_tri_i[2]}]
 set_property PACKAGE_PIN W8 [get_ports {pmod_jy_in_tri_i[1]}]
 set_property PACKAGE_PIN V8 [get_ports {pmod_jy_in_tri_i[0]}]
 set_property PACKAGE_PIN U10 [get_ports {pmod_jy_out_tri_o[3]}]

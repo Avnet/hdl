@@ -397,11 +397,32 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
 proc avnet_assign_addresses {project projects_folder scriptdir} {
     # Unassign all address segments
-  delete_bd_objs [get_bd_addr_segs]
-  delete_bd_objs [get_bd_addr_segs -excluded]
+   delete_bd_objs [get_bd_addr_segs]
+   delete_bd_objs [get_bd_addr_segs -excluded]
 
-  # Hard-code specific address segments (used in device-tree or applications)
-  #assign_bd_address -offset 0xA0020000 -range 0x00010000 -target_address_space [get_bd_addr_spaces zynq_ultra_ps_e_0/Data] [get_bd_addr_segs axi_intc_0/S_AXI/Reg] -force
+   # Hard-code specific address segments (used in device-tree or applications)
+   # pmod_ja
+   assign_bd_address -offset 0x41200000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_0/S_AXI/Reg] -force
+   # pmod_jb
+   assign_bd_address -offset 0x41210000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_1/S_AXI/Reg] -force
+   # pmod_jc
+   assign_bd_address -offset 0x41220000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_2/S_AXI/Reg] -force
+   # pmod_jd
+   assign_bd_address -offset 0x41230000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_3/S_AXI/Reg] -force
+   # pmod_je
+   assign_bd_address -offset 0x41240000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_4/S_AXI/Reg] -force
+   # pmod_jf
+   assign_bd_address -offset 0x41250000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_5/S_AXI/Reg] -force
+   # pmod_jg
+   assign_bd_address -offset 0x41260000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_6/S_AXI/Reg] -force
+   # pmod_jh
+   assign_bd_address -offset 0x41270000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_7/S_AXI/Reg] -force
+   # pmod_jk
+   assign_bd_address -offset 0x41280000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_8/S_AXI/Reg] -force
+   # dip_sw_4bits
+   assign_bd_address -offset 0x41290000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_9/S_AXI/Reg] -force
+   # leds_8bits
+   assign_bd_address -offset 0x412A0000 -range 0x00010000 -target_address_space [get_bd_addr_spaces ps7/Data] [get_bd_addr_segs axi_gpio_10/S_AXI/Reg] -force
   
   assign_bd_address
 
