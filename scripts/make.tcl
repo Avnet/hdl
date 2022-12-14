@@ -25,15 +25,6 @@
 #                              All rights reserved.
 # 
 # ----------------------------------------------------------------------------
-# 
-#  Create Date:         December 02, 2014
-#  Design Name:         
-#  Module Name:         
-#  Project Name:        
-#  Target Devices:      
-#  Hardware Boards:     
-# 
-# ----------------------------------------------------------------------------
 
 # must be format [4 digit major][period][1 digit minor]
 # i.e. 2020.2
@@ -402,7 +393,9 @@ switch -nocase $board {
    uz3eg_pciec                -
    uz7ev_evcc                 -
    mz7010_som                 -
-   mz7020_som                 {puts " Setting Up Project ${board}_${project}..."
+   mz7010_iocc                -
+   mz7020_som                 -
+   mz7020_iocc                {puts " Setting Up Project ${board}_${project}..."
                                  source ./project_scripts/${board}_${project}.tcl -notrace }
                                  
    default                    {puts " Error in Selecting Board!"
