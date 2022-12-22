@@ -274,6 +274,24 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk]
 
+   # Enable DisplayPort using PS GTR0 and GTR1
+   set_property -dict [list \
+      CONFIG.PSU__DPAUX__PERIPHERAL__IO {MIO 27 .. 30} \
+      CONFIG.PSU__DP__LANE_SEL {Dual Lower} \
+      CONFIG.PSU__DISPLAYPORT__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
+
+   # Set the DisplayPort reference clock to 135 MHz
+   set_property -dict [list \
+      CONFIG.PSU__DP__REF_CLK_SEL {Ref Clk0} \
+      CONFIG.PSU__DP__REF_CLK_FREQ {135}] [get_bd_cells zynq_ultra_ps_e_0]
+
+   # Enable the SD0 and set it to eMMC 8-bit mode
+   set_property -dict [list \
+      CONFIG.PSU__SD0__PERIPHERAL__ENABLE {1} \
+      CONFIG.PSU__SD0__PERIPHERAL__IO {MIO 13 .. 22} \
+      CONFIG.PSU__SD0__SLOT_TYPE {eMMC} \
+      CONFIG.PSU__SD0__DATA_TRANSFER_MODE {8Bit}] [get_bd_cells zynq_ultra_ps_e_0]
+
    save_bd_design
 }
 
