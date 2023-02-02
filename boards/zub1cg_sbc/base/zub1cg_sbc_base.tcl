@@ -380,10 +380,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
 
    #
-   # SYZYGY DNA IIC from BDF
+   # HSIO DNA IIC from BDF
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_1
-   apply_board_connection -board_interface "syzygydna_i2c_pl" -ip_intf "axi_iic_1/IIC" -diagram "${project}"
+   apply_board_connection -board_interface "hsio_dna_i2c_pl" -ip_intf "axi_iic_1/IIC" -diagram "${project}"
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
       Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
       Clk_slave {Auto} \

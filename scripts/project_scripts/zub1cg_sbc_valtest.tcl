@@ -84,7 +84,7 @@ if {[string match -nocase "yes" $clean]} {
    # Apply board specific project property settings
    puts ""
    puts "***** Assigning Vivado project board_part property to zuboard_1cg..."
-   set_property board_part avnet.com:zuboard_1cg:part0:1.0 [current_project]
+   set_property board_part avnet.com:zuboard_1cg:part0:1.1 [current_project]
 
    # Generate Avnet IP
    puts ""
