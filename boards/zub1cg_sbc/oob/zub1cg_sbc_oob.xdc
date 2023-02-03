@@ -4,9 +4,7 @@
 set_property IOSTANDARD LVCMOS18 [get_ports {pl_pb*}]
 set_property IOSTANDARD LVCMOS18 [get_ports {rgb_led*}]
 set_property IOSTANDARD LVCMOS18 [get_ports {click*}]
-set_property IOSTANDARD LVCMOS18 [get_ports {syzygydna*}]
 set_property IOSTANDARD LVCMOS18 [get_ports {tempsensor*}]
-set_property IOSTANDARD LVCMOS18 [get_ports {szg*}]
 
 #
 # Set I/O location constraints

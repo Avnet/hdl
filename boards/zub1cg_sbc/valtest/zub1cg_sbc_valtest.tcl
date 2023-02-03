@@ -338,7 +338,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
       
    #
-   # Syzygy TRX2 (MIO) loopback
+   # HSIO TRX2 (MIO) loopback
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_2
    set_property -dict [list \
@@ -348,9 +348,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.C_GPIO2_WIDTH {2} \
       CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_2]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_2/GPIO]
-   set_property name szg_trx2_mio_lb_out [get_bd_intf_ports GPIO_0]
+   set_property name hsio_trx2_mio_lb_out [get_bd_intf_ports GPIO_0]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_2/GPIO2]
-   set_property name szg_trx2_mio_lb_in [get_bd_intf_ports GPIO2_0]
+   set_property name hsio_trx2_mio_lb_in [get_bd_intf_ports GPIO2_0]
    save_bd_design
 
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
@@ -365,7 +365,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
       
    #
-   # Syzygy TRX2 (PL) loopback
+   # HSIO TRX2 (PL) loopback
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_3
    set_property -dict [list \
@@ -375,9 +375,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.C_GPIO2_WIDTH {9} \
       CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_3]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_3/GPIO]
-   set_property name szg_trx2_pl_lb_out [get_bd_intf_ports GPIO_0]
+   set_property name hsio_trx2_pl_lb_out [get_bd_intf_ports GPIO_0]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_3/GPIO2]
-   set_property name szg_trx2_pl_lb_in [get_bd_intf_ports GPIO2_0]
+   set_property name hsio_trx2_pl_lb_in [get_bd_intf_ports GPIO2_0]
    save_bd_design
 
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
@@ -392,7 +392,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
       
    #
-   # Syzygy STD (PL) loopback
+   # HSIO STD (PL) loopback
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_4
    set_property -dict [list \
@@ -402,9 +402,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.C_GPIO2_WIDTH {14} \
       CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_4]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_4/GPIO]
-   set_property name szg_std_lb_out [get_bd_intf_ports GPIO_0]
+   set_property name hsio_std_lb_out [get_bd_intf_ports GPIO_0]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_4/GPIO2]
-   set_property name szg_std_lb_in [get_bd_intf_ports GPIO2_0]
+   set_property name hsio_std_lb_in [get_bd_intf_ports GPIO2_0]
    save_bd_design
 
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
@@ -419,7 +419,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
       
    #
-   # Syzygy TRX2 (PL) power
+   # HSIO TRX2 (PL) power
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_5
    set_property -dict [list \
@@ -429,9 +429,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.C_GPIO2_WIDTH {3} \
       CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_5]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_5/GPIO]
-   set_property name szg_trx2_pl_pwr_out [get_bd_intf_ports GPIO_0]
+   set_property name hsio_trx2_pl_pwr_out [get_bd_intf_ports GPIO_0]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_5/GPIO2]
-   set_property name szg_trx2_pl_pwr_in [get_bd_intf_ports GPIO2_0]
+   set_property name hsio_trx2_pl_pwr_in [get_bd_intf_ports GPIO2_0]
    save_bd_design
 
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
@@ -446,7 +446,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
 
    #
-   # Syzygy STD (PL) power
+   # HSIO STD (PL) power
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_6
    set_property -dict [list \
@@ -456,9 +456,9 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
       CONFIG.C_GPIO2_WIDTH {3} \
       CONFIG.C_ALL_INPUTS_2 {1}] [get_bd_cells axi_gpio_6]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_6/GPIO]
-   set_property name szg_std_pwr_out [get_bd_intf_ports GPIO_0]
+   set_property name hsio_std_pwr_out [get_bd_intf_ports GPIO_0]
    make_bd_intf_pins_external [get_bd_intf_pins axi_gpio_6/GPIO2]
-   set_property name szg_std_pwr_in [get_bd_intf_ports GPIO2_0]
+   set_property name hsio_std_pwr_in [get_bd_intf_ports GPIO2_0]
    save_bd_design
 
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
@@ -511,10 +511,10 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
 
    #
-   # SYZYGY DNA IIC from BDF
+   # HSIO DNA IIC from BDF
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_1
-   apply_board_connection -board_interface "syzygydna_i2c_pl" -ip_intf "axi_iic_1/IIC" -diagram "zub1cg_sbc_valtest"
+   apply_board_connection -board_interface "hsio_dna_i2c_pl" -ip_intf "axi_iic_1/IIC" -diagram "zub1cg_sbc_valtest"
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
       Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
       Clk_slave {Auto} \

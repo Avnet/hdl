@@ -33,7 +33,7 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Apr 11, 2022
-#  Design Name:         ZUBoard 1CG Dualcam SYZYGY HW Platform
+#  Design Name:         ZUBoard 1CG Dualcam HW Platform
 #  Module Name:         zub1cg_sbc_dualcam.tcl
 #  Project Name:        ZUBoard 1CG Dualcam
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
@@ -84,11 +84,11 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
    
    #
-   # Syzygy I2C
+   # HSIO I2C
    #
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_iic:2.1 axi_iic_0
    make_bd_intf_pins_external  [get_bd_intf_pins axi_iic_0/IIC]
-   set_property name syzygy_i2c [get_bd_intf_ports IIC_0]
+   set_property name hsio_i2c [get_bd_intf_ports IIC_0]
 
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
       Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (100 MHz)} \
@@ -227,7 +227,7 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
       CONFIG.PSU__USE__IRQ0 {1} \
       CONFIG.PSU__USE__IRQ1 {1}] [get_bd_cells zynq_ultra_ps_e_0]
 
-   # Enable the PS SPI1 (SYZYGY MCU) and I2C0 (AP1302 ISP on DualCam SYZYGY)
+   # Enable the PS SPI1 (HSIO MCU) and I2C0 (AP1302 ISP on DualCam module)
    set_property -dict [list \
       CONFIG.PSU__I2C0__PERIPHERAL__ENABLE {1} \
       CONFIG.PSU__I2C0__PERIPHERAL__IO {EMIO} \

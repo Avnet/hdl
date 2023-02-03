@@ -33,11 +33,11 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Oct 05, 2021
-#  Design Name:         ZUBoard-1CG Dual Camera SYZYGY HW Platform
+#  Design Name:         ZUBoard-1CG Dual Camera HW Platform
 #  Module Name:         zub1cg_sbc_dualcam.tcl
-#  Project Name:        ZUBoard-1CG Dual Camera SYZYGY HW
+#  Project Name:        ZUBoard-1CG Dual Camera HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
-#  Hardware Boards:     ZUBoard-1CG Board + SYZYGY DualCam Pod
+#  Hardware Boards:     ZUBoard-1CG Board + DualCam Module
 #
 # ----------------------------------------------------------------------------
 
@@ -84,7 +84,7 @@ if {[string match -nocase "yes" $clean]} {
    # Apply board specific project property settings
    puts ""
    puts "***** Assigning Vivado project board_part property to zuboard_1cg..."
-   set_property board_part avnet.com:zuboard_1cg:part0:1.0 [current_project]
+   set_property board_part avnet.com:zuboard_1cg:part0:1.1 [current_project]
 
    # Generate Avnet IP
    puts ""
