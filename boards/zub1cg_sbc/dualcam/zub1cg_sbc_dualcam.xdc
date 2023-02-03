@@ -1,17 +1,17 @@
 #
 # Set I/O location constraints
 #
-set_property PACKAGE_PIN B9 [get_ports syzygy_i2c_scl_io]; # HD_SYZYGY_SCL_1V8
-set_property PACKAGE_PIN A9 [get_ports syzygy_i2c_sda_io]; # HD_SYZYGY_SDA_1V8
+set_property PACKAGE_PIN B9 [get_ports hsio_i2c_scl_io]; # HD_HSIO_SCL_1V8
+set_property PACKAGE_PIN A9 [get_ports hsio_i2c_sda_io]; # HD_HSIO_SDA_1V8
 
 #
 # Set I/O standards
 #
-set_property IOSTANDARD LVCMOS18 [get_ports syzygy*]
-set_property DRIVE 12 [get_ports syzygy*]
+set_property IOSTANDARD LVCMOS18 [get_ports hsio*]
+set_property DRIVE 12 [get_ports hsio*]
 
 #######################################################################
-# ZUBoard-1CG Dual Camera SYZYGY Pod
+# ZUBoard-1CG Dual Camera High Speed I/O Pod
 #######################################################################
 #
 # ISP GPIO & clock
