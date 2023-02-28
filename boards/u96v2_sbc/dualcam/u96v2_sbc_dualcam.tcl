@@ -640,7 +640,7 @@ proc create_hier_cell_CAPTURE_PIPELINE { parentCell nameHier } {
  ] $axis_subset_converter_1
 
   # Create instance: mipi_csi2_rx_subsyst_0, and set properties
-  set mipi_csi2_rx_subsyst_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:mipi_csi2_rx_subsystem:5.1 mipi_csi2_rx_subsyst_0 ]
+  set mipi_csi2_rx_subsyst_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:mipi_csi2_rx_subsystem:5.2 mipi_csi2_rx_subsyst_0 ]
   set_property -dict [ list \
    CONFIG.AXIS_TDEST_WIDTH {4} \
    CONFIG.CLK_LANE_IO_LOC {N2} \
