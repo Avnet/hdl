@@ -33,11 +33,11 @@
 # ----------------------------------------------------------------------------
 #
 #  Create Date:         Oct 05, 2021
-#  Design Name:         ZUBoard-1CG Dual Camera SYZYGY HW Platform
+#  Design Name:         ZUBoard-1CG Dual Camera HW Platform
 #  Module Name:         make_zub1cg_sbc_dualcam.tcl
-#  Project Name:        ZUBoard-1CG Dual Camera SYZYGY HW
+#  Project Name:        ZUBoard-1CG Dual Camera HW
 #  Target Devices:      Xilinx Zynq UltraScale+ 1CG
-#  Hardware Boards:     Xboard-ZU1 Board + SYZYGY DualCam Pod
+#  Hardware Boards:     Xboard-ZU1 Board + DualCam Module
 #
 # ----------------------------------------------------------------------------
 
