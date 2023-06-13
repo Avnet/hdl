@@ -579,7 +579,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 proc avnet_add_ps_preset {project projects_folder scriptdir} {
 
    # add selection for customization depending on board choice (or none)
-   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.4 zynq_ultra_ps_e_0
+   create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e:3.5 zynq_ultra_ps_e_0
    apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" } [get_bd_cells zynq_ultra_ps_e_0]
    set zynq_ultra_ps_e_0 [get_bd_cells zynq_ultra_ps_e_0]
 
