@@ -446,16 +446,6 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    save_bd_design
 
    #
-   # UART1 Modem signals
-   #
-
-   create_bd_port -dir I emio_uart1_ctsn
-   connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/emio_uart1_ctsn] [get_bd_ports emio_uart1_ctsn]
-
-   create_bd_port -dir O emio_uart1_rtsn
-   connect_bd_net [get_bd_pins /zynq_ultra_ps_e_0/emio_uart1_rtsn] [get_bd_ports emio_uart1_rtsn]
-
-   #
    # Connect the remaining nets and ports
    #
    connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD] -boundary_type upper [get_bd_intf_pins axi_interconnect_0/S00_AXI]
@@ -645,12 +635,16 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    # Set PS PCIe to root port
    set_property CONFIG.PSU__PCIE__DEVICE_PORT_TYPE {Root Port} [get_bd_cells zynq_ultra_ps_e_0]
 
-
+   # Enable UART1 and modem signals
    set_property -dict [list \
       CONFIG.PSU__UART1__MODEM__ENABLE {1} \
       CONFIG.PSU__UART1__PERIPHERAL__ENABLE {1} \
-      CONFIG.PSU__UART1__PERIPHERAL__IO {MIO 28 .. 29} \
-   ] [get_bd_cells zynq_ultra_ps_e_0]
+      CONFIG.PSU__UART1__PERIPHERAL__IO {MIO 28 .. 29} ] [get_bd_cells zynq_ultra_ps_e_0]
+
+   make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/emio_uart1_ctsn]
+   make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/emio_uart1_rtsn]
+   set_property name uart1_rtsn [get_bd_ports emio_uart1_rtsn_0]
+   set_property name uart1_ctsn [get_bd_ports emio_uart1_ctsn_0]
 
    save_bd_design
 }
