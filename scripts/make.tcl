@@ -28,7 +28,7 @@
 
 # must be format [4 digit major][period][1 digit minor]
 # i.e. 2020.2
-set required_version 2022.2
+set required_version 2023.1
 # properly set vivado version for secondary check and folder creation
 set vivado_ver [string replace $required_version 4 4 _ ]
 
@@ -383,6 +383,7 @@ if {[string match -nocase "init" $tag]} {
 # Project Creation Cases
 # use a - for fall through expressions
 switch -nocase $board {
+   aub15p_sbc                 -
    pz7010_fmc2                -
    pz7020_fmc2                -
    pz7015_fmc2                -
