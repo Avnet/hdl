@@ -11,17 +11,24 @@ set_property IOSTANDARD LVCMOS18 [get_ports hsio*]
 set_property DRIVE 12 [get_ports hsio*]
 
 #######################################################################
+# PS UART1 modem signals (M.2 HSIO Bluetooth)
+#######################################################################
+set_property IOSTANDARD LVCMOS18 [get_ports emio_uart1*]
+set_property PACKAGE_PIN C5 [get_ports emio_uart1_ctsn]
+set_property PACKAGE_PIN D5 [get_ports emio_uart1_rtsn]
+
+#######################################################################
 # DisplayPort HPD & AUX
 #######################################################################
 set_property IOSTANDARD LVCMOS12 [get_ports {dp_hot_plug_detect*}]
 set_property IOSTANDARD LVCMOS12 [get_ports {dp_aux_data*}]
-set_property PACKAGE_PIN K1 [get_ports dp_aux_data_out_0 ]; # HP_DP_15_P
-set_property PACKAGE_PIN J1 [get_ports dp_hot_plug_detect_0 ]; # HP_DP_15_N
-set_property PACKAGE_PIN D2 [get_ports dp_aux_data_oe_0 ]; # HP_DP_24_P
-set_property PACKAGE_PIN C2 [get_ports dp_aux_data_in_0 ]; # HP_DP_24_N
+set_property PACKAGE_PIN K1 [get_ports dp_aux_data_out ]; # HP_DP_15_P
+set_property PACKAGE_PIN J1 [get_ports dp_hot_plug_detect ]; # HP_DP_15_N
+set_property PACKAGE_PIN D2 [get_ports dp_aux_data_oe ]; # HP_DP_24_P
+set_property PACKAGE_PIN C2 [get_ports dp_aux_data_in ]; # HP_DP_24_N
 
 #######################################################################
-# ZUBoard-1CG Dual Camera High Speed I/O Pod
+# Dual Camera High Speed I/O
 #######################################################################
 #
 # ISP GPIO & clock

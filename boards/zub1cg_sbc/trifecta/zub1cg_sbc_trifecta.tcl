@@ -248,11 +248,26 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
    
    connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/dp_aux_data_oe_n] [get_bd_pins util_vector_logic_0/Op1]
    make_bd_pins_external  [get_bd_pins util_vector_logic_0/Res]
-   set_property name dp_aux_data_oe_0 [get_bd_ports Res_0]
+   set_property name dp_aux_data_oe [get_bd_ports Res_0]
 
    make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/dp_aux_data_out]
+   set_property name dp_aux_data_out [get_bd_ports dp_aux_data_out_0]
+
    make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/dp_aux_data_in]
+   set_property name dp_aux_data_in [get_bd_ports dp_aux_data_in_0]
+
    make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/dp_hot_plug_detect]
+   set_property name dp_hot_plug_detect [get_bd_ports dp_hot_plug_detect_0]
+
+
+   make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/emio_uart1_ctsn]
+   set_property name emio_uart1_ctsn [get_bd_ports emio_uart1_ctsn_0]
+
+   make_bd_pins_external  [get_bd_pins zynq_ultra_ps_e_0/emio_uart1_rtsn]
+   set_property name emio_uart1_rtsn [get_bd_ports emio_uart1_rtsn_0]
+
+
+
 
    regenerate_bd_layout
    save_bd_design
@@ -301,9 +316,9 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
    # Enable the SD0 and set it to eMMC 8-bit mode
    set_property -dict [list \
       CONFIG.PSU__SD0__PERIPHERAL__ENABLE {1} \
-      CONFIG.PSU__SD0__PERIPHERAL__IO {MIO 13 .. 22} \
-      CONFIG.PSU__SD0__SLOT_TYPE {eMMC} \
-      CONFIG.PSU__SD0__DATA_TRANSFER_MODE {8Bit}] [get_bd_cells zynq_ultra_ps_e_0]
+      CONFIG.PSU__SD0__PERIPHERAL__IO {MIO 13 .. 16 21 22} \
+      CONFIG.PSU__SD0__SLOT_TYPE {SD 2.0} \
+      CONFIG.PSU__SD0__DATA_TRANSFER_MODE {4Bit}] [get_bd_cells zynq_ultra_ps_e_0]
 
    # Enable the PCIe and configure it for root port (must use PS GTR0 and GTR1)
    set_property -dict [list \
@@ -311,7 +326,13 @@ proc avnet_add_ps_preset {project projects_folder scriptdir} {
      CONFIG.PSU__PCIE__DEVICE_PORT_TYPE {Root Port} \
      CONFIG.PSU__PCIE__MAXIMUM_LINK_WIDTH {x2} \
      CONFIG.PSU__PCIE__PERIPHERAL__ENABLE {1}] [get_bd_cells zynq_ultra_ps_e_0]
-
+     
+   # Enable the PS UART1 and modem signals
+   set_property -dict [list \
+      CONFIG.PSU__UART1__PERIPHERAL__ENABLE {1} \
+      CONFIG.PSU__UART1__MODEM__ENABLE {1} \
+      CONFIG.PSU__UART1__PERIPHERAL__IO {MIO 28 .. 29}] [get_bd_cells zynq_ultra_ps_e_0]
+     
    save_bd_design
 }
 
