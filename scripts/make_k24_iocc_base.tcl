@@ -15,6 +15,12 @@
 #  This design is the property of Avnet.  Publication of this
 #  design is not authorized without written consent from Avnet.
 #
+#  Please direct any questions to the K24 community support forum:
+#     http://avnet.me/k24-dk-forum
+#
+#  Product information is available at:
+#     http://avnet.me/k24-dk
+#
 #  Disclaimer:
 #     Avnet, Inc. makes no warranty for the use of this code or design.
 #     This code is provided  "As Is". Avnet, Inc assumes no responsibility for
