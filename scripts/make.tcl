@@ -383,6 +383,7 @@ if {[string match -nocase "init" $tag]} {
 # Project Creation Cases
 # use a - for fall through expressions
 switch -nocase $board {
+   k24_iocc                   -
    pz7010_fmc2                -
    pz7020_fmc2                -
    pz7015_fmc2                -
