@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2023.2
+set scripts_vivado_version 2024.1
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -44,7 +44,7 @@ set bCheckIPsPassed 1
 set bCheckIPs 1
 if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
-xilinx.com:ip:v_frmbuf_wr:2.3\
+xilinx.com:ip:v_frmbuf_wr:2.5\
 xilinx.com:ip:v_hdmi_rx_ss:3.2\
 xilinx.com:ip:v_proc_ss:2.3\
 "
