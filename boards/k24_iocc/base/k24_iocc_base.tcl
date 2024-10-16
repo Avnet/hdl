@@ -67,8 +67,8 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    # Add PL LEDs and RGB LED
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_0
-   apply_board_connection -board_interface "som40_2_connector_pl_led_2bits" -ip_intf "axi_gpio_0/GPIO" -diagram "${project}"
-   apply_board_connection -board_interface "som40_2_connector_pl_rgb_3bits" -ip_intf "axi_gpio_0/GPIO2" -diagram "${project}"
+   apply_board_connection -board_interface "som_connectors_pl_led_2bits" -ip_intf "axi_gpio_0/GPIO" -diagram "${project}"
+   apply_board_connection -board_interface "som_connectors_pl_rgb_3bits" -ip_intf "axi_gpio_0/GPIO2" -diagram "${project}"
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
       Clk_master {Auto} \
       Clk_slave {Auto} \
@@ -91,7 +91,7 @@ proc avnet_add_user_io_preset {project projects_folder scriptdir} {
 
    # Add PL Push Buttons
    create_bd_cell -type ip -vlnv xilinx.com:ip:axi_gpio:2.0 axi_gpio_1
-   apply_board_connection -board_interface "som40_2_connector_pl_pb_2bits" -ip_intf "axi_gpio_1/GPIO" -diagram "${project}"
+   apply_board_connection -board_interface "som_connectors_pl_pb_2bits" -ip_intf "axi_gpio_1/GPIO" -diagram "${project}"
    apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { \
       Clk_master {/zynq_ultra_ps_e_0/pl_clk0 (99 MHz)} \
       Clk_slave {Auto} \

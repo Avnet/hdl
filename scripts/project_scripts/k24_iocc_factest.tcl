@@ -84,10 +84,9 @@ if {[string match -nocase "yes" $clean]} {
    # Apply board specific project property settings
    puts ""
    puts "***** Assigning Vivado project board_part property to k24..."
-   set_property board_part xilinx.com:k24c:part0:1.0 [current_project]
-   set_property board_connections {som240_1_connector avnet.com:k24_iocc:som240_1_connector:1.0 som40_2_connector avnet.com:k24_iocc:som40_2_connector:1.0} [current_project]
+   set_property board_part avnet-tria:k24_io_dk_som:part0:1.0 [current_project]
+   set_property board_connections {som_connectors avnet-tria:k24_io_dk_carrier:som_connectors:1.0} [current_project]
 
-   
    # Generate Avnet IP
    puts ""
    puts "***** Generating IP..."
