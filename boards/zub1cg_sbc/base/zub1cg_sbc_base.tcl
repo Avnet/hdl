@@ -50,7 +50,7 @@ proc avnet_import_constraints {boards_folder board project} {
 
    set bdf_path [file normalize [pwd]/../../bdf]
    import_files -fileset constrs_1 -norecurse ${boards_folder}/${board}/${project}/${board}_${project}.xdc
-   import_files -fileset constrs_1 -norecurse ${bdf_path}/zub1cg/1.0/ZUBoard_temp.xdc
+   import_files -fileset constrs_1 -norecurse ${bdf_path}/zub1cg/1.2/ZUBoard_temp.xdc
 }
 
 proc create_hier_cell_mux2to1 { parentCell nameHier } {
