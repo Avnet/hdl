@@ -587,15 +587,15 @@ proc avnet_add_vitis_directives {project projects_folder scriptdir} {
 	S_AXI_HP1_FPD {memport "S_AXI_HP" sptag "HP1" memory "zynq_ultra_ps_e_0 HP1_DDR_LOW"} \
    } [get_bd_cells /zynq_ultra_ps_e_0]
 
-   set_property PFM.AXI_PORT { \
-  M10_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
-  M11_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
-  M12_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
-  M13_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
-  M14_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
-  M15_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
-  M16_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
-   } [get_bd_cells /ps8_0_axi_periph]
+#    set_property PFM.AXI_PORT { \
+#   M10_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+#   M11_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+#   M12_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+#   M13_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+#   M14_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+#   M15_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+#   M16_AXI {memport "M_AXI_GP" sptag "HPM0_FPD" memory ""} \
+#    } [get_bd_cells /ps8_0_axi_periph]
 
    # required for Vitis 2020.1
    # reference : https://github.com/Xilinx/Vitis-In-Depth-Tutorial/blob/master/Vitis_Platform_Creation/Introduction/02-Edge-AI-ZCU104/step1.md
